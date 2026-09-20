@@ -159,7 +159,7 @@
   .status-pill.declined{color:var(--danger);border-color:var(--danger);}
   .status-pill.paid{color:var(--accent);border-color:var(--accent);}
   footer{text-align:center;padding:40px 0 10px;color:var(--muted);font-size:12.5px;}
-  footer a.ig-link{color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:5px;margin-inline-start:10px;vertical-align:middle;}
+  footer a.ig-link{color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:5px;margin-top:8px;}
   footer a.ig-link:hover{color:var(--text);}
   html[dir="rtl"] .brand .mark, html[dir="rtl"] .hero h1, html[dir="rtl"] .stars{letter-spacing:normal;}
 </style>
@@ -181,7 +181,7 @@ const INSTAGRAM_URL = "https://instagram.com/workarmentoring";
 /* ---------- i18n ---------- */
 const I18N = {
   en: {
-    tag:'career mentorship', nav_home:'Home', nav_browse:'Find a mentor', nav_coach:'AI coach', nav_dash:'My profile', nav_start:'Get started',
+    tag:'career mentoring', nav_home:'Home', nav_browse:'Find a mentor', nav_coach:'AI coach', nav_dash:'My profile', nav_start:'Get started',
     hero_h1a:"Find the person who's ", hero_h1em:'already walked', hero_h1b:" the path you're on.",
     hero_sub:"Workar pairs people building a career with mentors who've done the job — real feedback on your resume, your interviews, and your next move.",
     cta_browse:'Browse mentors', cta_become:'Become a mentor',
@@ -218,7 +218,7 @@ const I18N = {
     ph_search:'Search by profession or skill…',
     no_match:'No mentors match yet.', request_for_profession:'Request a mentor for this profession',
     free:'Free',
-    request_mentorship:'Request mentorship', set_profile_first:'Set up your profile first — go to "Get started"',
+    request_mentorship:'Request mentoring', set_profile_first:'Set up your profile first — go to "Get started"',
     this_is_profile:'This is your public profile.',
     reviews_title:'Reviews', rate_experience:'Rate your experience', ph_review:'What was helpful?', post_review:'Post review',
     no_reviews:'No reviews yet — be the first.',
@@ -295,7 +295,7 @@ const I18N = {
     ph_search:'جستجو بر اساس شغل یا مهارت…',
     no_match:'هنوز منتوری با این مشخصات نیست.', request_for_profession:'درخواست منتور برای این شغل',
     free:'رایگان',
-    request_mentorship:'درخواست منتورشیپ', set_profile_first:'اول پروفایلتو بساز — برو به "شروع کن"',
+    request_mentorship:'درخواست منتورینگ', set_profile_first:'اول پروفایلتو بساز — برو به "شروع کن"',
     this_is_profile:'این پروفایل عمومی توئه.',
     reviews_title:'ریویوها', rate_experience:'تجربه‌تو امتیاز بده', ph_review:'چی کمکت کرد؟', post_review:'ثبت ریویو',
     no_reviews:'هنوز ریویویی نیست — اولین نفر باش.',
@@ -535,7 +535,7 @@ function render(){
     }
   }
   app.appendChild(el(body));
-  app.appendChild(el(`<footer>Workar · ${esc(T('footer_tag'))} <a class="ig-link" href="${INSTAGRAM_URL}" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg> @workarmentoring</a></footer>`));
+  app.appendChild(el(`<footer>Workar · ${esc(T('footer_tag'))}<br><a class="ig-link" href="${INSTAGRAM_URL}" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg> @workarmentoring</a></footer>`));
   wire();
 }
 
