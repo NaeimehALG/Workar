@@ -1143,83 +1143,8 @@ function pickVoice(lang){
   const pool = langMatches.length ? langMatches : voices;
   if(!pool.length) return null;
   const femaleNames = /female|zira|samantha|susan|victoria|karen|moira|tessa|joanna|salli|kimberly|amy|emma|ava|jenny|aria|nicole|olivia|sonia|natasha|shirin|dorsa/i;
-  const female = pool.find(v => femaleNames.test(v.name));
-  if(female) return female;
-  const notMale = pool.find(v => !/male|david|mark|guy|daniel|george|matthew|brian|christopher/i.test(v.name));
-  return notMale || pool[0];
-}
-function speakText(text){
-  if(!window.speechSynthesis) return;
-  const clean = cleanForSpeech(text);
-  if(!clean) return;
-  window.speechSynthesis.cancel(); // don't overlap with a previous utterance
-  const langTag = state.lang === 'fa' ? 'fa-IR' : 'en-US';
-  const u = new SpeechSynthesisUtterance(clean);
-  u.lang = langTag;
-  const voice = pickVoice(langTag);
-  if(voice) u.voice = voice;
-  u.pitch = 1.05;
-  u.rate = 0.97;
-  u.onerror = ()=>{ toast(T('voice_speak_fail')); };
-  window.speechSynthesis.speak(u);
-}
-function startListening(){
-  const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if(!Rec) { toast(T('voice_not_supported')); return; }
-  if(state.listening) return;
-  const rec = new Rec();
-  __recognizer = rec;
-  rec.lang = state.lang === 'fa' ? 'fa-IR' : 'en-US';
-  rec.interimResults = true;
-  rec.maxAlternatives = 1;
-  state.listening = true; render();
-  let finalText = '';
-  rec.onresult = (e)=>{
-    let interim = '';
-    for(let i=e.resultIndex; i<e.results.length; i++){
-      const chunk = e.results[i][0].transcript;
-      if(e.results[i].isFinal) finalText += chunk;
-      else interim += chunk;
-    }
-    const box = document.getElementById('chat-text');
-    if(box) box.value = (finalText + interim).trim();
-  };
-  rec.onerror = (e)=>{
-    state.listening = false; render();
-    if(e && (e.error==='not-allowed' || e.error==='service-not-allowed')) toast(T('voice_mic_denied'));
-  };
-  rec.onend = ()=>{
-    state.listening = false; render();
-    if(finalText.trim()) sendChat();
-  };
-  rec.start();
-}
-function stopListening(){
-  if(__recognizer) __recognizer.stop();
-}
-
-const __subscribed = { reviews:{}, requests:false };
-function loadReviews(mentorId){
-  if(!window.__db || !mentorId || __subscribed.reviews[mentorId]) return;
-  __subscribed.reviews[mentorId] = true;
-  window.__db.collection('reviews').where('mentorId','==',mentorId).onSnapshot(async list=>{
-    cache.reviews[mentorId] = (list||[]).map(d=>Object.assign({id:d.id}, d.data));
-    await resolveNames(cache.reviews[mentorId].map(r=>r.clientId));
-    if(state.view==='mentor' && state.mentorId===mentorId) render();
-  });
-}
-function loadRequests(){
-  if(!window.__db || !myProfile || __subscribed.requests) return;
-  __subscribed.requests = true;
-  const field = myProfile.role==='mentor' ? 'mentorId' : 'clientId';
-  window.__db.collection('requests').where(field,'==',uid).onSnapshot(async list=>{
-    cache.requests = (list||[]).map(d=>Object.assign({id:d.id}, d.data));
-    await resolveNames(cache.requests.flatMap(r=>[r.mentorId, r.clientId]));
-    if(state.view==='dashboard') render();
-  });
-}
-
-init();
-</script>
-</body>
-</html>
+  // Prefer high-quality "Natural"/"Neural"/"Online" voices (e.g. Edge's "Microsoft Aria Online (Natural)") — these sound far less robotic than legacy voices
+  const naturalFemale = pool.find(v => /natural|neural|online/i.test(v.name) && femaleNames.test(v.name));
+  if(naturalFemale) return naturalFemale;
+  const anyNatural = pool.find(v => /natural|neural|online/i.test(v.name));
+  if(anyNatural) 
