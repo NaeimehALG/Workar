@@ -246,6 +246,7 @@ const I18N = {
     ai_credits_left:'{n} AI messages left', ai_credits_left_1:'1 AI message left',
     ai_out_of_credits:'You\'re out of free AI messages.', buy_ai_credits:'Buy 20 more messages — $4.99',
     voice_mode:'Voice mode', voice_not_supported:'Voice isn\'t supported in this browser — try Chrome or Edge.',
+    voice_speak_fail:'Could not play audio', voice_mic_denied:'Microphone access denied — check your browser/site permissions', replay_audio:'🔊 Replay',
     listening:'Listening…', mic_start:'🎤 Speak', toast_ai_credits_added:'Credits added — you\'re all set!',
     need_access:'Workar needs workspace access to load profiles and mentors.', try_open:'Try opening this from within your Claude organization.',
     yrs_exp:'yrs experience', linkedin_link:'LinkedIn ↗',
@@ -323,6 +324,7 @@ const I18N = {
     ai_credits_left:'{n} پیام هوش مصنوعی باقی مونده', ai_credits_left_1:'۱ پیام باقی مونده',
     ai_out_of_credits:'پیام‌های رایگانت تموم شده.', buy_ai_credits:'خرید ۲۰ پیام دیگه — ۴.۹۹ دلار',
     voice_mode:'حالت صوتی', voice_not_supported:'این مرورگر از قابلیت صوتی پشتیبانی نمی‌کنه — کروم یا اج رو امتحان کن.',
+    voice_speak_fail:'پخش صدا انجام نشد', voice_mic_denied:'دسترسی به میکروفون رد شد — تنظیمات مرورگر/سایت رو چک کن', replay_audio:'🔊 پخش دوباره',
     listening:'در حال گوش دادن…', mic_start:'🎤 صحبت کن', toast_ai_credits_added:'پیام‌ها اضافه شد — آماده‌ای!',
     need_access:'Workar برای بارگذاری پروفایل‌ها و منتورها نیاز به دسترسی به Workspace داره.', try_open:'از داخل سازمان Claude خودت بازش کن.',
     yrs_exp:'سال تجربه', linkedin_link:'لینکدین ↗',
@@ -840,7 +842,7 @@ function coachView(){
   ${voiceControls}
   <div class="chat">
     <div class="chat-log" id="chat-log">
-      ${state.chatMsgs.length ? state.chatMsgs.map(m=>`<div class="msg ${m.role==='user'?'user':'ai'}">${esc(m.content)}</div>`).join('')
+      ${state.chatMsgs.length ? state.chatMsgs.map((m,i)=>`<div class="msg ${m.role==='user'?'user':'ai'}">${esc(m.content)}${(m.role==='ai' && state.coachMode==='interview' && window.speechSynthesis) ? `<div><button class="btn btn-ghost btn-sm replay-btn" type="button" data-msg-i="${i}" style="padding:2px 8px;margin-top:6px;">${esc(T('replay_audio'))}</button></div>` : ''}</div>`).join('')
         : `<div class="empty" style="border:none;">${state.coachMode==='resume' ? esc(T('empty_resume')) : esc(T('empty_career'))}</div>`}
       ${state.sending ? `<div class="msg ai">${esc(T('thinking'))}</div>` : ''}
     </div>
@@ -1071,6 +1073,13 @@ function wire(){
   const chatText = document.getElementById('chat-text');
   if(chatText) chatText.addEventListener('keydown', e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendChat(); } });
 
+  document.querySelectorAll('.replay-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const i = parseInt(btn.getAttribute('data-msg-i'), 10);
+      const msg = state.chatMsgs[i];
+      if(msg) speakText(msg.content);
+    });
+  });
   const log = document.getElementById('chat-log');
   if(log) log.scrollTop = log.scrollHeight;
 
@@ -1112,11 +1121,23 @@ let __recognizer = null;
 function speechSupported(){
   return !!(window.SpeechRecognition || window.webkitSpeechRecognition);
 }
+function cleanForSpeech(text){
+  return (text||'')
+    .replace(/\*\*(.*?)\*\*/g, '$1')
+    .replace(/\*(.*?)\*/g, '$1')
+    .replace(/^#+\s*/gm, '')
+    .replace(/^-{2,}$/gm, '')
+    .replace(/^[-•]\s*/gm, '')
+    .trim();
+}
 function speakText(text){
-  if(!window.speechSynthesis || !text) return;
+  if(!window.speechSynthesis) return;
+  const clean = cleanForSpeech(text);
+  if(!clean) return;
   window.speechSynthesis.cancel(); // don't overlap with a previous utterance
-  const u = new SpeechSynthesisUtterance(text);
+  const u = new SpeechSynthesisUtterance(clean);
   u.lang = state.lang === 'fa' ? 'fa-IR' : 'en-US';
+  u.onerror = ()=>{ toast(T('voice_speak_fail')); };
   window.speechSynthesis.speak(u);
 }
 function startListening(){
@@ -1140,39 +1161,6 @@ function startListening(){
     const box = document.getElementById('chat-text');
     if(box) box.value = (finalText + interim).trim();
   };
-  rec.onerror = ()=>{ state.listening = false; render(); };
-  rec.onend = ()=>{
+  rec.onerror = (e)=>{
     state.listening = false; render();
-    if(finalText.trim()) sendChat();
-  };
-  rec.start();
-}
-function stopListening(){
-  if(__recognizer) __recognizer.stop();
-}
-
-const __subscribed = { reviews:{}, requests:false };
-function loadReviews(mentorId){
-  if(!window.__db || !mentorId || __subscribed.reviews[mentorId]) return;
-  __subscribed.reviews[mentorId] = true;
-  window.__db.collection('reviews').where('mentorId','==',mentorId).onSnapshot(async list=>{
-    cache.reviews[mentorId] = (list||[]).map(d=>Object.assign({id:d.id}, d.data));
-    await resolveNames(cache.reviews[mentorId].map(r=>r.clientId));
-    if(state.view==='mentor' && state.mentorId===mentorId) render();
-  });
-}
-function loadRequests(){
-  if(!window.__db || !myProfile || __subscribed.requests) return;
-  __subscribed.requests = true;
-  const field = myProfile.role==='mentor' ? 'mentorId' : 'clientId';
-  window.__db.collection('requests').where(field,'==',uid).onSnapshot(async list=>{
-    cache.requests = (list||[]).map(d=>Object.assign({id:d.id}, d.data));
-    await resolveNames(cache.requests.flatMap(r=>[r.mentorId, r.clientId]));
-    if(state.view==='dashboard') render();
-  });
-}
-
-init();
-</script>
-</body>
-</html>
+    if(e && (e.error==='not-allowed' || e.error==='service-not-allowed')) toast(T(
