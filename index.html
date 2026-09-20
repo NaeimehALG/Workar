@@ -85,7 +85,8 @@
   .stat span{font-size:12.5px;color:var(--muted);}
 
   .hero-card{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px;box-shadow:var(--shadow);overflow:hidden;}
-  .hero-card::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Cg fill='none' stroke='%238B6A4C' stroke-width='2.2' opacity='0.07'%3E%3Ccircle cx='110' cy='70' r='26'/%3E%3Ccircle cx='190' cy='70' r='26'/%3E%3Cpath d='M70 220c4-46 30-70 82-70s78 24 82 70'/%3E%3Cpath d='M110 96c22 18 46 40 40 60M190 96c-22 18-46 40-40 60'/%3E%3C/g%3E%3C/svg%3E");background-repeat:no-repeat;background-position:bottom -20px right -30px;background-size:260px;pointer-events:none;}
+  .hero-card::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Cg fill='none' stroke='%238B6A4C' stroke-width='3' opacity='0.22'%3E%3Ccircle cx='110' cy='70' r='26'/%3E%3Ccircle cx='190' cy='70' r='26'/%3E%3Cpath d='M70 220c4-46 30-70 82-70s78 24 82 70'/%3E%3Cpath d='M110 96c22 18 46 40 40 60M190 96c-22 18-46 40-40 60'/%3E%3C/g%3E%3C/svg%3E");background-repeat:no-repeat;background-position:center right -10px;background-size:120px;pointer-events:none;z-index:0;}
+  .hero-card .row{position:relative;z-index:1;}
   .hero-card>.row{position:relative;}
   .hero-card .row{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);}
   .hero-card .row:last-child{border-bottom:none;}
