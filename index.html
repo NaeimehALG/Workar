@@ -56,7 +56,7 @@
   .brand{display:flex;align-items:flex-end;gap:8px;cursor:pointer;padding-bottom:2px;}
   .brand img.logo-mark{height:52px;width:auto;display:block;}
   .brand .mark{font-weight:800;font-size:24px;letter-spacing:-.01em;}
-  .brand .tag{font-size:12px;color:var(--muted);position:relative;top:3px;}
+  .brand .tag{font-size:12px;color:var(--muted);position:relative;top:7px;}
   .navlinks{display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
   .navlink{padding:8px 14px;border-radius:999px;font-size:14px;font-weight:600;cursor:pointer;color:var(--muted);border:1px solid transparent;}
   .navlink.active{background:var(--surface-2);color:var(--text);border-color:var(--border);}
@@ -84,7 +84,9 @@
   .stat b{font-size:26px;font-weight:800;display:block;}
   .stat span{font-size:12.5px;color:var(--muted);}
 
-  .hero-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px;box-shadow:var(--shadow);}
+  .hero-card{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px;box-shadow:var(--shadow);overflow:hidden;}
+  .hero-card::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Cg fill='none' stroke='%238B6A4C' stroke-width='2.2' opacity='0.07'%3E%3Ccircle cx='110' cy='70' r='26'/%3E%3Ccircle cx='190' cy='70' r='26'/%3E%3Cpath d='M70 220c4-46 30-70 82-70s78 24 82 70'/%3E%3Cpath d='M110 96c22 18 46 40 40 60M190 96c-22 18-46 40-40 60'/%3E%3C/g%3E%3C/svg%3E");background-repeat:no-repeat;background-position:bottom -20px right -30px;background-size:260px;pointer-events:none;}
+  .hero-card>.row{position:relative;}
   .hero-card .row{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);}
   .hero-card .row:last-child{border-bottom:none;}
   .avatar{width:40px;height:40px;border-radius:50%;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:var(--accent);flex-shrink:0;border:1px solid var(--border);}
