@@ -258,7 +258,12 @@ const I18N = {
     pay_to_confirm:'Pay ${amount} to confirm', waiting_for_payment:'Waiting for client payment…',
     join_call:'Join video/voice call', paid_badge:'Paid',
     toast_payment_fail:'Could not start payment — try again',
-    toast_payment_success:'Payment received — booking confirmed!'
+    toast_payment_success:'Payment received — booking confirmed!',
+    lbl_availability:'Weekly availability', availability_hint:'Check the times you\'re usually free — clients will only be able to request these slots.',
+    day_sat:'Sat', day_sun:'Sun', day_mon:'Mon', day_tue:'Tue', day_wed:'Wed', day_thu:'Thu', day_fri:'Fri',
+    slot_morning:'Morning', slot_afternoon:'Afternoon', slot_evening:'Evening',
+    choose_slot_title:'Pick a time', no_slots_available:'This mentor has no open times right now — check back later.',
+    slot_taken:'Booked'
   },
   fa: {
     tag:'راهنمای مسیر شغلی', nav_home:'خانه', nav_browse:'پیدا کردن منتور', nav_coach:'مربی هوش مصنوعی', nav_dash:'پروفایل من', nav_start:'شروع کن',
@@ -336,7 +341,12 @@ const I18N = {
     pay_to_confirm:'پرداخت ${amount} دلار برای تأیید', waiting_for_payment:'منتظر پرداخت جویای کار…',
     join_call:'ورود به تماس تصویری/صوتی', paid_badge:'پرداخت‌شده',
     toast_payment_fail:'پرداخت شروع نشد — دوباره امتحان کن',
-    toast_payment_success:'پرداخت انجام شد — رزرو تأیید شد!'
+    toast_payment_success:'پرداخت انجام شد — رزرو تأیید شد!',
+    lbl_availability:'زمان‌های آزاد هفتگی', availability_hint:'ساعت‌هایی که معمولاً آزادی رو تیک بزن — جویای کار فقط همین‌ها رو می‌بینه.',
+    day_sat:'شنبه', day_sun:'یکشنبه', day_mon:'دوشنبه', day_tue:'سه‌شنبه', day_wed:'چهارشنبه', day_thu:'پنجشنبه', day_fri:'جمعه',
+    slot_morning:'صبح', slot_afternoon:'ظهر', slot_evening:'عصر',
+    choose_slot_title:'یه زمان انتخاب کن', no_slots_available:'این منتور الان زمان آزادی نداره — بعداً سر بزن.',
+    slot_taken:'رزرو شده'
   }
 };
 function T(key){ return (I18N[state.lang] && I18N[state.lang][key]) || I18N.en[key] || key; }
@@ -344,7 +354,7 @@ function T(key){ return (I18N[state.lang] && I18N[state.lang][key]) || I18N.en[k
 /* ---------- state ---------- */
 let uid = null, myProfile = null;
 let state = { view:'home', mentorId:null, coachMode:'resume', chatMsgs:[], sending:false, ratingDraft:5,
-  matchQuery:'', matchResults:null, matching:false, interviewRole:'', interviewStarted:false, bookingOpen:false,
+  matchQuery:'', matchResults:null, matching:false, interviewRole:'', interviewStarted:false, bookingOpen:false, selectedSlot:null,
   lang:'en', query:'', role:null, voiceMode:false, listening:false, outOfCredits:false };
 let cache = { profiles:{}, reviews:{}, requests:[], names:{} };
 
@@ -362,6 +372,42 @@ function nameOf(id){
 function initials(name){ return (name||'?').split(' ').filter(Boolean).slice(0,2).map(w=>w[0].toUpperCase()).join(''); }
 function starsStr(n){ n=Math.round(n||0); return '★'.repeat(n)+'☆'.repeat(5-n); }
 function avgRating(mentorId){ const rs=(cache.reviews[mentorId]||[]); if(!rs.length) return null; return rs.reduce((a,r)=>a+r.rating,0)/rs.length; }
+
+// --- Availability / slot picking ---
+const AVAIL_DAYS = ['Sat','Sun','Mon','Tue','Wed','Thu','Fri']; // JS getDay(): 0=Sun..6=Sat, reordered for display
+const AVAIL_DAY_KEYS = {Sat:'day_sat',Sun:'day_sun',Mon:'day_mon',Tue:'day_tue',Wed:'day_wed',Thu:'day_thu',Fri:'day_fri'};
+const AVAIL_BLOCKS = [['morning','09:00','slot_morning'], ['afternoon','13:00','slot_afternoon'], ['evening','17:00','slot_evening']];
+const JSDAY_TO_NAME = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']; // matches Date#getDay()
+
+// Given a mentor's weekly template (array like ["Mon-morning","Wed-evening"]) and existing requests,
+// returns concrete upcoming slots for the next 14 days that are (a) in the template and (b) not already booked.
+function upcomingSlotsFor(mentorId, template){
+  const tmpl = new Set(template||[]);
+  if(!tmpl.size) return [];
+  const taken = new Set(
+    (cache.requests||[])
+      .filter(r=> r.mentorId===mentorId && (r.status==='pending' || r.status==='accepted'))
+      .map(r=> r.date+'|'+r.time)
+  );
+  const out = [];
+  const now = new Date();
+  for(let i=0;i<14;i++){
+    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate()+i);
+    const dayName = JSDAY_TO_NAME[d.getDay()];
+    for(const [blockKey, time, labelKey] of AVAIL_BLOCKS){
+      if(!tmpl.has(dayName+'-'+blockKey)) continue;
+      const dateStr = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+      if(taken.has(dateStr+'|'+time)) continue;
+      out.push({ date: dateStr, time, dayName, labelKey, dateObj: d });
+    }
+  }
+  return out;
+}
+function formatSlotLabel(slot){
+  const d = slot.dateObj;
+  const md = (d.getMonth()+1)+'/'+d.getDate();
+  return T(AVAIL_DAY_KEYS[slot.dayName]) + ' ' + md + ' · ' + T(slot.labelKey);
+}
 
 /* ---------- Supabase-backed database (shared, real multi-user) ---------- */
 const SUPABASE_URL = 'https://jgbjhzhbdsdhssyakpgq.supabase.co';
@@ -750,16 +796,22 @@ function mentorView(){
 
   ${!isSelf ? `
   <div style="margin-bottom:36px;">
-    ${!myProfile ? `<span class="muted" style="font-size:13px;">${esc(T('set_profile_first'))}</span>` : (state.bookingOpen ? `
+    ${!myProfile ? `<span class="muted" style="font-size:13px;">${esc(T('set_profile_first'))}</span>` : (state.bookingOpen ? (()=>{
+      const slots = upcomingSlotsFor(id, p.availability);
+      return `
     <div class="panel" style="max-width:480px;">
-      <div class="field"><label>${esc(T('lbl_date'))}</label><input type="date" id="book-date"></div>
-      <div class="field"><label>${esc(T('lbl_time'))}</label><input type="time" id="book-time"></div>
+      <label style="display:block;margin-bottom:8px;">${esc(T('choose_slot_title'))}</label>
+      ${slots.length ? `
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
+        ${slots.map(s=>`<button type="button" class="btn btn-sm ${state.selectedSlot && state.selectedSlot.date===s.date && state.selectedSlot.time===s.time ? 'btn-primary':'btn-outline'} slot-btn" data-date="${s.date}" data-time="${s.time}">${esc(formatSlotLabel(s))}</button>`).join('')}
+      </div>` : `<p class="muted" style="font-size:13.5px;margin-bottom:14px;">${esc(T('no_slots_available'))}</p>`}
       <div class="field"><label>${esc(T('lbl_message'))}</label><textarea id="book-message" placeholder="${esc(T('ph_message'))}"></textarea></div>
       <div style="display:flex;gap:10px;">
-        <button class="btn btn-primary btn-sm" id="book-submit">${esc(T('send_request'))}</button>
+        <button class="btn btn-primary btn-sm" id="book-submit" ${state.selectedSlot?'':'disabled'}>${esc(T('send_request'))}</button>
         <button class="btn btn-ghost btn-sm" id="book-cancel">${esc(T('cancel'))}</button>
       </div>
-    </div>` : `<button class="btn btn-primary" id="request-btn">${esc(T('request_mentorship'))}</button>`)}
+    </div>`;
+    })() : `<button class="btn btn-primary" id="request-btn">${esc(T('request_mentorship'))}</button>`)}
   </div>` : `<div class="banner">${esc(T('this_is_profile'))}</div>`}
 
   <div class="section-head"><h2>${esc(T('reviews_title'))}</h2></div>
@@ -795,7 +847,26 @@ function dashboardView(){
     <div class="field"><label>${esc(T('lbl_experience'))}</label><input id="edit-experience" type="number" min="0" value="${esc(myProfile.experience||'')}"></div>
     <div class="field"><label>${esc(T('lbl_languages'))}</label><input id="edit-languages" value="${esc((myProfile.languages||[]).join(', '))}"></div>
     <div class="field"><label>${esc(T('lbl_rate'))}</label><input id="edit-rate" value="${esc(myProfile.rate||'')}" placeholder="${esc(T('rate_hint'))}"></div>
-    <div class="field"><label>${esc(T('lbl_price_usd'))}</label><input id="edit-price-usd" type="number" min="0" step="0.01" value="${myProfile.priceUsd!=null?esc(String(myProfile.priceUsd)):''}" placeholder="${esc(T('price_usd_hint'))}"></div>` : ''}
+    <div class="field"><label>${esc(T('lbl_price_usd'))}</label><input id="edit-price-usd" type="number" min="0" step="0.01" value="${myProfile.priceUsd!=null?esc(String(myProfile.priceUsd)):''}" placeholder="${esc(T('price_usd_hint'))}"></div>
+    <div class="field">
+      <label>${esc(T('lbl_availability'))}</label>
+      <div class="muted" style="font-size:12.5px;margin-bottom:8px;">${esc(T('availability_hint'))}</div>
+      <div style="overflow-x:auto;">
+        <table style="border-collapse:collapse;width:100%;min-width:420px;">
+          <thead><tr><th></th>${AVAIL_BLOCKS.map(([,,lk])=>`<th style="font-size:12px;font-weight:600;padding:4px 8px;text-align:center;">${esc(T(lk))}</th>`).join('')}</tr></thead>
+          <tbody>
+            ${AVAIL_DAYS.map(day=>`<tr>
+              <td style="font-size:12.5px;padding:4px 8px;white-space:nowrap;">${esc(T(AVAIL_DAY_KEYS[day]))}</td>
+              ${AVAIL_BLOCKS.map(([blockKey])=>{
+                const key = day+'-'+blockKey;
+                const checked = (myProfile.availability||[]).includes(key);
+                return `<td style="text-align:center;padding:4px 8px;"><input type="checkbox" class="avail-check" data-slotkey="${key}" ${checked?'checked':''}></td>`;
+              }).join('')}
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>` : ''}
     <div class="field"><label>${esc(T('lbl_linkedin'))}</label><input id="edit-linkedin" type="url" value="${esc(myProfile.linkedin||'')}"></div>
     <button class="btn btn-outline btn-sm" id="save-profile">${esc(T('save_changes'))}</button>
   </div>
@@ -913,17 +984,24 @@ function wire(){
   }
 
   const reqBtn = document.getElementById('request-btn');
-  if(reqBtn) reqBtn.addEventListener('click', ()=>{ state.bookingOpen = true; render(); });
+  if(reqBtn) reqBtn.addEventListener('click', ()=>{ state.bookingOpen = true; state.selectedSlot = null; render(); });
 
   const bookCancel = document.getElementById('book-cancel');
-  if(bookCancel) bookCancel.addEventListener('click', ()=>{ state.bookingOpen = false; render(); });
+  if(bookCancel) bookCancel.addEventListener('click', ()=>{ state.bookingOpen = false; state.selectedSlot = null; render(); });
+
+  document.querySelectorAll('.slot-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      state.selectedSlot = { date: btn.getAttribute('data-date'), time: btn.getAttribute('data-time') };
+      render();
+    });
+  });
 
   const bookSubmit = document.getElementById('book-submit');
   if(bookSubmit) bookSubmit.addEventListener('click', async ()=>{
-    const date = document.getElementById('book-date').value;
-    const time = document.getElementById('book-time').value;
-    const message = document.getElementById('book-message').value;
-    if(!date || !time){ toast(T('toast_pick_datetime')); return; }
+    if(!state.selectedSlot){ toast(T('toast_pick_datetime')); return; }
+    const { date, time } = state.selectedSlot;
+    const messageEl = document.getElementById('book-message');
+    const message = messageEl ? messageEl.value : '';
     const reqId = 'req_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);
     const mentorProfile = cache.profiles[state.mentorId] || {};
     const amountCents = mentorProfile.priceUsd ? Math.round(Number(mentorProfile.priceUsd)*100) : 0;
@@ -931,6 +1009,7 @@ function wire(){
       await window.__db.doc('requests/'+reqId).set({ mentorId: state.mentorId, clientId: uid, message, date, time, status:'pending', createdAt: Date.now(), amountCents, paid:false, stripeSessionId:null });
       toast(T('toast_request_sent'));
       state.bookingOpen = false;
+      state.selectedSlot = null;
       loadRequests(); render();
     }catch(err){ toast(T('toast_request_fail')); }
   });
@@ -972,6 +1051,8 @@ function wire(){
     if(rateEl) patch.rate = rateEl.value;
     const priceEl = document.getElementById('edit-price-usd');
     if(priceEl) patch.priceUsd = priceEl.value==='' ? null : Math.max(0, Number(priceEl.value)||0);
+    const availChecks = document.querySelectorAll('.avail-check');
+    if(availChecks.length) patch.availability = Array.from(availChecks).filter(c=>c.checked).map(c=>c.getAttribute('data-slotkey'));
     try{ await window.__db.doc('profiles/'+uid).update(patch); toast(T('toast_saved')); }
     catch(err){ toast(T('toast_save_fail')); }
   });
