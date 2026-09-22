@@ -270,7 +270,12 @@ const I18N = {
     auth_toggle_to_login:'Already have an account? Log in',
     auth_check_email:'Almost done — check your email and click the confirmation link, then come back and log in.',
     auth_error_generic:'Something went wrong. Check your email/password and try again.',
-    nav_signout:'Sign out', signed_in_as:'Signed in as'
+    nav_signout:'Sign out', signed_in_as:'Signed in as',
+    btn_delete_profile:'Delete my profile', confirm_delete_profile:'Delete your profile permanently? This cannot be undone.',
+    toast_profile_deleted:'Profile deleted', toast_delete_fail:'Could not delete — try again',
+    admin_tools:'Admin tools', btn_delete_this_profile:'Delete this profile', confirm_delete_other:'Delete this profile permanently? This cannot be undone.',
+    btn_save_admin_edit:'Save changes (admin)',
+    toast_email_confirmed:'Email confirmed — welcome to Workar!'
   },
   fa: {
     tag:'راهنمای مسیر شغلی', nav_home:'خانه', nav_browse:'پیدا کردن منتور', nav_coach:'مربی هوش مصنوعی', nav_dash:'پروفایل من', nav_start:'شروع کن',
@@ -360,7 +365,12 @@ const I18N = {
     auth_toggle_to_login:'حساب داری؟ وارد شو',
     auth_check_email:'تقریباً تمومه — ایمیلت رو چک کن و روی لینک تأیید بزن، بعد برگرد و وارد شو.',
     auth_error_generic:'یه مشکلی پیش اومد. ایمیل/رمز رو چک کن و دوباره امتحان کن.',
-    nav_signout:'خروج', signed_in_as:'وارد شدی با'
+    nav_signout:'خروج', signed_in_as:'وارد شدی با',
+    btn_delete_profile:'حذف پروفایلم', confirm_delete_profile:'پروفایلت برای همیشه حذف بشه؟ این کار برگشت‌ناپذیره.',
+    toast_profile_deleted:'پروفایل حذف شد', toast_delete_fail:'حذف نشد — دوباره امتحان کن',
+    admin_tools:'ابزار ادمین', btn_delete_this_profile:'حذف این پروفایل', confirm_delete_other:'این پروفایل برای همیشه حذف بشه؟ این کار برگشت‌ناپذیره.',
+    btn_save_admin_edit:'ذخیره تغییرات (ادمین)',
+    toast_email_confirmed:'ایمیلت تأیید شد — به Workar خوش اومدی!'
   }
 };
 function T(key){ return (I18N[state.lang] && I18N[state.lang][key]) || I18N.en[key] || key; }
@@ -430,6 +440,9 @@ const SUPABASE_ANON_KEY = 'sb_publishable_QB6yw8JdxxI7ODorT3X3aw_rJa2UXbq';
 const sb = (window.supabase && SUPABASE_URL.startsWith('http'))
   ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
   : null;
+// Detect an email-confirmation / magic-link redirect (Supabase puts type=signup etc in the URL hash)
+// before the client consumes it, so we can show a clear success message instead of nothing.
+const __cameFromEmailLink = /type=(signup|magiclink|invite|email_change|recovery)/.test(location.hash);
 
 function withTimeout(promise, ms, label){
   return Promise.race([
@@ -445,6 +458,7 @@ function makeSupabaseDB(){
       return {
         async set(data){ const { error } = await sb.from(col).upsert(Object.assign({id}, data)); if(error) throw error; },
         async update(patch){ const { error } = await sb.from(col).update(patch).eq('id', id); if(error) throw error; },
+        async delete(){ const { error } = await sb.from(col).delete().eq('id', id); if(error) throw error; },
         onSnapshot(cb){
           let cancelled = false;
           async function fetchOnce(){
@@ -499,6 +513,11 @@ function onSignedIn(session){
     render();
   });
   render();
+
+  if(__cameFromEmailLink){
+    toast(T('toast_email_confirmed'), 4000);
+    history.replaceState({}, '', location.origin + location.pathname);
+  }
 
   const params = new URLSearchParams(location.search);
   if(params.get('paid')){
@@ -880,6 +899,18 @@ function mentorView(){
   <p style="max-width:60ch;color:var(--muted);margin-bottom:18px;">${esc(p.bio||'')}</p>
   <div style="margin-bottom:26px;">${(p.skills||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('')}</div>
 
+  ${(myProfile && myProfile.isAdmin && !isSelf) ? `
+  <div class="panel" style="max-width:480px;margin-bottom:26px;border-color:#b3412c;">
+    <label style="font-size:13px;font-weight:700;display:block;margin-bottom:10px;">${esc(T('admin_tools'))}</label>
+    <div class="field"><label>${esc(T('lbl_name'))}</label><input id="admin-edit-name" value="${esc(p.name||'')}"></div>
+    <div class="field"><label>${esc(T('lbl_headline'))}</label><input id="admin-edit-headline" value="${esc(p.headline||'')}"></div>
+    <div class="field"><label>${esc(T('lbl_bio_m'))}</label><textarea id="admin-edit-bio">${esc(p.bio||'')}</textarea></div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-outline btn-sm" id="admin-save-profile">${esc(T('btn_save_admin_edit'))}</button>
+      <button class="btn btn-ghost btn-sm" id="admin-delete-profile" style="color:#b3412c;">${esc(T('btn_delete_this_profile'))}</button>
+    </div>
+  </div>` : ''}
+
   ${!isSelf ? `
   <div style="margin-bottom:36px;">
     ${!myProfile ? `<span class="muted" style="font-size:13px;">${esc(T('set_profile_first'))}</span>` : (state.bookingOpen ? (()=>{
@@ -955,6 +986,7 @@ function dashboardView(){
     </div>` : ''}
     <div class="field"><label>${esc(T('lbl_linkedin'))}</label><input id="edit-linkedin" type="text" value="${esc(myProfile.linkedin||'')}"></div>
     <button class="btn btn-outline btn-sm" id="save-profile">${esc(T('save_changes'))}</button>
+    <button class="btn btn-ghost btn-sm" id="delete-my-profile" style="color:#b3412c;">${esc(T('btn_delete_profile'))}</button>
   </div>
 
   <div class="section-head"><h2>${isMentor?esc(T('requests_from_clients')):esc(T('your_requests'))}</h2></div>
@@ -1080,6 +1112,24 @@ function wire(){
   const reqBtn = document.getElementById('request-btn');
   if(reqBtn) reqBtn.addEventListener('click', ()=>{ state.bookingOpen = true; state.selectedSlot = null; render(); });
 
+  const adminSaveBtn = document.getElementById('admin-save-profile');
+  if(adminSaveBtn) adminSaveBtn.addEventListener('click', async ()=>{
+    const patch = {
+      name: document.getElementById('admin-edit-name').value,
+      headline: document.getElementById('admin-edit-headline').value,
+      bio: document.getElementById('admin-edit-bio').value,
+    };
+    try{ await window.__db.doc('profiles/'+state.mentorId).update(patch); toast(T('toast_saved')); }
+    catch(err){ console.error('admin edit failed:', err); toast(T('toast_save_fail')); }
+  });
+
+  const adminDeleteBtn = document.getElementById('admin-delete-profile');
+  if(adminDeleteBtn) adminDeleteBtn.addEventListener('click', async ()=>{
+    if(!confirm(T('confirm_delete_other'))) return;
+    try{ await window.__db.doc('profiles/'+state.mentorId).delete(); toast(T('toast_profile_deleted')); nav('browse'); }
+    catch(err){ console.error('admin delete failed:', err); toast(T('toast_delete_fail')); }
+  });
+
   const bookCancel = document.getElementById('book-cancel');
   if(bookCancel) bookCancel.addEventListener('click', ()=>{ state.bookingOpen = false; state.selectedSlot = null; render(); });
 
@@ -1151,6 +1201,19 @@ function wire(){
     catch(err){
       console.error('profile save failed:', err);
       toast(T('toast_save_fail'));
+    }
+  });
+
+  const deleteMyBtn = document.getElementById('delete-my-profile');
+  if(deleteMyBtn) deleteMyBtn.addEventListener('click', async ()=>{
+    if(!confirm(T('confirm_delete_profile'))) return;
+    try{
+      await window.__db.doc('profiles/'+uid).delete();
+      toast(T('toast_profile_deleted'));
+      state.view = 'home';
+    }catch(err){
+      console.error('profile delete failed:', err);
+      toast(T('toast_delete_fail'));
     }
   });
 
