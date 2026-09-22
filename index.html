@@ -275,7 +275,8 @@ const I18N = {
     toast_profile_deleted:'Profile deleted', toast_delete_fail:'Could not delete — try again',
     admin_tools:'Admin tools', btn_delete_this_profile:'Delete this profile', confirm_delete_other:'Delete this profile permanently? This cannot be undone.',
     btn_save_admin_edit:'Save changes (admin)',
-    toast_email_confirmed:'Email confirmed — welcome to Workar!'
+    toast_email_confirmed:'Email confirmed — welcome to Workar!',
+    nav_login:'Log in'
   },
   fa: {
     tag:'راهنمای مسیر شغلی', nav_home:'خانه', nav_browse:'پیدا کردن منتور', nav_coach:'مربی هوش مصنوعی', nav_dash:'پروفایل من', nav_start:'شروع کن',
@@ -370,7 +371,8 @@ const I18N = {
     toast_profile_deleted:'پروفایل حذف شد', toast_delete_fail:'حذف نشد — دوباره امتحان کن',
     admin_tools:'ابزار ادمین', btn_delete_this_profile:'حذف این پروفایل', confirm_delete_other:'این پروفایل برای همیشه حذف بشه؟ این کار برگشت‌ناپذیره.',
     btn_save_admin_edit:'ذخیره تغییرات (ادمین)',
-    toast_email_confirmed:'ایمیلت تأیید شد — به Workar خوش اومدی!'
+    toast_email_confirmed:'ایمیلت تأیید شد — به Workar خوش اومدی!',
+    nav_login:'ورود'
   }
 };
 function T(key){ return (I18N[state.lang] && I18N[state.lang][key]) || I18N.en[key] || key; }
@@ -503,15 +505,7 @@ function onSignedIn(session){
   userEmail = session.user.email || null;
   state.authBusy = false; state.authError = ''; state.authCheckEmail = false;
 
-  const db = makeSupabaseDB();
-  window.__db = db;
-
-  db.doc('profiles/'+uid).onSnapshot(doc=>{ myProfile = doc && doc.data ? doc.data : null; render(); });
-  db.collection('profiles').where('role','==','mentor').onSnapshot(list=>{
-    cache.profiles = {};
-    (list||[]).forEach(d=>{ cache.profiles[d.id] = d.data; });
-    render();
-  });
+  window.__db.doc('profiles/'+uid).onSnapshot(doc=>{ myProfile = doc && doc.data ? doc.data : null; render(); });
   render();
 
   if(__cameFromEmailLink){
@@ -536,6 +530,16 @@ async function init(){
     document.getElementById('app').innerHTML = `<div class="empty" style="margin-top:80px;">Workar isn't connected to a database yet.<br>Add your Supabase URL and key in the code to enable it.</div>`;
     return;
   }
+
+  // Public data — visible to everyone, signed in or not.
+  const db = makeSupabaseDB();
+  window.__db = db;
+  db.collection('profiles').where('role','==','mentor').onSnapshot(list=>{
+    cache.profiles = {};
+    (list||[]).forEach(d=>{ cache.profiles[d.id] = d.data; });
+    render();
+  });
+
   let session;
   try{
     const res = await withTimeout(sb.auth.getSession(), 8000, 'getSession');
@@ -547,13 +551,15 @@ async function init(){
   if(session){
     onSignedIn(session);
   } else {
-    render(); // shows the login/signup screen since uid is still null
+    render(); // home/browse are visible; only onboard/dashboard prompt for login
   }
   sb.auth.onAuthStateChange((event, session)=>{
     if(event==='SIGNED_OUT'){
-      uid = null; userEmail = null; myProfile = null; window.__db = null;
+      uid = null; userEmail = null; myProfile = null;
       state.view = 'home';
       render();
+    } else if(event==='SIGNED_IN' && session && !uid){
+      onSignedIn(session);
     }
   });
 }
@@ -620,14 +626,13 @@ function render(){
   applyDir();
   const app = document.getElementById('app');
   app.innerHTML = '';
-  if(!uid){
-    app.appendChild(el(authView()));
-    wireAuth();
-    return;
-  }
   app.appendChild(el(navHtml()));
   let body;
-  if(!myProfile && (state.view==='dashboard' || state.view==='onboard')){
+  const wantsAccount = (state.view==='dashboard' || state.view==='onboard');
+  const showAuthScreen = wantsAccount && !uid;
+  if(showAuthScreen){
+    body = authView();
+  } else if(!myProfile && wantsAccount){
     body = onboardView();
   } else {
     switch(state.view){
@@ -643,6 +648,7 @@ function render(){
   app.appendChild(el(body));
   app.appendChild(el(`<footer>Workar · ${esc(T('footer_tag'))}<br><a class="ig-link" href="${INSTAGRAM_URL}" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg> @workarmentoring</a></footer>`));
   wire();
+  if(showAuthScreen) wireAuth();
 }
 
 function navHtml(){
@@ -654,7 +660,7 @@ function navHtml(){
     <div class="brand" data-nav="home"><img class="logo-mark" src="${LOGO_DATA_URI}" alt="Workar"><span class="tag">${esc(T('tag'))}</span></div>
     <div class="navlinks">
       ${items.map(([v,l])=>`<div class="navlink ${state.view===v?'active':''}" data-nav="${v}">${esc(l)}</div>`).join('')}
-      <div class="navlink" id="signout-btn" title="${esc(T('signed_in_as'))} ${esc(userEmail||'')}">${esc(T('nav_signout'))}</div>
+      ${uid ? `<div class="navlink" id="signout-btn" title="${esc(T('signed_in_as'))} ${esc(userEmail||'')}">${esc(T('nav_signout'))}</div>` : `<div class="navlink" data-nav="dashboard">${esc(T('nav_login'))}</div>`}
       <div class="lang-switch" id="lang-toggle">${esc(T('lang_switch'))}</div>
     </div>
   </div>`;
