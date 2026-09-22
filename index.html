@@ -375,7 +375,7 @@ let cache = { profiles:{}, reviews:{}, requests:[], names:{} };
 
 function el(html){ const t=document.createElement('template'); t.innerHTML=html.trim(); return t.content; }
 function esc(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function toast(msg){ const d=document.createElement('div'); d.className='toast'; d.textContent=msg; document.body.appendChild(d); setTimeout(()=>d.remove(), 2600); }
+function toast(msg, ms){ const d=document.createElement('div'); d.className='toast'; d.textContent=msg; document.body.appendChild(d); setTimeout(()=>d.remove(), ms||2600); }
 function nav(view, params){ state.view=view; Object.assign(state, params||{}); render(); window.scrollTo(0,0); }
 
 async function resolveNames(ids){ /* names are resolved locally in nameOf() — nothing to fetch */ }
@@ -1062,7 +1062,10 @@ function wire(){
       await window.__db.doc('profiles/'+uid).set(doc);
       toast(T('toast_profile_created'));
       nav(state.role==='mentor' ? 'dashboard' : 'browse');
-    }catch(err){ toast(T('toast_save_fail')); }
+    }catch(err){
+      const detail = (err && (err.message || err.details || err.hint || err.code)) || 'unknown error';
+      toast(T('toast_save_fail') + ' — ' + detail, 8000);
+    }
   });
 
   const searchInput = document.getElementById('search-input');
@@ -1145,7 +1148,10 @@ function wire(){
     const availChecks = document.querySelectorAll('.avail-check');
     if(availChecks.length) patch.availability = Array.from(availChecks).filter(c=>c.checked).map(c=>c.getAttribute('data-slotkey'));
     try{ await window.__db.doc('profiles/'+uid).update(patch); toast(T('toast_saved')); }
-    catch(err){ toast(T('toast_save_fail')); }
+    catch(err){
+      const detail = (err && (err.message || err.details || err.hint || err.code)) || 'unknown error';
+      toast(T('toast_save_fail') + ' — ' + detail, 8000);
+    }
   });
 
   document.querySelectorAll('[data-req]').forEach(btn=>{
