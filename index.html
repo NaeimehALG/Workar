@@ -263,7 +263,14 @@ const I18N = {
     day_sat:'Sat', day_sun:'Sun', day_mon:'Mon', day_tue:'Tue', day_wed:'Wed', day_thu:'Thu', day_fri:'Fri',
     slot_morning:'Morning', slot_afternoon:'Afternoon', slot_evening:'Evening',
     choose_slot_title:'Pick a time', no_slots_available:'This mentor has no open times right now — check back later.',
-    slot_taken:'Booked'
+    slot_taken:'Booked',
+    auth_title:'Welcome to Workar', auth_subtitle:'Sign in or create an account to continue.',
+    lbl_email:'Email', lbl_password:'Password', ph_email:'you@example.com', ph_password:'At least 6 characters',
+    btn_login:'Log in', btn_signup:'Create account', auth_toggle_to_signup:"Don't have an account? Sign up",
+    auth_toggle_to_login:'Already have an account? Log in',
+    auth_check_email:'Almost done — check your email and click the confirmation link, then come back and log in.',
+    auth_error_generic:'Something went wrong. Check your email/password and try again.',
+    nav_signout:'Sign out', signed_in_as:'Signed in as'
   },
   fa: {
     tag:'راهنمای مسیر شغلی', nav_home:'خانه', nav_browse:'پیدا کردن منتور', nav_coach:'مربی هوش مصنوعی', nav_dash:'پروفایل من', nav_start:'شروع کن',
@@ -346,15 +353,23 @@ const I18N = {
     day_sat:'شنبه', day_sun:'یکشنبه', day_mon:'دوشنبه', day_tue:'سه‌شنبه', day_wed:'چهارشنبه', day_thu:'پنجشنبه', day_fri:'جمعه',
     slot_morning:'صبح', slot_afternoon:'ظهر', slot_evening:'عصر',
     choose_slot_title:'یه زمان انتخاب کن', no_slots_available:'این منتور الان زمان آزادی نداره — بعداً سر بزن.',
-    slot_taken:'رزرو شده'
+    slot_taken:'رزرو شده',
+    auth_title:'به Workar خوش اومدی', auth_subtitle:'برای ادامه وارد شو یا حساب بساز.',
+    lbl_email:'ایمیل', lbl_password:'رمز عبور', ph_email:'you@example.com', ph_password:'حداقل ۶ کاراکتر',
+    btn_login:'ورود', btn_signup:'ساخت حساب', auth_toggle_to_signup:'حساب نداری؟ بساز',
+    auth_toggle_to_login:'حساب داری؟ وارد شو',
+    auth_check_email:'تقریباً تمومه — ایمیلت رو چک کن و روی لینک تأیید بزن، بعد برگرد و وارد شو.',
+    auth_error_generic:'یه مشکلی پیش اومد. ایمیل/رمز رو چک کن و دوباره امتحان کن.',
+    nav_signout:'خروج', signed_in_as:'وارد شدی با'
   }
 };
 function T(key){ return (I18N[state.lang] && I18N[state.lang][key]) || I18N.en[key] || key; }
 
 /* ---------- state ---------- */
-let uid = null, myProfile = null;
+let uid = null, myProfile = null, userEmail = null;
 let state = { view:'home', mentorId:null, coachMode:'resume', chatMsgs:[], sending:false, ratingDraft:5,
   matchQuery:'', matchResults:null, matching:false, interviewRole:'', interviewStarted:false, bookingOpen:false, selectedSlot:null,
+  authMode:'login', authError:'', authCheckEmail:false, authBusy:false,
   lang:'en', query:'', role:null, voiceMode:false, listening:false, outOfCredits:false };
 let cache = { profiles:{}, reviews:{}, requests:[], names:{} };
 
@@ -423,17 +438,6 @@ function withTimeout(promise, ms, label){
   ]);
 }
 
-async function ensureAuth(){
-  if(!sb) throw new Error('supabase-not-configured');
-  let { data:{ session } } = await withTimeout(sb.auth.getSession(), 8000, 'getSession');
-  if(!session){
-    const { data, error } = await withTimeout(sb.auth.signInAnonymously(), 8000, 'signInAnonymously');
-    if(error) throw error;
-    session = data.session;
-  }
-  return session.user.id;
-}
-
 function makeSupabaseDB(){
   return {
     doc(path){
@@ -480,17 +484,11 @@ function makeSupabaseDB(){
   };
 }
 
-async function init(){
-  if(!sb){
-    document.getElementById('app').innerHTML = `<div class="empty" style="margin-top:80px;">Workar isn't connected to a database yet.<br>Add your Supabase URL and key in the code to enable it.</div>`;
-    return;
-  }
-  try{
-    uid = await ensureAuth();
-  }catch(e){
-    document.getElementById('app').innerHTML = `<div class="empty" style="margin-top:80px;">Could not sign in. Check that anonymous sign-ins are enabled in your Supabase project.<br><span style="font-size:12px;opacity:0.7;">${(e && (e.message || e.error_description || JSON.stringify(e))) || ''}</span></div>`;
-    return;
-  }
+function onSignedIn(session){
+  uid = session.user.id;
+  userEmail = session.user.email || null;
+  state.authBusy = false; state.authError = ''; state.authCheckEmail = false;
+
   const db = makeSupabaseDB();
   window.__db = db;
 
@@ -512,6 +510,33 @@ async function init(){
   } else if(params.get('payment')==='cancelled'){
     history.replaceState({}, '', location.origin + location.pathname);
   }
+}
+
+async function init(){
+  if(!sb){
+    document.getElementById('app').innerHTML = `<div class="empty" style="margin-top:80px;">Workar isn't connected to a database yet.<br>Add your Supabase URL and key in the code to enable it.</div>`;
+    return;
+  }
+  let session;
+  try{
+    const res = await withTimeout(sb.auth.getSession(), 8000, 'getSession');
+    session = res.data.session;
+  }catch(e){
+    document.getElementById('app').innerHTML = `<div class="empty" style="margin-top:80px;">Could not connect. <br><span style="font-size:12px;opacity:0.7;">${(e && (e.message || e.error_description || JSON.stringify(e))) || ''}</span></div>`;
+    return;
+  }
+  if(session){
+    onSignedIn(session);
+  } else {
+    render(); // shows the login/signup screen since uid is still null
+  }
+  sb.auth.onAuthStateChange((event, session)=>{
+    if(event==='SIGNED_OUT'){
+      uid = null; userEmail = null; myProfile = null; window.__db = null;
+      state.view = 'home';
+      render();
+    }
+  });
 }
 
 /* ---------- AI calls, proxied through /api/ai (key stays server-side on Vercel) ---------- */
@@ -576,6 +601,11 @@ function render(){
   applyDir();
   const app = document.getElementById('app');
   app.innerHTML = '';
+  if(!uid){
+    app.appendChild(el(authView()));
+    wireAuth();
+    return;
+  }
   app.appendChild(el(navHtml()));
   let body;
   if(!myProfile && (state.view==='dashboard' || state.view==='onboard')){
@@ -605,6 +635,7 @@ function navHtml(){
     <div class="brand" data-nav="home"><img class="logo-mark" src="${LOGO_DATA_URI}" alt="Workar"><span class="tag">${esc(T('tag'))}</span></div>
     <div class="navlinks">
       ${items.map(([v,l])=>`<div class="navlink ${state.view===v?'active':''}" data-nav="${v}">${esc(l)}</div>`).join('')}
+      <div class="navlink" id="signout-btn" title="${esc(T('signed_in_as'))} ${esc(userEmail||'')}">${esc(T('nav_signout'))}</div>
       <div class="lang-switch" id="lang-toggle">${esc(T('lang_switch'))}</div>
     </div>
   </div>`;
@@ -683,6 +714,61 @@ function homeView(){
   `;
 }
 
+function authView(){
+  return `
+  <div class="section-head"><h2>${esc(T('auth_title'))}</h2></div>
+  <div class="panel" style="max-width:420px;">
+    <p class="muted" style="margin-top:0;">${esc(T('auth_subtitle'))}</p>
+    ${state.authCheckEmail ? `<p style="margin-top:10px;">${esc(T('auth_check_email'))}</p>` : `
+    <form id="auth-form">
+      <div class="field"><label>${esc(T('lbl_email'))}</label><input name="email" type="email" required placeholder="${esc(T('ph_email'))}"></div>
+      <div class="field"><label>${esc(T('lbl_password'))}</label><input name="password" type="password" required minlength="6" placeholder="${esc(T('ph_password'))}"></div>
+      ${state.authError ? `<p style="color:#b3412c;font-size:13px;margin:4px 0 10px;">${esc(state.authError)}</p>` : ''}
+      <button class="btn btn-primary" type="submit" style="width:100%;" ${state.authBusy?'disabled':''}>${esc(state.authMode==='signup' ? T('btn_signup') : T('btn_login'))}</button>
+    </form>
+    <p style="margin-top:14px;"><a href="#" id="auth-toggle">${esc(state.authMode==='signup' ? T('auth_toggle_to_login') : T('auth_toggle_to_signup'))}</a></p>
+    `}
+  </div>`;
+}
+
+function wireAuth(){
+  const toggle = document.getElementById('auth-toggle');
+  if(toggle) toggle.addEventListener('click', (e)=>{
+    e.preventDefault();
+    state.authMode = state.authMode==='signup' ? 'login' : 'signup';
+    state.authError = ''; state.authCheckEmail = false;
+    render();
+  });
+  const form = document.getElementById('auth-form');
+  if(form) form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    if(state.authBusy) return;
+    const fd = new FormData(form);
+    const email = (fd.get('email')||'').trim();
+    const password = fd.get('password')||'';
+    state.authBusy = true; state.authError = ''; render();
+    try{
+      if(state.authMode==='signup'){
+        const { data, error } = await withTimeout(sb.auth.signUp({ email, password }), 8000, 'signUp');
+        if(error) throw error;
+        if(data.session){
+          onSignedIn(data.session);
+        } else {
+          state.authBusy = false; state.authCheckEmail = true; render();
+        }
+      } else {
+        const { data, error } = await withTimeout(sb.auth.signInWithPassword({ email, password }), 8000, 'signInWithPassword');
+        if(error) throw error;
+        onSignedIn(data.session);
+      }
+    }catch(err){
+      state.authBusy = false;
+      state.authError = (err && err.message) || T('auth_error_generic');
+      render();
+    }
+  });
+}
+
 function onboardView(){
   const preset = state.role;
   return `
@@ -702,13 +788,13 @@ function onboardView(){
         <div class="field"><label>${esc(T('lbl_skills'))}</label><input name="skills" placeholder="${esc(T('ph_skills'))}"></div>
         <div class="field"><label>${esc(T('lbl_experience'))}</label><input name="experience" type="number" min="0" placeholder="${esc(T('ph_experience'))}"></div>
         <div class="field"><label>${esc(T('lbl_languages'))}</label><input name="languages" placeholder="${esc(T('ph_languages'))}"></div>
-        <div class="field"><label>${esc(T('lbl_linkedin'))}</label><input name="linkedin" type="url" placeholder="${esc(T('ph_linkedin'))}"></div>
+        <div class="field"><label>${esc(T('lbl_linkedin'))}</label><input name="linkedin" type="text" placeholder="${esc(T('ph_linkedin'))}"></div>
         <div class="field"><label>${esc(T('lbl_rate'))} <span class="hint" style="display:inline;">${esc(T('rate_hint'))}</span></label><input name="rate" placeholder="${esc(T('ph_rate'))}"></div>
       ` : `
         <div class="field"><label>${esc(T('lbl_profession_c'))}</label><input name="profession" required placeholder="${esc(T('ph_profession_c'))}"></div>
         <div class="field"><label>${esc(T('lbl_goal_c'))}</label><textarea name="bio" placeholder="${esc(T('ph_goal_c'))}"></textarea></div>
         <div class="field"><label>${esc(T('lbl_help_c'))}</label><input name="skills" placeholder="${esc(T('ph_skills'))}"></div>
-        <div class="field"><label>${esc(T('lbl_linkedin_opt'))} <span class="hint" style="display:inline;">${esc(T('opt_label'))}</span></label><input name="linkedin" type="url" placeholder="${esc(T('ph_linkedin'))}"></div>
+        <div class="field"><label>${esc(T('lbl_linkedin_opt'))} <span class="hint" style="display:inline;">${esc(T('opt_label'))}</span></label><input name="linkedin" type="text" placeholder="${esc(T('ph_linkedin'))}"></div>
       `}
       <button class="btn btn-primary" type="submit" style="width:100%;">${esc(T('create_profile'))}</button>
     </form>` : `<p class="muted" style="margin-top:14px;">${esc(T('pick_to_continue'))}</p>`}
@@ -867,7 +953,7 @@ function dashboardView(){
         </table>
       </div>
     </div>` : ''}
-    <div class="field"><label>${esc(T('lbl_linkedin'))}</label><input id="edit-linkedin" type="url" value="${esc(myProfile.linkedin||'')}"></div>
+    <div class="field"><label>${esc(T('lbl_linkedin'))}</label><input id="edit-linkedin" type="text" value="${esc(myProfile.linkedin||'')}"></div>
     <button class="btn btn-outline btn-sm" id="save-profile">${esc(T('save_changes'))}</button>
   </div>
 
@@ -951,6 +1037,9 @@ function wire(){
   const langBtn = document.getElementById('lang-toggle');
   if(langBtn) langBtn.addEventListener('click', ()=>{ state.lang = state.lang==='en' ? 'fa' : 'en'; render(); });
 
+  const signoutBtn = document.getElementById('signout-btn');
+  if(signoutBtn) signoutBtn.addEventListener('click', async ()=>{ await sb.auth.signOut(); });
+
   document.querySelectorAll('.role-opt').forEach(node=>{
     node.addEventListener('click', ()=>{ state.role = node.getAttribute('data-role'); render(); });
   });
@@ -959,7 +1048,9 @@ function wire(){
   if(form) form.addEventListener('submit', async e=>{
     e.preventDefault();
     const fd = new FormData(form);
-    const doc = { role: state.role, name: fd.get('name')||'', profession: fd.get('profession')||'', bio: fd.get('bio')||'', linkedin: fd.get('linkedin')||'', aiCredits: 5 };
+    let linkedinVal = (fd.get('linkedin')||'').trim();
+    if(linkedinVal && !/^https?:\/\//i.test(linkedinVal)) linkedinVal = 'https://'+linkedinVal;
+    const doc = { role: state.role, name: fd.get('name')||'', profession: fd.get('profession')||'', bio: fd.get('bio')||'', linkedin: linkedinVal, aiCredits: 5 };
     doc.skills = (fd.get('skills')||'').split(',').map(s=>s.trim()).filter(Boolean);
     if(state.role==='mentor'){
       doc.headline = fd.get('headline')||'';
@@ -1037,7 +1128,7 @@ function wire(){
       name: document.getElementById('edit-name').value,
       profession: document.getElementById('edit-profession').value,
       bio: document.getElementById('edit-bio').value,
-      linkedin: document.getElementById('edit-linkedin').value,
+      linkedin: (()=>{ let v=(document.getElementById('edit-linkedin').value||'').trim(); if(v && !/^https?:\/\//i.test(v)) v='https://'+v; return v; })(),
     };
     const skillsEl = document.getElementById('edit-skills');
     if(skillsEl) patch.skills = skillsEl.value.split(',').map(s=>s.trim()).filter(Boolean);
