@@ -247,6 +247,10 @@ const I18N = {
     cta_browse:'Browse mentors', cta_become:'Become a mentor',
     stat_mentors:'mentors on Workar', stat_reviews:'reviews written', stat_realtime:'real conversations',
     no_mentors_yet:'No mentors yet', be_first:'Be the first to sign up',
+    from_price:'From ${p} / session', sec_links_only:'Links',
+    self_book_preview:"This is how clients book you. Session prices are set by Workar, so you don't need to add a rate.",
+    no_slots_pick_own:"This mentor hasn't set weekly hours yet — suggest a date and time and they'll confirm.",
+    choose_pkg_title:'Choose a package', multi_session_note:"You'll book your first session now — the remaining sessions are scheduled with your mentor afterwards.",
     why_e1_n:'Real', why_e1:"mentors who've done the job you want",
     why_e2_n:'Growing', why_e2:'new fields added every week',
     why_e3_n:'EN · فا', why_e3:'mentoring in your language',
@@ -401,6 +405,10 @@ const I18N = {
     cta_browse:'مشاهده منتورها', cta_become:'منتور شو',
     stat_mentors:'منتور در Workar', stat_reviews:'ریویو نوشته‌شده', stat_realtime:'گفتگوی واقعی',
     no_mentors_yet:'هنوز منتوری نیست', be_first:'اولین نفری باش که ثبت‌نام می‌کنه',
+    from_price:'از {p} دلار / جلسه', sec_links_only:'لینک‌ها',
+    self_book_preview:'مراجعه‌کننده‌ها این‌طوری با شما جلسه رزرو می‌کنن. قیمت جلسات رو Workar تعیین می‌کنه، پس لازم نیست نرخی وارد کنی.',
+    no_slots_pick_own:'این منتور هنوز ساعت‌های هفتگی‌اش رو تعیین نکرده — یک تاریخ و ساعت پیشنهاد بده تا تأیید کنه.',
+    choose_pkg_title:'یک پکیج انتخاب کن', multi_session_note:'اولین جلسه رو الان رزرو می‌کنی — بقیه‌ی جلسات بعداً با منتور هماهنگ می‌شن.',
     why_e1_n:'واقعی', why_e1:'منتورهایی که همون کاری رو که می‌خوای انجام دادن',
     why_e2_n:'در حال رشد', why_e2:'هر هفته رشته‌های جدید اضافه می‌شن',
     why_e3_n:'EN · فا', why_e3:'منتورینگ به زبان خودت',
@@ -880,6 +888,7 @@ const DEFAULT_PACKAGES = [
   { key:'interview', sessions:3, price:129, featured:true,  hidden:false },
   { key:'offer',     sessions:6, price:249, featured:false, hidden:false }
 ];
+function basePrice(){ const pk = getPackages()[0]; return pk ? Math.round(pk.price/pk.sessions) : 0; }
 function getPackages(){
   const saved = (siteSettings && Array.isArray(siteSettings.packages)) ? siteSettings.packages : [];
   const list = DEFAULT_PACKAGES.map(d=>Object.assign({}, d, saved.find(x=>x.key===d.key)||{}));
@@ -1298,9 +1307,8 @@ function onboardView(){
         <div class="form-section">${esc(T('sec_mentoring'))}</div>
         <div class="field"><label>${esc(T('lbl_skills'))}</label><input name="skills" placeholder="${esc(T('ph_skills'))}"></div>
         <div class="field"><label>${esc(T('lbl_formats_m'))}</label>${optPills('formats', FORMAT_KEYS, 'fmt_', ['video','voice'])}</div>
-        <div class="form-section">${esc(T('sec_links'))}</div>
+        <div class="form-section">${esc(T('sec_links_only'))}</div>
         <div class="field"><label>${esc(T('lbl_linkedin'))}</label><input name="linkedin" type="text" placeholder="${esc(T('ph_linkedin'))}"></div>
-        <div class="field"><label>${esc(T('lbl_rate'))} <span class="hint" style="display:inline;">${esc(T('rate_hint'))}</span></label><input name="rate" placeholder="${esc(T('ph_rate'))}"></div>
       ` : `
         <div class="field"><label>${esc(T('lbl_profession_c'))}</label><input name="profession" required placeholder="${esc(T('ph_profession_c'))}"></div>
         <div class="field"><label>${esc(T('lbl_stage_c'))}</label>${stageSelect('name="careerStage"', '')}</div>
@@ -1312,7 +1320,7 @@ function onboardView(){
         <div class="form-section">${esc(T('sec_background'))}</div>
         <div class="field"><label>${esc(T('lbl_education'))}</label><input name="education" placeholder="${esc(T('ph_education'))}"></div>
         <div class="field"><label>${esc(T('lbl_certifications'))} <span class="hint" style="display:inline;">${esc(T('opt_label'))}</span></label><input name="certifications" placeholder="${esc(T('ph_certifications'))}"></div>
-        <div class="form-section">${esc(T('sec_links'))}</div>
+        <div class="form-section">${esc(T('sec_links_only'))}</div>
         <div class="field"><label>${esc(T('lbl_linkedin_opt'))} <span class="hint" style="display:inline;">${esc(T('opt_label'))}</span></label><input name="linkedin" type="text" placeholder="${esc(T('ph_linkedin'))}"></div>
       `}
       <button class="btn btn-primary" type="submit" style="width:100%;">${esc(T('create_profile'))}</button>
@@ -1361,9 +1369,10 @@ function browseView(){
         <p class="bio">${esc(p.bio||'')}</p>
         <div>${(p.skills||[]).slice(0,3).map(s=>`<span class="chip">${esc(s)}</span>`).join('')}</div>
         <div class="card-foot">
-          <span class="stars">${avg ? starsStr(avg) : ''}</span>
-          <span class="muted">${p.rate ? esc(p.rate) : esc(T('free'))}</span>
+          <span class="stars">${avg ? starsStr(avg) : `<span class="muted">${esc(T('new_mentor'))}</span>`}</span>
+          <span class="muted">${esc(T('from_price').replace('{p}', basePrice()))}</span>
         </div>
+        ${id!==uid ? `<button class="btn btn-primary btn-sm card-book" data-book="${id}" style="width:100%;margin-top:12px;">${esc(T('book_session'))}</button>` : ''}
       </div>`;
     }).join('')}
   </div>` : `<div class="empty">${esc(T('no_match'))}</div>`}
@@ -1391,9 +1400,8 @@ function mentorView(){
       </div>
     </div>
     <div class="rate-badge">
-      <b>${avg ? avg.toFixed(1) : '—'}</b>
-      <div class="muted" style="font-size:12.5px;">${reviews.length}</div>
-      ${p.rate ? `<div style="font-size:13px;font-weight:700;margin-top:4px;">${esc(p.rate)}</div>` : `<div class="muted" style="font-size:12.5px;margin-top:4px;">${esc(T('free'))}</div>`}
+      ${avg ? `<b>${avg.toFixed(1)} <span class="stars" style="font-size:14px;">★</span></b><div class="muted" style="font-size:12.5px;">${reviews.length} ${esc(T('reviews_title').toLowerCase())}</div>` : `<div class="chip" style="margin:0;">${esc(T('new_mentor'))}</div>`}
+      <div style="font-size:14px;font-weight:700;margin-top:8px;">${esc(T('from_price').replace('{p}', basePrice()))}</div>
     </div>
   </div>
   <p style="max-width:60ch;color:var(--muted);margin-bottom:18px;">${esc(p.bio||'')}</p>
@@ -1414,6 +1422,12 @@ function mentorView(){
     </div>
   </div>` : ''}
 
+  ${isSelf ? `
+  <div style="margin-bottom:36px;">
+    <p class="call-note" style="margin-bottom:12px;">${esc(T('session_how'))}</p>
+    <button class="btn btn-primary" disabled style="opacity:.55;cursor:not-allowed;">${esc(T('book_session'))}</button>
+    <div class="call-note" style="margin-top:8px;">${esc(T('self_book_preview'))}</div>
+  </div>` : ''}
   ${!isSelf ? `
   <div style="margin-bottom:36px;">
     <p class="call-note" style="margin-bottom:12px;">${esc(T('session_how'))}</p>
@@ -1421,12 +1435,27 @@ function mentorView(){
       <div class="call-note" style="margin-top:8px;">${esc(T('book_signup_hint'))}</div>` : (state.bookingOpen ? (()=>{
       const slots = upcomingSlotsFor(id, p.availability);
       return `
-    <div class="panel" style="max-width:480px;">
+    <div class="panel" style="max-width:560px;">
+      <label style="display:block;margin-bottom:8px;">${esc(T('choose_pkg_title'))}</label>
+      <div style="display:grid;gap:8px;margin-bottom:18px;">
+        ${getPackages().filter(pk=>!pk.hidden).map(pk=>{
+          const sel = (state.selectedPkg||'single')===pk.key;
+          return `<label class="pkg-opt" style="display:flex;align-items:center;gap:10px;padding:10px 14px;border:1.5px solid ${sel?'var(--accent)':'var(--border)'};border-radius:var(--radius-sm);cursor:pointer;background:${sel?'var(--surface-2)':'var(--surface)'};">
+            <input type="radio" name="pkg" value="${pk.key}" ${sel?'checked':''} style="accent-color:var(--accent);width:auto;">
+            <span style="flex:1;"><b>${esc(T('pk_'+pk.key+'_name'))}</b><span class="muted" style="font-size:12.5px;display:block;">${pk.sessions} ${esc(T(pk.sessions===1?'pk_session':'pk_sessions'))} · 45 min${pk.save?` · ${esc(T('pk_save').replace('{n}',pk.save))}`:''}</span></span>
+            <b>$${pk.price}</b>
+          </label>`;}).join('')}
+      </div>
+      ${(()=>{ const pk = getPackages().find(x=>x.key===(state.selectedPkg||'single')); return pk && pk.sessions>1 ? `<p class="call-note" style="margin:-8px 0 14px;">${esc(T('multi_session_note'))}</p>` : ''; })()}
       <label style="display:block;margin-bottom:8px;">${esc(T('choose_slot_title'))}</label>
       ${slots.length ? `
       <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
         ${slots.map(s=>`<button type="button" class="btn btn-sm ${state.selectedSlot && state.selectedSlot.date===s.date && state.selectedSlot.time===s.time ? 'btn-primary':'btn-outline'} slot-btn" data-date="${s.date}" data-time="${s.time}">${esc(formatSlotLabel(s))}</button>`).join('')}
-      </div>` : `<p class="muted" style="font-size:13.5px;margin-bottom:14px;">${esc(T('no_slots_available'))}</p>`}
+      </div>` : `<p class="muted" style="font-size:13px;margin-bottom:10px;">${esc(T('no_slots_pick_own'))}</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px;">
+        <div class="field"><label>${esc(T('lbl_date'))}</label><input type="date" id="book-date" min="${new Date().toISOString().slice(0,10)}" value="${esc((state.selectedSlot&&state.selectedSlot.date)||'')}"></div>
+        <div class="field"><label>${esc(T('lbl_time'))}</label><input type="time" id="book-time" step="900" value="${esc((state.selectedSlot&&state.selectedSlot.time)||'')}"></div>
+      </div>`}
       <div class="field"><label>${esc(T('lbl_message'))}</label><textarea id="book-message" placeholder="${esc(T('ph_message'))}"></textarea></div>
       <div style="display:flex;gap:10px;">
         <button class="btn btn-primary btn-sm" id="book-submit" ${state.selectedSlot?'':'disabled'}>${esc(T('send_request'))}</button>
@@ -1475,8 +1504,6 @@ function dashboardView(){
     ${isMentor ? `
     <div class="field"><label>${esc(T('lbl_experience'))}</label><input id="edit-experience" type="number" min="0" value="${esc(myProfile.experience||'')}"></div>
     <div class="field"><label>${esc(T('lbl_languages'))}</label><input id="edit-languages" value="${esc((myProfile.languages||[]).join(', '))}"></div>
-    <div class="field"><label>${esc(T('lbl_rate'))}</label><input id="edit-rate" value="${esc(myProfile.rate||'')}" placeholder="${esc(T('rate_hint'))}"></div>
-    <div class="field"><label>${esc(T('lbl_price_usd'))}</label><input id="edit-price-usd" type="number" min="0" step="0.01" value="${myProfile.priceUsd!=null?esc(String(myProfile.priceUsd)):''}" placeholder="${esc(T('price_usd_hint'))}"></div>
     <div class="field">
       <label>${esc(T('lbl_availability'))}</label>
       <div class="muted" style="font-size:12.5px;margin-bottom:8px;">${esc(T('availability_hint'))}</div>
@@ -1506,6 +1533,7 @@ function dashboardView(){
     <div class="req-item">
       <div>
         <b>${esc(nameOf(isMentor ? r.clientId : r.mentorId))}</b>
+        ${r.packageKey ? `<div style="font-size:12.5px;font-weight:700;color:var(--accent);margin-top:2px;">${esc(T('pk_'+r.packageKey+'_name'))}${r.amountCents?` · $${(r.amountCents/100).toFixed(0)}`:''}</div>` : ''}
         ${r.date ? `<div class="muted" style="font-size:12.5px;margin-top:2px;">${esc(r.date)} · ${esc(r.time||'')}</div>` : ''}
         <div class="muted" style="font-size:13.5px;margin-top:2px;">${esc(r.message||'')}</div>
       </div>
@@ -1644,6 +1672,19 @@ function wire(){
 
   const reqBtn = document.getElementById('request-btn');
   if(reqBtn) reqBtn.addEventListener('click', ()=>{ state.bookingOpen = true; state.selectedSlot = null; render(); });
+  const bd = document.getElementById('book-date'), bt = document.getElementById('book-time');
+  const syncOwn = ()=>{
+    const d = bd && bd.value, t = bt && bt.value;
+    state.selectedSlot = (d && t) ? { date:d, time:t } : null;
+    const sb2 = document.getElementById('book-submit'); if(sb2) sb2.disabled = !state.selectedSlot;
+  };
+  if(bd) bd.addEventListener('change', syncOwn);
+  if(bt) bt.addEventListener('change', syncOwn);
+  document.querySelectorAll('input[name="pkg"]').forEach(r=>r.addEventListener('change', ()=>{ state.selectedPkg = r.value; render(); }));
+  document.querySelectorAll('.card-book').forEach(btn=>btn.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    nav('mentor', { mentorId: btn.getAttribute('data-book'), bookingOpen: !!myProfile, selectedSlot: null });
+  }));
 
   const adminSaveBtn = document.getElementById('admin-save-profile');
   if(adminSaveBtn) adminSaveBtn.addEventListener('click', async ()=>{
@@ -1680,10 +1721,10 @@ function wire(){
     const messageEl = document.getElementById('book-message');
     const message = messageEl ? messageEl.value : '';
     const reqId = 'req_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);
-    const mentorProfile = cache.profiles[state.mentorId] || {};
-    const amountCents = mentorProfile.priceUsd ? Math.round(Number(mentorProfile.priceUsd)*100) : 0;
+    const pk = getPackages().find(x=>x.key===(state.selectedPkg||'single')) || getPackages()[0];
+    const amountCents = Math.round(Number(pk.price)*100);
     try{
-      await window.__db.doc('requests/'+reqId).set({ mentorId: state.mentorId, clientId: uid, message, date, time, status:'pending', createdAt: Date.now(), amountCents, paid:false, stripeSessionId:null });
+      await window.__db.doc('requests/'+reqId).set({ mentorId: state.mentorId, clientId: uid, message, date, time, status:'pending', createdAt: Date.now(), amountCents, packageKey: pk.key, paid:false, stripeSessionId:null });
       toast(T('toast_request_sent'));
       state.bookingOpen = false;
       state.selectedSlot = null;
