@@ -280,7 +280,7 @@ const I18N = {
     auth_check_spam:"Don't see it within a few minutes? Check your spam or promotions folder.",
     auth_resend:'Resend confirmation email', auth_resent:'Sent — check your inbox',
     auth_already_registered:'This email already has an account — please log in.',
-    forgot_link:'Forgot password?', forgot_hint:"Enter your account email and we'll send you a link to reset your password.",
+    lbl_confirm_password_signup:'Confirm password', forgot_link:'Forgot password?', forgot_hint:"Enter your account email and we'll send you a link to reset your password.",
     btn_send_reset:'Send reset link', back_to_login:'Back to log in',
     reset_sent:'If an account exists for that email, a reset link is on its way. Check your inbox (and spam folder).',
     reset_title:'Set a new password', reset_subtitle:'Choose a new password for your Workar account.',
@@ -399,7 +399,7 @@ const I18N = {
     auth_check_spam:'اگه تا چند دقیقه نیومد، پوشه‌ی اسپم یا Promotions رو هم چک کن.',
     auth_resend:'ارسال دوباره‌ی ایمیل تأیید', auth_resent:'ارسال شد — ایمیلت رو چک کن',
     auth_already_registered:'با این ایمیل قبلاً حساب ساخته شده — لطفاً وارد شو.',
-    forgot_link:'رمز عبور را فراموش کرده‌اید؟', forgot_hint:'ایمیل حسابت رو وارد کن تا لینک تغییر رمز برات فرستاده بشه.',
+    lbl_confirm_password_signup:'تکرار رمز عبور', forgot_link:'رمز عبور را فراموش کرده‌اید؟', forgot_hint:'ایمیل حسابت رو وارد کن تا لینک تغییر رمز برات فرستاده بشه.',
     btn_send_reset:'ارسال لینک تغییر رمز', back_to_login:'بازگشت به ورود',
     reset_sent:'اگه حسابی با این ایمیل وجود داشته باشه، لینک تغییر رمز فرستاده شد. صندوق ورودی (و اسپم) رو چک کن.',
     reset_title:'تعیین رمز عبور جدید', reset_subtitle:'یه رمز جدید برای حساب Workar انتخاب کن.',
@@ -819,6 +819,7 @@ function authView(){
       <div class="field"><label>${esc(T('lbl_email'))}</label><input name="email" type="email" required placeholder="${esc(T('ph_email'))}" value="${esc(state.authEmail||'')}"></div>
       ${state.authMode==='forgot' ? `<p class="muted" style="font-size:13.5px;margin:-4px 0 12px;">${esc(T('forgot_hint'))}</p>` : `
       <div class="field"><label>${esc(T('lbl_password'))}</label><input name="password" type="password" required minlength="6" placeholder="${esc(T('ph_password'))}"></div>
+      ${state.authMode==='signup' ? `<div class="field"><label>${esc(T('lbl_confirm_password_signup'))}</label><input name="password2" type="password" required minlength="6"></div>` : ''}
       ${state.authMode==='login' ? `<div style="text-align:end;margin:-6px 0 12px;"><a href="#" id="auth-forgot" style="font-size:13px;color:var(--accent);">${esc(T('forgot_link'))}</a></div>` : ''}`}
       ${state.authError ? `<p style="color:#b3412c;font-size:13px;margin:4px 0 10px;">${esc(state.authError)}</p>` : ''}
       <button class="btn btn-primary" type="submit" style="width:100%;" ${state.authBusy?'disabled':''}>${esc(state.authMode==='signup' ? T('btn_signup') : state.authMode==='forgot' ? T('btn_send_reset') : T('btn_login'))}</button>
@@ -906,6 +907,11 @@ function wireAuth(){
         return;
       }
       if(state.authMode==='signup'){
+        if(password !== (fd.get('password2')||'')){
+          state.authBusy = false; state.authError = T('pw_mismatch'); render();
+          const em = document.querySelector('#auth-form input[name="email"]'); if(em) em.value = email;
+          return;
+        }
         const { data, error } = await withTimeout(sb.auth.signUp({ email, password, options:{ emailRedirectTo: window.location.origin } }), 8000, 'signUp');
         if(error) throw error;
         state.authEmail = email;
