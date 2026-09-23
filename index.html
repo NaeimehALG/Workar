@@ -383,6 +383,40 @@
   .gd-ito .out li{font-weight:700;}
   @media (max-width:680px){.gd-ito{grid-template-columns:1fr;}.gd-ito > div + div{border-inline-start:none;border-top:1px solid var(--border);}}
   .gd-nav{border-top:1px solid var(--border);padding-top:16px;margin-top:26px !important;}
+
+  .tx{max-width:860px;margin:0 auto;}
+  .tx-btn{border:none;background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:10px 20px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;transition:filter .15s,transform .15s;}
+  .tx-btn:hover{filter:brightness(1.08);transform:translateY(-1px);}
+  .tx-btn.ghost{background:none;color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--accent);}
+  .tx-btn.light{background:#fff;color:#6B4F3A;} .tx-btn.ghost.light{background:none;color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.7);}
+  .tx-pick{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;}
+  .tx-tag{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:999px;}
+  .tx-tag.free{background:var(--accent);color:var(--accent-ink);} .tx-tag.own{color:#4E8A5B;box-shadow:inset 0 0 0 1.5px #4E8A5B;}
+  .tx-meta{font-size:12.5px;color:var(--muted);}
+  .tx-free{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;padding:22px 24px;border-radius:18px;background:var(--surface-2);}
+  .tx-free h3{margin:8px 0 4px;font-size:20px;font-weight:800;}
+  .tx-free p{margin:0 0 6px;color:var(--muted);font-size:14.5px;}
+  .tx-list{display:grid;}
+  .tx-row{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 8px;border-bottom:1px solid var(--border);}
+  .tx-row:first-child{border-top:1px solid var(--border);}
+  .tx-row.draft{opacity:.6;}
+  .tx-row-l{display:flex;flex-direction:column;gap:3px;min-width:0;}
+  .tx-row-t{display:flex;align-items:center;gap:8px;} .tx-row-t b{font-size:16px;}
+  .tx-row-l > span:not(.tx-meta){font-size:14px;color:var(--text);opacity:.8;}
+  @media (max-width:600px){.tx-row{flex-direction:column;align-items:flex-start;}.tx-pick{justify-content:flex-start;}}
+  .tx-full{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;margin-top:32px;padding:30px 30px;border-radius:22px;color:#fff;background:linear-gradient(135deg,#5E4331 0%,#8B6A4C 60%,#B98D5E 100%);box-shadow:0 20px 44px -24px rgba(94,67,49,.7);}
+  .tx-kicker{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;opacity:.75;}
+  .tx-full h3{margin:6px 0 6px;font-size:24px;font-weight:800;}
+  .tx-full p{margin:0 0 18px;opacity:.85;font-size:14.5px;max-width:48ch;line-height:1.55;}
+  .tx-full-stats{display:flex;gap:28px;}
+  .tx-full-stats b{display:block;font-size:24px;font-weight:800;line-height:1.1;} .tx-full-stats span{font-size:12px;opacity:.75;}
+  .tx-full-r{display:flex;flex-direction:column;align-items:flex-end;gap:10px;}
+  .tx-full-r .tx-tag.own{color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.7);}
+  .tx-bundle{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;margin-top:18px;padding:18px 22px;border-radius:16px;border:1.5px dashed var(--accent-2);}
+  .tx-bundle > div:first-child{display:flex;flex-direction:column;gap:3px;max-width:52ch;}
+  .tx-bundle > div:first-child b{font-size:16px;} .tx-bundle > div:first-child span{font-size:13.5px;color:var(--muted);}
+  .tx-bundle-r{display:flex;align-items:center;gap:12px;}
+  .tx-bundle-r s{color:var(--muted);font-size:13px;} .tx-bundle-r b{font-size:22px;font-weight:800;}
   /* ---------- PMP study guide ---------- */
   .pp-path{display:flex;align-items:stretch;gap:10px;margin:0 0 30px;flex-wrap:wrap;}
   .pp-path-step{flex:1 1 200px;position:relative;display:grid;grid-template-columns:auto 1fr;column-gap:10px;align-items:center;text-decoration:none;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px 16px;transition:border-color .15s,transform .15s;}
@@ -637,7 +671,7 @@ const I18N = {
     adm_save:'Save & publish', adm_reset:'Reset everything to default', adm_reset_confirm:'Reset all prices and text back to the original defaults?',
     adm_saved:'Saved — the site is updated', adm_save_fail:'Could not save — check that the site_settings SQL has been run',
     rv_empty_t:'No results yet', rv_login_t:'Track your progress', rv_taken:'Mocks taken', rv_avg:'Average score', rv_best:'Best score', rv_answered:'Questions answered', rv_trend:'Score trend', rv_trend_d:'Your last attempts, oldest to newest', rv_goal:'Target', rv_domains:'Strength by domain', rv_domains_d:'All attempts combined', rv_rec_k:'Recommended next', rv_rec_t:'Strengthen {d}', rv_rec_d:'This is your weakest domain so far. Review these modules, then retake a mock and watch your score move.',
-    guide_inputs:'Key inputs', guide_tools:'Tools & techniques', guide_outputs:'Key outputs', prep_title_short:'PMP Prep', prep_tagline:'Learn the essentials, practise with mock exams, and track your progress.', guide_scn:'Exam scenario — try it', guide_part:'Part', guide_part1:'Foundations', guide_part2:'Planning the work', guide_part3:'Delivering with people & control', guide_part4:'Agile & exam-ready', guide_left:'left', guide_begin:'Start here', guide_continue:'Continue where you left off', guide_begin_btn:'Begin', guide_continue_btn:'Continue', guide_all_done:'You have completed every module. Time to test yourself.', guide_start_btn:'Start', guide_review_btn:'Review',
+    prep_full_k:'The complete exam-day experience', guide_inputs:'Key inputs', guide_tools:'Tools & techniques', guide_outputs:'Key outputs', prep_title_short:'PMP Prep', prep_tagline:'Learn the essentials, practise with mock exams, and track your progress.', guide_scn:'Exam scenario — try it', guide_part:'Part', guide_part1:'Foundations', guide_part2:'Planning the work', guide_part3:'Delivering with people & control', guide_part4:'Agile & exam-ready', guide_left:'left', guide_begin:'Start here', guide_continue:'Continue where you left off', guide_begin_btn:'Begin', guide_continue_btn:'Continue', guide_all_done:'You have completed every module. Time to test yourself.', guide_start_btn:'Start', guide_review_btn:'Review',
     guide_modules:'study modules', guide_kicker:'Free study guide', guide_title:'Learn the essentials', guide_sub:'{n} bite-sized modules covering every exam area — written in plain English, with tips on how PMI thinks.',
     guide_complete:'complete', guide_slides:'slides', guide_tip:'Exam tip:', guide_all:'All modules', guide_module:'Module', guide_slide_of:'slide {i} of {n}',
     guide_done_t:'Module complete: {m}', guide_next_mod:'Next module', guide_test_now:'Test yourself — free diagnostic', guide_keys:'Tip: use ← → to move between slides',
@@ -840,7 +874,7 @@ const I18N = {
     adm_save:'ذخیره و انتشار', adm_reset:'برگرداندن همه‌چیز به حالت اولیه', adm_reset_confirm:'همه‌ی قیمت‌ها و متن‌ها به حالت اولیه برگردن؟',
     adm_saved:'ذخیره شد — سایت به‌روز شد', adm_save_fail:'ذخیره نشد — مطمئن شو SQL مربوط به site_settings اجرا شده',
     rv_empty_t:'هنوز نتیجه‌ای نداری', rv_login_t:'پیشرفتت رو دنبال کن', rv_taken:'آزمون داده‌شده', rv_avg:'میانگین نمره', rv_best:'بهترین نمره', rv_answered:'سؤال پاسخ‌داده', rv_trend:'روند نمره', rv_trend_d:'آزمون‌های اخیر، از قدیمی به جدید', rv_goal:'هدف', rv_domains:'قدرت در هر حوزه', rv_domains_d:'همه‌ی آزمون‌ها با هم', rv_rec_k:'پیشنهاد بعدی', rv_rec_t:'تقویت حوزه‌ی {d}', rv_rec_d:'این ضعیف‌ترین حوزه‌ی تو تا الانه. این ماژول‌ها رو مرور کن، بعد دوباره آزمون بده و ببین نمره‌ات چطور بالا می‌ره.',
-    guide_inputs:'ورودی‌های اصلی', guide_tools:'ابزارها و تکنیک‌ها', guide_outputs:'خروجی‌های اصلی', prep_title_short:'آمادگی PMP', prep_tagline:'مفاهیم اصلی رو یاد بگیر، با آزمون‌های آزمایشی تمرین کن و پیشرفتت رو ببین.', guide_scn:'سناریوی آزمون — امتحانش کن', guide_part:'بخش', guide_part1:'مبانی', guide_part2:'برنامه‌ریزی کار', guide_part3:'اجرا با تیم و کنترل', guide_part4:'اجایل و آمادگی آزمون', guide_left:'باقی‌مانده', guide_begin:'از اینجا شروع کن', guide_continue:'از همون جایی که موندی ادامه بده', guide_begin_btn:'شروع', guide_continue_btn:'ادامه', guide_all_done:'همه‌ی ماژول‌ها رو تموم کردی. وقت آزمونه.', guide_start_btn:'شروع', guide_review_btn:'مرور',
+    prep_full_k:'تجربه‌ی کامل روز آزمون', guide_inputs:'ورودی‌های اصلی', guide_tools:'ابزارها و تکنیک‌ها', guide_outputs:'خروجی‌های اصلی', prep_title_short:'آمادگی PMP', prep_tagline:'مفاهیم اصلی رو یاد بگیر، با آزمون‌های آزمایشی تمرین کن و پیشرفتت رو ببین.', guide_scn:'سناریوی آزمون — امتحانش کن', guide_part:'بخش', guide_part1:'مبانی', guide_part2:'برنامه‌ریزی کار', guide_part3:'اجرا با تیم و کنترل', guide_part4:'اجایل و آمادگی آزمون', guide_left:'باقی‌مانده', guide_begin:'از اینجا شروع کن', guide_continue:'از همون جایی که موندی ادامه بده', guide_begin_btn:'شروع', guide_continue_btn:'ادامه', guide_all_done:'همه‌ی ماژول‌ها رو تموم کردی. وقت آزمونه.', guide_start_btn:'شروع', guide_review_btn:'مرور',
     guide_modules:'ماژول آموزشی', guide_kicker:'راهنمای مطالعه‌ی رایگان', guide_title:'مفاهیم اصلی رو یاد بگیر', guide_sub:'{n} ماژول کوتاه که همه‌ی حوزه‌های آزمون رو پوشش می‌ده — با نکته‌هایی درباره‌ی طرز فکر PMI.',
     guide_complete:'تکمیل‌شده', guide_slides:'اسلاید', guide_tip:'نکته‌ی آزمون:', guide_all:'همه‌ی ماژول‌ها', guide_module:'ماژول', guide_slide_of:'اسلاید {i} از {n}',
     guide_done_t:'ماژول تموم شد: {m}', guide_next_mod:'ماژول بعدی', guide_test_now:'خودت رو بسنج — آزمون تشخیصی رایگان', guide_keys:'نکته: با ← → بین اسلایدها جابه‌جا شو',
@@ -1794,42 +1828,45 @@ function prepHomeView(){
 
   const learnTab = prepGuideHome();
 
+  const action = (ex, big)=>{
+    const access = prepHasAccess(ex), best = prepBest(ex.id);
+    if(!access) return `<button class="tx-btn ${big?'light':''}" data-buy="${ex.id}">${esc(T('prep_unlock'))} · ${prepMoney(ex.priceUsd)}</button>`;
+    if(prep.pickExam===ex.id) return `<div class="tx-pick">
+        <button class="tx-btn ${big?'light':''}" data-start="${ex.id}" data-mode="practice" title="${esc(T('prep_mode_practice_d'))}">${esc(T('prep_mode_practice'))}</button>
+        <button class="tx-btn ghost ${big?'light':''}" data-start="${ex.id}" data-mode="exam" title="${esc(T('prep_mode_exam_d'))}">${esc(T('prep_mode_exam'))}</button></div>`;
+    return `<button class="tx-btn ${big?'light':''}" data-pick="${ex.id}">${esc(T(best!=null?'prep_retake':'prep_start'))}</button>`;
+  };
+  const tag = ex => ex.isFree ? `<span class="tx-tag free">${esc(T('prep_free'))}</span>` : prepHasAccess(ex) ? `<span class="tx-tag own">${esc(T('prep_unlocked'))}</span>` : '';
+  const best = ex => { const b = prepBest(ex.id); return b!=null ? ` · ${esc(T('prep_best'))} ${b}%` : ''; };
+  const pub = exams.filter(e=>e.published || isAdmin());
+  const free = pub.filter(e=>e.isFree);
+  const full = pub.filter(e=>!e.isFree && (e.questionCount||0) >= 100);
+  const mocks = pub.filter(e=>!e.isFree && !full.includes(e));
   const testTab = `
-    <div class="pp-grid">
-    ${exams.map(ex=>{
-      const access = prepHasAccess(ex), best = prepBest(ex.id);
-      const badge = ex.isFree ? `<span class="pp-badge free">${esc(T('prep_free'))}</span>` : access ? `<span class="pp-badge owned">✓ ${esc(T('prep_unlocked'))}</span>` : `<span class="pp-badge paid">${prepMoney(ex.priceUsd)}</span>`;
-      const picking = prep.pickExam===ex.id;
-      return `<div class="pp-card ${ex.isFree?'is-free':''} ${!ex.published?'is-draft':''}">
-        <div class="pp-card-top">${badge}${!ex.published?`<span class="pp-badge draft">${esc(T('prep_draft'))}</span>`:''}${best!=null?`<span class="pp-best">${esc(T('prep_best'))} ${best}%</span>`:''}</div>
-        <h3>${esc(ex.title)}</h3>
-        <p class="pp-card-sub">${esc(ex.subtitle||'')}</p>
-        <div class="pp-meta"><span>${ex.questionCount||0} ${esc(T('prep_questions'))}</span><span>${ex.timeMinutes||0} ${esc(T('prep_min'))}</span></div>
-        ${access ? (picking ? `
-          <div class="pp-pick">
-            <button class="btn btn-primary btn-sm" data-start="${ex.id}" data-mode="practice">${esc(T('prep_mode_practice'))}</button>
-            <div class="pp-pick-note">${esc(T('prep_mode_practice_d'))}</div>
-            <button class="btn btn-outline btn-sm" data-start="${ex.id}" data-mode="exam">${esc(T('prep_mode_exam'))}</button>
-            <div class="pp-pick-note">${esc(T('prep_mode_exam_d'))}</div>
-          </div>` : `<button class="btn ${ex.isFree?'btn-primary':'btn-outline'} pp-cta" data-pick="${ex.id}">${esc(T(best!=null?'prep_retake':'prep_start'))}</button>`)
-        : `<button class="btn btn-primary pp-cta" data-buy="${ex.id}">${esc(T('prep_unlock'))} · ${prepMoney(ex.priceUsd)}</button>`}
-      </div>`;
-    }).join('')}
-    </div>
-    ${paid.length>1 && !ownsAll ? `<div class="pp-bundle">
-      <div>
-        <span class="pp-kicker">${esc(T('prep_bundle_k'))}</span>
-        <h3>${esc(T('prep_bundle_t'))}</h3>
-        <p class="muted">${esc(T('prep_bundle_d').replace('{n}', paid.length))}</p>
-      </div>
-      <div class="pp-bundle-buy">
-        ${saveBundle ? `<div class="pp-strike">${prepMoney(paidSum.toFixed(2))}</div>` : ''}
-        <div class="pp-bundle-price">${prepMoney(bundle)}</div>
-        ${saveBundle ? `<div class="pp-save">${esc(T('pk_save').replace('{n}', saveBundle))}</div>` : ''}
-        <button class="btn btn-primary" data-buy="all">${esc(T('prep_bundle_btn'))}</button>
-      </div>
+  <div class="tx">
+    ${free.map(ex=>`<div class="tx-free">
+      <div class="tx-free-l">${tag(ex)}<h3>${esc(ex.title)}</h3><p>${esc(ex.subtitle||'')}</p><span class="tx-meta">${ex.questionCount||0} ${esc(T('prep_questions'))} · ${ex.timeMinutes||0} ${esc(T('prep_min'))}${best(ex)}</span></div>
+      <div class="tx-free-r">${action(ex)}</div>
+    </div>`).join('')}
+
+    ${mocks.length ? `<h3 class="lx-part-h" style="margin-top:30px;">${esc(T('prep_mocks_title'))}</h3>
+    <div class="tx-list">${mocks.map(ex=>`<div class="tx-row ${!ex.published?'draft':''}">
+      <div class="tx-row-l"><div class="tx-row-t"><b>${esc(ex.title)}</b>${tag(ex)}</div><span>${esc(ex.subtitle||'')}</span><span class="tx-meta">${ex.questionCount||0} ${esc(T('prep_questions'))} · ${ex.timeMinutes||0} ${esc(T('prep_min'))}${best(ex)}</span></div>
+      <div class="tx-row-r">${action(ex)}</div>
+    </div>`).join('')}</div>` : ''}
+
+    ${full.map(ex=>`<div class="tx-full">
+      <div class="tx-full-l"><span class="tx-kicker">${esc(T('prep_full_k'))}</span><h3>${esc(ex.title)}</h3><p>${esc(ex.subtitle||'')}</p>
+        <div class="tx-full-stats"><div><b>${ex.questionCount||0}</b><span>${esc(T('prep_questions'))}</span></div><div><b>${ex.timeMinutes||0}</b><span>${esc(T('prep_min'))}</span></div><div><b>3</b><span>${esc(T('prep_stat_domains'))}</span></div></div></div>
+      <div class="tx-full-r">${tag(ex)}${action(ex, true)}</div>
+    </div>`).join('')}
+
+    ${paid.length>1 && !ownsAll ? `<div class="tx-bundle">
+      <div><b>${esc(T('prep_bundle_t'))}</b><span>${esc(T('prep_bundle_d').replace('{n}', paid.length))}</span></div>
+      <div class="tx-bundle-r">${saveBundle ? `<s>${prepMoney(paidSum.toFixed(2))}</s>` : ''}<b>${prepMoney(bundle)}</b><button class="tx-btn" data-buy="all">${esc(T('prep_bundle_btn'))}</button></div>
     </div>` : ''}
-    ${isAdmin() ? `<div style="text-align:center;margin-top:18px;"><button class="btn btn-ghost btn-sm" data-nav="prepAdmin">${esc(T('prep_manage'))}</button></div>` : ''}`;
+    ${isAdmin() ? `<div style="text-align:center;margin-top:20px;"><button class="btn btn-ghost btn-sm" data-nav="prepAdmin">${esc(T('prep_manage'))}</button></div>` : ''}
+  </div>`;
 
   const reviewTab = prepReviewDashboard();
 
