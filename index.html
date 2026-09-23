@@ -213,6 +213,41 @@
   .pp-tabpanel{animation:ppIn .2s ease;min-height:240px;}
   .pp-modes-line{display:flex;gap:10px 22px;flex-wrap:wrap;font-size:13.5px;color:var(--muted);margin:-4px 0 16px;}
   .pp-modes-line b{color:var(--text);}
+
+  .gl-wrap{display:grid;grid-template-columns:300px 1fr;gap:26px;align-items:start;}
+  @media (max-width:860px){.gl-wrap{grid-template-columns:1fr;}}
+  .gl-side{position:sticky;top:90px;background:linear-gradient(160deg,#6B4F3A 0%,#8B6A4C 55%,#B98D5E 100%);color:#fff;border-radius:22px;padding:26px 24px;box-shadow:0 18px 40px -18px rgba(107,79,58,.55);}
+  @media (max-width:860px){.gl-side{position:static;}}
+  .gl-ring{position:relative;width:118px;height:118px;margin-bottom:14px;}
+  .gl-ring circle:last-child{transition:stroke-dashoffset .8s ease;}
+  .gl-ring-t{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .gl-ring-t b{font-size:26px;font-weight:800;line-height:1;}
+  .gl-ring-t span{font-size:11px;opacity:.8;margin-top:3px;}
+  .gl-side-stats{font-size:13px;opacity:.85;margin-bottom:22px;}
+  .gl-next-label{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;opacity:.75;margin-bottom:6px;}
+  .gl-next-title{font-size:19px;font-weight:800;line-height:1.3;margin-bottom:16px;}
+  .gl-next-btn{width:100%;border:none;border-radius:999px;padding:12px 18px;background:#fff;color:#6B4F3A;font-family:inherit;font-size:15px;font-weight:800;cursor:pointer;transition:transform .15s,box-shadow .15s;}
+  .gl-next-btn:hover{transform:translateY(-1px);box-shadow:0 8px 18px -8px rgba(0,0,0,.4);}
+  .gl-side-note{font-size:12.5px;line-height:1.55;opacity:.75;margin:18px 0 0;}
+  .gl-part{margin-bottom:22px;}
+  .gl-part-head{display:flex;align-items:baseline;gap:10px;padding:0 4px 8px;border-bottom:1px solid var(--border);margin-bottom:4px;}
+  .gl-part-k{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-2);}
+  .gl-part-head h3{margin:0;font-size:17px;font-weight:800;flex:1;}
+  .gl-part-c{font-size:12px;font-weight:700;color:var(--muted);}
+  .gl-row{display:flex;align-items:center;gap:14px;width:100%;text-align:start;background:none;border:none;border-radius:12px;padding:11px 10px;font-family:inherit;color:var(--text);cursor:pointer;transition:background .15s;}
+  .gl-row:hover{background:var(--surface-2);}
+  .gl-num{flex:0 0 38px;height:38px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--muted);font-variant-numeric:tabular-nums;transition:all .15s;}
+  .gl-row:hover .gl-num{border-color:var(--accent-2);color:var(--accent);}
+  .gl-row.done .gl-num{background:#4E8A5B;border-color:#4E8A5B;color:#fff;}
+  .gl-row.next .gl-num{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);box-shadow:0 0 0 5px var(--surface-2);}
+  .gl-t{flex:1;display:flex;flex-direction:column;min-width:0;}
+  .gl-t b{font-size:15px;font-weight:700;}
+  .gl-t small{font-size:12.5px;color:var(--muted);margin-top:1px;}
+  .gl-row.done .gl-t b{color:var(--muted);}
+  .gl-go{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:var(--accent);white-space:nowrap;}
+  .gl-arrow{opacity:0;transform:translateX(-4px);transition:all .15s;}
+  .gl-row:hover .gl-arrow, .gl-row.next .gl-arrow{opacity:1;transform:none;}
+  .gd-band-num{font-variant-numeric:tabular-nums;font-weight:800;opacity:.75;}
   /* ---------- PMP study guide ---------- */
   .pp-path{display:flex;align-items:stretch;gap:10px;margin:0 0 30px;flex-wrap:wrap;}
   .pp-path-step{flex:1 1 200px;position:relative;display:grid;grid-template-columns:auto 1fr;column-gap:10px;align-items:center;text-decoration:none;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px 16px;transition:border-color .15s,transform .15s;}
@@ -466,6 +501,7 @@ const I18N = {
     adm_g_hero:'Top of the home page', adm_g_why:'Why Workar', adm_g_steps:'How Workar works', adm_g_pk:'Packages', adm_g_footer:'Footer & tagline',
     adm_save:'Save & publish', adm_reset:'Reset everything to default', adm_reset_confirm:'Reset all prices and text back to the original defaults?',
     adm_saved:'Saved — the site is updated', adm_save_fail:'Could not save — check that the site_settings SQL has been run',
+    guide_part:'Part', guide_part1:'Foundations', guide_part2:'Planning the work', guide_part3:'Delivering with people & control', guide_part4:'Agile & exam-ready', guide_left:'left', guide_begin:'Start here', guide_continue:'Continue where you left off', guide_begin_btn:'Begin', guide_continue_btn:'Continue', guide_all_done:'You have completed every module. Time to test yourself.', guide_start_btn:'Start', guide_review_btn:'Review',
     guide_modules:'study modules', guide_kicker:'Free study guide', guide_title:'Learn the essentials', guide_sub:'{n} bite-sized modules covering every exam area — written in plain English, with tips on how PMI thinks.',
     guide_complete:'complete', guide_slides:'slides', guide_tip:'Exam tip:', guide_all:'All modules', guide_module:'Module', guide_slide_of:'slide {i} of {n}',
     guide_done_t:'Module complete: {m}', guide_next_mod:'Next module', guide_test_now:'Test yourself — free diagnostic', guide_keys:'Tip: use ← → to move between slides',
@@ -637,7 +673,7 @@ const I18N = {
     detail_education:'Education', detail_certs:'Certifications', detail_formats:'Session formats',
     book_session:'Book a session', book_signup_hint:'Create a free mentee account to pick a time — it only takes a minute.',
     session_how:'Sessions take place by video or voice call right here on Workar, once the mentor confirms your booking.',
-    btn_video_call:'🎥 Video call', btn_voice_call:'📞 Voice call',
+    btn_video_call:'Video call', btn_voice_call:'Voice call',
     call_after_accept:'Call options appear once the mentor accepts.', call_tip:'Opens in a new tab. The first person to join may be asked to sign in with Google or GitHub to start the room.',
     toast_email_confirmed:'Email confirmed — welcome to Workar!',
     nav_login:'Log in'
@@ -667,6 +703,7 @@ const I18N = {
     adm_g_hero:'بالای صفحه‌ی اصلی', adm_g_why:'چرا Workar', adm_g_steps:'Workar چطور کار می‌کنه', adm_g_pk:'پکیج‌ها', adm_g_footer:'فوتر و شعار',
     adm_save:'ذخیره و انتشار', adm_reset:'برگرداندن همه‌چیز به حالت اولیه', adm_reset_confirm:'همه‌ی قیمت‌ها و متن‌ها به حالت اولیه برگردن؟',
     adm_saved:'ذخیره شد — سایت به‌روز شد', adm_save_fail:'ذخیره نشد — مطمئن شو SQL مربوط به site_settings اجرا شده',
+    guide_part:'بخش', guide_part1:'مبانی', guide_part2:'برنامه‌ریزی کار', guide_part3:'اجرا با تیم و کنترل', guide_part4:'اجایل و آمادگی آزمون', guide_left:'باقی‌مانده', guide_begin:'از اینجا شروع کن', guide_continue:'از همون جایی که موندی ادامه بده', guide_begin_btn:'شروع', guide_continue_btn:'ادامه', guide_all_done:'همه‌ی ماژول‌ها رو تموم کردی. وقت آزمونه.', guide_start_btn:'شروع', guide_review_btn:'مرور',
     guide_modules:'ماژول آموزشی', guide_kicker:'راهنمای مطالعه‌ی رایگان', guide_title:'مفاهیم اصلی رو یاد بگیر', guide_sub:'{n} ماژول کوتاه که همه‌ی حوزه‌های آزمون رو پوشش می‌ده — با نکته‌هایی درباره‌ی طرز فکر PMI.',
     guide_complete:'تکمیل‌شده', guide_slides:'اسلاید', guide_tip:'نکته‌ی آزمون:', guide_all:'همه‌ی ماژول‌ها', guide_module:'ماژول', guide_slide_of:'اسلاید {i} از {n}',
     guide_done_t:'ماژول تموم شد: {m}', guide_next_mod:'ماژول بعدی', guide_test_now:'خودت رو بسنج — آزمون تشخیصی رایگان', guide_keys:'نکته: با ← → بین اسلایدها جابه‌جا شو',
@@ -838,7 +875,7 @@ const I18N = {
     detail_education:'تحصیلات', detail_certs:'گواهینامه‌ها', detail_formats:'نوع جلسات',
     book_session:'رزرو جلسه', book_signup_hint:'برای انتخاب زمان، یک حساب رایگان بسازید — فقط یک دقیقه طول می‌کشد.',
     session_how:'جلسات پس از تأیید منتور، به‌صورت تماس تصویری یا صوتی در همین سایت Workar برگزار می‌شوند.',
-    btn_video_call:'🎥 تماس تصویری', btn_voice_call:'📞 تماس صوتی',
+    btn_video_call:'تماس تصویری', btn_voice_call:'تماس صوتی',
     call_after_accept:'گزینه‌های تماس بعد از تأیید منتور نمایش داده می‌شود.', call_tip:'در تب جدید باز می‌شود. ممکن است از اولین نفری که وارد می‌شود خواسته شود با گوگل یا گیت‌هاب وارد شود تا اتاق شروع شود.',
     toast_email_confirmed:'ایمیلت تأیید شد — به Workar خوش اومدی!',
     nav_login:'ورود'
@@ -1165,7 +1202,7 @@ function navHtml(){
     <div class="brand" data-nav="home"><img class="logo-mark" src="${LOGO_DATA_URI}" alt="Workar"><span class="tag">${esc(T('tag'))}</span></div>
     <div class="navlinks">
       ${items.map(([v,l])=>`<div class="navlink ${state.view===v?'active':''}" data-nav="${v}">${esc(l)}</div>`).join('')}
-      ${isAdmin() ? `<div class="navlink ${state.view==='admin'?'active':''}" data-nav="admin">✏️ ${esc(T('adm_nav'))}</div>` : ''}
+      ${isAdmin() ? `<div class="navlink ${state.view==='admin'?'active':''}" data-nav="admin">${esc(T('adm_nav'))}</div>` : ''}
       ${uid ? `<div class="navlink" id="signout-btn" title="${esc(T('signed_in_as'))} ${esc(userEmail||'')}">${esc(T('nav_signout'))}</div>` : `<div class="navlink" data-nav="dashboard">${esc(T('nav_login'))}</div>`}
       <div class="lang-switch" id="lang-toggle">${esc(T('lang_switch'))}</div>
     </div>
@@ -1264,7 +1301,7 @@ function landingSections(){
     <div class="lp-bar"></div>
     <div class="price-row">${priceHtml}</div>
     <p class="price-foot">${esc(T('pk_foot'))}</p>
-    ${isAdmin() ? `<button class="btn btn-outline btn-sm" data-nav="admin" style="margin-top:12px;">✏️ ${esc(T('adm_edit_prices'))}</button>` : ''}
+    ${isAdmin() ? `<button class="btn btn-outline btn-sm" data-nav="admin" style="margin-top:12px;">${esc(T('adm_edit_prices'))}</button>` : ''}
   </section>`;
 }
 
@@ -1316,7 +1353,7 @@ function adminView(){
   const pks = getPackages();
   const cur = (lang,key)=>{ const ov=(siteSettings.text||{})[lang]||{}; return ov[key]!=null ? ov[key] : defaultT(lang,key); };
   return `
-  <div class="section-head"><h2>✏️ ${esc(T('adm_title'))}</h2></div>
+  <div class="section-head"><h2>${esc(T('adm_title'))}</h2></div>
   <p class="muted" style="margin-top:-8px;margin-bottom:22px;">${esc(T('adm_sub'))}</p>
 
   <div class="panel wide" style="margin-bottom:28px;">
@@ -1526,29 +1563,29 @@ function prepHomeView(){
   const recent = prep.attempts.slice(0,8);
   const done = prepGuideDone().filter(id=>PREP_GUIDE.some(m=>m.id===id)).length;
   if(!prep.tab) prep.tab = prep.attempts.length ? 'test' : 'learn';
-  const tabs = [['learn','📖','path_learn', `${done}/${PREP_GUIDE.length}`],['test','📝','path_test', `${exams.filter(e=>e.published).length}`],['review','📊','path_review', `${prep.attempts.length}`]];
+  const tabs = [['learn','','path_learn', `${done}/${PREP_GUIDE.length}`],['test','','path_test', `${exams.filter(e=>e.published).length}`],['review','','path_review', `${prep.attempts.length}`]];
 
   const learnTab = prepGuideHome();
 
   const testTab = `
     <div class="pp-modes-line">
-      <span>💡 <b>${esc(T('prep_mode_practice'))}</b> — ${esc(T('prep_mode_practice_d'))}</span>
-      <span>⏱️ <b>${esc(T('prep_mode_exam'))}</b> — ${esc(T('prep_mode_exam_d'))}</span>
+      <span><b>${esc(T('prep_mode_practice'))}</b> — ${esc(T('prep_mode_practice_d'))}</span>
+      <span><b>${esc(T('prep_mode_exam'))}</b> — ${esc(T('prep_mode_exam_d'))}</span>
     </div>
     <div class="pp-grid">
     ${exams.map(ex=>{
       const access = prepHasAccess(ex), best = prepBest(ex.id);
-      const badge = ex.isFree ? `<span class="pp-badge free">${esc(T('prep_free'))}</span>` : access ? `<span class="pp-badge owned">✓ ${esc(T('prep_unlocked'))}</span>` : `<span class="pp-badge paid">🔒 ${prepMoney(ex.priceUsd)}</span>`;
+      const badge = ex.isFree ? `<span class="pp-badge free">${esc(T('prep_free'))}</span>` : access ? `<span class="pp-badge owned">✓ ${esc(T('prep_unlocked'))}</span>` : `<span class="pp-badge paid">${prepMoney(ex.priceUsd)}</span>`;
       const picking = prep.pickExam===ex.id;
       return `<div class="pp-card ${ex.isFree?'is-free':''} ${!ex.published?'is-draft':''}">
         <div class="pp-card-top">${badge}${!ex.published?`<span class="pp-badge draft">${esc(T('prep_draft'))}</span>`:''}${best!=null?`<span class="pp-best">${esc(T('prep_best'))} ${best}%</span>`:''}</div>
         <h3>${esc(ex.title)}</h3>
         <p class="pp-card-sub">${esc(ex.subtitle||'')}</p>
-        <div class="pp-meta"><span>📝 ${ex.questionCount||0} ${esc(T('prep_questions'))}</span><span>⏱ ${ex.timeMinutes||0} ${esc(T('prep_min'))}</span></div>
+        <div class="pp-meta"><span>${ex.questionCount||0} ${esc(T('prep_questions'))}</span><span>${ex.timeMinutes||0} ${esc(T('prep_min'))}</span></div>
         ${access ? (picking ? `
           <div class="pp-pick">
-            <button class="btn btn-primary btn-sm" data-start="${ex.id}" data-mode="practice">💡 ${esc(T('prep_mode_practice'))}</button>
-            <button class="btn btn-outline btn-sm" data-start="${ex.id}" data-mode="exam">⏱️ ${esc(T('prep_mode_exam'))}</button>
+            <button class="btn btn-primary btn-sm" data-start="${ex.id}" data-mode="practice">${esc(T('prep_mode_practice'))}</button>
+            <button class="btn btn-outline btn-sm" data-start="${ex.id}" data-mode="exam">${esc(T('prep_mode_exam'))}</button>
           </div>` : `<button class="btn ${ex.isFree?'btn-primary':'btn-outline'} pp-cta" data-pick="${ex.id}">${esc(T(best!=null?'prep_retake':'prep_start'))}</button>`)
         : `<button class="btn btn-primary pp-cta" data-buy="${ex.id}">${esc(T('prep_unlock'))} · ${prepMoney(ex.priceUsd)}</button>`}
       </div>`;
@@ -1567,7 +1604,7 @@ function prepHomeView(){
         <button class="btn btn-primary" data-buy="all">${esc(T('prep_bundle_btn'))}</button>
       </div>
     </div>` : ''}
-    ${isAdmin() ? `<div style="text-align:center;margin-top:18px;"><button class="btn btn-ghost btn-sm" data-nav="prepAdmin">✏️ ${esc(T('prep_manage'))}</button></div>` : ''}`;
+    ${isAdmin() ? `<div style="text-align:center;margin-top:18px;"><button class="btn btn-ghost btn-sm" data-nav="prepAdmin">${esc(T('prep_manage'))}</button></div>` : ''}`;
 
   const reviewTab = recent.length ? `<div class="pp-history">${recent.map(a=>{ const ex = prep.exams.find(e=>e.id===a.examId); const pct = a.total?Math.round(100*a.score/a.total):0; const [cls,lbl]=prepBand(pct);
       return `<div class="pp-hrow"><span><b>${esc(ex?ex.title:a.examId)}</b> <span class="muted">· ${esc(T('prep_mode_'+(a.mode==='exam'?'exam':'practice')))} · ${new Date(a.createdAt).toLocaleDateString()}</span></span><span class="pp-band ${cls}">${pct}% · ${esc(lbl)}</span></div>`; }).join('')}</div>`
@@ -1595,7 +1632,7 @@ function prepHomeView(){
 
   <div class="pp-tabbar" role="tablist">
     ${tabs.map(([k,ic,lbl,cnt],i)=>`<button class="pp-tabbtn ${prep.tab===k?'on':''}" data-tab="${k}" role="tab">
-      <span class="pp-tabnum">${i+1}</span><span>${ic} ${esc(T(lbl))}</span><span class="pp-tabcnt">${cnt}</span></button>`).join('')}
+      <span class="pp-tabnum">${i+1}</span><span>${esc(T(lbl))}</span><span class="pp-tabcnt">${cnt}</span></button>`).join('')}
   </div>
 
   <div class="pp-tabpanel">
@@ -1685,7 +1722,7 @@ function prepResultsView(){
         <h2 style="margin:10px 0 4px;">${esc(s.title)}</h2>
         <p class="muted" style="margin:0 0 6px;">${r.score} / ${r.total} ${esc(T('prep_correct_n'))} · ${esc(T('prep_time_used'))} ${prepFmtTime(r.usedMs)}</p>
         <p style="margin:0;max-width:52ch;">${esc(T('band_msg_'+cls))}</p>
-        ${weakest && r.byDomain[weakest].c < r.byDomain[weakest].t ? `<p class="pp-tip">🎯 ${esc(T('prep_focus').replace('{d}', domLabel(weakest)))}</p>` : ''}
+        ${weakest && r.byDomain[weakest].c < r.byDomain[weakest].t ? `<p class="pp-tip">${esc(T('prep_focus').replace('{d}', domLabel(weakest)))}</p>` : ''}
       </div>
     </div>
 
@@ -1697,7 +1734,7 @@ function prepResultsView(){
     </div>
 
     <div class="pp-res-actions">
-      ${wrongIds.length ? `<button class="btn btn-primary" id="pp-retry-wrong">↻ ${esc(T('prep_retry_wrong').replace('{n}', wrongIds.length))}</button>` : ''}
+      ${wrongIds.length ? `<button class="btn btn-primary" id="pp-retry-wrong">${esc(T('prep_retry_wrong').replace('{n}', wrongIds.length))}</button>` : ''}
       <button class="btn btn-outline" id="pp-retake">${esc(T('prep_retake_full'))}</button>
       <button class="btn btn-ghost" id="pp-back">← ${esc(T('prep_back'))}</button>
     </div>
@@ -1827,7 +1864,7 @@ const PREP_CSV_HEAD = ['domain','question','option_a','option_b','option_c','opt
 function prepAdminView(){
   if(!prep.loaded){ loadPrep(); return `<div class="empty">${esc(T('loading'))}</div>`; }
   return `
-  <div class="section-head"><h2>✏️ ${esc(T('prep_manage'))}</h2><button class="btn btn-ghost btn-sm" data-nav="prep">← ${esc(T('prep_back'))}</button></div>
+  <div class="section-head"><h2>${esc(T('prep_manage'))}</h2><button class="btn btn-ghost btn-sm" data-nav="prep">← ${esc(T('prep_back'))}</button></div>
   <p class="muted" style="margin-top:-8px;">${esc(T('prep_admin_sub'))}</p>
 
   <div class="panel wide" style="margin-bottom:22px;">
@@ -1841,7 +1878,7 @@ function prepAdminView(){
   <div class="panel wide" style="margin-bottom:22px;">
     <h3 style="margin:0 0 6px;">${esc(T('prep_csv_title'))}</h3>
     <p class="muted" style="font-size:13px;margin:0 0 10px;">${esc(T('prep_csv_help'))}</p>
-    <button class="btn btn-outline btn-sm" id="pa-template">⬇ ${esc(T('prep_csv_template'))}</button>
+    <button class="btn btn-outline btn-sm" id="pa-template">${esc(T('prep_csv_template'))}</button>
   </div>
 
   ${prep.exams.map(ex=>`
@@ -1855,12 +1892,12 @@ function prepAdminView(){
     <div style="display:flex;gap:18px;flex-wrap:wrap;margin:12px 0;font-size:14px;">
       <label><input type="checkbox" data-f="isFree" ${ex.isFree?'checked':''}> ${esc(T('prep_free'))}</label>
       <label><input type="checkbox" data-f="published" ${ex.published?'checked':''}> ${esc(T('prep_f_published'))}</label>
-      <span class="muted">📝 ${ex.questionCount||0} ${esc(T('prep_questions'))}</span>
+      <span class="muted">${ex.questionCount||0} ${esc(T('prep_questions'))}</span>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
       <button class="btn btn-primary btn-sm" data-pa="save">${esc(T('save_changes'))}</button>
-      <button class="btn btn-outline btn-sm" data-pa="export">⬇ ${esc(T('prep_export'))}</button>
-      <label class="btn btn-outline btn-sm" style="cursor:pointer;">⬆ ${esc(T('prep_upload'))}<input type="file" accept=".csv,text/csv" data-pa="file" style="display:none;"></label>
+      <button class="btn btn-outline btn-sm" data-pa="export">${esc(T('prep_export'))}</button>
+      <label class="btn btn-outline btn-sm" style="cursor:pointer;">${esc(T('prep_upload'))}<input type="file" accept=".csv,text/csv" data-pa="file" style="display:none;"></label>
       <select data-pa="mode" style="padding:6px 8px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);">
         <option value="append">${esc(T('prep_append'))}</option><option value="replace">${esc(T('prep_replace'))}</option>
       </select>
@@ -1869,7 +1906,7 @@ function prepAdminView(){
   </div>`).join('')}
 
   <div class="panel wide">
-    <h3 style="margin:0 0 10px;">➕ ${esc(T('prep_new_exam'))}</h3>
+    <h3 style="margin:0 0 10px;">${esc(T('prep_new_exam'))}</h3>
     <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;">
       <div class="field" style="margin:0;"><label>${esc(T('prep_f_title'))}</label><input id="pa-new-title" placeholder="e.g. Agile Deep Dive"></div>
       <div class="field" style="margin:0;"><label>${esc(T('adm_col_price'))}</label><input id="pa-new-price" type="number" min="0" step="0.01" value="9.99"></div>
@@ -1944,7 +1981,7 @@ function wirePrepAdmin(){
 /* ======================= PMP STUDY GUIDE (original Workar content) ======================= */
 // slide block types: p (paragraph), list (bullets), cards ([title, text]), table ({head, rows}), formula ([label, expr, note]), tip (text), flow ([steps])
 const PREP_GUIDE = [
- { id:'start', icon:'🧭', title:'Start here: the PMP at a glance', mins:6, slides:[
+ { id:'start', title:'Start here: the PMP at a glance', mins:6, slides:[
    { t:'What the exam really tests', blocks:[
      {p:'The PMP is not a memory test. Most questions describe a situation and ask what a project manager should do — first, next, or best.'},
      {cards:[['People','Leading and supporting teams, resolving conflict, engaging stakeholders.'],['Process','Planning and delivering the technical work: scope, schedule, cost, quality, risk, procurement.'],['Business Environment','Keeping the project aligned with strategy, value, compliance and change in the organization.']]},
@@ -1955,7 +1992,7 @@ const PREP_GUIDE = [
    { t:'Before you book', blocks:[
      {list:['You need 35 contact hours of project management education plus the required project experience (checked when you apply to PMI).','The exam is long — around four hours — so practise under timed conditions at least twice.','PMI updates the exam outline periodically. Always confirm the current format on pmi.org before you book.']} ]}
  ]},
- { id:'framework', icon:'🗺️', title:'The process framework', mins:8, slides:[
+ { id:'framework', title:'The process framework', mins:8, slides:[
    { t:'Five process groups', blocks:[
      {flow:['Initiating','Planning','Executing','Monitoring & Controlling','Closing']},
      {p:'Process groups are not phases. Monitoring & Controlling runs alongside all the others, and a large project may repeat the whole cycle in every phase.'} ]},
@@ -1970,7 +2007,7 @@ const PREP_GUIDE = [
        ['Closing','Close project or phase']]}},
      {tip:'Planning has by far the most processes. In a predictive question, "have we planned this?" is often the key.'} ]}
  ]},
- { id:'integration', icon:'🧩', title:'Integration management', mins:8, slides:[
+ { id:'integration', title:'Integration management', mins:8, slides:[
    { t:'From idea to authorized project', blocks:[
      {flow:['Needs assessment','Business case','Project charter','Project management plan']},
      {list:['The business case justifies the investment and supports a go / no-go decision.','The charter formally authorizes the project and gives the project manager authority to use resources. The sponsor issues it.','The project management plan combines all subsidiary plans and the baselines.']} ]},
@@ -1992,7 +2029,7 @@ const PREP_GUIDE = [
      {list:['Confirm formal acceptance of deliverables against acceptance criteria.','Transfer the product and knowledge to operations.','Close contracts and settle claims.','Finalize lessons learned and archive records.','Release resources and celebrate the team.']},
      {tip:'Closure still applies when a project is cancelled early — scaled to what was done.'} ]}
  ]},
- { id:'stakeholders', icon:'🤝', title:'Stakeholders', mins:7, slides:[
+ { id:'stakeholders', title:'Stakeholders', mins:7, slides:[
    { t:'Identify early, and keep identifying', blocks:[
      {p:'Stakeholders are anyone who affects, or is affected by, the project. Identification starts at initiation and continues throughout, because new stakeholders appear and interests change.'},
      {list:['Use several techniques: interviews, document review, brainstorming and expert judgment.','Record them in the stakeholder register: role, interests, influence, expectations and engagement level.']} ]},
@@ -2004,7 +2041,7 @@ const PREP_GUIDE = [
      {p:'Mark each stakeholder\'s current (C) and desired (D) level, then plan specific actions to close the gap.'},
      {tip:'Resistant stakeholder? Start by understanding their concerns directly before escalating.'} ]}
  ]},
- { id:'scope', icon:'📐', title:'Scope', mins:8, slides:[
+ { id:'scope', title:'Scope', mins:8, slides:[
    { t:'Collecting requirements', blocks:[
      {cards:[['Interviews & focus groups','Deep input from individuals or small groups.'],['Workshops','Bring cross-functional stakeholders together to agree requirements quickly.'],['Prototypes','Storyboards, wireframes and models help people react to something concrete.'],['Voting','Unanimity, majority, plurality, or the nominal group technique.']]},
      {p:'The requirements traceability matrix links each requirement to its business need and to the deliverables and tests that satisfy it.'} ]},
@@ -2017,7 +2054,7 @@ const PREP_GUIDE = [
    { t:'Prioritization techniques', blocks:[
      {cards:[['MoSCoW','Must have, Should have, Could have, Won\'t have (this time).'],['Value vs effort','Do high-value, low-effort items first.'],['Kano','Basic needs, performance needs and delighters.'],['Cost of delay','Prioritize by what waiting costs.']]} ]}
  ]},
- { id:'schedule', icon:'📅', title:'Schedule', mins:10, slides:[
+ { id:'schedule', title:'Schedule', mins:10, slides:[
    { t:'Sequencing activities', blocks:[
      {table:{head:['Relationship','Meaning'],rows:[['Finish-to-start (FS)','B starts after A finishes — the most common'],['Start-to-start (SS)','B starts after A starts'],['Finish-to-finish (FF)','B finishes after A finishes'],['Start-to-finish (SF)','B finishes after A starts — rare']]}},
      {list:['Lead: the successor starts early (overlap).','Lag: a waiting time between activities (e.g. concrete curing).','Mandatory dependencies are hard logic; discretionary ones are preferences; external ones depend on outside parties.']} ]},
@@ -2030,7 +2067,7 @@ const PREP_GUIDE = [
      {table:{head:['Technique','What it does','Trade-off'],rows:[['Crashing','Adds resources to critical activities','Costs more'],['Fast tracking','Overlaps activities planned in sequence','More risk and rework'],['Resource levelling','Resolves over-allocation','May extend the end date'],['Resource smoothing','Adjusts within available float','End date unchanged']]}},
      {p:'Rolling wave planning details near-term work now and plans later work at a higher level until more is known.'} ]}
  ]},
- { id:'cost', icon:'💰', title:'Cost & earned value', mins:10, slides:[
+ { id:'cost', title:'Cost & earned value', mins:10, slides:[
    { t:'Estimate accuracy', blocks:[
      {table:{head:['Estimate','Typical range','When'],rows:[['Rough order of magnitude','−25% to +75%','Initiating'],['Budget','−10% to +25%','Early planning'],['Definitive','−5% to +10%','Detailed planning']]}},
      {p:'Accuracy is how close to the true value. Precision is how finely it is measured. An estimate can be precise and still wrong.'} ]},
@@ -2045,7 +2082,7 @@ const PREP_GUIDE = [
    { t:'Forecasting', blocks:[
      {formula:[['Estimate at completion (typical)','EAC = BAC / CPI','Current cost performance continues'],['EAC (atypical)','EAC = AC + (BAC − EV)','The variance was a one-off'],['Estimate to complete','ETC = EAC − AC','Money still needed'],['Variance at completion','VAC = BAC − EAC','Negative = expected overrun'],['To-complete performance index','TCPI = (BAC − EV) / (BAC − AC)','Efficiency needed to finish on budget']]} ]}
  ]},
- { id:'quality', icon:'✅', title:'Quality', mins:7, slides:[
+ { id:'quality', title:'Quality', mins:7, slides:[
    { t:'Assurance vs control', blocks:[
      {table:{head:['','Manage quality (assurance)','Control quality'],rows:[['Focus','The process','The product'],['Asks','Are we doing the work the right way?','Does this deliverable meet requirements?'],['Examples','Audits, process analysis','Inspections, testing, control charts']]}},
      {tip:'Prevention over inspection: it is cheaper to build quality in than to find defects later.'} ]},
@@ -2055,7 +2092,7 @@ const PREP_GUIDE = [
      {cards:[['Cause-and-effect (fishbone)','Traces a problem back to possible root causes.'],['Pareto chart','Ranks causes; about 80% of problems come from 20% of causes.'],['Control chart','Shows whether a process is stable over time.'],['Histogram','Shows how often values occur.'],['Scatter diagram','Shows the relationship between two variables.'],['Checklist vs check sheet','A checklist confirms steps were done; a check sheet tallies how often something happens.']]},
      {tip:'Rule of seven: seven consecutive points on one side of the mean signals a non-random pattern, even inside the control limits.'} ]}
  ]},
- { id:'resources', icon:'👥', title:'Resources & leadership', mins:10, slides:[
+ { id:'resources', title:'Resources & leadership', mins:10, slides:[
    { t:'Organizing the team', blocks:[
      {list:['RACI chart: who is Responsible, Accountable (only one person), Consulted and Informed.','Team charter: values, working agreements, decision-making and conflict rules, created with the team.','Resource breakdown structure lists resources by category; the organizational breakdown structure maps work to departments.']} ]},
    { t:'How teams develop (Tuckman)', blocks:[
@@ -2069,7 +2106,7 @@ const PREP_GUIDE = [
    { t:'Servant leadership & emotional intelligence', blocks:[
      {list:['Servant leaders remove impediments, shield the team from distractions, and coach rather than command.','Emotional intelligence: self-awareness, self-management, social awareness and relationship management.','Psychological safety lets people raise risks and admit mistakes early.']} ]}
  ]},
- { id:'communications', icon:'💬', title:'Communications', mins:6, slides:[
+ { id:'communications', title:'Communications', mins:6, slides:[
    { t:'Methods of communication', blocks:[
      {cards:[['Interactive','Two-way, real time: meetings and calls. Best for complex or sensitive topics.'],['Push','Sent to recipients: emails, reports. Delivery is not the same as understanding.'],['Pull','Recipients access it themselves: dashboards, wikis, information radiators.']]} ]},
    { t:'Channels and models', blocks:[
@@ -2079,7 +2116,7 @@ const PREP_GUIDE = [
    { t:'Tailoring communication', blocks:[
      {list:['The communications management plan defines who needs what information, when, how and from whom.','Tailor format and detail to each audience — a one-page view for executives, detail for the team.','Consider time zones, language and culture on distributed teams.']} ]}
  ]},
- { id:'risk', icon:'⚠️', title:'Risk', mins:10, slides:[
+ { id:'risk', title:'Risk', mins:10, slides:[
    { t:'Risk vs issue', blocks:[
      {cards:[['Risk','An uncertain future event that could affect objectives — positive (opportunity) or negative (threat).'],['Issue','Something happening now. It goes in the issue log and needs action.']]},
      {flow:['Plan','Identify','Qualitative analysis','Quantitative analysis','Plan responses','Implement','Monitor']} ]},
@@ -2092,7 +2129,7 @@ const PREP_GUIDE = [
      {list:['Residual risk: what remains after a response.','Secondary risk: a new risk created by a response.','Risk owner: the person accountable for monitoring and responding.','Workaround: an unplanned response to a risk nobody identified.']},
      {tip:'If an identified risk occurs, implement the planned response first — do not start re-planning from scratch.'} ]}
  ]},
- { id:'procurement', icon:'📦', title:'Procurement', mins:7, slides:[
+ { id:'procurement', title:'Procurement', mins:7, slides:[
    { t:'Contract types', blocks:[
      {table:{head:['Type','Examples','Who carries more risk'],rows:[['Fixed price','FFP, FPIF, FP-EPA','Seller'],['Cost-reimbursable','CPFF, CPIF, CPAF','Buyer'],['Time & materials','Hourly or daily rates','Shared; best for unclear or small scope']]}},
      {tip:'Clear, stable scope → fixed price. Uncertain scope → cost-reimbursable or T&M with caps.'} ]},
@@ -2102,7 +2139,7 @@ const PREP_GUIDE = [
    { t:'Managing the contract', blocks:[
      {list:['The contract is legally binding: changes go through formal change control and written change orders.','Claims administration handles disputed changes, ideally by negotiation first.','Procurement closure: confirm acceptance, settle payments and claims, and archive records.']} ]}
  ]},
- { id:'agile', icon:'🔄', title:'Agile & hybrid', mins:12, slides:[
+ { id:'agile', title:'Agile & hybrid', mins:12, slides:[
    { t:'The agile mindset', blocks:[
      {p:'Agile values people and interactions, working product, customer collaboration and responding to change — while still valuing processes, documentation, contracts and plans.'},
      {list:['Deliver value in small increments and get feedback early.','Empower self-organizing, cross-functional teams.','Inspect and adapt continuously.']} ]},
@@ -2120,14 +2157,14 @@ const PREP_GUIDE = [
      {p:'Choose the approach per component: predictive where requirements are stable or regulated, adaptive where uncertainty is high. Manage the seams with shared milestones and integration points.'},
      {tip:'In agile questions, the team decides how to work; the PM or scrum master facilitates rather than assigns tasks.'} ]}
  ]},
- { id:'formulas', icon:'🧮', title:'Formula cheat sheet', mins:5, slides:[
+ { id:'formulas', title:'Formula cheat sheet', mins:5, slides:[
    { t:'Earned value', blocks:[
      {formula:[['CV','EV − AC',''],['SV','EV − PV',''],['CPI','EV / AC',''],['SPI','EV / PV',''],['EAC','BAC / CPI','typical'],['ETC','EAC − AC',''],['VAC','BAC − EAC',''],['TCPI','(BAC − EV) / (BAC − AC)','']]} ]},
    { t:'Estimating, scheduling & more', blocks:[
      {formula:[['PERT (beta)','(O + 4M + P) / 6',''],['Triangular','(O + M + P) / 3',''],['Standard deviation','(P − O) / 6',''],['Total float','LS − ES  or  LF − EF',''],['Communication channels','n(n − 1) / 2',''],['EMV','probability × impact','']]},
      {tip:'Memorize these and practise one calculation question per day in the mocks.'} ]}
  ]},
- { id:'mindset', icon:'🎯', title:'Exam mindset', mins:5, slides:[
+ { id:'mindset', title:'Exam mindset', mins:5, slides:[
    { t:'How PMI wants you to think', blocks:[
      {list:['Assess before acting: gather information and analyze impact first.','Follow the agreed process, especially change control.','Talk to people directly and privately before escalating.','Be proactive: prevent problems rather than react to them.','Protect value: the project exists to deliver benefits, not just outputs.','Act ethically and transparently — never hide bad news.']} ]},
    { t:'Reading the question', blocks:[
@@ -2145,28 +2182,58 @@ function prepGuideBlock(b){
   if(b.cards) return `<div class="gd-cards">${b.cards.map(([t,x])=>`<div class="gd-card"><b>${esc(t)}</b><span>${esc(x)}</span></div>`).join('')}</div>`;
   if(b.table) return `<div class="gd-tablewrap"><table class="gd-table"><thead><tr>${b.table.head.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${b.table.rows.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
   if(b.formula) return `<div class="gd-formulas">${b.formula.map(([l,e,n])=>`<div class="gd-f"><span class="gd-fl">${esc(l)}</span><code>${esc(e)}</code>${n?`<span class="gd-fn">${esc(n)}</span>`:''}</div>`).join('')}</div>`;
-  if(b.tip) return `<div class="gd-tip"><b>💡 ${esc(T('guide_tip'))}</b> ${esc(b.tip)}</div>`;
+  if(b.tip) return `<div class="gd-tip"><b>${esc(T('guide_tip'))}</b> ${esc(b.tip)}</div>`;
   if(b.flow) return `<div class="gd-flow">${b.flow.map((x,i)=>`<div class="gd-step"><span>${i+1}</span>${esc(x)}</div>`).join('<div class="gd-arrow">→</div>')}</div>`;
   return '';
 }
 
+const PREP_GUIDE_PARTS = [
+  ['guide_part1', ['start','framework','integration']],
+  ['guide_part2', ['stakeholders','scope','schedule','cost']],
+  ['guide_part3', ['quality','resources','communications','risk','procurement']],
+  ['guide_part4', ['agile','formulas','mindset']]
+];
 function prepGuideHome(){
-  const done = prepGuideDone();
-  const pct = Math.round(100*done.filter(id=>PREP_GUIDE.some(m=>m.id===id)).length/PREP_GUIDE.length);
+  const done = prepGuideDone().filter(id=>PREP_GUIDE.some(m=>m.id===id));
+  const n = PREP_GUIDE.length, pct = Math.round(100*done.length/n);
+  const next = PREP_GUIDE.find(m=>!done.includes(m.id));
+  const nextIdx = next ? PREP_GUIDE.indexOf(next) : -1;
+  const minsLeft = PREP_GUIDE.filter(m=>!done.includes(m.id)).reduce((a,m)=>a+m.mins,0);
+  const r = 46, c = 2*Math.PI*r;
   return `
-  <section>
-    <div class="gd-head">
-      <p class="muted" style="margin:0;max-width:60ch;">${esc(T('guide_sub').replace('{n}', PREP_GUIDE.length))}</p>
-      <div class="gd-progress-box"><b>${pct}%</b><span>${esc(T('guide_complete'))}</span><div class="pp-bar" style="height:6px;margin-top:6px;"><div style="width:${pct}%;background:var(--accent);"></div></div></div>
+  <div class="gl-wrap">
+    <aside class="gl-side">
+      <div class="gl-ring">
+        <svg viewBox="0 0 110 110" width="118" height="118">
+          <circle cx="55" cy="55" r="${r}" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="8"/>
+          <circle cx="55" cy="55" r="${r}" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${(c*(1-pct/100)).toFixed(1)}" transform="rotate(-90 55 55)"/>
+        </svg>
+        <div class="gl-ring-t"><b>${pct}%</b><span>${esc(T('guide_complete'))}</span></div>
+      </div>
+      <div class="gl-side-stats">${done.length} / ${n} ${esc(T('guide_modules'))}${minsLeft ? ` · ${minsLeft} ${esc(T('prep_min'))} ${esc(T('guide_left'))}` : ''}</div>
+      ${next ? `
+        <div class="gl-next-label">${esc(T(done.length ? 'guide_continue' : 'guide_begin'))}</div>
+        <div class="gl-next-title">${String(nextIdx+1).padStart(2,'0')} · ${esc(next.title)}</div>
+        <button class="gl-next-btn" data-guide="${next.id}">${esc(T(done.length ? 'guide_continue_btn' : 'guide_begin_btn'))} →</button>`
+      : `<div class="gl-next-title">${esc(T('guide_all_done'))}</div>
+         <button class="gl-next-btn" data-tab="test">${esc(T('guide_test_now'))} →</button>`}
+      <p class="gl-side-note">${esc(T('guide_sub').replace('{n}', n))}</p>
+    </aside>
+    <div class="gl-main">
+      ${PREP_GUIDE_PARTS.map(([pk, ids], pi)=>{
+        const mods = ids.map(id=>PREP_GUIDE.find(m=>m.id===id)).filter(Boolean);
+        const pd = mods.filter(m=>done.includes(m.id)).length;
+        return `<section class="gl-part">
+          <div class="gl-part-head"><span class="gl-part-k">${esc(T('guide_part'))} ${pi+1}</span><h3>${esc(T(pk))}</h3><span class="gl-part-c">${pd}/${mods.length}</span></div>
+          ${mods.map(m=>{ const i = PREP_GUIDE.indexOf(m), isDone = done.includes(m.id), isNext = next && next.id===m.id;
+            return `<button class="gl-row ${isDone?'done':''} ${isNext?'next':''}" data-guide="${m.id}">
+              <span class="gl-num">${isDone ? '✓' : String(i+1).padStart(2,'0')}</span>
+              <span class="gl-t"><b>${esc(m.title)}</b><small>${m.slides.length} ${esc(T('guide_slides'))} · ${m.mins} ${esc(T('prep_min'))}</small></span>
+              <span class="gl-go">${isDone ? esc(T('guide_review_btn')) : isNext ? esc(T('guide_start_btn')) : ''}<span class="gl-arrow">→</span></span>
+            </button>`; }).join('')}
+        </section>`; }).join('')}
     </div>
-    <div class="gd-grid">
-      ${PREP_GUIDE.map((m,i)=>`<button class="gd-mod ${done.includes(m.id)?'done':''}" data-guide="${m.id}">
-        <span class="gd-mod-ico">${m.icon}</span>
-        <span class="gd-mod-body"><b>${i+1}. ${esc(m.title)}</b><span>${m.slides.length} ${esc(T('guide_slides'))} · ${m.mins} ${esc(T('prep_min'))}</span></span>
-        <span class="gd-mod-state">${done.includes(m.id)?'✓':'→'}</span>
-      </button>`).join('')}
-    </div>
-  </section>`;
+  </div>`;
 }
 
 function prepGuideView(){
@@ -2182,7 +2249,7 @@ function prepGuideView(){
       <span class="muted" style="font-size:13px;">${esc(T('guide_module'))} ${mi+1}/${PREP_GUIDE.length} · ${esc(T('guide_slide_of').replace('{i}', si+1).replace('{n}', m.slides.length))}</span>
     </div>
     <div class="gd-slide" dir="ltr">
-      <div class="gd-band"><span class="gd-band-ico">${m.icon}</span><span>${esc(m.title)}</span><span class="gd-brand">WORKAR · PMP PREP</span></div>
+      <div class="gd-band"><span class="gd-band-num">${String(mi+1).padStart(2,"0")}</span><span>${esc(m.title)}</span><span class="gd-brand">WORKAR · PMP PREP</span></div>
       <div class="gd-body">
         <h2 class="gd-title">${esc(sl.t)}</h2>
         ${sl.blocks.map(prepGuideBlock).join('')}
@@ -2194,10 +2261,10 @@ function prepGuideView(){
       ${!last ? `<button class="btn btn-primary btn-sm" id="gd-next">${esc(T('prep_next'))} →</button>` : `<span></span>`}
     </div>
     ${last ? `<div class="gd-end">
-      <b>✓ ${esc(T('guide_done_t').replace('{m}', m.title))}</b>
+      <b>${esc(T('guide_done_t').replace('{m}', m.title))}</b>
       <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px;">
         ${next ? `<button class="btn btn-primary btn-sm" data-guide="${next.id}">${esc(T('guide_next_mod'))}: ${esc(next.title)} →</button>` : ''}
-        <button class="btn btn-outline btn-sm" id="gd-test">📝 ${esc(T('guide_test_now'))}</button>
+        <button class="btn btn-outline btn-sm" id="gd-test">${esc(T('guide_test_now'))}</button>
       </div>
     </div>` : ''}
     <div class="pp-keys">${esc(T('guide_keys'))}</div>
