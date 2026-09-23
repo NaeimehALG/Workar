@@ -293,6 +293,8 @@ const I18N = {
     lbl_field_c:'Which field or industry are you looking for a mentor in?', ph_field_c:'e.g. Data analytics, Construction, Software',
     lbl_stage_c:'Career stage', stage_pick:'Select…', stage_student:'Student / new graduate', stage_entry:'Entry level (0–2 yrs)', stage_mid:'Mid level (3–7 yrs)', stage_senior:'Senior (8+ yrs)', stage_switch:'Changing careers',
     detail_education:'Education', detail_certs:'Certifications', detail_formats:'Session formats',
+    book_session:'Book a session', book_signup_hint:'Create a free mentee account to pick a time — it only takes a minute.',
+    session_how:'Sessions take place by video or voice call right here on Workar, once the mentor confirms your booking.',
     btn_video_call:'🎥 Video call', btn_voice_call:'📞 Voice call',
     call_after_accept:'Call options appear once the mentor accepts.', call_tip:'Opens in a new tab. The first person to join may be asked to sign in with Google or GitHub to start the room.',
     toast_email_confirmed:'Email confirmed — welcome to Workar!',
@@ -401,6 +403,8 @@ const I18N = {
     lbl_field_c:'دنبال منتور در چه رشته یا صنعتی هستید؟', ph_field_c:'مثلاً تحلیل داده، ساخت‌وساز، نرم‌افزار',
     lbl_stage_c:'مرحله‌ی شغلی', stage_pick:'انتخاب کنید…', stage_student:'دانشجو / تازه فارغ‌التحصیل', stage_entry:'تازه‌کار (۰ تا ۲ سال)', stage_mid:'میانی (۳ تا ۷ سال)', stage_senior:'ارشد (۸ سال به بالا)', stage_switch:'در حال تغییر مسیر شغلی',
     detail_education:'تحصیلات', detail_certs:'گواهینامه‌ها', detail_formats:'نوع جلسات',
+    book_session:'رزرو جلسه', book_signup_hint:'برای انتخاب زمان، یک حساب رایگان بسازید — فقط یک دقیقه طول می‌کشد.',
+    session_how:'جلسات پس از تأیید منتور، به‌صورت تماس تصویری یا صوتی در همین سایت Workar برگزار می‌شوند.',
     btn_video_call:'🎥 تماس تصویری', btn_voice_call:'📞 تماس صوتی',
     call_after_accept:'گزینه‌های تماس بعد از تأیید منتور نمایش داده می‌شود.', call_tip:'در تب جدید باز می‌شود. ممکن است از اولین نفری که وارد می‌شود خواسته شود با گوگل یا گیت‌هاب وارد شود تا اتاق شروع شود.',
     toast_email_confirmed:'ایمیلت تأیید شد — به Workar خوش اومدی!',
@@ -965,7 +969,7 @@ function mentorView(){
   <div style="margin-bottom:22px;">${(p.skills||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('')}</div>
   ${p.education ? `<div class="detail-block"><h4>${esc(T('detail_education'))}</h4><div>${esc(p.education)}</div></div>` : ''}
   ${(p.certifications||[]).length ? `<div class="detail-block"><h4>${esc(T('detail_certs'))}</h4><div>${p.certifications.map(c=>`<span class="chip">${esc(c)}</span>`).join('')}</div></div>` : ''}
-  ${(p.formats||[]).length ? `<div class="detail-block" style="margin-bottom:26px;"><h4>${esc(T('detail_formats'))}</h4><div>${p.formats.filter(f=>FORMAT_KEYS.includes(f)).map(f=>`<span class="chip">${esc(T('fmt_'+f))}</span>`).join('')}</div></div>` : ''}
+  ${`<div class="detail-block" style="margin-bottom:26px;"><h4>${esc(T('detail_formats'))}</h4><div>${((p.formats&&p.formats.length)?p.formats:['video','voice']).filter(f=>FORMAT_KEYS.includes(f)).map(f=>`<span class="chip">${esc(T('fmt_'+f))}</span>`).join('')}</div></div>`}
 
   ${(myProfile && myProfile.isAdmin && !isSelf) ? `
   <div class="panel" style="max-width:480px;margin-bottom:26px;border-color:#b3412c;">
@@ -981,7 +985,9 @@ function mentorView(){
 
   ${!isSelf ? `
   <div style="margin-bottom:36px;">
-    ${!myProfile ? `<span class="muted" style="font-size:13px;">${esc(T('set_profile_first'))}</span>` : (state.bookingOpen ? (()=>{
+    <p class="call-note" style="margin-bottom:12px;">${esc(T('session_how'))}</p>
+    ${!myProfile ? `<button class="btn btn-primary" id="book-signup" data-mentor-id="${id}">${esc(T('book_session'))}</button>
+      <div class="call-note" style="margin-top:8px;">${esc(T('book_signup_hint'))}</div>` : (state.bookingOpen ? (()=>{
       const slots = upcomingSlotsFor(id, p.availability);
       return `
     <div class="panel" style="max-width:480px;">
@@ -996,7 +1002,7 @@ function mentorView(){
         <button class="btn btn-ghost btn-sm" id="book-cancel">${esc(T('cancel'))}</button>
       </div>
     </div>`;
-    })() : `<button class="btn btn-primary" id="request-btn">${esc(T('request_mentorship'))}</button>`)}
+    })() : `<button class="btn btn-primary" id="request-btn">${esc(T('book_session'))}</button>`)}
   </div>` : `<div class="banner">${esc(T('this_is_profile'))}</div>`}
 
   <div class="section-head"><h2>${esc(T('reviews_title'))}</h2></div>
@@ -1144,6 +1150,11 @@ function wire(){
     });
   });
 
+  const bookSignup = document.getElementById('book-signup');
+  if(bookSignup) bookSignup.addEventListener('click', ()=>{
+    nav('onboard', { role:'client', returnMentorId: bookSignup.getAttribute('data-mentor-id') });
+  });
+
   const langBtn = document.getElementById('lang-toggle');
   if(langBtn) langBtn.addEventListener('click', ()=>{ state.lang = state.lang==='en' ? 'fa' : 'en'; render(); });
 
@@ -1179,7 +1190,12 @@ function wire(){
     try{
       await window.__db.doc('profiles/'+uid).set(doc);
       toast(T('toast_profile_created'));
-      nav(state.role==='mentor' ? 'dashboard' : 'browse');
+      if(state.role==='client' && state.returnMentorId){
+        const back = state.returnMentorId; state.returnMentorId = null;
+        nav('mentor', { mentorId: back, bookingOpen: true });
+      } else {
+        nav(state.role==='mentor' ? 'dashboard' : 'browse');
+      }
     }catch(err){
       console.error('profile create failed:', err);
       toast(T('toast_save_fail'));
