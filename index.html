@@ -319,6 +319,70 @@
   .pp-meta{color:var(--muted);gap:6px !important;}
   .pp-meta span + span::before{content:"·";margin-inline-end:6px;}
   .pp-pick-note{font-size:12px;color:var(--muted);margin:-2px 0 4px;line-height:1.4;}
+
+  .pp-head{padding:8px 0 18px;}
+  .pp-head h1{font-size:28px;font-weight:800;margin:0 0 4px;}
+  .pp-head p{margin:0;color:var(--muted);font-size:15px;}
+  .lx{max-width:820px;margin:0 auto;}
+  .lx-progress{margin:4px 0 26px;}
+  .lx-progress-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px;font-size:14px;color:var(--muted);}
+  .lx-progress-top b{color:var(--text);font-size:16px;}
+  .lx-cta{border:none;background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:9px 16px;font-family:inherit;font-size:13.5px;font-weight:700;cursor:pointer;}
+  .lx-cta:hover{filter:brightness(1.08);}
+  .lx-bar{height:4px;background:var(--surface-2);border-radius:4px;overflow:hidden;}
+  .lx-bar div{height:100%;background:var(--accent);border-radius:4px;transition:width .6s ease;}
+  .lx-part{margin-bottom:22px;}
+  .lx-part-h{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 4px;padding:0 8px;}
+  .lx-row{display:flex;align-items:center;gap:14px;width:100%;padding:11px 8px;border:none;border-bottom:1px solid var(--border);background:none;color:var(--text);font-family:inherit;text-align:start;cursor:pointer;transition:background .12s;}
+  .lx-row:hover{background:var(--surface-2);}
+  .lx-num{flex:0 0 26px;font-size:12.5px;font-weight:800;color:var(--muted);font-variant-numeric:tabular-nums;}
+  .lx-title{flex:1;font-size:15px;font-weight:600;}
+  .lx-meta{font-size:12.5px;color:var(--muted);}
+  .lx-row.done .lx-num{color:#4E8A5B;}
+  .lx-row.done .lx-title{color:var(--muted);}
+  .lx-row.next .lx-title{font-weight:800;}
+  .lx-row.next .lx-num{color:var(--accent);}
+  .lx-row.next{background:var(--surface-2);border-radius:10px;border-bottom-color:transparent;}
+  .pp-tabbar{margin-bottom:26px !important;}
+
+  /* calm reading view */
+  .gd-viewer{max-width:820px !important;}
+  .gd-slide{border:none !important;box-shadow:none !important;background:none !important;border-radius:0 !important;overflow:visible !important;animation:ppIn .2s ease;}
+  .gd-crumb{display:flex;justify-content:space-between;font-size:12.5px;font-weight:700;color:var(--muted);letter-spacing:.02em;margin-bottom:8px;}
+  .gd-thin{height:3px;background:var(--surface-2);border-radius:3px;overflow:hidden;margin-bottom:26px;}
+  .gd-thin div{height:100%;background:var(--accent);transition:width .3s ease;}
+  .gd-body{padding:0 !important;}
+  .gd-title{font-size:30px !important;margin:0 0 20px !important;letter-spacing:-.01em;}
+  .gd-p{font-size:17px !important;line-height:1.75 !important;}
+  .gd-list li{font-size:16.5px !important;line-height:1.7 !important;margin-bottom:10px !important;}
+  .gd-jump{max-width:60%;padding:7px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-size:13px;}
+  .gd-dl{margin:0 0 18px;display:grid;}
+  .gd-dl > div{display:grid;grid-template-columns:200px 1fr;gap:16px;padding:12px 0;border-bottom:1px solid var(--border);}
+  .gd-dl > div:first-child{border-top:1px solid var(--border);}
+  .gd-dl dt{font-weight:800;font-size:15px;} .gd-dl dd{margin:0;font-size:15px;line-height:1.6;color:var(--text);opacity:.88;}
+  @media (max-width:600px){.gd-dl > div{grid-template-columns:1fr;gap:2px;}}
+  .gd-table th{background:none !important;color:var(--muted) !important;border-bottom:2px solid var(--border);font-size:12px !important;text-transform:uppercase;letter-spacing:.05em;border-radius:0 !important;}
+  .gd-table tr:nth-child(even) td{background:none !important;}
+  .gd-table td{font-size:14.5px;}
+  .gd-fig{border:none !important;background:none !important;padding:4px 0 8px !important;}
+  .gd-f{border:none !important;border-bottom:1px solid var(--border) !important;border-radius:0 !important;padding:12px 2px !important;}
+  .gd-compare > div:not(.gd-vs){background:none !important;border:1px solid var(--border);}
+  .gd-tip{background:none !important;border-inline-start:3px solid var(--accent-2) !important;border-radius:0 !important;padding:6px 0 6px 16px !important;color:var(--text) !important;font-size:15px !important;}
+  html[dir="rtl"] .gd-tip{padding:6px 16px 6px 0 !important;}
+  .gd-tip b{color:var(--accent);}
+  .gd-step{background:none !important;}
+  .gd-proc-g{display:inline-block;font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);background:var(--surface-2);padding:4px 10px;border-radius:999px;margin-bottom:12px;}
+  .gd-proc-p{font-size:18px;line-height:1.6;margin:0 0 22px;font-weight:600;}
+  .gd-ito{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:20px;}
+  .gd-ito > div{padding:14px 16px;} .gd-ito > div + div{border-inline-start:1px solid var(--border);}
+  .gd-ito h4{margin:0 0 8px;font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+  .gd-ito .out h4{color:var(--accent);}
+  .gd-ito ul{margin:0;padding:0;list-style:none;}
+  .gd-ito li{font-size:14.5px;line-height:1.5;padding:3px 0;}
+  .gd-ito li::first-letter{text-transform:uppercase;}
+  .gd-ito .out li{font-weight:700;}
+  @media (max-width:680px){.gd-ito{grid-template-columns:1fr;}.gd-ito > div + div{border-inline-start:none;border-top:1px solid var(--border);}}
+  .gd-nav{border-top:1px solid var(--border);padding-top:16px;margin-top:26px !important;}
   /* ---------- PMP study guide ---------- */
   .pp-path{display:flex;align-items:stretch;gap:10px;margin:0 0 30px;flex-wrap:wrap;}
   .pp-path-step{flex:1 1 200px;position:relative;display:grid;grid-template-columns:auto 1fr;column-gap:10px;align-items:center;text-decoration:none;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px 16px;transition:border-color .15s,transform .15s;}
@@ -573,7 +637,7 @@ const I18N = {
     adm_save:'Save & publish', adm_reset:'Reset everything to default', adm_reset_confirm:'Reset all prices and text back to the original defaults?',
     adm_saved:'Saved — the site is updated', adm_save_fail:'Could not save — check that the site_settings SQL has been run',
     rv_empty_t:'No results yet', rv_login_t:'Track your progress', rv_taken:'Mocks taken', rv_avg:'Average score', rv_best:'Best score', rv_answered:'Questions answered', rv_trend:'Score trend', rv_trend_d:'Your last attempts, oldest to newest', rv_goal:'Target', rv_domains:'Strength by domain', rv_domains_d:'All attempts combined', rv_rec_k:'Recommended next', rv_rec_t:'Strengthen {d}', rv_rec_d:'This is your weakest domain so far. Review these modules, then retake a mock and watch your score move.',
-    guide_scn:'Exam scenario — try it', guide_part:'Part', guide_part1:'Foundations', guide_part2:'Planning the work', guide_part3:'Delivering with people & control', guide_part4:'Agile & exam-ready', guide_left:'left', guide_begin:'Start here', guide_continue:'Continue where you left off', guide_begin_btn:'Begin', guide_continue_btn:'Continue', guide_all_done:'You have completed every module. Time to test yourself.', guide_start_btn:'Start', guide_review_btn:'Review',
+    guide_inputs:'Key inputs', guide_tools:'Tools & techniques', guide_outputs:'Key outputs', prep_title_short:'PMP Prep', prep_tagline:'Learn the essentials, practise with mock exams, and track your progress.', guide_scn:'Exam scenario — try it', guide_part:'Part', guide_part1:'Foundations', guide_part2:'Planning the work', guide_part3:'Delivering with people & control', guide_part4:'Agile & exam-ready', guide_left:'left', guide_begin:'Start here', guide_continue:'Continue where you left off', guide_begin_btn:'Begin', guide_continue_btn:'Continue', guide_all_done:'You have completed every module. Time to test yourself.', guide_start_btn:'Start', guide_review_btn:'Review',
     guide_modules:'study modules', guide_kicker:'Free study guide', guide_title:'Learn the essentials', guide_sub:'{n} bite-sized modules covering every exam area — written in plain English, with tips on how PMI thinks.',
     guide_complete:'complete', guide_slides:'slides', guide_tip:'Exam tip:', guide_all:'All modules', guide_module:'Module', guide_slide_of:'slide {i} of {n}',
     guide_done_t:'Module complete: {m}', guide_next_mod:'Next module', guide_test_now:'Test yourself — free diagnostic', guide_keys:'Tip: use ← → to move between slides',
@@ -776,7 +840,7 @@ const I18N = {
     adm_save:'ذخیره و انتشار', adm_reset:'برگرداندن همه‌چیز به حالت اولیه', adm_reset_confirm:'همه‌ی قیمت‌ها و متن‌ها به حالت اولیه برگردن؟',
     adm_saved:'ذخیره شد — سایت به‌روز شد', adm_save_fail:'ذخیره نشد — مطمئن شو SQL مربوط به site_settings اجرا شده',
     rv_empty_t:'هنوز نتیجه‌ای نداری', rv_login_t:'پیشرفتت رو دنبال کن', rv_taken:'آزمون داده‌شده', rv_avg:'میانگین نمره', rv_best:'بهترین نمره', rv_answered:'سؤال پاسخ‌داده', rv_trend:'روند نمره', rv_trend_d:'آزمون‌های اخیر، از قدیمی به جدید', rv_goal:'هدف', rv_domains:'قدرت در هر حوزه', rv_domains_d:'همه‌ی آزمون‌ها با هم', rv_rec_k:'پیشنهاد بعدی', rv_rec_t:'تقویت حوزه‌ی {d}', rv_rec_d:'این ضعیف‌ترین حوزه‌ی تو تا الانه. این ماژول‌ها رو مرور کن، بعد دوباره آزمون بده و ببین نمره‌ات چطور بالا می‌ره.',
-    guide_scn:'سناریوی آزمون — امتحانش کن', guide_part:'بخش', guide_part1:'مبانی', guide_part2:'برنامه‌ریزی کار', guide_part3:'اجرا با تیم و کنترل', guide_part4:'اجایل و آمادگی آزمون', guide_left:'باقی‌مانده', guide_begin:'از اینجا شروع کن', guide_continue:'از همون جایی که موندی ادامه بده', guide_begin_btn:'شروع', guide_continue_btn:'ادامه', guide_all_done:'همه‌ی ماژول‌ها رو تموم کردی. وقت آزمونه.', guide_start_btn:'شروع', guide_review_btn:'مرور',
+    guide_inputs:'ورودی‌های اصلی', guide_tools:'ابزارها و تکنیک‌ها', guide_outputs:'خروجی‌های اصلی', prep_title_short:'آمادگی PMP', prep_tagline:'مفاهیم اصلی رو یاد بگیر، با آزمون‌های آزمایشی تمرین کن و پیشرفتت رو ببین.', guide_scn:'سناریوی آزمون — امتحانش کن', guide_part:'بخش', guide_part1:'مبانی', guide_part2:'برنامه‌ریزی کار', guide_part3:'اجرا با تیم و کنترل', guide_part4:'اجایل و آمادگی آزمون', guide_left:'باقی‌مانده', guide_begin:'از اینجا شروع کن', guide_continue:'از همون جایی که موندی ادامه بده', guide_begin_btn:'شروع', guide_continue_btn:'ادامه', guide_all_done:'همه‌ی ماژول‌ها رو تموم کردی. وقت آزمونه.', guide_start_btn:'شروع', guide_review_btn:'مرور',
     guide_modules:'ماژول آموزشی', guide_kicker:'راهنمای مطالعه‌ی رایگان', guide_title:'مفاهیم اصلی رو یاد بگیر', guide_sub:'{n} ماژول کوتاه که همه‌ی حوزه‌های آزمون رو پوشش می‌ده — با نکته‌هایی درباره‌ی طرز فکر PMI.',
     guide_complete:'تکمیل‌شده', guide_slides:'اسلاید', guide_tip:'نکته‌ی آزمون:', guide_all:'همه‌ی ماژول‌ها', guide_module:'ماژول', guide_slide_of:'اسلاید {i} از {n}',
     guide_done_t:'ماژول تموم شد: {m}', guide_next_mod:'ماژول بعدی', guide_test_now:'خودت رو بسنج — آزمون تشخیصی رایگان', guide_keys:'نکته: با ← → بین اسلایدها جابه‌جا شو',
@@ -1770,18 +1834,10 @@ function prepHomeView(){
   const reviewTab = prepReviewDashboard();
 
   return `
-  <section class="pp-hero2">
-    <div>
-      <span class="pp-kicker">${esc(T('prep_kicker'))}</span>
-      <h1>${esc(T('prep_title'))}</h1>
-      <p>${esc(T('prep_sub'))}</p>
-    </div>
-    <div class="pp-hero2-stats">
-      <div><b>${PREP_GUIDE.length}</b><span>${esc(T('guide_modules'))}</span></div>
-      <div><b>${total}</b><span>${esc(T('prep_stat_q'))}</span></div>
-      <div><b>${exams.filter(e=>e.published).length}</b><span>${esc(T('prep_stat_mocks'))}</span></div>
-    </div>
-  </section>
+  <header class="pp-head">
+    <h1>${esc(T('prep_title_short'))}</h1>
+    <p>${esc(T('prep_tagline'))}</p>
+  </header>
 
   ${s && !s.finished ? `<div class="pp-resume">
     <div><b>${esc(T('prep_resume_t'))}</b> <span class="muted">${esc(s.title)} · ${Object.keys(s.ans).length}/${s.qs.length} ${esc(T('prep_answered'))}</span></div>
@@ -2576,13 +2632,82 @@ const PREP_GUIDE = [
 ];
 
 
+// One slide per process: [module id, process name, group, purpose, key inputs, key tools & techniques, key outputs, exam tip]
+const PREP_PROCS = [
+ ['integration','Develop project charter','Initiating','Formally authorize the project and give the project manager authority to use resources.','Business case, agreements, EEFs, OPAs','Expert judgment, data gathering, meetings','Project charter, assumption log','Without an approved charter, work should not start. The sponsor issues it.'],
+ ['integration','Develop project management plan','Planning','Combine all subsidiary plans and baselines into one integrated plan.','Charter, outputs of other planning processes','Expert judgment, meetings, checklists','Project management plan','The plan is progressively elaborated and changes only through change control once baselined.'],
+ ['integration','Direct and manage project work','Executing','Carry out the planned work and implement approved changes.','Project management plan, approved change requests','PMIS, meetings','Deliverables, work performance data, issue log, change requests','This is where approved changes are actually implemented.'],
+ ['integration','Manage project knowledge','Executing','Use existing knowledge and create new knowledge to achieve objectives and help the organization learn.','Project documents, deliverables, OPAs','Knowledge management, information management, interpersonal skills','Lessons learned register','Capture lessons throughout the project, not only at the end.'],
+ ['integration','Monitor and control project work','M&C','Track, review and report overall progress against the plan.','Work performance information, forecasts','Data analysis (variance, trend, earned value), decision making','Work performance reports, change requests','Reports go to stakeholders; deviations lead to change requests.'],
+ ['integration','Perform integrated change control','M&C','Review, approve or reject every change and manage updates to baselines and documents.','Change requests, work performance reports','Change control tools, data analysis, decision making, meetings','Approved change requests, change log','Analyze impact first; the authorized body decides; then update and communicate.'],
+ ['integration','Close project or phase','Closing','Finalize all activities and formally close the project or phase.','Accepted deliverables, agreements, project documents','Data analysis (document, regression, variance), meetings','Final report, transition of the result, OPA updates','Also applies to projects cancelled early.'],
+ ['stakeholders','Identify stakeholders','Initiating','Find everyone who can affect or be affected by the project and analyze them.','Charter, business documents, agreements','Brainstorming, interviews, stakeholder mapping','Stakeholder register','Repeat identification throughout the project, not just once.'],
+ ['stakeholders','Plan stakeholder engagement','Planning','Decide how to involve each stakeholder based on needs, expectations and impact.','Stakeholder register, charter','Engagement assessment matrix, mind mapping, prioritization','Stakeholder engagement plan','Compare current and desired engagement levels to plan actions.'],
+ ['stakeholders','Manage stakeholder engagement','Executing','Communicate and work with stakeholders to meet their needs and address issues.','Engagement plan, change log, issue log','Communication skills, negotiation, conflict management, ground rules','Change requests, updated logs','Address concerns early and directly, before they become issues.'],
+ ['stakeholders','Monitor stakeholder engagement','M&C','Watch relationships and adjust engagement strategies as needed.','Work performance data, issue log','Data analysis, decision making, active listening, feedback','Work performance information, change requests','If engagement is not improving, change the strategy.'],
+ ['scope','Plan scope management','Planning','Define how scope will be defined, validated and controlled.','Charter, project management plan','Expert judgment, meetings','Scope management plan, requirements management plan','Describes the approach, not the scope itself.'],
+ ['scope','Collect requirements','Planning','Determine, document and manage stakeholder needs and requirements.','Charter, stakeholder register, business documents','Interviews, focus groups, workshops, prototypes, observation, group decisions','Requirements documentation, requirements traceability matrix','Every requirement should trace back to a business need.'],
+ ['scope','Define scope','Planning','Develop a detailed description of the project and product.','Charter, requirements documentation','Product analysis, alternatives analysis, facilitation','Project scope statement','Include exclusions and acceptance criteria.'],
+ ['scope','Create WBS','Planning','Break deliverables and work into smaller, manageable components.','Scope statement, requirements documentation','Decomposition','Scope baseline (scope statement, WBS, WBS dictionary)','Decompose until work can be estimated and managed — the work package.'],
+ ['scope','Validate scope','M&C','Formally accept completed deliverables.','Verified deliverables, requirements, RTM','Inspection, group decision making','Accepted deliverables, change requests','Customer acceptance happens here; quality checks happen earlier in control quality.'],
+ ['scope','Control scope','M&C','Monitor scope status and manage changes to the scope baseline.','Scope baseline, work performance data','Variance analysis, trend analysis','Work performance information, change requests','Prevent scope creep: every change goes through change control.'],
+ ['schedule','Plan schedule management','Planning','Set the policies and approach for developing and controlling the schedule.','Charter, project management plan','Expert judgment, meetings','Schedule management plan','Defines tools, units, thresholds and methods.'],
+ ['schedule','Define activities','Planning','Identify the specific actions needed to produce the deliverables.','Scope baseline','Decomposition, rolling wave planning','Activity list, activity attributes, milestone list','Work packages are broken down into activities here.'],
+ ['schedule','Sequence activities','Planning','Identify and document the relationships between activities.','Activity list, milestone list','Precedence diagramming, dependency determination, leads and lags','Project schedule network diagrams','Know FS, SS, FF, SF and the dependency types.'],
+ ['schedule','Estimate activity durations','Planning','Estimate how long each activity will take.','Activity list, resource requirements, resource calendars','Analogous, parametric, three-point, bottom-up estimating','Duration estimates, basis of estimates','Estimates come from the people doing the work where possible.'],
+ ['schedule','Develop schedule','Planning','Analyze sequences, durations and resources to build the schedule model.','Network diagrams, duration estimates, resource calendars','Critical path method, resource optimization, schedule compression, what-if analysis','Schedule baseline, project schedule','The critical path sets the minimum duration.'],
+ ['schedule','Control schedule','M&C','Monitor status and manage changes to the schedule baseline.','Schedule baseline, work performance data','Critical path analysis, earned value, iteration burndown','Schedule forecasts, change requests','Use SPI and SV to understand schedule performance.'],
+ ['cost','Plan cost management','Planning','Define how costs will be estimated, budgeted, managed and controlled.','Charter, project management plan','Expert judgment, data analysis','Cost management plan','Sets units, precision, thresholds and EV rules.'],
+ ['cost','Estimate costs','Planning','Approximate the money needed to complete the work.','Scope baseline, schedule, resource requirements, risk register','Analogous, parametric, bottom-up, three-point estimating, reserve analysis','Cost estimates, basis of estimates','Estimates include contingency for identified risks.'],
+ ['cost','Determine budget','Planning','Add up estimates to establish an authorized cost baseline.','Cost estimates, basis of estimates, schedule','Cost aggregation, reserve analysis, funding limit reconciliation','Cost baseline, funding requirements','Cost baseline + management reserve = project budget.'],
+ ['cost','Control costs','M&C','Monitor cost status and manage changes to the cost baseline.','Cost baseline, work performance data, funding requirements','Earned value analysis, forecasting, TCPI','Cost forecasts, work performance information, change requests','EAC and VAC tell you where the project is heading.'],
+ ['quality','Plan quality management','Planning','Identify quality requirements and standards and how compliance will be shown.','Requirements, stakeholder register, risk register','Cost-benefit analysis, cost of quality, benchmarking, flowcharts','Quality management plan, quality metrics','Quality is planned in, not inspected in.'],
+ ['quality','Manage quality','Executing','Turn the quality plan into executable activities; check that processes are followed.','Quality management plan, quality control measurements','Audits, root cause analysis, design for X, problem solving','Quality reports, test and evaluation documents','Focus on the process — audits are the classic tool.'],
+ ['quality','Control quality','M&C','Monitor and record results to assess performance and verify deliverables.','Deliverables, quality metrics, test documents','Inspection, testing, check sheets, control charts, statistical sampling','Verified deliverables, quality control measurements','Verified deliverables then go to validate scope for acceptance.'],
+ ['resources','Plan resource management','Planning','Define how to estimate, acquire, manage and use team and physical resources.','Charter, scope baseline, schedule','RACI charts, organizational theory, org charts','Resource management plan, team charter','The team charter records values, working agreements and ground rules.'],
+ ['resources','Estimate activity resources','Planning','Estimate the team members, equipment and materials needed.','Activity list, resource calendars, cost estimates','Bottom-up, analogous, parametric estimating','Resource requirements, resource breakdown structure','The RBS groups resources by category and type.'],
+ ['resources','Acquire resources','Executing','Obtain the team members, facilities, equipment and materials needed.','Resource management plan, resource requirements','Negotiation, pre-assignment, virtual teams, multi-criteria decision analysis','Physical and team resource assignments, resource calendars','Negotiate with functional managers for the people you need.'],
+ ['resources','Develop team','Executing','Improve competencies, interaction and environment to raise performance.','Team assignments, team charter','Colocation, virtual teams, training, recognition, team building','Team performance assessments','Build trust and psychological safety; recognize contributions.'],
+ ['resources','Manage team','Executing','Track performance, give feedback, resolve issues and manage changes.','Issue log, work performance reports, team assessments','Conflict management, decision making, emotional intelligence, leadership','Change requests, updated plans','Handle performance and conflict issues early and privately.'],
+ ['resources','Control resources','M&C','Make sure physical resources are available as planned and used well.','Resource requirements, work performance data','Alternatives analysis, cost-benefit analysis, problem solving','Work performance information, change requests','Covers physical resources such as equipment and materials.'],
+ ['communications','Plan communications management','Planning','Develop the approach for project communications based on stakeholder needs.','Stakeholder register, requirements','Communication requirements analysis, models, methods, technology','Communications management plan','Who needs what information, when, how, and from whom.'],
+ ['communications','Manage communications','Executing','Create, distribute, store and dispose of project information on time.','Communications plan, work performance reports','Communication skills, technology, meeting management','Project communications','Tailor the message and channel to each audience.'],
+ ['communications','Monitor communications','M&C','Make sure information needs of the project and stakeholders are met.','Project communications, issue log','Stakeholder engagement matrix, observation, meetings','Work performance information, change requests','If people are not understanding, adjust the plan.'],
+ ['risk','Plan risk management','Planning','Define how risk management activities will be carried out.','Charter, stakeholder register','Stakeholder analysis, meetings','Risk management plan','Sets risk appetite, thresholds, categories and probability-impact definitions.'],
+ ['risk','Identify risks','Planning','Identify individual risks and sources of overall project risk.','Project management plan, documents, agreements','Brainstorming, checklists, interviews, SWOT, root cause analysis, prompt lists','Risk register, risk report','Involve many people; risks can be threats or opportunities.'],
+ ['risk','Perform qualitative risk analysis','Planning','Prioritize risks by assessing probability and impact.','Risk register, risk management plan','Probability-impact matrix, risk data quality assessment, categorization','Updated risk register','Fast and done for every risk.'],
+ ['risk','Perform quantitative risk analysis','Planning','Numerically analyze the combined effect of risks on objectives.','Risk register, cost and schedule estimates','Monte Carlo simulation, sensitivity analysis, decision trees','Updated risk report','Not every project needs it — usually for large or complex ones.'],
+ ['risk','Plan risk responses','Planning','Develop options and actions to deal with risks.','Risk register, risk report','Response strategies for threats and opportunities, contingent responses','Change requests, updated risk register','Each response has an owner.'],
+ ['risk','Implement risk responses','Executing','Carry out the agreed risk response plans.','Risk register, lessons learned','Influencing, PMIS','Change requests, updated issue log','When a risk occurs, execute the planned response.'],
+ ['risk','Monitor risks','M&C','Track risks, check responses work and identify new risks.','Work performance data, risk register','Technical performance analysis, reserve analysis, audits, meetings','Work performance information, change requests','Risk reviews happen throughout the project.'],
+ ['procurement','Plan procurement management','Planning','Decide what to buy, how, and from whom.','Charter, scope baseline, requirements','Make-or-buy analysis, source selection analysis, market research','Procurement plan, statement of work, bid documents, source selection criteria','The procurement SOW describes the work in enough detail for sellers to respond.'],
+ ['procurement','Conduct procurements','Executing','Get seller responses, select a seller and award a contract.','Procurement documents, seller proposals','Bidder conferences, proposal evaluation, negotiation, advertising','Selected sellers, agreements','Bidder conferences keep the process fair for every seller.'],
+ ['procurement','Control procurements','M&C','Manage relationships, monitor contract performance and close contracts.','Agreements, procurement documents, work performance data','Claims administration, inspection, audits, earned value','Closed procurements, change requests','Contract changes need formal written change orders.']
+];
+
+// insert one slide per process right after each module's overview slide
+(function(){
+  const byMod = {};
+  PREP_PROCS.forEach(p=>{ (byMod[p[0]] = byMod[p[0]] || []).push(p); });
+  PREP_GUIDE.forEach(m=>{
+    const list = byMod[m.id]; if(!list) return;
+    const slides = list.map(([mod,name,group,purpose,ins,tools,outs,tip])=>({ t:name, blocks:[{ proc:{group,purpose,ins,tools,outs,tip} }] }));
+    m.slides.splice(1, 0, ...slides);
+    m.mins += Math.round(list.length*1.5);
+  });
+})();
+
 function prepGuideDone(){ try{ return JSON.parse(localStorage.getItem('workar_guide_done')||'[]'); }catch(e){ return []; } }
 function prepGuideMark(id){ try{ const d = prepGuideDone(); if(!d.includes(id)){ d.push(id); localStorage.setItem('workar_guide_done', JSON.stringify(d)); } }catch(e){} }
 
 function prepGuideBlock(b){
   if(b.p) return `<p class="gd-p">${esc(b.p)}</p>`;
   if(b.list) return `<ul class="gd-list">${b.list.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`;
-  if(b.cards) return `<div class="gd-cards">${b.cards.map(([t,x])=>`<div class="gd-card"><b>${esc(t)}</b><span>${esc(x)}</span></div>`).join('')}</div>`;
+  if(b.cards) return `<dl class="gd-dl">${b.cards.map(([t,x])=>`<div><dt>${esc(t)}</dt><dd>${esc(x)}</dd></div>`).join('')}</dl>`;
+  if(b.proc){ const pr=b.proc, items = t => t.split(/,\s*/).map(x=>`<li>${esc(x)}</li>`).join('');
+    return `<div class="gd-proc"><span class="gd-proc-g">${esc(pr.group)}</span><p class="gd-proc-p">${esc(pr.purpose)}</p>
+      <div class="gd-ito"><div><h4>${esc(T('guide_inputs'))}</h4><ul>${items(pr.ins)}</ul></div><div><h4>${esc(T('guide_tools'))}</h4><ul>${items(pr.tools)}</ul></div><div class="out"><h4>${esc(T('guide_outputs'))}</h4><ul>${items(pr.outs)}</ul></div></div>
+      <div class="gd-tip"><b>${esc(T('guide_tip'))}</b> ${esc(pr.tip)}</div></div>`; }
   if(b.table) return `<div class="gd-tablewrap"><table class="gd-table"><thead><tr>${b.table.head.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${b.table.rows.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
   if(b.formula) return `<div class="gd-formulas">${b.formula.map(([l,e,n])=>`<div class="gd-f"><span class="gd-fl">${esc(l)}</span><code>${esc(e)}</code>${n?`<span class="gd-fn">${esc(n)}</span>`:''}</div>`).join('')}</div>`;
   if(b.tip) return `<div class="gd-tip"><b>${esc(T('guide_tip'))}</b> ${esc(b.tip)}</div>`;
@@ -2606,41 +2731,27 @@ function prepGuideHome(){
   const n = PREP_GUIDE.length, pct = Math.round(100*done.length/n);
   const next = PREP_GUIDE.find(m=>!done.includes(m.id));
   const nextIdx = next ? PREP_GUIDE.indexOf(next) : -1;
-  const minsLeft = PREP_GUIDE.filter(m=>!done.includes(m.id)).reduce((a,m)=>a+m.mins,0);
-  const r = 46, c = 2*Math.PI*r;
   return `
-  <div class="gl-wrap">
-    <aside class="gl-side">
-      <div class="gl-ring">
-        <svg viewBox="0 0 110 110" width="118" height="118">
-          <circle cx="55" cy="55" r="${r}" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="8"/>
-          <circle cx="55" cy="55" r="${r}" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${(c*(1-pct/100)).toFixed(1)}" transform="rotate(-90 55 55)"/>
-        </svg>
-        <div class="gl-ring-t"><b>${pct}%</b><span>${esc(T('guide_complete'))}</span></div>
+  <div class="lx">
+    <div class="lx-progress">
+      <div class="lx-progress-top">
+        <span><b>${pct}%</b> · ${done.length}/${n} ${esc(T('guide_modules'))}</span>
+        ${next ? `<button class="lx-cta" data-guide="${next.id}">${esc(T(done.length ? 'guide_continue_btn' : 'guide_begin_btn'))}: ${String(nextIdx+1).padStart(2,'0')} ${esc(next.title)} →</button>`
+               : `<button class="lx-cta" data-tab="test">${esc(T('guide_test_now'))} →</button>`}
       </div>
-      <div class="gl-side-stats">${done.length} / ${n} ${esc(T('guide_modules'))}${minsLeft ? ` · ${minsLeft} ${esc(T('prep_min'))} ${esc(T('guide_left'))}` : ''}</div>
-      ${next ? `
-        <div class="gl-next-label">${esc(T(done.length ? 'guide_continue' : 'guide_begin'))}</div>
-        <div class="gl-next-title">${String(nextIdx+1).padStart(2,'0')} · ${esc(next.title)}</div>
-        <button class="gl-next-btn" data-guide="${next.id}">${esc(T(done.length ? 'guide_continue_btn' : 'guide_begin_btn'))} →</button>`
-      : `<div class="gl-next-title">${esc(T('guide_all_done'))}</div>
-         <button class="gl-next-btn" data-tab="test">${esc(T('guide_test_now'))} →</button>`}
-      <p class="gl-side-note">${esc(T('guide_sub').replace('{n}', n))}</p>
-    </aside>
-    <div class="gl-main">
-      ${PREP_GUIDE_PARTS.map(([pk, ids], pi)=>{
-        const mods = ids.map(id=>PREP_GUIDE.find(m=>m.id===id)).filter(Boolean);
-        const pd = mods.filter(m=>done.includes(m.id)).length;
-        return `<section class="gl-part">
-          <div class="gl-part-head"><span class="gl-part-k">${esc(T('guide_part'))} ${pi+1}</span><h3>${esc(T(pk))}</h3><span class="gl-part-c">${pd}/${mods.length}</span></div>
-          ${mods.map(m=>{ const i = PREP_GUIDE.indexOf(m), isDone = done.includes(m.id), isNext = next && next.id===m.id;
-            return `<button class="gl-row ${isDone?'done':''} ${isNext?'next':''}" data-guide="${m.id}">
-              <span class="gl-num">${isDone ? '✓' : String(i+1).padStart(2,'0')}</span>
-              <span class="gl-t"><b>${esc(m.title)}</b><small>${m.slides.length} ${esc(T('guide_slides'))} · ${m.mins} ${esc(T('prep_min'))}</small></span>
-              <span class="gl-go">${isDone ? esc(T('guide_review_btn')) : isNext ? esc(T('guide_start_btn')) : ''}<span class="gl-arrow">→</span></span>
-            </button>`; }).join('')}
-        </section>`; }).join('')}
+      <div class="lx-bar"><div style="width:${pct}%"></div></div>
     </div>
+    ${PREP_GUIDE_PARTS.map(([pk, ids], pi)=>{
+      const mods = ids.map(id=>PREP_GUIDE.find(m=>m.id===id)).filter(Boolean);
+      return `<section class="lx-part">
+        <h3 class="lx-part-h">${esc(T('guide_part'))} ${pi+1} · ${esc(T(pk))}</h3>
+        ${mods.map(m=>{ const i = PREP_GUIDE.indexOf(m), isDone = done.includes(m.id), isNext = next && next.id===m.id;
+          return `<button class="lx-row ${isDone?'done':''} ${isNext?'next':''}" data-guide="${m.id}">
+            <span class="lx-num">${isDone ? '✓' : String(i+1).padStart(2,'0')}</span>
+            <span class="lx-title">${esc(m.title)}</span>
+            <span class="lx-meta">${m.mins} ${esc(T('prep_min'))}</span>
+          </button>`; }).join('')}
+      </section>`; }).join('')}
   </div>`;
 }
 
@@ -2654,10 +2765,10 @@ function prepGuideView(){
   <div class="gd-viewer">
     <div class="pp-top" style="margin-bottom:12px;">
       <button class="btn btn-ghost btn-sm" id="gd-back">← ${esc(T('guide_all'))}</button>
-      <span class="muted" style="font-size:13px;">${esc(T('guide_module'))} ${mi+1}/${PREP_GUIDE.length} · ${esc(T('guide_slide_of').replace('{i}', si+1).replace('{n}', m.slides.length))}</span>
+      <select class="gd-jump" id="gd-jump">${m.slides.map((x,i)=>`<option value="${i}" ${i===si?'selected':''}>${i+1}. ${esc(x.t)}</option>`).join('')}</select>
     </div>
     <div class="gd-slide" dir="ltr">
-      <div class="gd-band"><span class="gd-band-num">${String(mi+1).padStart(2,"0")}</span><span>${esc(m.title)}</span><span class="gd-brand">WORKAR · PMP PREP</span></div>
+      <div class="gd-crumb"><span>${String(mi+1).padStart(2,"0")} · ${esc(m.title)}</span><span>${si+1} / ${m.slides.length}</span></div><div class="gd-thin"><div style="width:${Math.round(100*(si+1)/m.slides.length)}%"></div></div>
       <div class="gd-body">
         <h2 class="gd-title">${esc(sl.t)}</h2>
         ${sl.blocks.map(prepGuideBlock).join('')}
@@ -2665,7 +2776,7 @@ function prepGuideView(){
     </div>
     <div class="gd-nav">
       <button class="btn btn-outline btn-sm" id="gd-prev" ${si===0?'disabled':''}>← ${esc(T('prep_prev'))}</button>
-      <div class="gd-dots">${m.slides.map((_,i)=>`<button class="gd-dot ${i===si?'on':''}" data-slide="${i}" aria-label="${i+1}"></button>`).join('')}</div>
+      <div class="gd-dots">${m.slides.length<=12 ? m.slides.map((_,i)=>`<button class="gd-dot ${i===si?'on':''}" data-slide="${i}" aria-label="${i+1}"></button>`).join('') : `<span class="muted" style="font-size:13px;">${si+1} / ${m.slides.length}</span>`}</div>
       ${!last ? `<button class="btn btn-primary btn-sm" id="gd-next">${esc(T('prep_next'))} →</button>` : `<span></span>`}
     </div>
     ${last ? `<div class="gd-end">
@@ -2689,6 +2800,7 @@ function wireGuide(){
   on('gd-back', ()=>{ prep.screen='home'; prep.tab='learn'; render(); window.scrollTo(0,0); });
   on('gd-test', ()=>{ prep.screen='home'; prep.tab='test'; prep.pickExam = (prep.exams.find(e=>e.isFree)||{}).id || null; render(); window.scrollTo(0,0); });
   document.querySelectorAll('[data-slide]').forEach(b=>b.addEventListener('click', ()=>go(parseInt(b.getAttribute('data-slide'),10))));
+  const jump = document.getElementById('gd-jump'); if(jump) jump.addEventListener('change', ()=>go(parseInt(jump.value,10)));
   document.querySelectorAll('.gd-scn').forEach(box=>{
     const ans = parseInt(box.getAttribute('data-a'),10);
     box.querySelectorAll('.gd-scn-o').forEach(btn=>btn.addEventListener('click', ()=>{
