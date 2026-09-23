@@ -1846,7 +1846,7 @@ function prepHomeView(){
 
   <div class="pp-tabbar" role="tablist">
     ${tabs.map(([k,ic,lbl,cnt],i)=>`<button class="pp-tabbtn ${prep.tab===k?'on':''}" data-tab="${k}" role="tab">
-      <span class="pp-tabnum">${i+1}</span><span>${esc(T(lbl))}</span><span class="pp-tabcnt">${cnt}</span></button>`).join('')}
+      <span class="pp-tabnum">${i+1}</span><span>${esc(T(lbl))}</span></button>`).join('')}
   </div>
 
   <div class="pp-tabpanel">
