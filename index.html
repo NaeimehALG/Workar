@@ -248,6 +248,77 @@
   .gl-arrow{opacity:0;transform:translateX(-4px);transition:all .15s;}
   .gl-row:hover .gl-arrow, .gl-row.next .gl-arrow{opacity:1;transform:none;}
   .gd-band-num{font-variant-numeric:tabular-nums;font-weight:800;opacity:.75;}
+
+  .rv-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px;}
+  @media (max-width:760px){.rv-kpis{grid-template-columns:repeat(2,1fr);}}
+  .rv-kpi{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:2px;}
+  .rv-kpi span{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;}
+  .rv-kpi b{font-size:28px;font-weight:800;line-height:1.15;}
+  .rv-kpi em{font-style:normal;align-self:flex-start;margin-top:4px;font-size:11px;}
+  .rv-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:18px;}
+  @media (max-width:860px){.rv-grid{grid-template-columns:1fr;}}
+  .rv-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:20px 22px;}
+  .rv-card-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+  .rv-card-h h3{margin:0;font-size:16px;font-weight:800;}
+  .rv-card-h span{font-size:12.5px;}
+  .rv-chart{width:100%;height:auto;display:block;}
+  .rv-line{fill:none;stroke:var(--accent);stroke-width:3;stroke-linejoin:round;stroke-linecap:round;}
+  .rv-dot{fill:var(--surface);stroke:var(--accent);stroke-width:2.5;}
+  .rv-goal{stroke:#4E8A5B;stroke-width:1.5;stroke-dasharray:5 5;opacity:.7;}
+  .rv-goal-t{font-size:11px;fill:#4E8A5B;font-weight:700;}
+  .rv-rec{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-top:18px;padding:22px 24px;border-radius:18px;background:linear-gradient(135deg,#6B4F3A,#8B6A4C 60%,#B98D5E);color:#fff;}
+  .rv-rec h3{margin:4px 0 6px;font-size:20px;font-weight:800;}
+  .rv-rec p{margin:0;opacity:.85;font-size:14px;max-width:46ch;}
+  .rv-rec-mods{display:grid;gap:8px;min-width:260px;}
+  .rv-rec-mod{display:flex;align-items:center;gap:10px;text-align:start;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;border-radius:12px;padding:10px 14px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:background .15s;}
+  .rv-rec-mod:hover{background:rgba(255,255,255,.24);}
+  .rv-rec-mod span{font-size:12px;opacity:.75;font-variant-numeric:tabular-nums;}
+  .rv-table{display:grid;}
+  .rv-row{display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:center;padding:12px 4px;border-top:1px solid var(--border);}
+  .rv-row:first-child{border-top:none;}
+  .rv-row-t{display:flex;flex-direction:column;} .rv-row-t b{font-size:14.5px;} .rv-row-t small{font-size:12px;color:var(--muted);}
+  .rv-row-s{font-size:13px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;}
+  @media (max-width:560px){.rv-row{grid-template-columns:1fr auto;}.rv-row-s{display:none;}}
+  .rv-empty{text-align:center;padding:46px 20px;border:1.5px dashed var(--border);border-radius:18px;}
+  .rv-empty h3{margin:0 0 6px;font-size:19px;}
+  .rv-empty p{margin:0 auto 16px;max-width:44ch;}
+  .pp-hero2{position:relative;}
+
+  .gd-slide{min-height:0 !important;}
+  .gd-fig{margin:6px 0 16px;padding:14px 12px 10px;background:var(--surface);border:1px solid var(--border);border-radius:14px;}
+  .gd-svg{width:100%;height:auto;display:block;max-height:320px;}
+  .gd-fig figcaption{font-size:12.5px;color:var(--muted);text-align:center;margin-top:6px;}
+  .gd-compare{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:stretch;margin:0 0 14px;}
+  .gd-compare > div:not(.gd-vs){background:var(--surface-2);border-radius:12px;padding:14px 16px;}
+  .gd-compare b{display:block;margin-bottom:4px;font-size:14.5px;} .gd-compare span{font-size:13.5px;line-height:1.55;}
+  .gd-vs{align-self:center;font-size:12px;font-weight:800;color:var(--accent-2);text-transform:uppercase;}
+  @media (max-width:600px){.gd-compare{grid-template-columns:1fr;}.gd-vs{text-align:center;}}
+  .gd-scn{margin:8px 0 4px;padding:18px;border-radius:14px;border:1.5px solid var(--accent-2);background:linear-gradient(180deg,var(--surface-2),var(--surface));}
+  .gd-scn-k{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;}
+  .gd-scn p{margin:0 0 12px;font-size:15px;line-height:1.55;font-weight:600;}
+  .gd-scn-opts{display:grid;gap:8px;}
+  .gd-scn-o{display:flex;gap:10px;align-items:flex-start;text-align:start;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);font-family:inherit;font-size:14px;line-height:1.45;cursor:pointer;}
+  .gd-scn-o:hover:not([disabled]){border-color:var(--accent);}
+  .gd-scn-o span{flex:0 0 22px;height:22px;border-radius:50%;border:1.5px solid currentColor;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;opacity:.8;}
+  .gd-scn-o.ok{border-color:#4E8A5B;background:#E3F0E5;color:#1F4A29;} .gd-scn-o.no{border-color:#B3412C;background:#F8E1DC;color:#6E2416;} .gd-scn-o.dim{opacity:.55;}
+  .gd-scn-o[disabled]{cursor:default;}
+  .gd-scn-why{margin-top:12px;padding:12px 14px;border-radius:10px;font-size:14px;line-height:1.55;animation:ppIn .25s ease;}
+  .gd-scn-why.ok{background:#EEF6EF;color:#1F4A29;} .gd-scn-why.no{background:#FBEFEC;color:#5C1E13;}
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .gd-scn-o.ok, :root:not([data-theme="light"]) .gd-scn-why.ok{background:#1F3525;color:#CFE8D4;} :root:not([data-theme="light"]) .gd-scn-o.no, :root:not([data-theme="light"]) .gd-scn-why.no{background:#3A1F19;color:#F2CFC6;} }
+  /* cleaner tab bar */
+  .pp-tabbar{background:none !important;padding:0 !important;border-radius:0 !important;gap:0 !important;border-bottom:1px solid var(--border);top:0 !important;background:var(--bg) !important;}
+  .pp-tabbtn{border-radius:0 !important;padding:14px 10px !important;border-bottom:3px solid transparent !important;margin-bottom:-1px;font-size:15px;}
+  .pp-tabbtn.on{background:none !important;box-shadow:none !important;border-bottom-color:var(--accent) !important;}
+  .pp-tabnum{display:none;}
+  .pp-tabcnt{background:var(--surface-2) !important;}
+  /* cleaner test cards */
+  .pp-card{box-shadow:none !important;padding:20px !important;}
+  .pp-card:hover{border-color:var(--accent-2);transform:none !important;box-shadow:0 10px 26px -18px rgba(107,79,58,.45) !important;}
+  .pp-card.is-free{border:1px solid var(--accent) !important;}
+  .pp-card h3{font-size:18px !important;}
+  .pp-meta{color:var(--muted);gap:6px !important;}
+  .pp-meta span + span::before{content:"·";margin-inline-end:6px;}
+  .pp-pick-note{font-size:12px;color:var(--muted);margin:-2px 0 4px;line-height:1.4;}
   /* ---------- PMP study guide ---------- */
   .pp-path{display:flex;align-items:stretch;gap:10px;margin:0 0 30px;flex-wrap:wrap;}
   .pp-path-step{flex:1 1 200px;position:relative;display:grid;grid-template-columns:auto 1fr;column-gap:10px;align-items:center;text-decoration:none;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px 16px;transition:border-color .15s,transform .15s;}
@@ -501,7 +572,8 @@ const I18N = {
     adm_g_hero:'Top of the home page', adm_g_why:'Why Workar', adm_g_steps:'How Workar works', adm_g_pk:'Packages', adm_g_footer:'Footer & tagline',
     adm_save:'Save & publish', adm_reset:'Reset everything to default', adm_reset_confirm:'Reset all prices and text back to the original defaults?',
     adm_saved:'Saved — the site is updated', adm_save_fail:'Could not save — check that the site_settings SQL has been run',
-    guide_part:'Part', guide_part1:'Foundations', guide_part2:'Planning the work', guide_part3:'Delivering with people & control', guide_part4:'Agile & exam-ready', guide_left:'left', guide_begin:'Start here', guide_continue:'Continue where you left off', guide_begin_btn:'Begin', guide_continue_btn:'Continue', guide_all_done:'You have completed every module. Time to test yourself.', guide_start_btn:'Start', guide_review_btn:'Review',
+    rv_empty_t:'No results yet', rv_login_t:'Track your progress', rv_taken:'Mocks taken', rv_avg:'Average score', rv_best:'Best score', rv_answered:'Questions answered', rv_trend:'Score trend', rv_trend_d:'Your last attempts, oldest to newest', rv_goal:'Target', rv_domains:'Strength by domain', rv_domains_d:'All attempts combined', rv_rec_k:'Recommended next', rv_rec_t:'Strengthen {d}', rv_rec_d:'This is your weakest domain so far. Review these modules, then retake a mock and watch your score move.',
+    guide_scn:'Exam scenario — try it', guide_part:'Part', guide_part1:'Foundations', guide_part2:'Planning the work', guide_part3:'Delivering with people & control', guide_part4:'Agile & exam-ready', guide_left:'left', guide_begin:'Start here', guide_continue:'Continue where you left off', guide_begin_btn:'Begin', guide_continue_btn:'Continue', guide_all_done:'You have completed every module. Time to test yourself.', guide_start_btn:'Start', guide_review_btn:'Review',
     guide_modules:'study modules', guide_kicker:'Free study guide', guide_title:'Learn the essentials', guide_sub:'{n} bite-sized modules covering every exam area — written in plain English, with tips on how PMI thinks.',
     guide_complete:'complete', guide_slides:'slides', guide_tip:'Exam tip:', guide_all:'All modules', guide_module:'Module', guide_slide_of:'slide {i} of {n}',
     guide_done_t:'Module complete: {m}', guide_next_mod:'Next module', guide_test_now:'Test yourself — free diagnostic', guide_keys:'Tip: use ← → to move between slides',
@@ -703,7 +775,8 @@ const I18N = {
     adm_g_hero:'بالای صفحه‌ی اصلی', adm_g_why:'چرا Workar', adm_g_steps:'Workar چطور کار می‌کنه', adm_g_pk:'پکیج‌ها', adm_g_footer:'فوتر و شعار',
     adm_save:'ذخیره و انتشار', adm_reset:'برگرداندن همه‌چیز به حالت اولیه', adm_reset_confirm:'همه‌ی قیمت‌ها و متن‌ها به حالت اولیه برگردن؟',
     adm_saved:'ذخیره شد — سایت به‌روز شد', adm_save_fail:'ذخیره نشد — مطمئن شو SQL مربوط به site_settings اجرا شده',
-    guide_part:'بخش', guide_part1:'مبانی', guide_part2:'برنامه‌ریزی کار', guide_part3:'اجرا با تیم و کنترل', guide_part4:'اجایل و آمادگی آزمون', guide_left:'باقی‌مانده', guide_begin:'از اینجا شروع کن', guide_continue:'از همون جایی که موندی ادامه بده', guide_begin_btn:'شروع', guide_continue_btn:'ادامه', guide_all_done:'همه‌ی ماژول‌ها رو تموم کردی. وقت آزمونه.', guide_start_btn:'شروع', guide_review_btn:'مرور',
+    rv_empty_t:'هنوز نتیجه‌ای نداری', rv_login_t:'پیشرفتت رو دنبال کن', rv_taken:'آزمون داده‌شده', rv_avg:'میانگین نمره', rv_best:'بهترین نمره', rv_answered:'سؤال پاسخ‌داده', rv_trend:'روند نمره', rv_trend_d:'آزمون‌های اخیر، از قدیمی به جدید', rv_goal:'هدف', rv_domains:'قدرت در هر حوزه', rv_domains_d:'همه‌ی آزمون‌ها با هم', rv_rec_k:'پیشنهاد بعدی', rv_rec_t:'تقویت حوزه‌ی {d}', rv_rec_d:'این ضعیف‌ترین حوزه‌ی تو تا الانه. این ماژول‌ها رو مرور کن، بعد دوباره آزمون بده و ببین نمره‌ات چطور بالا می‌ره.',
+    guide_scn:'سناریوی آزمون — امتحانش کن', guide_part:'بخش', guide_part1:'مبانی', guide_part2:'برنامه‌ریزی کار', guide_part3:'اجرا با تیم و کنترل', guide_part4:'اجایل و آمادگی آزمون', guide_left:'باقی‌مانده', guide_begin:'از اینجا شروع کن', guide_continue:'از همون جایی که موندی ادامه بده', guide_begin_btn:'شروع', guide_continue_btn:'ادامه', guide_all_done:'همه‌ی ماژول‌ها رو تموم کردی. وقت آزمونه.', guide_start_btn:'شروع', guide_review_btn:'مرور',
     guide_modules:'ماژول آموزشی', guide_kicker:'راهنمای مطالعه‌ی رایگان', guide_title:'مفاهیم اصلی رو یاد بگیر', guide_sub:'{n} ماژول کوتاه که همه‌ی حوزه‌های آزمون رو پوشش می‌ده — با نکته‌هایی درباره‌ی طرز فکر PMI.',
     guide_complete:'تکمیل‌شده', guide_slides:'اسلاید', guide_tip:'نکته‌ی آزمون:', guide_all:'همه‌ی ماژول‌ها', guide_module:'ماژول', guide_slide_of:'اسلاید {i} از {n}',
     guide_done_t:'ماژول تموم شد: {m}', guide_next_mod:'ماژول بعدی', guide_test_now:'خودت رو بسنج — آزمون تشخیصی رایگان', guide_keys:'نکته: با ← → بین اسلایدها جابه‌جا شو',
@@ -903,7 +976,23 @@ let cache = { profiles:{}, reviews:{}, requests:[], names:{} };
 function el(html){ const t=document.createElement('template'); t.innerHTML=html.trim(); return t.content; }
 function esc(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function toast(msg, ms){ const d=document.createElement('div'); d.className='toast'; d.textContent=msg; document.body.appendChild(d); setTimeout(()=>d.remove(), ms||2600); }
-function nav(view, params){ state.view=view; Object.assign(state, params||{}); render(); window.scrollTo(0,0); }
+function nav(view, params, fromHistory){
+  if(typeof prep!=='undefined'){
+    const s = prep.session;
+    if(s && !s.finished && prep.screen==='run' && s.mode==='exam' && s.deadline){ s.pausedLeft = Math.max(0, s.deadline-Date.now()); savePrepSession(); }
+    if(view==='prep' && !(params && params.prepScreen)) prep.screen = 'home';
+    if(params && params.prepScreen){ prep.screen = params.prepScreen; }
+  }
+  state.view=view; Object.assign(state, params||{});
+  if(!fromHistory){ try{ history.pushState({ view, prepScreen: (typeof prep!=='undefined' && view==='prep') ? prep.screen : null, guide: (typeof prep!=='undefined') ? prep.guide : null }, ''); }catch(e){} }
+  render(); window.scrollTo(0,0);
+}
+window.addEventListener('popstate', e=>{
+  const st = e.state || { view:'home' };
+  if(typeof prep!=='undefined'){ if(st.guide) prep.guide = st.guide; }
+  nav(st.view || 'home', st.prepScreen ? { prepScreen: st.prepScreen } : null, true);
+});
+try{ history.replaceState({ view: state.view }, ''); }catch(e){}
 
 async function resolveNames(ids){ /* names are resolved locally in nameOf() — nothing to fetch */ }
 function nameOf(id){
@@ -1500,7 +1589,7 @@ async function startPrepExam(examId, mode, onlyIds){
   const mins = onlyIds ? Math.max(3, Math.round(qs.length*1.28)) : (ex.timeMinutes || Math.round(qs.length*1.28));
   prep.session = { examId, title:ex.title, mode, qs, idx:0, ans:{}, checked:{}, flags:[], startedAt:Date.now(),
                    deadline: mode==='exam' ? Date.now()+mins*60000 : null, finished:false, result:null, isRetry:!!onlyIds };
-  prep.screen = 'run'; prep.pickExam = null; savePrepSession(); render(); window.scrollTo(0,0);
+  prep.pickExam = null; savePrepSession(); nav('prep', { prepScreen:'run' });
 }
 
 async function finishPrep(){
@@ -1551,6 +1640,80 @@ function prepView(){
   return prepHomeView();
 }
 
+const PREP_DOMAIN_MODULES = { 'People':['stakeholders','resources','communications'], 'Process':['schedule','cost','risk','quality'], 'Business Environment':['integration','procurement','mindset'] };
+function prepReviewDashboard(){
+  const at = prep.attempts.slice().filter(a=>a.total);
+  if(!uid || !at.length){
+    return `<div class="rv-empty">
+      <h3>${esc(T(uid ? 'rv_empty_t' : 'rv_login_t'))}</h3>
+      <p class="muted">${esc(T(uid ? 'prep_history_empty' : 'prep_login_save'))}</p>
+      ${uid ? `<button class="btn btn-primary btn-sm" data-tab="test">${esc(T('prep_start'))} →</button>` : `<button class="btn btn-primary btn-sm" data-nav="dashboard">${esc(T('nav_login'))} →</button>`}
+    </div>`;
+  }
+  const pcts = at.map(a=>Math.round(100*a.score/a.total));
+  const avg = Math.round(pcts.reduce((x,y)=>x+y,0)/pcts.length), best = Math.max(...pcts);
+  const answered = at.reduce((x,a)=>x+a.total,0);
+  const agg = {};
+  at.forEach(a=>Object.entries(a.byDomain||{}).forEach(([d,v])=>{ const g = agg[d] || (agg[d]={c:0,t:0}); g.c += v.c||0; g.t += v.t||0; }));
+  const doms = PREP_DOMAINS.filter(d=>agg[d]);
+  const weakest = doms.slice().sort((x,y)=>(agg[x].c/agg[x].t)-(agg[y].c/agg[y].t))[0];
+  const [bandCls, bandLbl] = prepBand(avg);
+  // trend: oldest -> newest
+  const trend = at.slice(0,12).reverse().map(a=>Math.round(100*a.score/a.total));
+  const W=560, H=150, pad=26;
+  const x = i => trend.length===1 ? W/2 : pad + i*(W-2*pad)/(trend.length-1);
+  const y = v => H-pad - v*(H-2*pad)/100;
+  const pts = trend.map((v,i)=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+  const recMods = weakest ? (PREP_DOMAIN_MODULES[weakest]||[]).map(id=>PREP_GUIDE.find(m=>m.id===id)).filter(Boolean) : [];
+  return `
+  <div class="rv-kpis">
+    <div class="rv-kpi"><span>${esc(T('rv_taken'))}</span><b>${at.length}</b></div>
+    <div class="rv-kpi"><span>${esc(T('rv_avg'))}</span><b>${avg}%</b><em class="pp-band ${bandCls}">${esc(bandLbl)}</em></div>
+    <div class="rv-kpi"><span>${esc(T('rv_best'))}</span><b>${best}%</b></div>
+    <div class="rv-kpi"><span>${esc(T('rv_answered'))}</span><b>${answered}</b></div>
+  </div>
+
+  <div class="rv-grid">
+    <div class="rv-card">
+      <div class="rv-card-h"><h3>${esc(T('rv_trend'))}</h3><span class="muted">${esc(T('rv_trend_d'))}</span></div>
+      <svg viewBox="0 0 ${W} ${H}" class="rv-chart">
+        <line x1="${pad}" x2="${W-pad}" y1="${y(80)}" y2="${y(80)}" class="rv-goal"/>
+        <text x="${W-pad}" y="${y(80)-6}" text-anchor="end" class="rv-goal-t">${esc(T('rv_goal'))} 80%</text>
+        ${trend.length>1 ? `<polyline points="${pts}" class="rv-line"/>` : ''}
+        ${trend.map((v,i)=>`<circle cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="4.5" class="rv-dot"><title>${v}%</title></circle>`).join('')}
+      </svg>
+    </div>
+    <div class="rv-card">
+      <div class="rv-card-h"><h3>${esc(T('rv_domains'))}</h3><span class="muted">${esc(T('rv_domains_d'))}</span></div>
+      ${doms.map(d=>{ const p = Math.round(100*agg[d].c/agg[d].t); return `<div class="pp-dom" style="margin-bottom:14px;">
+        <div class="pp-dom-h"><b>${esc(prepDomLabel(d))}</b><span>${p}%</span></div>
+        <div class="pp-bar"><div style="width:${p}%;background:${p>=80?'#4E8A5B':p>=65?'var(--accent)':p>=50?'#C2773A':'#B3412C'}"></div></div>
+      </div>`; }).join('')}
+    </div>
+  </div>
+
+  ${weakest && recMods.length ? `<div class="rv-rec">
+    <div>
+      <span class="pp-kicker" style="color:inherit;opacity:.8;">${esc(T('rv_rec_k'))}</span>
+      <h3>${esc(T('rv_rec_t').replace('{d}', prepDomLabel(weakest)))}</h3>
+      <p>${esc(T('rv_rec_d'))}</p>
+    </div>
+    <div class="rv-rec-mods">${recMods.map(m=>`<button class="rv-rec-mod" data-guide="${m.id}"><span>${String(PREP_GUIDE.indexOf(m)+1).padStart(2,'0')}</span>${esc(m.title)} →</button>`).join('')}</div>
+  </div>` : ''}
+
+  <div class="rv-card" style="margin-top:18px;">
+    <div class="rv-card-h"><h3>${esc(T('prep_history'))}</h3></div>
+    <div class="rv-table">
+      ${at.slice(0,10).map(a=>{ const ex = prep.exams.find(e=>e.id===a.examId); const pct = Math.round(100*a.score/a.total); const [cls,lbl]=prepBand(pct);
+        return `<div class="rv-row">
+          <span class="rv-row-t"><b>${esc(ex?ex.title:a.examId)}</b><small>${new Date(a.createdAt).toLocaleDateString(state.lang==='fa'?'fa-IR':undefined,{year:'numeric',month:'short',day:'numeric'})} · ${esc(T(a.mode==='exam'?'prep_mode_exam':a.mode==='retry'?'prep_retry_tag':'prep_mode_practice'))}</small></span>
+          <span class="rv-row-s">${a.score}/${a.total}</span>
+          <span class="pp-band ${cls}">${pct}% · ${esc(lbl)}</span>
+        </div>`; }).join('')}
+    </div>
+  </div>`;
+}
+
 function prepHomeView(){
   const exams = prep.exams;
   const total = exams.filter(e=>e.published).reduce((a,e)=>a+(e.questionCount||0),0);
@@ -1568,10 +1731,6 @@ function prepHomeView(){
   const learnTab = prepGuideHome();
 
   const testTab = `
-    <div class="pp-modes-line">
-      <span><b>${esc(T('prep_mode_practice'))}</b> — ${esc(T('prep_mode_practice_d'))}</span>
-      <span><b>${esc(T('prep_mode_exam'))}</b> — ${esc(T('prep_mode_exam_d'))}</span>
-    </div>
     <div class="pp-grid">
     ${exams.map(ex=>{
       const access = prepHasAccess(ex), best = prepBest(ex.id);
@@ -1585,7 +1744,9 @@ function prepHomeView(){
         ${access ? (picking ? `
           <div class="pp-pick">
             <button class="btn btn-primary btn-sm" data-start="${ex.id}" data-mode="practice">${esc(T('prep_mode_practice'))}</button>
+            <div class="pp-pick-note">${esc(T('prep_mode_practice_d'))}</div>
             <button class="btn btn-outline btn-sm" data-start="${ex.id}" data-mode="exam">${esc(T('prep_mode_exam'))}</button>
+            <div class="pp-pick-note">${esc(T('prep_mode_exam_d'))}</div>
           </div>` : `<button class="btn ${ex.isFree?'btn-primary':'btn-outline'} pp-cta" data-pick="${ex.id}">${esc(T(best!=null?'prep_retake':'prep_start'))}</button>`)
         : `<button class="btn btn-primary pp-cta" data-buy="${ex.id}">${esc(T('prep_unlock'))} · ${prepMoney(ex.priceUsd)}</button>`}
       </div>`;
@@ -1606,10 +1767,7 @@ function prepHomeView(){
     </div>` : ''}
     ${isAdmin() ? `<div style="text-align:center;margin-top:18px;"><button class="btn btn-ghost btn-sm" data-nav="prepAdmin">${esc(T('prep_manage'))}</button></div>` : ''}`;
 
-  const reviewTab = recent.length ? `<div class="pp-history">${recent.map(a=>{ const ex = prep.exams.find(e=>e.id===a.examId); const pct = a.total?Math.round(100*a.score/a.total):0; const [cls,lbl]=prepBand(pct);
-      return `<div class="pp-hrow"><span><b>${esc(ex?ex.title:a.examId)}</b> <span class="muted">· ${esc(T('prep_mode_'+(a.mode==='exam'?'exam':'practice')))} · ${new Date(a.createdAt).toLocaleDateString()}</span></span><span class="pp-band ${cls}">${pct}% · ${esc(lbl)}</span></div>`; }).join('')}</div>`
-    : `<div class="empty" style="padding:30px;">${esc(T(uid ? 'prep_history_empty' : 'prep_login_save'))}
-        <div style="margin-top:14px;"><button class="btn btn-primary btn-sm" data-tab="test">${esc(T('prep_start'))}</button></div></div>`;
+  const reviewTab = prepReviewDashboard();
 
   return `
   <section class="pp-hero2">
@@ -1980,198 +2138,443 @@ function wirePrepAdmin(){
 
 /* ======================= PMP STUDY GUIDE (original Workar content) ======================= */
 // slide block types: p (paragraph), list (bullets), cards ([title, text]), table ({head, rows}), formula ([label, expr, note]), tip (text), flow ([steps])
+
+/* ---------- study guide diagrams (SVG, theme-aware) ---------- */
+const VZ = { a:'#8B6A4C', a2:'#B98D5E', d:'#6B4F3A', g:'#4E8A5B', o:'#C2773A', r:'#B3412C', l:'#E9DCCB' };
+function vzT(x,y,t,o){ o=o||{}; return `<text x="${x}" y="${y}" text-anchor="${o.a||'middle'}" font-size="${o.s||13}" font-weight="${o.w||600}" fill="${o.f||'var(--text)'}" ${o.extra||''}>${esc(t)}</text>`; }
+function vzBox(x,y,w,h,t,o){ o=o||{}; return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${o.rx||8}" fill="${o.fill||'var(--surface-2)'}" stroke="${o.stroke||VZ.a2}" stroke-width="${o.sw||1.5}"/>`+(t!=null?vzT(x+w/2,y+h/2+4.5,t,{f:o.tf||'var(--text)',s:o.s||12.5,w:o.w||700}):''); }
+function vzArrow(x1,y1,x2,y2,c){ return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c||VZ.a2}" stroke-width="2" marker-end="url(#vzah)"/>`; }
+const VZ_DEFS = `<defs><marker id="vzah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${VZ.a2}"/></marker></defs>`;
+function vzSvg(w,h,inner){ return `<svg viewBox="0 0 ${w} ${h}" class="gd-svg" role="img">${VZ_DEFS}${inner}</svg>`; }
+
+const PREP_VIZ = {
+  lifecycle(){
+    const W=560,H=280,x0=80,y0=240,w=420,h=210;
+    const band=(r,f)=>`<circle cx="${x0}" cy="${y0}" r="${r}" fill="${f}" clip-path="url(#vzlc)"/>`;
+    const lab=(r,t,sub,c)=>{ const a=Math.PI/4, x=x0+r*Math.cos(a)*1.05, y=y0-r*Math.sin(a)*0.78; return vzT(x,y,t,{s:12.5,w:800,f:c})+vzT(x,y+14,sub,{s:10.5,f:c,w:600}); };
+    return vzSvg(W,H, `<defs><clipPath id="vzlc"><rect x="${x0}" y="${y0-h}" width="${w}" height="${h}"/></clipPath></defs>`
+      + `<rect x="${x0}" y="${y0-h}" width="${w}" height="${h}" fill="var(--surface-2)"/>` + band(330,VZ.a) + band(215,VZ.a2) + band(105,VZ.l)
+      + lab(52,'Simple','predictive','var(--text)') + lab(160,'Complicated','iterative / incremental','#fff') + lab(272,'Complex','agile','#fff')
+      + vzT(x0+w-12,y0-h+22,'Chaotic',{a:'end',s:12.5,w:800}) + vzT(x0+w-12,y0-h+36,'probe & act first',{a:'end',s:10.5,f:'var(--muted)',w:600})
+      + `<line x1="${x0}" y1="${y0}" x2="${x0+w+10}" y2="${y0}" stroke="${VZ.a2}" stroke-width="2" marker-end="url(#vzah)"/><line x1="${x0}" y1="${y0}" x2="${x0}" y2="${y0-h-10}" stroke="${VZ.a2}" stroke-width="2" marker-end="url(#vzah)"/>`
+      + vzT(x0+w/2,y0+28,'Technical uncertainty →',{s:12,f:'var(--muted)'}) + vzT(34,y0-h/2,'Requirements uncertainty →',{s:12,f:'var(--muted)',extra:`transform="rotate(-90 34 ${y0-h/2})"`}));
+  },
+  processgroups(){ // activity level of process groups over time
+    const W=640,H=250,x0=50,x1=610,y0=210,y1=30;
+    const curve=(peak,width,height,c,label,lx)=>{ let d=''; for(let i=0;i<=60;i++){ const t=i/60, x=x0+t*(x1-x0), v=height*Math.exp(-Math.pow((t-peak)/width,2)); d+=(i?'L':'M')+x.toFixed(1)+','+(y0-v*(y0-y1)).toFixed(1); } return `<path d="${d}" fill="none" stroke="${c}" stroke-width="3"/>`+vzT(lx,y0-height*(y0-y1)-8,label,{f:c,s:12,w:800}); };
+    return vzSvg(W,H, `<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y0}" stroke="var(--border)" stroke-width="2"/><line x1="${x0}" y1="${y0}" x2="${x0}" y2="${y1-10}" stroke="var(--border)" stroke-width="2"/>`
+      + curve(.04,.09,.35,VZ.a2,'Initiating',x0+42) + curve(.3,.2,.75,VZ.a,'Planning',x0+.3*(x1-x0)) + curve(.55,.2,1,VZ.d,'Executing',x0+.55*(x1-x0))
+      + `<path d="M${x0},${y0-22} C${x0+140},${y0-80} ${x1-160},${y0-95} ${x1-40},${y0-60}" fill="none" stroke="${VZ.g}" stroke-width="3" stroke-dasharray="7 5"/>` + vzT(x1-60,y0-104,'Monitoring & Controlling',{f:VZ.g,s:12,w:800})
+      + curve(.95,.06,.3,VZ.o,'Closing',x1-20) + vzT((x0+x1)/2,H-10,'Time →',{s:12,f:'var(--muted)'}) + vzT(18,120,'Level of activity',{s:12,f:'var(--muted)',extra:'transform="rotate(-90 18 120)"'}));
+  },
+  changeflow(){
+    const steps=['Change request','Impact analysis','CCB decision','Update plans & baselines','Communicate'], W=640,H=120,w=108,g=(W-20-5*w)/4;
+    return vzSvg(W,H, steps.map((t,i)=>{ const x=10+i*(w+g); const parts=t.split(' & '); return vzBox(x,30,w,60,null,{fill:i===2?VZ.a:'var(--surface-2)',stroke:i===2?VZ.a:VZ.a2})
+      + (parts.length>1 ? vzT(x+w/2,56,parts[0]+' &',{s:11.5,w:700,f:i===2?'#fff':'var(--text)'})+vzT(x+w/2,72,parts[1],{s:11.5,w:700,f:i===2?'#fff':'var(--text)'}) : vzT(x+w/2,64,t,{s:11.5,w:700,f:i===2?'#fff':'var(--text)'}))
+      + (i<4? vzArrow(x+w+2,60,x+w+g-4,60):''); }).join('') + vzT(10+2*(w+g)+w/2,110,'approve · reject · defer',{s:11,f:'var(--muted)',w:600}));
+  },
+  pgrid(){
+    const W=560,H=290,x=70,y=20,s=210;
+    const q=[['Keep satisfied',x,y,'var(--surface-2)'],['Manage closely',x+s,y,VZ.a],['Monitor',x,y+s/1.8,'var(--surface-2)'],['Keep informed',x+s,y+s/1.8,VZ.l]];
+    const h=s/1.8;
+    return vzSvg(W,H, q.map(([t,qx,qy,f])=>vzBox(qx,qy,s,h,t,{rx:6,fill:f,stroke:'var(--surface)',sw:3,tf:f===VZ.a?'#fff':'var(--text)',s:14})).join('')
+      + vzT(x+s,y+2*h+30,'Interest →',{s:13,f:'var(--muted)'}) + vzT(30,y+h,'Power →',{s:13,f:'var(--muted)',extra:`transform="rotate(-90 30 ${y+h})"`})
+      + vzT(x+2*s+10,y+18,'High',{a:'start',s:11,f:'var(--muted)'}) + vzT(x+2*s+10,y+2*h-6,'Low',{a:'start',s:11,f:'var(--muted)'}));
+  },
+  wbs(){
+    const W=640,H=250;
+    const kids=[['1.1 Design',['1.1.1 Wireframes','1.1.2 Specs']],['1.2 Build',['1.2.1 Front end','1.2.2 Back end']],['1.3 Launch',['1.3.1 Training','1.3.2 Go-live']]];
+    let out = vzBox(245,10,150,40,'1.0 New website',{fill:VZ.a,stroke:VZ.a,tf:'#fff'});
+    kids.forEach(([t,wp],i)=>{ const cx=110+i*210; out += `<path d="M320,50 V70 H${cx} V88" fill="none" stroke="${VZ.a2}" stroke-width="2"/>` + vzBox(cx-70,88,140,36,t);
+      wp.forEach((w,j)=>{ const y=150+j*48; out += `<path d="M${cx-60},124 V${y+18} H${cx-44}" fill="none" stroke="${VZ.a2}" stroke-width="1.5"/>` + vzBox(cx-44,y,128,36,w,{fill:'var(--surface)',s:11.5,w:600}); }); });
+    return vzSvg(W,H,out + vzT(630,244,'lowest level = work packages',{a:'end',s:11,f:'var(--muted)',w:600}));
+  },
+  network(){
+    const W=640,H=240;
+    const node=(x,y,n,d,es,ef,ls,lf,crit)=> `<g><rect x="${x}" y="${y}" width="110" height="78" rx="8" fill="${crit?VZ.a:'var(--surface)'}" stroke="${crit?VZ.a:VZ.a2}" stroke-width="2"/>`
+      + `<line x1="${x}" y1="${y+24}" x2="${x+110}" y2="${y+24}" stroke="${crit?'rgba(255,255,255,.35)':'var(--border)'}"/><line x1="${x}" y1="${y+54}" x2="${x+110}" y2="${y+54}" stroke="${crit?'rgba(255,255,255,.35)':'var(--border)'}"/>`
+      + vzT(x+8,y+17,'ES '+es,{a:'start',s:11,f:crit?'#fff':'var(--muted)'}) + vzT(x+102,y+17,'EF '+ef,{a:'end',s:11,f:crit?'#fff':'var(--muted)'})
+      + vzT(x+55,y+44,n+' ('+d+'d)',{s:14,w:800,f:crit?'#fff':'var(--text)'})
+      + vzT(x+8,y+70,'LS '+ls,{a:'start',s:11,f:crit?'#fff':'var(--muted)'}) + vzT(x+102,y+70,'LF '+lf,{a:'end',s:11,f:crit?'#fff':'var(--muted)'}) + `</g>`;
+    return vzSvg(W,H, node(10,80,'A',3,0,3,0,3,1) + node(190,20,'B',4,3,7,3,7,1) + node(190,142,'C',2,3,5,5,7,0) + node(370,80,'D',5,7,12,7,12,1)
+      + vzArrow(120,110,188,64,VZ.d) + vzArrow(120,130,188,178) + vzArrow(300,59,368,108,VZ.d) + vzArrow(300,181,368,140)
+      + vzT(245,236,'C float = LS − ES = 5 − 3 = 2 days',{s:12,f:VZ.o,w:800})
+      + `<rect x="500" y="84" width="130" height="70" rx="10" fill="var(--surface-2)"/>` + vzT(565,108,'Critical path',{s:12,f:'var(--muted)'}) + vzT(565,128,'A → B → D',{s:15,w:800,f:VZ.d}) + vzT(565,146,'= 12 days',{s:12,f:'var(--muted)'}));
+  },
+  compression(){
+    const W=640,H=200, bar=(x,y,w,t,c)=>`<rect x="${x}" y="${y}" width="${w}" height="26" rx="5" fill="${c}"/>`+vzT(x+w/2,y+17.5,t,{s:12,w:700,f:'#fff'});
+    return vzSvg(W,H, vzT(10,20,'Original',{a:'start',s:12,f:'var(--muted)'}) + bar(10,28,200,'Design',VZ.a2) + bar(214,28,200,'Build',VZ.a)
+      + vzT(10,90,'Fast tracking — overlap (more risk)',{a:'start',s:12,f:VZ.o,w:800}) + bar(10,98,200,'Design',VZ.a2) + bar(150,128,200,'Build',VZ.a)
+      + vzT(430,90,'Crashing — add resources (more cost)',{a:'start',s:12,f:VZ.g,w:800}) + bar(430,98,100,'Design ×2',VZ.a2) + bar(532,98,100,'Build ×2',VZ.a)
+      + `<line x1="10" y1="178" x2="630" y2="178" stroke="var(--border)"/>` + vzT(320,196,'Both shorten the schedule without reducing scope',{s:12,f:'var(--muted)'}));
+  },
+  costbaseline(){
+    const W=640,H=240, x=40,w=200;
+    const seg=(y,h,t,c,tc)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="4" fill="${c}" stroke="var(--surface)" stroke-width="2"/>`+vzT(x+w/2,y+h/2+4.5,t,{s:12.5,w:700,f:tc||'#fff'});
+    const brace=(x2,y1,y2,t,sub)=>`<path d="M${x2},${y1} h10 V${y2} h-10" fill="none" stroke="${VZ.a2}" stroke-width="2"/>`+vzT(x2+22,(y1+y2)/2-2,t,{a:'start',s:13.5,w:800})+vzT(x2+22,(y1+y2)/2+15,sub,{a:'start',s:11.5,f:'var(--muted)',w:600});
+    return vzSvg(W,H, seg(14,40,'Management reserve',VZ.l,'var(--text)') + seg(54,40,'Contingency reserve',VZ.a2) + seg(94,130,'Work package estimates',VZ.a)
+      + brace(x+w+14,54,224,'Cost baseline','used to measure (EVM)')
+      + brace(x+w+200,14,224,'Project budget','+ management reserve'));
+  },
+  evm(){
+    const W=640,H=260,x0=60,y0=220,x1=600,y1=20, sx=t=>x0+t*(x1-x0), sy=v=>y0-v*(y0-y1);
+    const pv=t=>1/(1+Math.exp(-9*(t-.5))), path=(f,tmax)=>{ let d=''; for(let i=0;i<=40;i++){ const t=i/40*tmax; d+=(i?'L':'M')+sx(t).toFixed(1)+','+sy(f(t)).toFixed(1);} return d; };
+    const now=.55;
+    return vzSvg(W,H, `<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y0}" stroke="var(--border)" stroke-width="2"/><line x1="${x0}" y1="${y0}" x2="${x0}" y2="${y1}" stroke="var(--border)" stroke-width="2"/>`
+      + `<path d="${path(pv,1)}" fill="none" stroke="${VZ.a2}" stroke-width="3" stroke-dasharray="7 5"/>`
+      + `<path d="${path(t=>pv(t)*1.18,now)}" fill="none" stroke="${VZ.r}" stroke-width="3"/>`
+      + `<path d="${path(t=>pv(t)*0.82,now)}" fill="none" stroke="${VZ.g}" stroke-width="3"/>`
+      + `<line x1="${sx(now)}" y1="${y1}" x2="${sx(now)}" y2="${y0}" stroke="var(--muted)" stroke-dasharray="3 4"/>` + vzT(sx(now),y1-4,'Today',{s:11,f:'var(--muted)'})
+      + vzT(sx(1)-4,sy(1)+16,'PV (plan)',{a:'end',s:12,w:800,f:VZ.a2}) + vzT(sx(now)+8,sy(pv(now)*1.18)-4,'AC (spent)',{a:'start',s:12,w:800,f:VZ.r}) + vzT(sx(now)+8,sy(pv(now)*0.82)+14,'EV (earned)',{a:'start',s:12,w:800,f:VZ.g})
+      + `<path d="M${sx(now)-8},${sy(pv(now))} h-6 V${sy(pv(now)*0.82)} h6" fill="none" stroke="${VZ.o}" stroke-width="2"/>` + vzT(sx(now)-18,(sy(pv(now))+sy(pv(now)*0.82))/2+4,'SV',{a:'end',s:12,w:800,f:VZ.o})
+      + vzT((x0+x1)/2,H-6,'Time →',{s:12,f:'var(--muted)'}) + vzT(20,120,'Cost',{s:12,f:'var(--muted)',extra:'transform="rotate(-90 20 120)"'}));
+  },
+  controlchart(){
+    const W=640,H=230,x0=40,x1=620, pts=[0,.6,-.4,1.1,.3,.5,.8,.4,1,.7,.6,.9,-.8,.2], sy=v=>115-v*55;
+    const seven=[5,6,7,8,9,10,11];
+    return vzSvg(W,H, [[2,'UCL',VZ.r],[0,'Mean',VZ.a2],[-2,'LCL',VZ.r]].map(([v,t,c])=>`<line x1="${x0}" y1="${sy(v)}" x2="${x1}" y2="${sy(v)}" stroke="${c}" stroke-width="${v?1.5:2}" stroke-dasharray="${v?'6 5':''}"/>`+vzT(x1,sy(v)-5,t,{a:'end',s:11,w:800,f:c})).join('')
+      + `<rect x="${x0+5*40-12}" y="${sy(1.25)}" width="${6*40+24}" height="${sy(.1)-sy(1.25)}" rx="10" fill="${VZ.o}" opacity=".12"/>`
+      + `<polyline points="${pts.map((v,i)=>`${x0+20+i*40},${sy(v)}`).join(' ')}" fill="none" stroke="${VZ.a}" stroke-width="2"/>`
+      + pts.map((v,i)=>`<circle cx="${x0+20+i*40}" cy="${sy(v)}" r="5" fill="${seven.includes(i)?VZ.o:'var(--surface)'}" stroke="${seven.includes(i)?VZ.o:VZ.a}" stroke-width="2"/>`).join('')
+      + vzT(x0+5*40+120,H-14,'7 points in a row above the mean → investigate',{s:12,w:800,f:VZ.o}));
+  },
+  pareto(){
+    const W=640,H=240,x0=50,y0=200, v=[42,23,14,9,7,5], L=['Missing specs','Rushed tests','Tool errors','Handoffs','Training','Other'], tot=100;
+    let cum=0, line=[];
+    const bars=v.map((n,i)=>{ const x=x0+10+i*92, h=n*3.4; cum+=n; line.push(`${x+35},${y0-cum*1.7}`); return `<rect x="${x}" y="${y0-h}" width="70" height="${h}" rx="4" fill="${i<2?VZ.a:VZ.a2}"/>`+vzT(x+35,y0-h-6,n+'%',{s:11,w:800})+vzT(x+35,y0+16,L[i],{s:10.5,f:'var(--muted)'}); }).join('');
+    return vzSvg(W,H, `<line x1="${x0}" y1="${y0}" x2="${x0+560}" y2="${y0}" stroke="var(--border)" stroke-width="2"/>` + bars
+      + `<line x1="${x0}" y1="${y0-80*1.7}" x2="${x0+560}" y2="${y0-80*1.7}" stroke="${VZ.g}" stroke-dasharray="5 5"/>` + vzT(x0+560,y0-80*1.7-6,'80%',{a:'end',s:11,w:800,f:VZ.g})
+      + `<polyline points="${line.join(' ')}" fill="none" stroke="${VZ.o}" stroke-width="2.5"/>` + line.map(p=>{const [x,y]=p.split(',');return `<circle cx="${x}" cy="${y}" r="3.5" fill="${VZ.o}"/>`;}).join('')
+      + vzT(x0+560,y0+34,'Fix the tall bars first',{a:'end',s:11.5,f:'var(--muted)'}));
+  },
+  fishbone(){
+    const W=640,H=240,y=120,xh=520;
+    const bones=[['People',150,1],['Methods',300,1],['Materials',450,1],['Machines',150,-1],['Measurement',300,-1],['Environment',450,-1]];
+    return vzSvg(W,H, `<line x1="40" y1="${y}" x2="${xh}" y2="${y}" stroke="${VZ.a}" stroke-width="4"/>` + vzBox(xh,y-26,110,52,'Late delivery',{fill:VZ.a,stroke:VZ.a,tf:'#fff',s:13})
+      + bones.map(([t,x,d])=>`<line x1="${x-60}" y1="${y-d*85}" x2="${x}" y2="${y}" stroke="${VZ.a2}" stroke-width="2.5"/>`+vzT(x-60,y-d*85-(d>0?8:-18),t,{s:12.5,w:800})
+        + `<line x1="${x-45}" y1="${y-d*64}" x2="${x-5}" y2="${y-d*64}" stroke="${VZ.a2}" stroke-width="1.2"/><line x1="${x-30}" y1="${y-d*42}" x2="${x+10}" y2="${y-d*42}" stroke="${VZ.a2}" stroke-width="1.2"/>`).join('')
+      + vzT(40,H-6,'Causes →',{a:'start',s:11.5,f:'var(--muted)'}) + vzT(575,H-6,'Effect',{s:11.5,f:'var(--muted)'}));
+  },
+  tuckman(){
+    const W=640,H=230, st=['Forming','Storming','Norming','Performing'];
+    let out=''; st.forEach((t,i)=>{ const x=30+i*130, y=170-i*38; out+=`<rect x="${x}" y="${y}" width="126" height="${200-y}" rx="6" fill="${i===3?VZ.a:i===1?VZ.o:VZ.a2}" opacity="${i===3?1:.85}"/>`+vzT(x+63,y+22,t,{s:13,w:800,f:'#fff'}); });
+    out += `<rect x="550" y="150" width="70" height="50" rx="6" fill="var(--surface-2)" stroke="${VZ.a2}" stroke-dasharray="4 4"/>` + vzT(585,180,'Adjourning',{s:11,w:800});
+    out += vzT(95,222,'direct',{s:11.5,f:'var(--muted)'})+vzT(225,222,'coach',{s:11.5,f:'var(--muted)'})+vzT(355,222,'support',{s:11.5,f:'var(--muted)'})+vzT(485,222,'delegate',{s:11.5,f:'var(--muted)'});
+    return vzSvg(W,H,out + vzT(30,20,'Team performance ↑',{a:'start',s:12,f:'var(--muted)'}));
+  },
+  tk(){
+    const W=560,H=310,x0=80,y0=260;
+    const pts=[['Force',x0+50,y0-180],['Collaborate',x0+370,y0-180],['Compromise',x0+210,y0-110],['Withdraw',x0+50,y0-40],['Smooth',x0+370,y0-40]];
+    return vzSvg(W,H, `<rect x="${x0}" y="${y0-220}" width="420" height="220" rx="10" fill="var(--surface-2)"/>`
+      + `<line x1="${x0}" y1="${y0}" x2="${x0+430}" y2="${y0}" stroke="${VZ.a2}" stroke-width="2" marker-end="url(#vzah)"/><line x1="${x0}" y1="${y0}" x2="${x0}" y2="${y0-230}" stroke="${VZ.a2}" stroke-width="2" marker-end="url(#vzah)"/>`
+      + pts.map(([t,x,y])=>`<rect x="${x-52}" y="${y-17}" width="104" height="34" rx="17" fill="${t==='Collaborate'?VZ.g:VZ.a}"/>`+vzT(x,y+4.5,t,{s:12,w:800,f:'#fff'})).join('')
+      + vzT(x0+210,y0+28,'Cooperativeness (focus on their needs) →',{s:12,f:'var(--muted)'}) + vzT(34,y0-110,'Assertiveness →',{s:12,f:'var(--muted)',extra:`transform="rotate(-90 34 ${y0-110})"`}));
+  },
+  channels(){
+    const W=520,H=230,cx=260,cy=112,R=85, n=5, P=[...Array(n)].map((_,i)=>[cx+R*Math.cos(-Math.PI/2+i*2*Math.PI/n), cy+R*Math.sin(-Math.PI/2+i*2*Math.PI/n)]);
+    let lines=''; for(let i=0;i<n;i++) for(let j=i+1;j<n;j++) lines+=`<line x1="${P[i][0]}" y1="${P[i][1]}" x2="${P[j][0]}" y2="${P[j][1]}" stroke="${VZ.a2}" stroke-width="1.8" opacity=".8"/>`;
+    return vzSvg(W,H, lines + P.map(([x,y],i)=>`<circle cx="${x}" cy="${y}" r="17" fill="${VZ.a}"/>`+vzT(x,y+4.5,String.fromCharCode(65+i),{s:13,w:800,f:'#fff'})).join('')
+      + vzT(cx,H-4,'5 people → 5 × 4 ÷ 2 = 10 channels',{s:13,w:800,f:VZ.d}));
+  },
+  pi(){
+    const W=560,H=280,x0=110,y0=20,c=78;
+    const col=(p,i)=>{ const sc=p*i; return sc>=12?VZ.r:sc>=6?VZ.o:sc>=3?VZ.a2:VZ.l; };
+    let out=''; for(let p=1;p<=3;p++) for(let i=1;i<=5;i++){ const pr=[1,3,5][p-1]; const x=x0+(i-1)*c*0.95, y=y0+(3-p)*c*0.95*0.9; out+=`<rect x="${x}" y="${y}" width="${c*0.9}" height="${c*0.8}" rx="6" fill="${col(pr,i)}"/>`; }
+    out+=['Low','Medium','High'].map((t,k)=>vzT(x0-12,y0+(2-k)*c*0.855+c*0.45,t,{a:'end',s:12,f:'var(--muted)'})).join('');
+    out+=['Very low','Low','Moderate','High','Very high'].map((t,k)=>vzT(x0+k*c*0.95+c*0.45,y0+3*c*0.855+18,t,{s:11,f:'var(--muted)'})).join('');
+    return vzSvg(W,H, out + vzT(x0+2.3*c,H-6,'Impact →',{s:12,f:'var(--muted)'}) + vzT(24,y0+c*1.3,'Probability →',{s:12,f:'var(--muted)',extra:`transform="rotate(-90 24 ${y0+c*1.3})"`}));
+  },
+  decisiontree(){
+    const W=640,H=250;
+    return vzSvg(W,H, `<rect x="10" y="105" width="34" height="34" fill="${VZ.a}"/>` + vzT(27,160,'Decide',{s:11,f:'var(--muted)'})
+      + `<path d="M44,122 L190,60 M44,122 L190,190" stroke="${VZ.a2}" stroke-width="2" fill="none"/>` + vzT(110,78,'Build −$100k',{s:12,w:800}) + vzT(110,176,'Buy −$150k',{s:12,w:800})
+      + `<circle cx="205" cy="60" r="15" fill="${VZ.a2}"/><path d="M220,60 L380,25 M220,60 L380,95" stroke="${VZ.a2}" stroke-width="2"/>` + vzT(300,30,'70% → +$250k',{s:12}) + vzT(300,95,'30% → +$50k',{s:12})
+      + vzT(390,64,'EMV = $190k − $100k = $90k',{a:'start',s:12.5,w:800,f:VZ.o})
+      + `<path d="M205,190 L380,190" stroke="${VZ.a2}" stroke-width="2"/>` + vzT(300,182,'100% → +$250k',{s:12})
+      + vzT(390,194,'EMV = $250k − $150k = $100k ✓',{a:'start',s:12.5,w:800,f:VZ.g}));
+  },
+  contracts(){
+    const W=640,H=170,x0=30,x1=610, types=['FFP','FPIF','FP-EPA','T&M','CPIF','CPAF','CPFF'];
+    return vzSvg(W,H, `<defs><linearGradient id="vzg" x1="0" x2="1"><stop offset="0" stop-color="${VZ.d}"/><stop offset="1" stop-color="${VZ.a2}"/></linearGradient></defs>`
+      + `<rect x="${x0}" y="55" width="${x1-x0}" height="40" rx="20" fill="url(#vzg)"/>`
+      + types.map((t,i)=>vzT(x0+40+i*(x1-x0-80)/6,80,t,{s:12.5,w:800,f:'#fff'})).join('')
+      + vzT(x0,40,'← Seller carries more risk',{a:'start',s:12.5,w:800,f:VZ.d}) + vzT(x1,40,'Buyer carries more risk →',{a:'end',s:12.5,w:800,f:VZ.a})
+      + vzT(x0,125,'Clear, stable scope',{a:'start',s:12,f:'var(--muted)'}) + vzT(x1,125,'Uncertain, evolving scope',{a:'end',s:12,f:'var(--muted)'}));
+  },
+  scrum(){
+    const W=640,H=230;
+    return vzSvg(W,H, vzBox(10,90,110,50,'Product backlog') + vzArrow(122,115,158,115) + vzBox(160,90,100,50,'Sprint planning',{s:11.5})
+      + vzArrow(262,115,298,115) + `<circle cx="365" cy="115" r="62" fill="none" stroke="${VZ.a}" stroke-width="10" stroke-dasharray="330 60" transform="rotate(-60 365 115)"/>`
+      + vzT(365,110,'Sprint',{s:15,w:800}) + vzT(365,128,'1–4 weeks',{s:11,f:'var(--muted)'})
+      + `<circle cx="365" cy="30" r="16" fill="${VZ.a2}"/>` + vzT(365,34,'24h',{s:10,w:800,f:'#fff'}) + vzT(400,26,'Daily scrum',{a:'start',s:11.5,w:700})
+      + vzArrow(430,115,478,115) + vzBox(480,90,150,50,'Increment',{fill:VZ.a,stroke:VZ.a,tf:'#fff'})
+      + vzT(555,165,'Sprint review',{s:12,w:800}) + vzT(555,184,'then retrospective',{s:11.5,f:'var(--muted)'}));
+  },
+  burndown(){
+    const W=640,H=230,x0=50,y0=190,x1=610,y1=25, act=[40,40,37,35,34,28,24,20,13,8,3];
+    return vzSvg(W,H, `<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y0}" stroke="var(--border)" stroke-width="2"/><line x1="${x0}" y1="${y0}" x2="${x0}" y2="${y1}" stroke="var(--border)" stroke-width="2"/>`
+      + `<line x1="${x0}" y1="${y1}" x2="${x1}" y2="${y0}" stroke="${VZ.a2}" stroke-width="2.5" stroke-dasharray="7 5"/>`
+      + `<polyline points="${act.map((v,i)=>`${x0+i*(x1-x0)/10},${y0-v/40*(y0-y1)}`).join(' ')}" fill="none" stroke="${VZ.a}" stroke-width="3"/>`
+      + act.map((v,i)=>`<circle cx="${x0+i*(x1-x0)/10}" cy="${y0-v/40*(y0-y1)}" r="4" fill="var(--surface)" stroke="${VZ.a}" stroke-width="2"/>`).join('')
+      + vzT(x1-150,y1+60,'Ideal',{s:12,w:800,f:VZ.a2}) + vzT(x0+300,y1+100,'Actual',{a:'start',s:12,w:800,f:VZ.a})
+      + vzT((x0+x1)/2,H-8,'Sprint days →',{s:12,f:'var(--muted)'}) + vzT(20,110,'Points left',{s:12,f:'var(--muted)',extra:'transform="rotate(-90 20 110)"'}));
+  },
+  kanban(){
+    const W=640,H=220, cols=[['To do','',4],['In progress','WIP 3',3],['Review','WIP 2',2],['Done','',3]];
+    return vzSvg(W,H, cols.map(([t,w,n],i)=>{ const x=10+i*158; return `<rect x="${x}" y="10" width="150" height="200" rx="10" fill="var(--surface-2)"/>`+vzT(x+12,34,t,{a:'start',s:13,w:800})+(w?vzT(x+140,34,w,{a:'end',s:11,w:800,f:i===2?VZ.r:VZ.o}):'')
+      + [...Array(n)].map((_,k)=>`<rect x="${x+12}" y="${48+k*38}" width="126" height="30" rx="6" fill="var(--surface)" stroke="${i===3?VZ.g:VZ.a2}" stroke-width="1.5"/><rect x="${x+12}" y="${48+k*38}" width="5" height="30" rx="2" fill="${i===3?VZ.g:VZ.a}"/>`).join('')
+      + (i===2?vzT(x+75,198,'full — swarm here',{s:11,w:800,f:VZ.r}):''); }).join(''));
+  },
+  estimates(){
+    const W=640,H=200,x0=80,x1=600, sc=v=>x0+(v+30)/(80+30)*(x1-x0), rows=[['ROM',-25,75,VZ.a2],['Budget',-10,25,VZ.a],['Definitive',-5,10,VZ.d]];
+    return vzSvg(W,H, `<line x1="${sc(0)}" y1="20" x2="${sc(0)}" y2="165" stroke="${VZ.g}" stroke-width="2" stroke-dasharray="4 4"/>` + vzT(sc(0),184,'actual cost',{s:11.5,w:800,f:VZ.g})
+      + rows.map(([t,lo,hi,c],i)=>{ const y=30+i*48; return vzT(x0-10,y+17,t,{a:'end',s:12.5,w:800})+`<rect x="${sc(lo)}" y="${y}" width="${sc(hi)-sc(lo)}" height="26" rx="13" fill="${c}"/>`+vzT(sc(lo)+8,y+17,lo+'%',{a:'start',s:11,w:800,f:'#fff'})+vzT(sc(hi)-8,y+17,'+'+hi+'%',{a:'end',s:11,w:800,f:'#fff'}); }).join('')
+      + vzT(x1,184,'narrower = more accurate →',{a:'end',s:11.5,f:'var(--muted)'}));
+  }
+};
+
 const PREP_GUIDE = [
- { id:'start', title:'Start here: the PMP at a glance', mins:6, slides:[
+ { id:'start', title:'Start here: the PMP at a glance', mins:8, slides:[
    { t:'What the exam really tests', blocks:[
-     {p:'The PMP is not a memory test. Most questions describe a situation and ask what a project manager should do — first, next, or best.'},
-     {cards:[['People','Leading and supporting teams, resolving conflict, engaging stakeholders.'],['Process','Planning and delivering the technical work: scope, schedule, cost, quality, risk, procurement.'],['Business Environment','Keeping the project aligned with strategy, value, compliance and change in the organization.']]},
-     {tip:'Expect predictive, agile and hybrid scenarios mixed together. Always check which approach the question describes before answering.'} ]},
+     {p:'The PMP is not a memory test. Most questions describe a real situation and ask what a project manager should do — first, next, or best. Knowing the terms matters, but judgment matters more.'},
+     {cards:[['People','Leading and supporting teams, resolving conflict, engaging stakeholders.'],['Process','Planning and delivering the work: scope, schedule, cost, quality, risk, procurement.'],['Business Environment','Keeping the project aligned with strategy, value, compliance and organizational change.']]},
+     {tip:'Expect predictive, agile and hybrid scenarios mixed together. Before answering, identify which approach the question describes.'} ]},
+   { t:'Three ways to deliver a project', blocks:[
+     {table:{head:['Approach','Scope','Delivery','Best when'],rows:[['Predictive (waterfall)','Defined up front','Once, at the end','Requirements are stable and well understood'],['Adaptive (agile)','Evolves through feedback','Frequently, in small increments','Requirements are uncertain or likely to change'],['Hybrid','Mixed by component','Some parts planned, some iterative','Parts of the work are stable and parts are uncertain']]}},
+     {viz:'lifecycle', cap:'The more uncertain the requirements and technology, the more adaptive the approach should be.'} ]},
    { t:'How to study with Workar', blocks:[
-     {flow:['Learn — work through these modules','Test — take the free Starter Diagnostic','Review — read every explanation','Repeat — retry your weakest domain']},
-     {p:'Each module takes 5–10 minutes. Your progress is saved on this device, and you can jump into a mock at any time.'} ]},
+     {flow:['Learn a module','Try the exam scenario','Take a mock','Review weak domains','Repeat']},
+     {p:'Each module ends with an exam-style scenario so you practise thinking like the exam straight away. Your progress is saved on this device.'} ]},
    { t:'Before you book', blocks:[
-     {list:['You need 35 contact hours of project management education plus the required project experience (checked when you apply to PMI).','The exam is long — around four hours — so practise under timed conditions at least twice.','PMI updates the exam outline periodically. Always confirm the current format on pmi.org before you book.']} ]}
+     {list:['You need 35 contact hours of project management education plus the required project experience, confirmed when you apply to PMI.','The exam is long — around four hours — so practise under timed conditions at least twice.','PMI updates the exam outline periodically. Always confirm the current format on pmi.org before you book.']},
+     {scn:{q:'A new project manager joins a project where the business units describe the project\'s purpose differently. What should the project manager do FIRST?',o:['Adopt the sponsor\'s description and move on','Facilitate a session to agree a shared vision and success criteria','Escalate the disagreement to the steering committee','Document each view and start execution'],a:1,why:'Misaligned purpose is a root-cause problem. The PMI mindset is to engage people directly and build shared understanding before escalating or proceeding.'}} ]}
  ]},
- { id:'framework', title:'The process framework', mins:8, slides:[
+ { id:'framework', title:'The process framework', mins:10, slides:[
    { t:'Five process groups', blocks:[
      {flow:['Initiating','Planning','Executing','Monitoring & Controlling','Closing']},
-     {p:'Process groups are not phases. Monitoring & Controlling runs alongside all the others, and a large project may repeat the whole cycle in every phase.'} ]},
+     {viz:'processgroups', cap:'Process groups overlap. Monitoring & Controlling runs alongside everything else.'} ]},
    { t:'Ten knowledge areas', blocks:[
      {cards:[['Integration','Pulls everything together: charter, plan, change control, closure.'],['Scope','What is (and is not) included.'],['Schedule','When the work happens.'],['Cost','What it costs and how spending is controlled.'],['Quality','Meeting requirements and fitness for use.'],['Resources','People, equipment and materials.'],['Communications','Who needs what information, when and how.'],['Risk','Uncertainty, both threats and opportunities.'],['Procurement','Buying from outside the organization.'],['Stakeholders','Everyone affected, and how to engage them.']]} ]},
    { t:'Where the processes sit', blocks:[
      {table:{head:['Group','Typical processes'],rows:[
        ['Initiating','Develop project charter · Identify stakeholders'],
-       ['Planning','Plan each knowledge area · Collect requirements · Define scope · Create WBS · Develop schedule · Determine budget · Identify & analyze risks'],
-       ['Executing','Direct & manage work · Manage quality · Acquire, develop & manage team · Manage communications · Implement risk responses · Conduct procurements · Manage stakeholder engagement'],
+       ['Planning','A "plan … management" process for each area · Collect requirements · Define scope · Create WBS · Define, sequence & estimate activities · Develop schedule · Estimate costs · Determine budget · Identify & analyze risks · Plan risk responses'],
+       ['Executing','Direct & manage work · Manage knowledge · Manage quality · Acquire, develop & manage team · Manage communications · Implement risk responses · Conduct procurements · Manage stakeholder engagement'],
        ['Monitoring & Controlling','Monitor & control work · Integrated change control · Validate & control scope · Control schedule, cost, quality, resources · Monitor risks, communications, procurements, engagement'],
        ['Closing','Close project or phase']]}},
-     {tip:'Planning has by far the most processes. In a predictive question, "have we planned this?" is often the key.'} ]}
+     {tip:'In a predictive question, ask yourself: "Has this been planned yet?" If not, planning usually comes first.'} ]},
+   { t:'Inputs that shape every project', blocks:[
+     {compare:[['Enterprise environmental factors (EEFs)','Conditions outside the team\'s control: culture, regulations, market conditions, existing systems, geography.'],['Organizational process assets (OPAs)','The organization\'s own knowledge: templates, policies, procedures, historical data, lessons learned.']]},
+     {scn:{q:'During planning, the project manager reviews the company\'s estimating templates and lessons learned from similar projects. What are these?',o:['Enterprise environmental factors','Organizational process assets','Work performance data','Project documents'],a:1,why:'Templates, procedures and historical knowledge belong to the organization and can be reused, so they are organizational process assets.'}} ]}
  ]},
- { id:'integration', title:'Integration management', mins:8, slides:[
+ { id:'integration', title:'Integration management', mins:12, slides:[
+   { t:'The integration processes', blocks:[
+     {table:{head:['Process','Group','Key output'],rows:[['Develop project charter','Initiating','Charter, assumption log'],['Develop project management plan','Planning','Project management plan'],['Direct and manage project work','Executing','Deliverables, work performance data, change requests'],['Manage project knowledge','Executing','Lessons learned register'],['Monitor and control project work','M&C','Work performance reports'],['Perform integrated change control','M&C','Approved change requests, change log'],['Close project or phase','Closing','Final report, transition of the result']]}} ]},
    { t:'From idea to authorized project', blocks:[
      {flow:['Needs assessment','Business case','Project charter','Project management plan']},
-     {list:['The business case justifies the investment and supports a go / no-go decision.','The charter formally authorizes the project and gives the project manager authority to use resources. The sponsor issues it.','The project management plan combines all subsidiary plans and the baselines.']} ]},
-   { t:'Baselines and change control', blocks:[
-     {p:'The scope, schedule and cost baselines together form the performance measurement baseline. They only change through integrated change control.'},
-     {flow:['Change requested','Impact analyzed','Decision by authorized body (e.g. CCB)','Plans & baselines updated','Stakeholders informed']},
-     {tip:'Exam pattern: never implement a change before it is analyzed and approved, even if the sponsor asks informally.'} ]},
+     {list:['The business case justifies the investment and supports a go / no-go decision.','The charter formally authorizes the project and names the project manager. The sponsor issues it.','The project management plan combines all subsidiary plans and the baselines.']},
+     {tip:'No charter, no project. If a question describes work starting without authorization, getting the charter approved comes first.'} ]},
+   { t:'Integrated change control', blocks:[
+     {viz:'changeflow', cap:'Every change follows the same path, whoever asks for it.'},
+     {list:['Baselines (scope, schedule, cost) only change through this process.','The change control board (CCB) or another authorized body decides — not the project manager alone.','After approval: update plans and baselines, then tell everyone affected.']} ]},
    { t:'Key logs and registers', blocks:[
-     {table:{head:['Document','What it holds'],rows:[
-       ['Issue log','Problems happening now, with owners and due dates'],
-       ['Risk register','Uncertain future events, analysis, responses and owners'],
-       ['Change log','Every change request and its status'],
-       ['Lessons learned register','What worked, what did not, and recommendations — updated throughout, not just at the end'],
-       ['Assumption log','Assumptions and constraints that need validating']]}} ]},
+     {table:{head:['Document','What it holds'],rows:[['Issue log','Problems happening now, with owners and due dates'],['Risk register','Uncertain future events, analysis, responses and owners'],['Change log','Every change request and its status'],['Lessons learned register','What worked, what did not — updated throughout, not just at the end'],['Assumption log','Assumptions and constraints that need validating']]}} ]},
+   { t:'Managing project knowledge', blocks:[
+     {compare:[['Explicit knowledge','Easy to write down: procedures, reports, facts. Shared through documents and repositories.'],['Tacit knowledge','Experience, judgment and know-how. Shared through conversation, pairing, mentoring and shadowing.']]},
+     {tip:'When an expert is about to leave, start pairing and shadowing early. A last-day handover document captures very little tacit knowledge.'} ]},
    { t:'Choosing projects: the numbers', blocks:[
      {cards:[['NPV','Net present value. Higher is better; a positive NPV adds value.'],['IRR','Internal rate of return. Higher is better.'],['Payback period','Time to recover the investment. Shorter is better.'],['Benefit-cost ratio','Above 1 means benefits exceed costs.']]},
-     {tip:'Opportunity cost is the value of the option you did not choose — not a cost of the chosen project.'} ]},
+     {tip:'Sunk costs (money already spent) should never drive a decision. Opportunity cost is the value of the option you did not choose.'} ]},
    { t:'Closing the project', blocks:[
      {list:['Confirm formal acceptance of deliverables against acceptance criteria.','Transfer the product and knowledge to operations.','Close contracts and settle claims.','Finalize lessons learned and archive records.','Release resources and celebrate the team.']},
-     {tip:'Closure still applies when a project is cancelled early — scaled to what was done.'} ]}
+     {scn:{q:'The sponsor emails the project manager asking for a small extra report page "since the team is already working on reports". What should the project manager do?',o:['Add it, since it is small','Assess the impact and process it as a change request','Refuse, because scope is baselined','Ask the team to add it in their spare time'],a:1,why:'All changes — even small ones from the sponsor — go through integrated change control, starting with impact analysis.'}} ]}
  ]},
- { id:'stakeholders', title:'Stakeholders', mins:7, slides:[
-   { t:'Identify early, and keep identifying', blocks:[
-     {p:'Stakeholders are anyone who affects, or is affected by, the project. Identification starts at initiation and continues throughout, because new stakeholders appear and interests change.'},
-     {list:['Use several techniques: interviews, document review, brainstorming and expert judgment.','Record them in the stakeholder register: role, interests, influence, expectations and engagement level.']} ]},
+ { id:'stakeholders', title:'Stakeholders', mins:9, slides:[
+   { t:'The stakeholder processes', blocks:[
+     {table:{head:['Process','Group','Key output'],rows:[['Identify stakeholders','Initiating','Stakeholder register'],['Plan stakeholder engagement','Planning','Stakeholder engagement plan'],['Manage stakeholder engagement','Executing','Change requests, updated logs'],['Monitor stakeholder engagement','M&C','Work performance information']]}},
+     {p:'Identification starts at initiation and continues throughout, because new stakeholders appear and interests change.'} ]},
    { t:'Classifying stakeholders', blocks:[
-     {table:{head:['Power / Interest','Approach'],rows:[['High power, high interest','Manage closely'],['High power, low interest','Keep satisfied'],['Low power, high interest','Keep informed'],['Low power, low interest','Monitor']]}},
+     {viz:'pgrid', cap:'The power / interest grid tells you how much attention each stakeholder needs.'},
      {p:'The salience model adds a third lens: power, legitimacy and urgency. Stakeholders with all three need the most attention.'} ]},
    { t:'The engagement assessment matrix', blocks:[
      {flow:['Unaware','Resistant','Neutral','Supportive','Leading']},
-     {p:'Mark each stakeholder\'s current (C) and desired (D) level, then plan specific actions to close the gap.'},
-     {tip:'Resistant stakeholder? Start by understanding their concerns directly before escalating.'} ]}
+     {table:{head:['Stakeholder','Unaware','Resistant','Neutral','Supportive','Leading'],rows:[['Finance director','','C','','D',''],['Operations lead','C','','','D',''],['Sponsor','','','','C','D']]}},
+     {p:'C = current level, D = desired level. Plan specific actions to close each gap.'} ]},
+   { t:'Engaging well', blocks:[
+     {list:['Understand interests and concerns before trying to change anyone\'s mind.','Talk directly and privately with resistant stakeholders before escalating.','Keep engagement going throughout — it is not a one-time activity.','Update the register and the plan whenever stakeholders or their attitudes change.']},
+     {scn:{q:'A previously quiet stakeholder group suddenly becomes highly critical of the project. What should the project manager do FIRST?',o:['Reduce communication with them','Reassess their interests and update the engagement plan','Ask the sponsor to overrule them','Continue with the original plan'],a:1,why:'Stakeholder analysis is iterative. Changed behaviour means the analysis and the plan need updating before choosing a response.'}} ]}
  ]},
- { id:'scope', title:'Scope', mins:8, slides:[
+ { id:'scope', title:'Scope', mins:10, slides:[
+   { t:'The scope processes', blocks:[
+     {table:{head:['Process','Group','Key output'],rows:[['Plan scope management','Planning','Scope & requirements management plans'],['Collect requirements','Planning','Requirements documentation, traceability matrix'],['Define scope','Planning','Project scope statement'],['Create WBS','Planning','Scope baseline'],['Validate scope','M&C','Accepted deliverables'],['Control scope','M&C','Work performance information, change requests']]}} ]},
    { t:'Collecting requirements', blocks:[
-     {cards:[['Interviews & focus groups','Deep input from individuals or small groups.'],['Workshops','Bring cross-functional stakeholders together to agree requirements quickly.'],['Prototypes','Storyboards, wireframes and models help people react to something concrete.'],['Voting','Unanimity, majority, plurality, or the nominal group technique.']]},
+     {cards:[['Interviews & focus groups','Deep input from individuals or small groups.'],['Facilitated workshops','Bring cross-functional stakeholders together to agree requirements quickly.'],['Prototypes','Storyboards, wireframes and models help people react to something concrete.'],['Group decisions','Unanimity, majority, plurality, or the nominal group technique.']]},
      {p:'The requirements traceability matrix links each requirement to its business need and to the deliverables and tests that satisfy it.'} ]},
    { t:'The scope baseline', blocks:[
      {flow:['Scope statement','WBS','WBS dictionary']},
-     {list:['The WBS decomposes the total scope into deliverables. The lowest level is the work package.','The 100% rule: the WBS contains all the work — and only the work — of the project.','The WBS dictionary gives details for each component: description, owner, acceptance criteria.']} ]},
+     {viz:'wbs', cap:'The WBS breaks the total scope into deliverables, then into work packages.'},
+     {tip:'The 100% rule: the WBS contains all of the work — and only the work — of the project.'} ]},
    { t:'Validate scope vs control quality', blocks:[
      {table:{head:['','Control quality','Validate scope'],rows:[['Question','Is it correct?','Is it accepted?'],['Who','Project team','Customer or sponsor'],['Order','Usually first','Usually after'],['Output','Verified deliverables','Accepted deliverables']]}},
-     {tip:'Scope creep is uncontrolled change. Gold plating is the team adding extras nobody asked for. Both are wrong.'} ]},
-   { t:'Prioritization techniques', blocks:[
-     {cards:[['MoSCoW','Must have, Should have, Could have, Won\'t have (this time).'],['Value vs effort','Do high-value, low-effort items first.'],['Kano','Basic needs, performance needs and delighters.'],['Cost of delay','Prioritize by what waiting costs.']]} ]}
+     {compare:[['Scope creep','Uncontrolled additions, usually from stakeholders, without change control.'],['Gold plating','The team adding extras nobody asked for. Also wrong.']]} ]},
+   { t:'Prioritizing requirements', blocks:[
+     {cards:[['MoSCoW','Must have, Should have, Could have, Won\'t have (this time).'],['Value vs effort','Do high-value, low-effort items first.'],['Kano','Basic needs, performance needs and delighters.'],['Cost of delay','Prioritize by what waiting costs.']]},
+     {scn:{q:'During a demo, the customer rejects a deliverable, saying it does not meet a requirement. What should the project manager do FIRST?',o:['Insist the deliverable matches the specification','Document the reasons and route the needed rework through change control','Rebuild the deliverable immediately','Escalate to the legal team'],a:1,why:'Rejection is information. Record the specific gaps, then handle any rework through the governed change process.'}} ]}
  ]},
- { id:'schedule', title:'Schedule', mins:10, slides:[
+ { id:'schedule', title:'Schedule', mins:14, slides:[
+   { t:'The schedule processes', blocks:[
+     {table:{head:['Process','Key output'],rows:[['Plan schedule management','Schedule management plan'],['Define activities','Activity list, milestone list'],['Sequence activities','Network diagram'],['Estimate activity durations','Duration estimates, basis of estimates'],['Develop schedule','Schedule baseline, project schedule'],['Control schedule (M&C)','Schedule forecasts, change requests']]}} ]},
    { t:'Sequencing activities', blocks:[
      {table:{head:['Relationship','Meaning'],rows:[['Finish-to-start (FS)','B starts after A finishes — the most common'],['Start-to-start (SS)','B starts after A starts'],['Finish-to-finish (FF)','B finishes after A finishes'],['Start-to-finish (SF)','B finishes after A starts — rare']]}},
-     {list:['Lead: the successor starts early (overlap).','Lag: a waiting time between activities (e.g. concrete curing).','Mandatory dependencies are hard logic; discretionary ones are preferences; external ones depend on outside parties.']} ]},
-   { t:'Critical path method', blocks:[
-     {list:['The critical path is the longest path through the network. It sets the shortest possible project duration.','Forward pass calculates early start and early finish. Backward pass calculates late start and late finish.','Total float = LS − ES (or LF − EF). Critical path activities usually have zero float.','Free float is how long an activity can slip without delaying the next activity\'s early start.']},
-     {tip:'Near-critical paths matter too — a small delay can make them critical.'} ]},
+     {list:['Lead: the successor starts early (overlap). Lag: a waiting time between activities.','Mandatory dependencies are hard logic; discretionary ones are preferences; external ones depend on outside parties.']} ]},
+   { t:'The critical path', blocks:[
+     {viz:'network', cap:'Forward pass gives early dates; backward pass gives late dates. The longest path is critical.'},
+     {formula:[['Total float','LS − ES  or  LF − EF','Critical activities usually have 0']]} ]},
    { t:'Estimating durations', blocks:[
-     {cards:[['Analogous','Top-down, from a similar past project. Fast, less accurate.'],['Parametric','Uses a statistical rate, e.g. 2 hours per unit. Accurate if the data is good.'],['Three-point','Optimistic, most likely and pessimistic values.'],['Bottom-up','Estimate each work package and add up. Most accurate, slowest.']]} ]},
-   { t:'Compressing and levelling', blocks:[
-     {table:{head:['Technique','What it does','Trade-off'],rows:[['Crashing','Adds resources to critical activities','Costs more'],['Fast tracking','Overlaps activities planned in sequence','More risk and rework'],['Resource levelling','Resolves over-allocation','May extend the end date'],['Resource smoothing','Adjusts within available float','End date unchanged']]}},
-     {p:'Rolling wave planning details near-term work now and plans later work at a higher level until more is known.'} ]}
+     {cards:[['Analogous','Top-down, from a similar past project. Fast, less accurate.'],['Parametric','Uses a statistical rate, e.g. 2 hours per unit. Accurate if data is good.'],['Three-point (PERT)','(O + 4M + P) ÷ 6 — weights the most likely value.'],['Bottom-up','Estimate each work package and add up. Most accurate, slowest.']]} ]},
+   { t:'Compressing the schedule', blocks:[
+     {viz:'compression', cap:'Fast tracking overlaps work; crashing adds resources.'},
+     {table:{head:['Technique','What it does','Trade-off'],rows:[['Resource levelling','Resolves over-allocation','May extend the end date'],['Resource smoothing','Adjusts within available float','End date unchanged']]}} ]},
+   { t:'Planning in waves', blocks:[
+     {p:'Rolling wave planning details near-term work now and plans later work at a higher level until more is known. It is a form of progressive elaboration.'},
+     {scn:{q:'Budget is very tight, but some risk of rework is acceptable. The project is two weeks behind. Which technique fits best?',o:['Crashing','Fast tracking','Resource levelling','Reducing quality'],a:1,why:'Fast tracking overlaps activities without necessarily adding cost, at the price of more rework risk — exactly the trade-off described.'}} ]}
  ]},
- { id:'cost', title:'Cost & earned value', mins:10, slides:[
+ { id:'cost', title:'Cost & earned value', mins:14, slides:[
+   { t:'The cost processes', blocks:[
+     {table:{head:['Process','Key output'],rows:[['Plan cost management','Cost management plan'],['Estimate costs','Cost estimates, basis of estimates'],['Determine budget','Cost baseline, funding requirements'],['Control costs (M&C)','Cost forecasts, work performance information']]}} ]},
    { t:'Estimate accuracy', blocks:[
-     {table:{head:['Estimate','Typical range','When'],rows:[['Rough order of magnitude','−25% to +75%','Initiating'],['Budget','−10% to +25%','Early planning'],['Definitive','−5% to +10%','Detailed planning']]}},
+     {viz:'estimates', cap:'Estimates get more accurate as the project is better understood.'},
      {p:'Accuracy is how close to the true value. Precision is how finely it is measured. An estimate can be precise and still wrong.'} ]},
-   { t:'Reserves', blocks:[
-     {cards:[['Contingency reserve','For identified risks ("known unknowns"). Part of the cost baseline; the PM can use it.'],['Management reserve','For unforeseen work ("unknown unknowns"). Outside the baseline, inside the budget; needs management approval.']]},
-     {flow:['Work package estimates','+ contingency = cost baseline','+ management reserve = project budget']} ]},
-   { t:'Earned value: the basics', blocks:[
-     {cards:[['PV','Planned value — what should be done by now, in money.'],['EV','Earned value — what is actually done, in money.'],['AC','Actual cost — what was actually spent.'],['BAC','Budget at completion — the total planned budget.']]},
-     {tip:'EV comes first in every variance and index formula.'} ]},
+   { t:'Reserves and the budget', blocks:[
+     {viz:'costbaseline', cap:'How the cost baseline and the project budget are built.'},
+     {compare:[['Contingency reserve','For identified risks ("known unknowns"). Inside the cost baseline.'],['Management reserve','For unforeseen work ("unknown unknowns"). Outside the baseline; needs management approval.']]} ]},
+   { t:'Earned value at a glance', blocks:[
+     {viz:'evm', cap:'Here the project is behind schedule (EV below PV) and over budget (AC above EV).'},
+     {cards:[['PV','What should be done by now, in money.'],['EV','What is actually done, in money.'],['AC','What was actually spent.'],['BAC','The total planned budget.']]} ]},
    { t:'Earned value formulas', blocks:[
-     {formula:[['Cost variance','CV = EV − AC','Negative = over budget'],['Schedule variance','SV = EV − PV','Negative = behind schedule'],['Cost performance index','CPI = EV / AC','Below 1 = over budget'],['Schedule performance index','SPI = EV / PV','Below 1 = behind schedule']]} ]},
+     {formula:[['Cost variance','CV = EV − AC','Negative = over budget'],['Schedule variance','SV = EV − PV','Negative = behind schedule'],['Cost performance index','CPI = EV / AC','Below 1 = over budget'],['Schedule performance index','SPI = EV / PV','Below 1 = behind schedule']]},
+     {tip:'EV always comes first. Negative variance or an index below 1 is bad news.'} ]},
    { t:'Forecasting', blocks:[
-     {formula:[['Estimate at completion (typical)','EAC = BAC / CPI','Current cost performance continues'],['EAC (atypical)','EAC = AC + (BAC − EV)','The variance was a one-off'],['Estimate to complete','ETC = EAC − AC','Money still needed'],['Variance at completion','VAC = BAC − EAC','Negative = expected overrun'],['To-complete performance index','TCPI = (BAC − EV) / (BAC − AC)','Efficiency needed to finish on budget']]} ]}
+     {formula:[['EAC (typical)','BAC / CPI','Current performance continues'],['EAC (atypical)','AC + (BAC − EV)','The variance was a one-off'],['ETC','EAC − AC','Money still needed'],['VAC','BAC − EAC','Negative = expected overrun'],['TCPI','(BAC − EV) / (BAC − AC)','Efficiency needed to finish on budget']]},
+     {scn:{q:'PV = $100,000, EV = $90,000, AC = $95,000. How is the project doing?',o:['Ahead of schedule, under budget','Behind schedule, over budget','Behind schedule, under budget','On schedule, over budget'],a:1,why:'SV = 90 − 100 = −10k (behind). CV = 90 − 95 = −5k (over budget).'}} ]}
  ]},
- { id:'quality', title:'Quality', mins:7, slides:[
-   { t:'Assurance vs control', blocks:[
-     {table:{head:['','Manage quality (assurance)','Control quality'],rows:[['Focus','The process','The product'],['Asks','Are we doing the work the right way?','Does this deliverable meet requirements?'],['Examples','Audits, process analysis','Inspections, testing, control charts']]}},
-     {tip:'Prevention over inspection: it is cheaper to build quality in than to find defects later.'} ]},
+ { id:'quality', title:'Quality', mins:10, slides:[
+   { t:'The quality processes', blocks:[
+     {table:{head:['Process','Group','Key output'],rows:[['Plan quality management','Planning','Quality management plan, quality metrics'],['Manage quality','Executing','Quality reports, test & evaluation documents'],['Control quality','M&C','Verified deliverables, quality control measurements']]}},
+     {compare:[['Manage quality (assurance)','Focuses on the process: are we working the right way? Audits, process analysis.'],['Control quality','Focuses on the product: does this deliverable meet requirements? Inspection, testing.']]} ]},
    { t:'Cost of quality', blocks:[
-     {cards:[['Prevention','Training, standards, good design. (Conformance)'],['Appraisal','Testing, inspections, audits. (Conformance)'],['Internal failure','Rework and scrap found before delivery. (Nonconformance)'],['External failure','Warranty, returns, lost reputation. (Nonconformance)']]} ]},
-   { t:'Quality tools', blocks:[
-     {cards:[['Cause-and-effect (fishbone)','Traces a problem back to possible root causes.'],['Pareto chart','Ranks causes; about 80% of problems come from 20% of causes.'],['Control chart','Shows whether a process is stable over time.'],['Histogram','Shows how often values occur.'],['Scatter diagram','Shows the relationship between two variables.'],['Checklist vs check sheet','A checklist confirms steps were done; a check sheet tallies how often something happens.']]},
-     {tip:'Rule of seven: seven consecutive points on one side of the mean signals a non-random pattern, even inside the control limits.'} ]}
+     {cards:[['Prevention','Training, standards, good design. (Conformance)'],['Appraisal','Testing, inspections, audits. (Conformance)'],['Internal failure','Rework and scrap found before delivery. (Nonconformance)'],['External failure','Warranty, returns, lost reputation. (Nonconformance)']]},
+     {tip:'Prevention over inspection: building quality in is cheaper than finding defects later. Grade is the level of features; quality is meeting requirements. Low grade can be fine — low quality never is.'} ]},
+   { t:'Is the process stable?', blocks:[
+     {viz:'controlchart', cap:'A control chart shows variation over time against control limits.'},
+     {p:'Points outside the limits, or seven in a row on one side of the mean, signal a process that needs investigating.'} ]},
+   { t:'Finding the biggest causes', blocks:[
+     {viz:'pareto', cap:'A Pareto chart ranks causes: fix the few that cause most of the problems.'} ]},
+   { t:'Tracing root causes', blocks:[
+     {viz:'fishbone', cap:'A cause-and-effect (fishbone) diagram groups possible causes of one problem.'},
+     {scn:{q:'The team measures a finished module against its requirements and confirms it conforms. Which process was performed?',o:['Validate scope','Control quality','Manage quality','Plan quality management'],a:1,why:'Checking a deliverable against requirements is control quality. Customer acceptance would be validate scope.'}} ]}
  ]},
- { id:'resources', title:'Resources & leadership', mins:10, slides:[
+ { id:'resources', title:'Resources & leadership', mins:14, slides:[
+   { t:'The resource processes', blocks:[
+     {table:{head:['Process','Group','Key output'],rows:[['Plan resource management','Planning','Resource management plan, team charter'],['Estimate activity resources','Planning','Resource requirements, resource breakdown structure'],['Acquire resources','Executing','Team and physical resource assignments'],['Develop team','Executing','Team performance assessments'],['Manage team','Executing','Change requests, updated plans'],['Control resources','M&C','Work performance information']]}} ]},
    { t:'Organizing the team', blocks:[
-     {list:['RACI chart: who is Responsible, Accountable (only one person), Consulted and Informed.','Team charter: values, working agreements, decision-making and conflict rules, created with the team.','Resource breakdown structure lists resources by category; the organizational breakdown structure maps work to departments.']} ]},
-   { t:'How teams develop (Tuckman)', blocks:[
-     {flow:['Forming','Storming','Norming','Performing','Adjourning']},
-     {p:'Adapt your leadership to the stage: direct in forming, coach through storming, support in norming, delegate in performing.'} ]},
-   { t:'Conflict resolution', blocks:[
-     {table:{head:['Mode','Also called','Result'],rows:[['Collaborate','Problem-solve','Win-win — usually best when time allows'],['Compromise','Reconcile','Both give something up'],['Smooth','Accommodate','Emphasizes agreement; temporary'],['Force','Direct','Win-lose; for emergencies'],['Withdraw','Avoid','Postpones the issue']]}},
-     {tip:'On the exam: address conflict early, privately and directly, focusing on the issue, not the person.'} ]},
-   { t:'Motivation theories', blocks:[
-     {cards:[['Maslow','Needs build from physiological up to self-actualization.'],['Herzberg','Hygiene factors (pay, conditions) prevent dissatisfaction; motivators (growth, recognition) drive satisfaction.'],['McGregor X / Y','Theory X assumes people avoid work; Theory Y assumes they seek responsibility.'],['McClelland','People are driven by achievement, affiliation or power.'],['Vroom','Motivation depends on believing effort leads to a valued reward.']]} ]},
-   { t:'Servant leadership & emotional intelligence', blocks:[
-     {list:['Servant leaders remove impediments, shield the team from distractions, and coach rather than command.','Emotional intelligence: self-awareness, self-management, social awareness and relationship management.','Psychological safety lets people raise risks and admit mistakes early.']} ]}
+     {table:{head:['Task','Analyst','Lead','Sponsor','Tester'],rows:[['Write requirements','R','A','C','I'],['Approve budget','I','C','A','—'],['Test release','C','A','I','R']]}},
+     {p:'RACI: Responsible does the work, Accountable owns the outcome (only one per task), Consulted gives input, Informed is kept up to date.'} ]},
+   { t:'How teams develop', blocks:[
+     {viz:'tuckman', cap:'Tuckman\'s ladder, with the leadership style that fits each stage.'} ]},
+   { t:'Resolving conflict', blocks:[
+     {viz:'tk', cap:'Five conflict modes. Collaborating is usually best when time allows.'},
+     {tip:'Address conflict early, privately and directly — focus on the issue, not the person.'} ]},
+   { t:'What motivates people', blocks:[
+     {cards:[['Maslow','Needs build from physiological up to self-actualization.'],['Herzberg','Hygiene factors (pay, conditions) prevent dissatisfaction; motivators (growth, recognition) create satisfaction.'],['McGregor X / Y','Theory X assumes people avoid work; Theory Y assumes they seek responsibility.'],['McClelland','People are driven by achievement, affiliation or power.'],['Vroom','Motivation depends on believing effort leads to a valued reward.']]} ]},
+   { t:'Servant leadership', blocks:[
+     {list:['Remove impediments and shield the team from distractions.','Coach and ask questions rather than command.','Build psychological safety so risks and mistakes surface early.','Emotional intelligence: self-awareness, self-management, social awareness, relationship management.']},
+     {scn:{q:'A team member has missed three deadlines, which is unusual for them. What should the project manager do FIRST?',o:['Issue a formal warning','Talk with them privately to understand what changed','Reassign their work','Raise it in the next team meeting'],a:1,why:'A sudden change in performance calls for understanding before judgment. A private conversation often reveals a fixable cause.'}} ]}
  ]},
- { id:'communications', title:'Communications', mins:6, slides:[
+ { id:'communications', title:'Communications', mins:8, slides:[
+   { t:'The communication processes', blocks:[
+     {table:{head:['Process','Group','Key output'],rows:[['Plan communications management','Planning','Communications management plan'],['Manage communications','Executing','Project communications'],['Monitor communications','M&C','Work performance information']]}} ]},
    { t:'Methods of communication', blocks:[
-     {cards:[['Interactive','Two-way, real time: meetings and calls. Best for complex or sensitive topics.'],['Push','Sent to recipients: emails, reports. Delivery is not the same as understanding.'],['Pull','Recipients access it themselves: dashboards, wikis, information radiators.']]} ]},
-   { t:'Channels and models', blocks:[
-     {formula:[['Communication channels','n × (n − 1) / 2','n = number of people']]},
+     {cards:[['Interactive','Two-way, real time: meetings and calls. Best for complex or sensitive topics.'],['Push','Sent to recipients: emails, reports. Delivery is not the same as understanding.'],['Pull','People access it themselves: dashboards, wikis, information radiators.']]} ]},
+   { t:'Communication channels', blocks:[
+     {viz:'channels', cap:'Every new person adds more channels than you might expect.'},
+     {formula:[['Channels','n(n − 1) ÷ 2','n = number of people']]} ]},
+   { t:'Tailoring the message', blocks:[
      {flow:['Sender encodes','Message sent','Noise interferes','Receiver decodes','Feedback confirms']},
-     {tip:'Communication is complete only when the receiver understands. Confirm understanding.'} ]},
-   { t:'Tailoring communication', blocks:[
-     {list:['The communications management plan defines who needs what information, when, how and from whom.','Tailor format and detail to each audience — a one-page view for executives, detail for the team.','Consider time zones, language and culture on distributed teams.']} ]}
+     {list:['Tailor detail to the audience — one page for executives, detail for the team.','Consider time zones, language and culture on distributed teams.']},
+     {scn:{q:'A stakeholder says they were never told about a decision that was clearly in the last status report. What does this MOST likely show?',o:['The stakeholder is being dishonest','Information was sent but not received and understood','Status reports should be stopped','The report format is fine'],a:1,why:'Communication is only complete when it is understood. The loop needs confirmation, not just sending.'}} ]}
  ]},
- { id:'risk', title:'Risk', mins:10, slides:[
-   { t:'Risk vs issue', blocks:[
-     {cards:[['Risk','An uncertain future event that could affect objectives — positive (opportunity) or negative (threat).'],['Issue','Something happening now. It goes in the issue log and needs action.']]},
-     {flow:['Plan','Identify','Qualitative analysis','Quantitative analysis','Plan responses','Implement','Monitor']} ]},
-   { t:'Analyzing risk', blocks:[
-     {list:['Qualitative: rank risks by probability and impact using a probability-impact matrix. Quick; done for all risks.','Quantitative: numerical analysis of overall project risk — Monte Carlo simulation, decision trees, sensitivity (tornado) diagrams.']},
+ { id:'risk', title:'Risk', mins:14, slides:[
+   { t:'The risk processes', blocks:[
+     {flow:['Plan','Identify','Qualitative','Quantitative','Plan responses','Implement','Monitor']},
+     {compare:[['Risk','An uncertain future event — a threat or an opportunity. Goes in the risk register.'],['Issue','Something happening now. Goes in the issue log and needs action.']]} ]},
+   { t:'Qualitative analysis', blocks:[
+     {viz:'pi', cap:'A probability-impact matrix ranks risks quickly. Red = act first.'},
+     {p:'Qualitative analysis is fast and done for all identified risks. It decides which risks deserve deeper analysis or immediate responses.'} ]},
+   { t:'Quantitative analysis', blocks:[
+     {list:['Monte Carlo simulation models the chance of finishing by a date or within a budget.','Sensitivity analysis (tornado diagram) shows which risks affect the outcome most.','Decision trees compare options using expected monetary value.']},
      {formula:[['Expected monetary value','EMV = probability × impact','Threats negative, opportunities positive']]} ]},
+   { t:'Decision trees', blocks:[
+     {viz:'decisiontree', cap:'Choose the branch with the best expected value.'} ]},
    { t:'Response strategies', blocks:[
-     {table:{head:['Threats','Opportunities'],rows:[['Escalate — outside the PM\'s authority','Escalate'],['Avoid — remove the cause','Exploit — make it certain'],['Transfer — shift impact (insurance, contract)','Share — partner with a third party'],['Mitigate — reduce probability or impact','Enhance — increase probability or impact'],['Accept — active (reserve) or passive','Accept']]}} ]},
+     {table:{head:['Threats','Opportunities'],rows:[['Escalate — beyond the PM\'s authority','Escalate'],['Avoid — remove the cause','Exploit — make it certain'],['Transfer — shift the impact (insurance, contract)','Share — partner with a third party'],['Mitigate — reduce probability or impact','Enhance — increase probability or impact'],['Accept — active (reserve) or passive','Accept']]}} ]},
    { t:'After responses', blocks:[
-     {list:['Residual risk: what remains after a response.','Secondary risk: a new risk created by a response.','Risk owner: the person accountable for monitoring and responding.','Workaround: an unplanned response to a risk nobody identified.']},
-     {tip:'If an identified risk occurs, implement the planned response first — do not start re-planning from scratch.'} ]}
+     {cards:[['Residual risk','What remains after a response.'],['Secondary risk','A new risk created by a response.'],['Trigger','A warning sign that a risk is about to occur.'],['Workaround','An unplanned response to a risk nobody identified.']]},
+     {scn:{q:'An identified risk occurs, and the register contains a planned response. What should the project manager do?',o:['Meet the team to plan a new response','Implement the planned response and update the logs','Wait to see how bad it gets','Close the risk'],a:1,why:'The value of planning is acting immediately: execute the planned response, record the issue and update the register.'}} ]}
  ]},
- { id:'procurement', title:'Procurement', mins:7, slides:[
-   { t:'Contract types', blocks:[
-     {table:{head:['Type','Examples','Who carries more risk'],rows:[['Fixed price','FFP, FPIF, FP-EPA','Seller'],['Cost-reimbursable','CPFF, CPIF, CPAF','Buyer'],['Time & materials','Hourly or daily rates','Shared; best for unclear or small scope']]}},
-     {tip:'Clear, stable scope → fixed price. Uncertain scope → cost-reimbursable or T&M with caps.'} ]},
+ { id:'procurement', title:'Procurement', mins:10, slides:[
+   { t:'The procurement processes', blocks:[
+     {table:{head:['Process','Group','Key output'],rows:[['Plan procurement management','Planning','Procurement plan, statement of work, bid documents, source selection criteria'],['Conduct procurements','Executing','Selected sellers, agreements'],['Control procurements','M&C','Closed procurements, claims resolved']]}} ]},
+   { t:'Contract types and risk', blocks:[
+     {viz:'contracts', cap:'Fixed price puts more risk on the seller; cost-reimbursable puts more on the buyer.'},
+     {table:{head:['Type','How the price works'],rows:[['FFP','One fixed price for defined scope'],['FPIF','Fixed price with a performance incentive and a ceiling'],['FP-EPA','Fixed price adjusted for inflation or costs over long terms'],['CPFF / CPIF / CPAF','Costs reimbursed plus a fixed fee, incentive fee or award fee'],['T&M','Pay per hour or day — good for unclear or small scope']]}} ]},
    { t:'From need to contract', blocks:[
-     {flow:['Make-or-buy analysis','Procurement documents (RFP/RFQ/RFI)','Bidder conference','Evaluate against source selection criteria','Negotiate & award']},
-     {p:'A bidder conference gives all potential sellers the same information at the same time, keeping the process fair.'} ]},
+     {flow:['Make-or-buy analysis','RFI / RFQ / RFP','Bidder conference','Evaluate bids','Negotiate & award']},
+     {cards:[['RFI','Gather information about the market and sellers.'],['RFQ','Get prices for standard, well-defined items.'],['RFP','Ask sellers to propose a solution.']]} ]},
    { t:'Managing the contract', blocks:[
-     {list:['The contract is legally binding: changes go through formal change control and written change orders.','Claims administration handles disputed changes, ideally by negotiation first.','Procurement closure: confirm acceptance, settle payments and claims, and archive records.']} ]}
+     {list:['The contract is legally binding: changes need formal, written change orders.','Claims administration handles disputed changes, ideally by negotiation first.','Closure: confirm acceptance, settle payments and claims, archive records.']},
+     {scn:{q:'A seller says a site engineer verbally approved extra work and asks to be paid. The contract requires written change orders. What should the project manager do?',o:['Pay to protect the relationship','Handle it through claims administration, checking authority and the contract terms','Ignore the request','Ask the engineer to sign a backdated change order'],a:1,why:'The contract governs. Disputed changes go through claims administration.'}} ]}
  ]},
- { id:'agile', title:'Agile & hybrid', mins:12, slides:[
+ { id:'agile', title:'Agile & hybrid', mins:18, slides:[
    { t:'The agile mindset', blocks:[
      {p:'Agile values people and interactions, working product, customer collaboration and responding to change — while still valuing processes, documentation, contracts and plans.'},
-     {list:['Deliver value in small increments and get feedback early.','Empower self-organizing, cross-functional teams.','Inspect and adapt continuously.']} ]},
-   { t:'Scrum in one slide', blocks:[
-     {cards:[['Product owner','Owns the product backlog and maximizes value.'],['Scrum master','Servant leader who coaches and removes impediments.'],['Developers','Self-managing team that builds the increment.']]},
-     {flow:['Sprint planning','Daily scrum','Sprint review','Retrospective']},
-     {p:'Artifacts: product backlog, sprint backlog and the increment. Each sprint produces a usable increment.'} ]},
+     {cards:[['Deliver early and often','Small, usable increments get real feedback sooner.'],['Welcome change','Changing requirements are expected, even late.'],['Motivated, trusted teams','Give them the environment and support they need.'],['Sustainable pace','A steady pace the team can keep indefinitely.'],['Simplicity','Maximize the work not done.'],['Reflect and adjust','Regularly inspect how the team works and improve.']]} ]},
+   { t:'Choosing a life cycle', blocks:[
+     {table:{head:['Life cycle','Requirements','Delivery','Goal'],rows:[['Predictive','Fixed','Once','Manage cost'],['Iterative','Dynamic','Once','Correctness of the solution'],['Incremental','Dynamic','Frequent smaller deliveries','Speed'],['Agile','Dynamic','Frequent small deliveries','Customer value via feedback']]}} ]},
+   { t:'Scrum in one picture', blocks:[
+     {viz:'scrum', cap:'Plan the sprint, build with daily coordination, then review the increment and improve.'},
+     {cards:[['Product owner','Owns the backlog and maximizes value.'],['Scrum master','Servant leader who coaches and removes impediments.'],['Developers','Self-managing team that builds the increment.']]} ]},
    { t:'Key agile terms', blocks:[
-     {cards:[['User story','"As a… I want… so that…" — should be INVEST: independent, negotiable, valuable, estimable, small, testable.'],['Definition of Done','Shared quality standard for every increment.'],['Definition of Ready','When a backlog item is clear enough to start.'],['Velocity','Story points completed per sprint — a planning tool for that team only.'],['MVP','Minimum viable product: the smallest release that tests value.'],['Spike','A time-boxed experiment to reduce uncertainty.']]} ]},
+     {cards:[['User story','"As a… I want… so that…" — INVEST: independent, negotiable, valuable, estimable, small, testable.'],['Definition of Done','Shared quality standard for every increment.'],['Definition of Ready','When a backlog item is clear enough to start.'],['Velocity','Points completed per sprint — a planning tool for that team only.'],['MVP','The smallest release that tests value.'],['Spike','A time-boxed experiment to reduce uncertainty.']]} ]},
    { t:'Kanban and flow', blocks:[
-     {list:['Visualize the workflow on a board.','Limit work in progress (WIP) to improve flow.','Measure lead time (request to delivery) and cycle time (start to finish).','Burndown shows remaining work; burnup shows completed work against total scope.']} ]},
+     {viz:'kanban', cap:'Visualize work and limit work in progress. When a column is full, help clear it.'},
+     {compare:[['Lead time','From the customer\'s request to delivery.'],['Cycle time','From when work starts to when it is finished.']]} ]},
+   { t:'Tracking progress', blocks:[
+     {viz:'burndown', cap:'A burndown shows remaining work. A burnup shows completed work against total scope.'} ]},
    { t:'Technical practices', blocks:[
-     {cards:[['Continuous integration','Merge and test code frequently.'],['Test-driven development','Write the test before the code.'],['Pair programming','Two people, one workstation; spreads knowledge.'],['Refactoring','Improve the code without changing behavior.']]} ]},
+     {cards:[['Continuous integration','Merge and test code frequently.'],['Test-driven development','Write the test before the code.'],['Pair programming','Two people, one workstation; spreads knowledge.'],['Refactoring','Improve the code without changing its behaviour.']]} ]},
    { t:'Hybrid and tailoring', blocks:[
      {p:'Choose the approach per component: predictive where requirements are stable or regulated, adaptive where uncertainty is high. Manage the seams with shared milestones and integration points.'},
-     {tip:'In agile questions, the team decides how to work; the PM or scrum master facilitates rather than assigns tasks.'} ]}
+     {list:['Agile teams work best when stable, cross-functional and ideally co-located or well connected.','Agile contracts favour capped time and materials, outcome-based terms, or small statements of work per release.','A PMO can support agile by coaching and sharing practices rather than enforcing heavy gates.']},
+     {scn:{q:'Mid-sprint, a stakeholder asks the team to add an urgent new item. The team has committed to its sprint goal. What should happen?',o:['Add it immediately','Refuse without discussion','Help the product owner evaluate it — defer by default, or swap out work if truly urgent','Extend the sprint'],a:2,why:'The sprint goal is protected. Urgent work, if accepted, displaces other work; normally it goes to the next planning event.'}} ]}
  ]},
- { id:'formulas', title:'Formula cheat sheet', mins:5, slides:[
+ { id:'formulas', title:'Formula cheat sheet', mins:6, slides:[
    { t:'Earned value', blocks:[
-     {formula:[['CV','EV − AC',''],['SV','EV − PV',''],['CPI','EV / AC',''],['SPI','EV / PV',''],['EAC','BAC / CPI','typical'],['ETC','EAC − AC',''],['VAC','BAC − EAC',''],['TCPI','(BAC − EV) / (BAC − AC)','']]} ]},
+     {formula:[['CV','EV − AC',''],['SV','EV − PV',''],['CPI','EV / AC',''],['SPI','EV / PV',''],['EAC','BAC / CPI','typical'],['EAC','AC + (BAC − EV)','atypical'],['ETC','EAC − AC',''],['VAC','BAC − EAC',''],['TCPI','(BAC − EV) / (BAC − AC)','']]} ]},
    { t:'Estimating, scheduling & more', blocks:[
-     {formula:[['PERT (beta)','(O + 4M + P) / 6',''],['Triangular','(O + M + P) / 3',''],['Standard deviation','(P − O) / 6',''],['Total float','LS − ES  or  LF − EF',''],['Communication channels','n(n − 1) / 2',''],['EMV','probability × impact','']]},
-     {tip:'Memorize these and practise one calculation question per day in the mocks.'} ]}
+     {formula:[['PERT (beta)','(O + 4M + P) / 6',''],['Triangular','(O + M + P) / 3',''],['Standard deviation','(P − O) / 6',''],['Total float','LS − ES  or  LF − EF',''],['Communication channels','n(n − 1) / 2',''],['EMV','probability × impact',''],['Payback period','investment ÷ annual return','']]},
+     {tip:'Practise one calculation question a day in the mocks until these feel automatic.'} ]}
  ]},
- { id:'mindset', title:'Exam mindset', mins:5, slides:[
+ { id:'mindset', title:'Exam mindset', mins:6, slides:[
    { t:'How PMI wants you to think', blocks:[
-     {list:['Assess before acting: gather information and analyze impact first.','Follow the agreed process, especially change control.','Talk to people directly and privately before escalating.','Be proactive: prevent problems rather than react to them.','Protect value: the project exists to deliver benefits, not just outputs.','Act ethically and transparently — never hide bad news.']} ]},
+     {cards:[['Assess first','Gather information and analyze impact before acting.'],['Follow the process','Especially change control — whoever asks.'],['Talk directly','Speak privately with people before escalating.'],['Be proactive','Prevent problems instead of reacting to them.'],['Protect value','The project exists to deliver benefits, not just outputs.'],['Be ethical','Never hide bad news; follow policy on gifts and conflicts.']]} ]},
    { t:'Reading the question', blocks:[
-     {list:['Identify the approach: predictive, agile or hybrid.','Notice the keyword: FIRST, NEXT, BEST, MOST.','Eliminate answers that ignore, delay, escalate too early or break process.','Of the remaining answers, choose the one that addresses the root cause.']},
-     {tip:'Ready? Take the free Starter Diagnostic, then use the results to choose what to review.'} ]}
+     {flow:['Identify the approach','Spot the keyword: FIRST, NEXT, BEST','Eliminate extremes','Pick the root-cause answer']},
+     {list:['Eliminate answers that ignore the problem, delay it, escalate too early, or break the process.','Of what remains, choose the one that deals with the root cause.']},
+     {scn:{q:'Two senior engineers disagree about a design. Both have valid points and there are two weeks before a decision is needed. What should the project manager encourage?',o:['Choose the more senior engineer\'s design','Smooth things over','Collaborate — test both options and decide on evidence','Postpone the decision'],a:2,why:'With valid input on both sides and time available, collaborating produces the best, most lasting result.'}} ]}
  ]}
 ];
+
 
 function prepGuideDone(){ try{ return JSON.parse(localStorage.getItem('workar_guide_done')||'[]'); }catch(e){ return []; } }
 function prepGuideMark(id){ try{ const d = prepGuideDone(); if(!d.includes(id)){ d.push(id); localStorage.setItem('workar_guide_done', JSON.stringify(d)); } }catch(e){} }
@@ -2183,6 +2586,11 @@ function prepGuideBlock(b){
   if(b.table) return `<div class="gd-tablewrap"><table class="gd-table"><thead><tr>${b.table.head.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${b.table.rows.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
   if(b.formula) return `<div class="gd-formulas">${b.formula.map(([l,e,n])=>`<div class="gd-f"><span class="gd-fl">${esc(l)}</span><code>${esc(e)}</code>${n?`<span class="gd-fn">${esc(n)}</span>`:''}</div>`).join('')}</div>`;
   if(b.tip) return `<div class="gd-tip"><b>${esc(T('guide_tip'))}</b> ${esc(b.tip)}</div>`;
+  if(b.viz && PREP_VIZ[b.viz]) return `<figure class="gd-fig">${PREP_VIZ[b.viz]()}${b.cap?`<figcaption>${esc(b.cap)}</figcaption>`:''}</figure>`;
+  if(b.compare) return `<div class="gd-compare">${b.compare.map(([t,x])=>`<div><b>${esc(t)}</b><span>${esc(x)}</span></div>`).join('<div class="gd-vs">vs</div>')}</div>`;
+  if(b.scn) return `<div class="gd-scn" data-a="${b.scn.a}"><div class="gd-scn-k">${esc(T('guide_scn'))}</div><p>${esc(b.scn.q)}</p>
+    <div class="gd-scn-opts">${b.scn.o.map((o,i)=>`<button class="gd-scn-o" data-i="${i}"><span>${'ABCD'[i]}</span>${esc(o)}</button>`).join('')}</div>
+    <div class="gd-scn-why" hidden><b></b> ${esc(b.scn.why)}</div></div>`;
   if(b.flow) return `<div class="gd-flow">${b.flow.map((x,i)=>`<div class="gd-step"><span>${i+1}</span>${esc(x)}</div>`).join('<div class="gd-arrow">→</div>')}</div>`;
   return '';
 }
@@ -2272,7 +2680,7 @@ function prepGuideView(){
 }
 
 function wireGuide(){
-  document.querySelectorAll('[data-guide]').forEach(b=>b.addEventListener('click', ()=>{ prep.guide = { mod:b.getAttribute('data-guide'), slide:0 }; prep.screen='learn'; render(); window.scrollTo(0,0); }));
+  document.querySelectorAll('[data-guide]').forEach(b=>b.addEventListener('click', ()=>{ prep.guide = { mod:b.getAttribute('data-guide'), slide:0 }; prep.tab='learn'; nav('prep', { prepScreen:'learn' }); }));
   if(prep.screen!=='learn') return;
   const g = prep.guide; const m = PREP_GUIDE.find(x=>x.id===g.mod); if(!m) return;
   const go = i => { g.slide = Math.max(0, Math.min(m.slides.length-1, i)); render(); };
@@ -2281,6 +2689,17 @@ function wireGuide(){
   on('gd-back', ()=>{ prep.screen='home'; prep.tab='learn'; render(); window.scrollTo(0,0); });
   on('gd-test', ()=>{ prep.screen='home'; prep.tab='test'; prep.pickExam = (prep.exams.find(e=>e.isFree)||{}).id || null; render(); window.scrollTo(0,0); });
   document.querySelectorAll('[data-slide]').forEach(b=>b.addEventListener('click', ()=>go(parseInt(b.getAttribute('data-slide'),10))));
+  document.querySelectorAll('.gd-scn').forEach(box=>{
+    const ans = parseInt(box.getAttribute('data-a'),10);
+    box.querySelectorAll('.gd-scn-o').forEach(btn=>btn.addEventListener('click', ()=>{
+      if(box.classList.contains('answered')) return;
+      box.classList.add('answered');
+      const i = parseInt(btn.getAttribute('data-i'),10);
+      box.querySelectorAll('.gd-scn-o').forEach(o=>{ const k=parseInt(o.getAttribute('data-i'),10); o.classList.add(k===ans?'ok':(k===i?'no':'dim')); o.disabled=true; });
+      const why = box.querySelector('.gd-scn-why'); why.hidden=false;
+      why.classList.add(i===ans?'ok':'no'); why.querySelector('b').textContent = T(i===ans?'prep_correct':'prep_incorrect');
+    }));
+  });
 }
 document.addEventListener('keydown', e=>{
   if(state.view!=='prep' || prep.screen!=='learn') return;
