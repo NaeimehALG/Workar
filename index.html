@@ -280,6 +280,12 @@ const I18N = {
     auth_check_spam:"Don't see it within a few minutes? Check your spam or promotions folder.",
     auth_resend:'Resend confirmation email', auth_resent:'Sent — check your inbox',
     auth_already_registered:'This email already has an account — please log in.',
+    forgot_link:'Forgot password?', forgot_hint:"Enter your account email and we'll send you a link to reset your password.",
+    btn_send_reset:'Send reset link', back_to_login:'Back to log in',
+    reset_sent:'If an account exists for that email, a reset link is on its way. Check your inbox (and spam folder).',
+    reset_title:'Set a new password', reset_subtitle:'Choose a new password for your Workar account.',
+    lbl_new_password:'New password', lbl_confirm_password:'Confirm new password', btn_save_password:'Save new password',
+    pw_mismatch:"Passwords don't match.", pw_updated:'Password updated — you\'re signed in.',
     auth_error_generic:'Something went wrong. Check your email/password and try again.',
     nav_signout:'Sign out', signed_in_as:'Signed in as',
     btn_delete_profile:'Delete my profile', confirm_delete_profile:'Delete your profile permanently? This cannot be undone.',
@@ -393,6 +399,12 @@ const I18N = {
     auth_check_spam:'اگه تا چند دقیقه نیومد، پوشه‌ی اسپم یا Promotions رو هم چک کن.',
     auth_resend:'ارسال دوباره‌ی ایمیل تأیید', auth_resent:'ارسال شد — ایمیلت رو چک کن',
     auth_already_registered:'با این ایمیل قبلاً حساب ساخته شده — لطفاً وارد شو.',
+    forgot_link:'رمز عبور را فراموش کرده‌اید؟', forgot_hint:'ایمیل حسابت رو وارد کن تا لینک تغییر رمز برات فرستاده بشه.',
+    btn_send_reset:'ارسال لینک تغییر رمز', back_to_login:'بازگشت به ورود',
+    reset_sent:'اگه حسابی با این ایمیل وجود داشته باشه، لینک تغییر رمز فرستاده شد. صندوق ورودی (و اسپم) رو چک کن.',
+    reset_title:'تعیین رمز عبور جدید', reset_subtitle:'یه رمز جدید برای حساب Workar انتخاب کن.',
+    lbl_new_password:'رمز عبور جدید', lbl_confirm_password:'تکرار رمز عبور جدید', btn_save_password:'ذخیره رمز جدید',
+    pw_mismatch:'رمزها یکی نیستن.', pw_updated:'رمز عوض شد — وارد شدی.',
     auth_error_generic:'یه مشکلی پیش اومد. ایمیل/رمز رو چک کن و دوباره امتحان کن.',
     nav_signout:'خروج', signed_in_as:'وارد شدی با',
     btn_delete_profile:'حذف پروفایلم', confirm_delete_profile:'پروفایلت برای همیشه حذف بشه؟ این کار برگشت‌ناپذیره.',
@@ -481,6 +493,7 @@ function formatSlotLabel(slot){
 /* ---------- Supabase-backed database (shared, real multi-user) ---------- */
 const SUPABASE_URL = 'https://jgbjhzhbdsdhssyakpgq.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_QB6yw8JdxxI7ODorT3X3aw_rJa2UXbq';
+const IS_RECOVERY_LINK = /type=recovery/.test(window.location.hash + window.location.search);
 const sb = (window.supabase && SUPABASE_URL.startsWith('http'))
   ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
   : null;
@@ -590,12 +603,18 @@ async function init(){
     document.getElementById('app').innerHTML = `<div class="empty" style="margin-top:80px;">Could not connect. <br><span style="font-size:12px;opacity:0.7;">${(e && (e.message || e.error_description || JSON.stringify(e))) || ''}</span></div>`;
     return;
   }
+  if(IS_RECOVERY_LINK) state.recoveryMode = true;
   if(session){
     onSignedIn(session);
   } else {
     render(); // home/browse are visible; only onboard/dashboard prompt for login
   }
   sb.auth.onAuthStateChange((event, session)=>{
+    if(event==='PASSWORD_RECOVERY'){
+      state.recoveryMode = true;
+      if(session && !uid) onSignedIn(session); else render();
+      return;
+    }
     if(event==='SIGNED_OUT'){
       uid = null; userEmail = null; myProfile = null;
       state.view = 'home';
@@ -672,7 +691,9 @@ function render(){
   let body;
   const wantsAccount = (state.view==='dashboard' || state.view==='onboard');
   const showAuthScreen = wantsAccount && !uid;
-  if(showAuthScreen){
+  if(state.recoveryMode){
+    body = resetPasswordView();
+  } else if(showAuthScreen){
     body = authView();
   } else if(!myProfile && wantsAccount){
     body = onboardView();
@@ -690,7 +711,8 @@ function render(){
   app.appendChild(el(body));
   app.appendChild(el(`<footer>Workar · ${esc(T('footer_tag'))}<br><a class="ig-link" href="${INSTAGRAM_URL}" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg> @workarmentoring</a></footer>`));
   wire();
-  if(showAuthScreen) wireAuth();
+  if(state.recoveryMode) wireResetPassword();
+  else if(showAuthScreen) wireAuth();
 }
 
 function navHtml(){
@@ -795,20 +817,65 @@ function authView(){
     ${state.authInfo ? `<p style="font-size:13.5px;margin:6px 0 12px;">${esc(state.authInfo)}</p>` : ''}
     <form id="auth-form">
       <div class="field"><label>${esc(T('lbl_email'))}</label><input name="email" type="email" required placeholder="${esc(T('ph_email'))}" value="${esc(state.authEmail||'')}"></div>
+      ${state.authMode==='forgot' ? `<p class="muted" style="font-size:13.5px;margin:-4px 0 12px;">${esc(T('forgot_hint'))}</p>` : `
       <div class="field"><label>${esc(T('lbl_password'))}</label><input name="password" type="password" required minlength="6" placeholder="${esc(T('ph_password'))}"></div>
+      ${state.authMode==='login' ? `<div style="text-align:end;margin:-6px 0 12px;"><a href="#" id="auth-forgot" style="font-size:13px;color:var(--accent);">${esc(T('forgot_link'))}</a></div>` : ''}`}
       ${state.authError ? `<p style="color:#b3412c;font-size:13px;margin:4px 0 10px;">${esc(state.authError)}</p>` : ''}
-      <button class="btn btn-primary" type="submit" style="width:100%;" ${state.authBusy?'disabled':''}>${esc(state.authMode==='signup' ? T('btn_signup') : T('btn_login'))}</button>
+      <button class="btn btn-primary" type="submit" style="width:100%;" ${state.authBusy?'disabled':''}>${esc(state.authMode==='signup' ? T('btn_signup') : state.authMode==='forgot' ? T('btn_send_reset') : T('btn_login'))}</button>
     </form>
-    <p style="margin-top:14px;"><a href="#" id="auth-toggle">${esc(state.authMode==='signup' ? T('auth_toggle_to_login') : T('auth_toggle_to_signup'))}</a></p>
+    <p style="margin-top:14px;"><a href="#" id="auth-toggle">${esc(state.authMode==='signup' ? T('auth_toggle_to_login') : state.authMode==='forgot' ? T('back_to_login') : T('auth_toggle_to_signup'))}</a></p>
   </div>`;
+}
+
+function resetPasswordView(){
+  return `
+  <div class="section-head"><h2>${esc(T('reset_title'))}</h2></div>
+  <div class="panel" style="max-width:420px;">
+    <p class="muted" style="margin-top:0;">${esc(T('reset_subtitle'))}</p>
+    <form id="reset-form">
+      <div class="field"><label>${esc(T('lbl_new_password'))}</label><input name="pw1" type="password" required minlength="6" placeholder="${esc(T('ph_password'))}"></div>
+      <div class="field"><label>${esc(T('lbl_confirm_password'))}</label><input name="pw2" type="password" required minlength="6"></div>
+      ${state.authError ? `<p style="color:#b3412c;font-size:13px;margin:4px 0 10px;">${esc(state.authError)}</p>` : ''}
+      <button class="btn btn-primary" type="submit" style="width:100%;" ${state.authBusy?'disabled':''}>${esc(T('btn_save_password'))}</button>
+    </form>
+  </div>`;
+}
+function wireResetPassword(){
+  const f = document.getElementById('reset-form');
+  if(!f) return;
+  f.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const fd = new FormData(f);
+    const pw1 = fd.get('pw1')||'', pw2 = fd.get('pw2')||'';
+    if(pw1 !== pw2){ state.authError = T('pw_mismatch'); render(); return; }
+    state.authBusy = true; state.authError = ''; render();
+    try{
+      const { error } = await withTimeout(sb.auth.updateUser({ password: pw1 }), 8000, 'updateUser');
+      if(error) throw error;
+      state.authBusy = false; state.recoveryMode = false;
+      history.replaceState(null, '', window.location.pathname);
+      toast(T('pw_updated'));
+      nav(myProfile ? 'dashboard' : 'home');
+    }catch(err){
+      state.authBusy = false; state.authError = (err && err.message) || T('auth_error_generic'); render();
+    }
+  });
 }
 
 function wireAuth(){
   const toggle = document.getElementById('auth-toggle');
   if(toggle) toggle.addEventListener('click', (e)=>{
     e.preventDefault();
-    state.authMode = state.authMode==='signup' ? 'login' : 'signup';
+    state.authMode = state.authMode==='login' ? 'signup' : 'login';
     state.authError = ''; state.authCheckEmail = false; state.authInfo = '';
+    render();
+  });
+  const forgotLink = document.getElementById('auth-forgot');
+  if(forgotLink) forgotLink.addEventListener('click', (e)=>{
+    e.preventDefault();
+    const em = document.querySelector('#auth-form input[name="email"]');
+    if(em && em.value) state.authEmail = em.value.trim();
+    state.authMode = 'forgot'; state.authError = ''; state.authInfo = ''; state.authCheckEmail = false;
     render();
   });
   const resendBtn = document.getElementById('auth-resend');
@@ -831,6 +898,13 @@ function wireAuth(){
     const password = fd.get('password')||'';
     state.authBusy = true; state.authError = ''; render();
     try{
+      if(state.authMode==='forgot'){
+        state.authEmail = email;
+        const { error } = await withTimeout(sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin }), 8000, 'resetPassword');
+        if(error) throw error;
+        state.authBusy = false; state.authMode = 'login'; state.authInfo = T('reset_sent'); render();
+        return;
+      }
       if(state.authMode==='signup'){
         const { data, error } = await withTimeout(sb.auth.signUp({ email, password, options:{ emailRedirectTo: window.location.origin } }), 8000, 'signUp');
         if(error) throw error;
