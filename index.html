@@ -74,6 +74,49 @@
   .btn-sm{padding:7px 14px;font-size:13px;}
   .btn:disabled{opacity:.5;cursor:not-allowed;}
 
+
+  /* ---------- landing sections ---------- */
+  .lp-section{padding:64px 0 24px;text-align:center;}
+  .lp-section.alt{background:var(--surface-2);border-radius:var(--radius-lg);padding:56px 24px 40px;margin:24px 0;}
+  .lp-title{font-size:32px;font-weight:800;margin:0 0 6px;letter-spacing:-.01em;}
+  .lp-sub{color:var(--muted);font-size:16px;margin:0 auto;max-width:56ch;}
+  .lp-bar{width:64px;height:3px;border-radius:3px;background:var(--accent-2);opacity:.6;margin:18px auto 44px;}
+  .why-row{display:flex;flex-wrap:wrap;justify-content:center;gap:26px;}
+  .why-bubble{width:176px;height:176px;border-radius:50%;border:4px solid var(--c);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px;background:var(--surface);box-shadow:var(--shadow);}
+  .why-bubble b{font-size:30px;font-weight:800;line-height:1.1;color:var(--text);}
+  .why-bubble span{font-size:13.5px;font-weight:600;line-height:1.35;margin-top:6px;color:var(--text);}
+  .why-note{color:var(--muted);font-size:14px;max-width:60ch;margin:34px auto 0;}
+  .steps-row{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;}
+  @media (max-width:860px){.steps-row{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:520px){.steps-row{grid-template-columns:1fr;}}
+  .step-ico{width:72px;height:72px;margin:0 auto 16px;display:block;}
+  .step h3{font-size:18px;font-weight:800;margin:0 0 8px;}
+  .step h3 em{font-style:normal;color:var(--accent);margin-inline-end:4px;}
+  .step p{color:var(--muted);font-size:14px;margin:0;line-height:1.65;}
+  .price-row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;align-items:stretch;}
+  @media (max-width:960px){.price-row{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:560px){.price-row{grid-template-columns:1fr;}}
+  .price-card{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px 20px 22px;display:flex;flex-direction:column;box-shadow:var(--shadow);text-align:center;}
+  .price-card.featured{border:2px solid var(--accent);}
+  .price-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--accent);color:var(--accent-ink);font-size:11.5px;font-weight:700;padding:3px 12px;border-radius:999px;white-space:nowrap;}
+  .price-name{font-size:18px;font-weight:800;color:var(--accent);margin:0 0 4px;}
+  .price-tag{font-size:12.5px;color:var(--muted);margin:0 0 16px;min-height:2.6em;}
+  .price-amount{font-size:38px;font-weight:800;line-height:1;}
+  .price-cur{font-size:12.5px;color:var(--muted);margin-top:4px;}
+  .price-save{color:#C2773A;font-weight:700;font-size:14px;margin:12px 0 0;min-height:1.4em;}
+  .price-per{font-size:13.5px;font-weight:600;margin:8px 0 14px;padding-top:10px;border-top:1px solid var(--border);}
+  .price-list{list-style:none;padding:0;margin:0 0 20px;text-align:start;font-size:13.5px;flex:1;}
+  .price-list li{padding:5px 0 5px 22px;position:relative;line-height:1.45;}
+  html[dir="rtl"] .price-list li{padding:5px 22px 5px 0;}
+  .price-list li::before{content:"";position:absolute;inset-inline-start:2px;top:10px;width:10px;height:6px;border-left:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(-45deg);}
+  .price-card .btn{width:100%;}
+  .price-foot{color:var(--muted);font-size:12.5px;margin-top:22px;}
+  /* scroll reveal: slides in from the reading-start side, staggered */
+  .reveal{opacity:0;transform:translateX(-56px);transition:opacity .7s ease, transform .8s cubic-bezier(.2,.75,.25,1);transition-delay:calc(var(--i,0) * 140ms);}
+  html[dir="rtl"] .reveal{transform:translateX(56px);}
+  .reveal.in{opacity:1;transform:none;}
+  .reveal.no-anim{transition:none;}
+  @media (prefers-reduced-motion: reduce){.reveal,html[dir="rtl"] .reveal{opacity:1;transform:none;transition:none;}}
   .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center;padding:36px 0 56px;}
   @media (max-width:760px){.hero{grid-template-columns:1fr;}}
   .hero h1{font-weight:800;font-size:42px;line-height:1.25;margin:0 0 18px;letter-spacing:-.01em;}
@@ -199,6 +242,27 @@ const I18N = {
     stat_mentors:'mentors on Workar', stat_reviews:'reviews written', stat_realtime:'real conversations',
     no_mentors_yet:'No mentors yet', be_first:'Be the first to sign up',
     hiw_title:'How it works',
+    new_mentor:'New on Workar',
+    why_title:'Why Workar?', why_sub:"Advice is everywhere. Guidance from someone who has already walked your path is rare.",
+    why_b1:'mentors who have done the job', why_b2:'fields & industries', why_b3:'languages spoken',
+    why_b4:'AI coach for resumes & interviews', why_b5:'private video & voice sessions',
+    why_note:'Every Workar mentor is a working professional sharing what they learned the hard way — the interviews they passed, the career changes they made, and the offers they negotiated.',
+    hiw2_title:'How Workar works', hiw2_sub:'From first question to next offer, in 4 simple steps',
+    step1_t:'Define your goal', step1_b:"Tell us where you are and where you want to go — a stronger resume, a new role, or a complete career change.",
+    step2_t:'Choose your mentor', step2_b:"Browse professionals who've already done the job you want, or let our AI match you in seconds.",
+    step3_t:'Book your session', step3_b:"Pick a time from your mentor's weekly availability and send your request in one click.",
+    step4_t:'Meet online', step4_b:'Join a private video or voice call from your phone, tablet, or computer — and keep practising with the AI coach in between.',
+    pk_title:'Mentoring packages', pk_sub:'Start with a single conversation, or go all the way from resume to offer.',
+    pk_popular:'Most popular', pk_usd_total:'USD total', pk_save:'Save {n}%', pk_per:'per session', pk_session:'session', pk_sessions:'sessions', pk_book:'Book now',
+    pk_single_name:'Single Session', pk_single_tag:'One focused conversation on any career question',
+    pk_single_items:'45-minute 1:1 video or voice call|Any topic: resume, interview, or career path|Follow-up notes from your mentor',
+    pk_resume_name:'Resume & LinkedIn', pk_resume_tag:'Get noticed by recruiters and hiring managers',
+    pk_resume_items:'2 × 45-minute sessions|Line-by-line resume review & rewrite|LinkedIn profile optimization|20 AI coach messages included',
+    pk_interview_name:'Interview Ready', pk_interview_tag:'Walk into your next interview with confidence',
+    pk_interview_items:'3 × 45-minute sessions|Role-specific mock interviews|Structured feedback on every answer (STAR)|40 AI mock-interview messages included',
+    pk_offer_name:'Resume to Offer', pk_offer_tag:'End-to-end support for your job search',
+    pk_offer_items:'6 × 45-minute sessions|Resume & LinkedIn makeover|2 full mock interviews|Job-search & networking strategy|Salary negotiation coaching|100 AI coach messages + priority booking',
+    pk_foot:'Prices in USD. Packages can be booked with any participating mentor; individual mentor rates may vary.',
     hiw1_t:'1. Set up your profile', hiw1_b:"Tell us your profession and what you're looking for — whether that's guidance or giving it.",
     hiw2_t:'2. Match with a mentor', hiw2_b:'Search by job title, read real reviews, and request a conversation.',
     hiw3_t:'3. Get AI coaching too', hiw3_b:'Between sessions, get instant feedback on your resume and career questions.',
@@ -318,6 +382,27 @@ const I18N = {
     stat_mentors:'منتور در Workar', stat_reviews:'ریویو نوشته‌شده', stat_realtime:'گفتگوی واقعی',
     no_mentors_yet:'هنوز منتوری نیست', be_first:'اولین نفری باش که ثبت‌نام می‌کنه',
     hiw_title:'چطور کار می‌کنه',
+    new_mentor:'تازه به Workar پیوسته',
+    why_title:'چرا Workar؟', why_sub:'توصیه همه‌جا پیدا می‌شه؛ راهنمایی از کسی که قبلاً همین مسیر رو رفته، کمیابه.',
+    why_b1:'منتوری که این کار رو انجام داده', why_b2:'رشته و صنعت', why_b3:'زبان',
+    why_b4:'کوچ هوش مصنوعی برای رزومه و مصاحبه', why_b5:'جلسه‌ی خصوصی تصویری و صوتی',
+    why_note:'هر منتور Workar یک متخصص شاغله که تجربه‌ی واقعی‌اش رو به اشتراک می‌ذاره — مصاحبه‌هایی که قبول شده، تغییر مسیرهایی که داشته و پیشنهادهای کاری که سرشون مذاکره کرده.',
+    hiw2_title:'Workar چطور کار می‌کنه', hiw2_sub:'از اولین سؤال تا پیشنهاد کاری بعدی، در ۴ قدم ساده',
+    step1_t:'هدفت رو مشخص کن', step1_b:'بگو الان کجایی و می‌خوای به کجا برسی — رزومه‌ی قوی‌تر، نقش جدید یا تغییر کامل مسیر شغلی.',
+    step2_t:'منتورت رو انتخاب کن', step2_b:'بین متخصصانی بگرد که همون کاری رو که می‌خوای قبلاً انجام دادن، یا بذار هوش مصنوعی در چند ثانیه بهترین گزینه رو پیدا کنه.',
+    step3_t:'جلسه‌ات رو رزرو کن', step3_b:'از بین زمان‌های آزاد هفتگی منتور یکی رو انتخاب کن و با یک کلیک درخواست بده.',
+    step4_t:'آنلاین ملاقات کن', step4_b:'از گوشی، تبلت یا کامپیوتر وارد تماس خصوصی تصویری یا صوتی شو — و بین جلسات با کوچ هوش مصنوعی تمرین کن.',
+    pk_title:'پکیج‌های منتورینگ', pk_sub:'با یک گفتگو شروع کن، یا کل مسیر از رزومه تا پیشنهاد کاری رو با ما طی کن.',
+    pk_popular:'محبوب‌ترین', pk_usd_total:'دلار (کل)', pk_save:'{n}٪ صرفه‌جویی', pk_per:'هر جلسه', pk_session:'جلسه', pk_sessions:'جلسه', pk_book:'رزرو کن',
+    pk_single_name:'یک جلسه', pk_single_tag:'یک گفتگوی متمرکز درباره‌ی هر سؤال شغلی',
+    pk_single_items:'تماس تصویری یا صوتی ۴۵ دقیقه‌ای|هر موضوعی: رزومه، مصاحبه یا مسیر شغلی|یادداشت‌های پیگیری از منتور',
+    pk_resume_name:'رزومه و لینکدین', pk_resume_tag:'دیده شدن توسط ریکروترها و مدیران استخدام',
+    pk_resume_items:'۲ جلسه‌ی ۴۵ دقیقه‌ای|بررسی و بازنویسی خط‌به‌خط رزومه|بهینه‌سازی پروفایل لینکدین|۲۰ پیام کوچ هوش مصنوعی',
+    pk_interview_name:'آمادگی مصاحبه', pk_interview_tag:'با اعتمادبه‌نفس وارد مصاحبه‌ی بعدی شو',
+    pk_interview_items:'۳ جلسه‌ی ۴۵ دقیقه‌ای|مصاحبه‌ی آزمایشی مخصوص نقش شما|بازخورد ساختاریافته روی هر پاسخ (STAR)|۴۰ پیام مصاحبه‌ی آزمایشی با هوش مصنوعی',
+    pk_offer_name:'از رزومه تا پیشنهاد کاری', pk_offer_tag:'همراهی کامل در مسیر کاریابی',
+    pk_offer_items:'۶ جلسه‌ی ۴۵ دقیقه‌ای|بازسازی رزومه و لینکدین|۲ مصاحبه‌ی آزمایشی کامل|استراتژی کاریابی و شبکه‌سازی|مشاوره‌ی مذاکره‌ی حقوق|۱۰۰ پیام کوچ هوش مصنوعی + اولویت در رزرو',
+    pk_foot:'قیمت‌ها به دلار آمریکاست. پکیج‌ها با هر منتور شرکت‌کننده قابل رزرو هستن؛ نرخ منتورها ممکنه متفاوت باشه.',
     hiw1_t:'۱. پروفایلتو بساز', hiw1_b:'شغلت و چیزی که دنبالشی رو بگو — چه راهنمایی می‌خوای، چه می‌خوای راهنما باشی.',
     hiw2_t:'۲. با یه منتور وصل شو', hiw2_b:'بر اساس عنوان شغلی جستجو کن، ریویوهای واقعی رو بخون، و درخواست گفتگو بده.',
     hiw3_t:'۳. کوچینگ با هوش مصنوعی هم بگیر', hiw3_b:'بین جلسات، فیدبک آنی برای رزومه و سؤالات شغلیت بگیر.',
@@ -712,6 +797,7 @@ function render(){
   app.appendChild(el(body));
   app.appendChild(el(`<footer>Workar · ${esc(T('footer_tag'))}<br><a class="ig-link" href="${INSTAGRAM_URL}" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg> @workarmentoring</a></footer>`));
   wire();
+  setupReveal();
   if(state.recoveryMode) wireResetPassword();
   else if(showAuthScreen) wireAuth();
 }
@@ -729,6 +815,115 @@ function navHtml(){
       <div class="lang-switch" id="lang-toggle">${esc(T('lang_switch'))}</div>
     </div>
   </div>`;
+}
+
+const WHY_COLORS = ['#6B4F3A','#8B6A4C','#A57E57','#B98D5E','#D4B48C'];
+const STEP_ICONS = [
+  `<svg class="step-ico" viewBox="0 0 64 64" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="32" r="22"/><circle cx="32" cy="32" r="13"/><circle cx="32" cy="32" r="4" fill="var(--accent)"/><path d="M46 18l8-8M50 10h4v4"/></svg>`,
+  `<svg class="step-ico" viewBox="0 0 64 64" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="15" r="5"/><path d="M6 29c1-5 4-8 8-8s7 3 8 8"/><path d="M30 12h26M30 19h18"/><circle cx="14" cy="42" r="5"/><path d="M6 56c1-5 4-8 8-8s7 3 8 8"/><path d="M30 39h26M30 46h18"/><path d="M50 50l3 3 6-7"/></svg>`,
+  `<svg class="step-ico" viewBox="0 0 64 64" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="12" width="48" height="44" rx="5"/><path d="M8 24h48M20 6v12M44 6v12"/><path d="M17 33h6M29 33h6M41 33h6M17 43h6M29 43h6"/><path d="M40 45l4 4 7-8"/></svg>`,
+  `<svg class="step-ico" viewBox="0 0 64 64" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="10" width="40" height="30" rx="4"/><path d="M18 48h16M26 40v8"/><circle cx="26" cy="21" r="5"/><path d="M17 34c1-4 5-6 9-6s8 2 9 6"/><path d="M46 20l12-7v26l-12-7"/><path d="M52 50a6 6 0 1 0 0 .1"/></svg>`
+];
+const PACKAGES = [
+  { key:'single',    sessions:1, price:49,  save:0 },
+  { key:'resume',    sessions:2, price:89,  save:9 },
+  { key:'interview', sessions:3, price:129, save:12, featured:true },
+  { key:'offer',     sessions:6, price:249, save:15 }
+];
+const revealedKeys = new Set();
+function rv(key, i){ return `data-rk="${key}" style="--i:${i}"`; }
+
+function landingSections(){
+  const profiles = Object.values(cache.profiles);
+  const mentors = profiles.filter(p=>p.role==='mentor' || !p.role);
+  const fields = new Set(mentors.map(p=>(p.profession||'').trim().toLowerCase()).filter(Boolean));
+  const langs = new Set(mentors.flatMap(p=>(p.languages||[]).map(l=>l.trim().toLowerCase())).filter(Boolean));
+  const why = [
+    { n: mentors.length, count:true, label: T('why_b1') },
+    { n: fields.size,    count:true, label: T('why_b2') },
+    { n: langs.size,     count:true, label: T('why_b3') },
+    { n: '24/7',         label: T('why_b4') },
+    { n: '1:1',          label: T('why_b5') }
+  ];
+  const stepsHtml = [1,2,3,4].map((n,i)=>`
+      <div class="step reveal" ${rv('step'+n,i)}>
+        ${STEP_ICONS[i]}
+        <h3><em>${n}.</em>${esc(T('step'+n+'_t'))}</h3>
+        <p>${esc(T('step'+n+'_b'))}</p>
+      </div>`).join('');
+  const priceHtml = PACKAGES.map((pk,i)=>`
+      <div class="price-card reveal ${pk.featured?'featured':''}" ${rv('pk-'+pk.key,i)}>
+        ${pk.featured ? `<div class="price-badge">${esc(T('pk_popular'))}</div>` : ''}
+        <div class="price-name">${esc(T('pk_'+pk.key+'_name'))}</div>
+        <p class="price-tag">${esc(T('pk_'+pk.key+'_tag'))}</p>
+        <div class="price-amount">$${pk.price}</div>
+        <div class="price-cur">${esc(T('pk_usd_total'))}</div>
+        <div class="price-save">${pk.save ? esc(T('pk_save').replace('{n}', pk.save)) : ''}</div>
+        <div class="price-per">$${(pk.price/pk.sessions)%1 ? (pk.price/pk.sessions).toFixed(2) : pk.price/pk.sessions} ${esc(T('pk_per'))}<div style="font-weight:400;color:var(--muted);font-size:12.5px;">${pk.sessions} ${esc(T(pk.sessions===1?'pk_session':'pk_sessions'))} · 45 min</div></div>
+        <ul class="price-list">${T('pk_'+pk.key+'_items').split('|').map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+        <button class="btn ${pk.featured?'btn-primary':'btn-outline'}" data-nav="browse">${esc(T('pk_book'))}</button>
+      </div>`).join('');
+  return `
+  <section class="lp-section">
+    <h2 class="lp-title">${esc(T('why_title'))}</h2>
+    <p class="lp-sub">${esc(T('why_sub'))}</p>
+    <div class="lp-bar"></div>
+    <div class="why-row">
+      ${why.map((w,i)=>`<div class="why-bubble reveal" data-rk="why${i}" style="--c:${WHY_COLORS[i]};--i:${i}">
+        <b ${w.count?`data-count="${w.n}"`:''}>${w.count ? (revealedKeys.has('why'+i) ? w.n : 0) : esc(w.n)}</b>
+        <span>${esc(w.label)}</span>
+      </div>`).join('')}
+    </div>
+    <p class="why-note">${esc(T('why_note'))}</p>
+  </section>
+
+  <section class="lp-section alt">
+    <h2 class="lp-title">${esc(T('hiw2_title'))}</h2>
+    <p class="lp-sub">${esc(T('hiw2_sub'))}</p>
+    <div class="lp-bar"></div>
+    <div class="steps-row">${stepsHtml}</div>
+  </section>
+
+  <section class="lp-section">
+    <h2 class="lp-title">${esc(T('pk_title'))}</h2>
+    <p class="lp-sub">${esc(T('pk_sub'))}</p>
+    <div class="lp-bar"></div>
+    <div class="price-row">${priceHtml}</div>
+    <p class="price-foot">${esc(T('pk_foot'))}</p>
+  </section>`;
+}
+
+function countUp(node){
+  const target = Number(node.getAttribute('data-count'))||0;
+  if(target<=0){ node.textContent = target; return; }
+  const dur = 1100, t0 = performance.now();
+  const step = now=>{
+    const k = Math.min(1,(now-t0)/dur);
+    node.textContent = Math.round(target*(1-Math.pow(1-k,3)));
+    if(k<1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+function setupReveal(){
+  const items = document.querySelectorAll('.reveal[data-rk]');
+  if(!items.length) return;
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const show = (node, animate)=>{
+    const key = node.getAttribute('data-rk');
+    if(!animate) node.classList.add('no-anim');
+    node.classList.add('in');
+    const c = node.querySelector('[data-count]');
+    if(c){ if(animate && !reduce) countUp(c); else c.textContent = c.getAttribute('data-count'); }
+    revealedKeys.add(key);
+  };
+  if(!('IntersectionObserver' in window)){ items.forEach(n=>show(n,false)); return; }
+  const io = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ show(e.target, true); io.unobserve(e.target); } });
+  }, { threshold: 0.2, rootMargin: '0px 0px -40px 0px' });
+  items.forEach(n=>{
+    if(revealedKeys.has(n.getAttribute('data-rk'))) show(n, false);
+    else io.observe(n);
+  });
 }
 
 function homeView(){
@@ -756,51 +951,13 @@ function homeView(){
       ${mentors.length ? mentors.map(([id,p])=>`
         <div class="row">
           <div class="avatar">${initials(nameOf(id))}</div>
-          <div class="who"><b>${esc(nameOf(id))}</b><span>${esc(p.headline||p.profession||'')} · <span class="stars">${starsStr(avgRating(id)||5)}</span></span></div>
+          <div class="who"><b>${esc(nameOf(id))}</b><span>${esc(p.headline||p.profession||'')} · ${avgRating(id) ? `<span class="stars">${starsStr(avgRating(id))}</span>` : esc(T('new_mentor'))}</span></div>
         </div>`).join('') : `
         <div class="row"><div class="avatar">?</div><div class="who"><b>${esc(T('no_mentors_yet'))}</b><span>${esc(T('be_first'))}</span></div></div>`}
     </div>
   </div>
 
-  <div class="section-head"><h2>${esc(T('hiw_title'))}</h2></div>
-  <div class="grid" style="margin-bottom:56px;">
-    <div class="card" style="cursor:default;">
-      <div class="ill-wrap"><svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="40" cy="40" r="38" stroke="var(--border)" stroke-width="1.5"/>
-        <circle cx="40" cy="30" r="10" stroke="var(--accent)" stroke-width="1.6"/>
-        <path d="M30 30c0-2 2-4 4-5M50 30c0 2-2 4-4 5" stroke="var(--accent)" stroke-width="1.4" stroke-linecap="round"/>
-        <path d="M35 27c1-1 2-1 3 0M42 27c1-1 2-1 3 0" stroke="var(--text)" stroke-width="1.6" stroke-linecap="round"/>
-        <path d="M22 58c1-10 8-15 18-15s17 5 18 15" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round"/>
-        <rect x="30" y="48" width="20" height="15" rx="1.5" stroke="var(--accent-2)" stroke-width="1.4" fill="var(--surface)"/>
-        <path d="M33 53h14M33 57h9" stroke="var(--accent-2)" stroke-width="1.2" stroke-linecap="round"/>
-      </svg></div>
-      <h3>${esc(T('hiw1_t'))}</h3><p class="bio">${esc(T('hiw1_b'))}</p>
-    </div>
-    <div class="card" style="cursor:default;">
-      <div class="ill-wrap"><svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="40" cy="40" r="38" stroke="var(--border)" stroke-width="1.5"/>
-        <circle cx="27" cy="30" r="8" stroke="var(--accent)" stroke-width="1.6"/>
-        <path d="M23 28c0.8-0.8 1.6-0.8 2.4 0M29 28c0.8-0.8 1.6-0.8 2.4 0" stroke="var(--text)" stroke-width="1.5" stroke-linecap="round"/>
-        <path d="M15 58c1-8 6-13 12-13s10 3 12 8" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round"/>
-        <circle cx="55" cy="34" r="8" stroke="var(--accent-2)" stroke-width="1.6"/>
-        <path d="M51 32c0.8-0.8 1.6-0.8 2.4 0M57 32c0.8-0.8 1.6-0.8 2.4 0" stroke="var(--text)" stroke-width="1.5" stroke-linecap="round"/>
-        <path d="M41 60c1-9 7-14 14-14s11 4 12 10" stroke="var(--accent-2)" stroke-width="1.6" stroke-linecap="round"/>
-        <path d="M35 42l7-3 7 3" stroke="var(--accent)" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="2 3"/>
-      </svg></div>
-      <h3>${esc(T('hiw2_t'))}</h3><p class="bio">${esc(T('hiw2_b'))}</p>
-    </div>
-    <div class="card" style="cursor:default;">
-      <div class="ill-wrap"><svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="40" cy="40" r="38" stroke="var(--border)" stroke-width="1.5"/>
-        <circle cx="34" cy="32" r="10" stroke="var(--accent)" stroke-width="1.6"/>
-        <path d="M29 30c1-1 2-1 3 0M36 30c1-1 2-1 3 0" stroke="var(--text)" stroke-width="1.6" stroke-linecap="round"/>
-        <path d="M24 60c1-10 6-15 15-15s13 4 15 12" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round"/>
-        <path d="M52 20h12c1.6 0 3 1.4 3 3v9c0 1.6-1.4 3-3 3h-2l1 5-6-5h-5c-1.6 0-3-1.4-3-3v-9c0-1.6 1.4-3 3-3z" stroke="var(--accent-2)" stroke-width="1.4" fill="var(--surface)"/>
-        <circle cx="57" cy="27" r="1.3" fill="var(--accent-2)"/><circle cx="61" cy="27" r="1.3" fill="var(--accent-2)"/><circle cx="65" cy="27" r="1.3" fill="var(--accent-2)"/>
-      </svg></div>
-      <h3>${esc(T('hiw3_t'))}</h3><p class="bio">${esc(T('hiw3_b'))}</p>
-    </div>
-  </div>
+  ${landingSections()}
   `;
 }
 
