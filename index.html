@@ -276,7 +276,10 @@ const I18N = {
     lbl_email:'Email', lbl_password:'Password', ph_email:'you@example.com', ph_password:'At least 6 characters',
     btn_login:'Log in', btn_signup:'Create account', auth_toggle_to_signup:"Don't have an account? Sign up",
     auth_toggle_to_login:'Already have an account? Log in',
-    auth_check_email:'Almost done — check your email and click the confirmation link, then come back and log in.',
+    auth_check_email:'Account created — check your email and click the confirmation link, then log in below.',
+    auth_check_spam:"Don't see it within a few minutes? Check your spam or promotions folder.",
+    auth_resend:'Resend confirmation email', auth_resent:'Sent — check your inbox',
+    auth_already_registered:'This email already has an account — please log in.',
     auth_error_generic:'Something went wrong. Check your email/password and try again.',
     nav_signout:'Sign out', signed_in_as:'Signed in as',
     btn_delete_profile:'Delete my profile', confirm_delete_profile:'Delete your profile permanently? This cannot be undone.',
@@ -386,7 +389,10 @@ const I18N = {
     lbl_email:'ایمیل', lbl_password:'رمز عبور', ph_email:'you@example.com', ph_password:'حداقل ۶ کاراکتر',
     btn_login:'ورود', btn_signup:'ساخت حساب', auth_toggle_to_signup:'حساب نداری؟ بساز',
     auth_toggle_to_login:'حساب داری؟ وارد شو',
-    auth_check_email:'تقریباً تمومه — ایمیلت رو چک کن و روی لینک تأیید بزن، بعد برگرد و وارد شو.',
+    auth_check_email:'حساب ساخته شد — ایمیلت رو چک کن و روی لینک تأیید بزن، بعد همین پایین وارد شو.',
+    auth_check_spam:'اگه تا چند دقیقه نیومد، پوشه‌ی اسپم یا Promotions رو هم چک کن.',
+    auth_resend:'ارسال دوباره‌ی ایمیل تأیید', auth_resent:'ارسال شد — ایمیلت رو چک کن',
+    auth_already_registered:'با این ایمیل قبلاً حساب ساخته شده — لطفاً وارد شو.',
     auth_error_generic:'یه مشکلی پیش اومد. ایمیل/رمز رو چک کن و دوباره امتحان کن.',
     nav_signout:'خروج', signed_in_as:'وارد شدی با',
     btn_delete_profile:'حذف پروفایلم', confirm_delete_profile:'پروفایلت برای همیشه حذف بشه؟ این کار برگشت‌ناپذیره.',
@@ -780,15 +786,20 @@ function authView(){
   <div class="section-head"><h2>${esc(T('auth_title'))}</h2></div>
   <div class="panel" style="max-width:420px;">
     <p class="muted" style="margin-top:0;">${esc(T('auth_subtitle'))}</p>
-    ${state.authCheckEmail ? `<p style="margin-top:10px;">${esc(T('auth_check_email'))}</p>` : `
+    ${state.authCheckEmail ? `
+    <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;margin:10px 0 16px;">
+      <p style="margin:0 0 6px;font-weight:600;">${esc(T('auth_check_email'))}</p>
+      <p class="muted" style="margin:0 0 10px;font-size:13px;">${esc(T('auth_check_spam'))}</p>
+      <button type="button" class="btn btn-outline btn-sm" id="auth-resend" ${state.resendBusy?'disabled':''}>${esc(state.resendDone ? T('auth_resent') : T('auth_resend'))}</button>
+    </div>` : ''}
+    ${state.authInfo ? `<p style="font-size:13.5px;margin:6px 0 12px;">${esc(state.authInfo)}</p>` : ''}
     <form id="auth-form">
-      <div class="field"><label>${esc(T('lbl_email'))}</label><input name="email" type="email" required placeholder="${esc(T('ph_email'))}"></div>
+      <div class="field"><label>${esc(T('lbl_email'))}</label><input name="email" type="email" required placeholder="${esc(T('ph_email'))}" value="${esc(state.authEmail||'')}"></div>
       <div class="field"><label>${esc(T('lbl_password'))}</label><input name="password" type="password" required minlength="6" placeholder="${esc(T('ph_password'))}"></div>
       ${state.authError ? `<p style="color:#b3412c;font-size:13px;margin:4px 0 10px;">${esc(state.authError)}</p>` : ''}
       <button class="btn btn-primary" type="submit" style="width:100%;" ${state.authBusy?'disabled':''}>${esc(state.authMode==='signup' ? T('btn_signup') : T('btn_login'))}</button>
     </form>
     <p style="margin-top:14px;"><a href="#" id="auth-toggle">${esc(state.authMode==='signup' ? T('auth_toggle_to_login') : T('auth_toggle_to_signup'))}</a></p>
-    `}
   </div>`;
 }
 
@@ -797,8 +808,19 @@ function wireAuth(){
   if(toggle) toggle.addEventListener('click', (e)=>{
     e.preventDefault();
     state.authMode = state.authMode==='signup' ? 'login' : 'signup';
-    state.authError = ''; state.authCheckEmail = false;
+    state.authError = ''; state.authCheckEmail = false; state.authInfo = '';
     render();
+  });
+  const resendBtn = document.getElementById('auth-resend');
+  if(resendBtn) resendBtn.addEventListener('click', async ()=>{
+    if(!state.authEmail) return;
+    state.resendBusy = true; render();
+    try{
+      const { error } = await withTimeout(sb.auth.resend({ type:'signup', email: state.authEmail, options:{ emailRedirectTo: window.location.origin } }), 8000, 'resend');
+      if(error) throw error;
+      state.resendDone = true;
+    }catch(err){ state.authError = (err && err.message) || T('auth_error_generic'); }
+    state.resendBusy = false; render();
   });
   const form = document.getElementById('auth-form');
   if(form) form.addEventListener('submit', async (e)=>{
@@ -810,16 +832,26 @@ function wireAuth(){
     state.authBusy = true; state.authError = ''; render();
     try{
       if(state.authMode==='signup'){
-        const { data, error } = await withTimeout(sb.auth.signUp({ email, password }), 8000, 'signUp');
+        const { data, error } = await withTimeout(sb.auth.signUp({ email, password, options:{ emailRedirectTo: window.location.origin } }), 8000, 'signUp');
         if(error) throw error;
+        state.authEmail = email;
         if(data.session){
           onSignedIn(data.session);
+        } else if(data.user && Array.isArray(data.user.identities) && data.user.identities.length===0){
+          // email already registered
+          state.authBusy = false; state.authMode = 'login'; state.authCheckEmail = false;
+          state.authInfo = T('auth_already_registered'); render();
         } else {
-          state.authBusy = false; state.authCheckEmail = true; render();
+          state.authBusy = false; state.authMode = 'login'; state.authCheckEmail = true;
+          state.resendDone = false; state.authInfo = ''; render();
         }
       } else {
+        state.authEmail = email;
         const { data, error } = await withTimeout(sb.auth.signInWithPassword({ email, password }), 8000, 'signInWithPassword');
-        if(error) throw error;
+        if(error){
+          if(/not confirmed/i.test(error.message||'')){ state.authBusy=false; state.authCheckEmail=true; state.authError=''; render(); return; }
+          throw error;
+        }
         onSignedIn(data.session);
       }
     }catch(err){
