@@ -161,7 +161,7 @@
   @media (max-width:600px){.pp-keys{display:none;}}
   .pp-navgrid{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;position:sticky;top:14px;}
   .pp-navhead{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:10px;}
-  .pp-dots{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+  .pp-dots{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;max-height:52vh;overflow-y:auto;padding:3px;}
   .pp-dot{position:relative;height:34px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;}
   .pp-dot.ans{background:var(--surface-2);border-color:var(--accent-2);}
   .pp-dot.ok{background:#E3F0E5;border-color:#4E8A5B;color:#1F4A29;}
@@ -192,6 +192,89 @@
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]) .pp-opt.correct, :root:not([data-theme="light"]) .pp-rev-opt.correct, :root:not([data-theme="light"]) .pp-dot.ok, :root:not([data-theme="light"]) .pp-explain.ok{background:#1F3525;color:#CFE8D4;}
     :root:not([data-theme="light"]) .pp-opt.wrong, :root:not([data-theme="light"]) .pp-rev-opt.wrong, :root:not([data-theme="light"]) .pp-dot.no, :root:not([data-theme="light"]) .pp-explain.no{background:#3A1F19;color:#F2CFC6;}
+  }
+
+
+  .pp-hero2{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;padding:10px 0 22px;border-bottom:1px solid var(--border);margin-bottom:20px;}
+  .pp-hero2 h1{font-size:32px;font-weight:800;margin:0 0 6px;line-height:1.2;}
+  .pp-hero2 p{color:var(--muted);margin:0;max-width:58ch;font-size:15px;}
+  .pp-hero2-stats{display:flex;gap:26px;}
+  .pp-hero2-stats b{display:block;font-size:24px;font-weight:800;line-height:1.1;}
+  .pp-hero2-stats span{font-size:12px;color:var(--muted);}
+  .pp-tabbar{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:var(--surface-2);padding:6px;border-radius:14px;margin-bottom:22px;position:sticky;top:8px;z-index:4;}
+  .pp-tabbtn{display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 10px;border:none;border-radius:10px;background:transparent;color:var(--muted);font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:background .15s,color .15s;}
+  .pp-tabbtn:hover{color:var(--text);}
+  .pp-tabbtn.on{background:var(--surface);color:var(--text);box-shadow:var(--shadow);}
+  .pp-tabnum{width:20px;height:20px;border-radius:50%;background:var(--border);color:var(--text);font-size:11px;display:inline-flex;align-items:center;justify-content:center;}
+  .pp-tabbtn.on .pp-tabnum{background:var(--accent);color:var(--accent-ink);}
+  .pp-tabcnt{font-size:11.5px;font-weight:700;padding:1px 8px;border-radius:999px;background:var(--surface);color:var(--muted);}
+  .pp-tabbtn.on .pp-tabcnt{background:var(--surface-2);}
+  @media (max-width:560px){.pp-tabnum,.pp-tabcnt{display:none;}.pp-tabbtn{font-size:13.5px;}}
+  .pp-tabpanel{animation:ppIn .2s ease;min-height:240px;}
+  .pp-modes-line{display:flex;gap:10px 22px;flex-wrap:wrap;font-size:13.5px;color:var(--muted);margin:-4px 0 16px;}
+  .pp-modes-line b{color:var(--text);}
+  /* ---------- PMP study guide ---------- */
+  .pp-path{display:flex;align-items:stretch;gap:10px;margin:0 0 30px;flex-wrap:wrap;}
+  .pp-path-step{flex:1 1 200px;position:relative;display:grid;grid-template-columns:auto 1fr;column-gap:10px;align-items:center;text-decoration:none;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px 16px;transition:border-color .15s,transform .15s;}
+  .pp-path-step:hover{border-color:var(--accent);transform:translateY(-1px);}
+  .pp-path-n{position:absolute;top:-9px;inset-inline-start:12px;background:var(--accent);color:var(--accent-ink);font-size:11px;font-weight:800;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+  .pp-path-ico{grid-row:span 2;font-size:24px;}
+  .pp-path-step b{font-size:15px;} .pp-path-step span:last-child{font-size:12.5px;color:var(--muted);}
+  .pp-path-arrow{align-self:center;color:var(--accent-2);font-weight:800;}
+  @media (max-width:700px){.pp-path-arrow{display:none;}}
+  .gd-section{background:var(--surface-2);border-radius:var(--radius-lg);padding:26px;}
+  .gd-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:18px;}
+  .gd-progress-box{min-width:150px;text-align:end;}
+  .gd-progress-box b{font-size:24px;font-weight:800;display:block;line-height:1;}
+  .gd-progress-box span{font-size:12px;color:var(--muted);}
+  .gd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;}
+  .gd-mod{display:flex;align-items:center;gap:12px;text-align:start;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface);color:var(--text);font-family:inherit;cursor:pointer;transition:border-color .15s,transform .15s;}
+  .gd-mod:hover{border-color:var(--accent);transform:translateY(-1px);}
+  .gd-mod-ico{font-size:22px;}
+  .gd-mod-body{flex:1;display:flex;flex-direction:column;}
+  .gd-mod-body b{font-size:14px;} .gd-mod-body span{font-size:12px;color:var(--muted);}
+  .gd-mod-state{font-weight:800;color:var(--accent-2);}
+  .gd-mod.done{border-color:#4E8A5B;} .gd-mod.done .gd-mod-state{color:#4E8A5B;}
+  .gd-viewer{max-width:900px;margin:0 auto;}
+  .gd-slide{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden;min-height:430px;animation:ppIn .25s ease;}
+  .gd-band{display:flex;align-items:center;gap:10px;padding:14px 24px;background:linear-gradient(90deg,#6B4F3A,#8B6A4C 55%,#B98D5E);color:#fff;font-weight:700;font-size:14px;}
+  .gd-band-ico{font-size:18px;}
+  .gd-brand{margin-inline-start:auto;font-size:10.5px;letter-spacing:.14em;opacity:.8;}
+  .gd-body{padding:26px 30px 30px;}
+  .gd-title{font-size:26px;font-weight:800;margin:0 0 16px;color:var(--text);}
+  .gd-p{font-size:16px;line-height:1.65;margin:0 0 14px;color:var(--text);}
+  .gd-list{margin:0 0 14px;padding-inline-start:20px;}
+  .gd-list li{margin-bottom:8px;line-height:1.6;font-size:15.5px;}
+  .gd-list li::marker{color:var(--accent);}
+  .gd-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin:0 0 14px;}
+  .gd-card{background:var(--surface-2);border-radius:var(--radius-md);padding:12px 14px;border-top:3px solid var(--accent-2);}
+  .gd-card b{display:block;font-size:14.5px;margin-bottom:4px;}
+  .gd-card span{font-size:13.5px;line-height:1.5;color:var(--text);opacity:.85;}
+  .gd-tablewrap{overflow-x:auto;margin:0 0 14px;}
+  .gd-table{width:100%;border-collapse:collapse;font-size:14px;}
+  .gd-table th{background:var(--accent);color:var(--accent-ink);text-align:start;padding:9px 12px;font-size:13px;}
+  .gd-table th:first-child{border-top-left-radius:8px;} .gd-table th:last-child{border-top-right-radius:8px;}
+  .gd-table td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.5;}
+  .gd-table tr:nth-child(even) td{background:var(--surface-2);}
+  .gd-formulas{display:grid;gap:8px;margin:0 0 14px;}
+  .gd-f{display:grid;grid-template-columns:minmax(150px,1fr) auto minmax(120px,1fr);gap:12px;align-items:center;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);}
+  .gd-fl{font-weight:700;font-size:14px;}
+  .gd-f code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:15px;font-weight:700;background:var(--surface-2);color:var(--accent);padding:4px 10px;border-radius:6px;white-space:nowrap;}
+  .gd-fn{font-size:12.5px;color:var(--muted);text-align:end;}
+  @media (max-width:600px){.gd-f{grid-template-columns:1fr;}.gd-fn{text-align:start;}}
+  .gd-tip{background:#FBF4EA;border-inline-start:4px solid #C2773A;border-radius:8px;padding:11px 14px;font-size:14px;line-height:1.55;margin:4px 0 0;color:#5A3A1E;}
+  .gd-flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 16px;}
+  .gd-step{display:flex;align-items:center;gap:8px;background:var(--surface-2);border:1px solid var(--border);border-radius:999px;padding:6px 14px 6px 6px;font-size:13.5px;font-weight:600;}
+  .gd-step span{width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:800;}
+  .gd-arrow{color:var(--accent-2);font-weight:800;}
+  .gd-nav{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:16px;}
+  .gd-dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;}
+  .gd-dot{width:9px;height:9px;border-radius:50%;border:none;background:var(--border);cursor:pointer;padding:0;}
+  .gd-dot.on{background:var(--accent);width:24px;border-radius:6px;}
+  .gd-end{text-align:center;margin-top:18px;padding:18px;border:1.5px dashed #4E8A5B;border-radius:var(--radius-md);background:#F1F8F2;color:#1F4A29;}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) .gd-tip{background:#3A2A18;color:#F2DEC6;}
+    :root:not([data-theme="light"]) .gd-end{background:#1F3525;color:#CFE8D4;}
   }
   /* ---------- landing sections ---------- */
   .lp-section{padding:64px 0 24px;text-align:center;}
@@ -383,6 +466,11 @@ const I18N = {
     adm_g_hero:'Top of the home page', adm_g_why:'Why Workar', adm_g_steps:'How Workar works', adm_g_pk:'Packages', adm_g_footer:'Footer & tagline',
     adm_save:'Save & publish', adm_reset:'Reset everything to default', adm_reset_confirm:'Reset all prices and text back to the original defaults?',
     adm_saved:'Saved — the site is updated', adm_save_fail:'Could not save — check that the site_settings SQL has been run',
+    guide_modules:'study modules', guide_kicker:'Free study guide', guide_title:'Learn the essentials', guide_sub:'{n} bite-sized modules covering every exam area — written in plain English, with tips on how PMI thinks.',
+    guide_complete:'complete', guide_slides:'slides', guide_tip:'Exam tip:', guide_all:'All modules', guide_module:'Module', guide_slide_of:'slide {i} of {n}',
+    guide_done_t:'Module complete: {m}', guide_next_mod:'Next module', guide_test_now:'Test yourself — free diagnostic', guide_keys:'Tip: use ← → to move between slides',
+    path_learn:'Learn', path_learn_d:'Free study guide', path_test:'Test', path_test_d:'Mock exams with explanations', path_review:'Review', path_review_d:'Scores and weak spots',
+    prep_mocks_title:'Mock exams', prep_history_empty:'Your scores will appear here after your first mock.',
     nav_prep:'PMP Prep', loading:'Loading…',
     dom_people:'People', dom_process:'Process', dom_business_environment:'Business Environment',
     prep_kicker:'PMP® exam preparation', prep_title:'Practice like it’s exam day',
@@ -579,6 +667,11 @@ const I18N = {
     adm_g_hero:'بالای صفحه‌ی اصلی', adm_g_why:'چرا Workar', adm_g_steps:'Workar چطور کار می‌کنه', adm_g_pk:'پکیج‌ها', adm_g_footer:'فوتر و شعار',
     adm_save:'ذخیره و انتشار', adm_reset:'برگرداندن همه‌چیز به حالت اولیه', adm_reset_confirm:'همه‌ی قیمت‌ها و متن‌ها به حالت اولیه برگردن؟',
     adm_saved:'ذخیره شد — سایت به‌روز شد', adm_save_fail:'ذخیره نشد — مطمئن شو SQL مربوط به site_settings اجرا شده',
+    guide_modules:'ماژول آموزشی', guide_kicker:'راهنمای مطالعه‌ی رایگان', guide_title:'مفاهیم اصلی رو یاد بگیر', guide_sub:'{n} ماژول کوتاه که همه‌ی حوزه‌های آزمون رو پوشش می‌ده — با نکته‌هایی درباره‌ی طرز فکر PMI.',
+    guide_complete:'تکمیل‌شده', guide_slides:'اسلاید', guide_tip:'نکته‌ی آزمون:', guide_all:'همه‌ی ماژول‌ها', guide_module:'ماژول', guide_slide_of:'اسلاید {i} از {n}',
+    guide_done_t:'ماژول تموم شد: {m}', guide_next_mod:'ماژول بعدی', guide_test_now:'خودت رو بسنج — آزمون تشخیصی رایگان', guide_keys:'نکته: با ← → بین اسلایدها جابه‌جا شو',
+    path_learn:'یادگیری', path_learn_d:'راهنمای مطالعه‌ی رایگان', path_test:'آزمون', path_test_d:'آزمون‌های آزمایشی با توضیح', path_review:'مرور', path_review_d:'نمره‌ها و نقاط ضعف',
+    prep_mocks_title:'آزمون‌های آزمایشی', prep_history_empty:'بعد از اولین آزمون، نمره‌هات اینجا نمایش داده می‌شن.',
     nav_prep:'آمادگی PMP', loading:'در حال بارگذاری…',
     dom_people:'افراد', dom_process:'فرایند', dom_business_environment:'محیط کسب‌وکار',
     prep_kicker:'آمادگی آزمون PMP®', prep_title:'طوری تمرین کن که انگار روز آزمونه',
@@ -1065,7 +1158,7 @@ function render(){
 
 function navHtml(){
   const items = [
-    ['home', T('nav_home')], ['browse', T('nav_browse')], ['prep', T('nav_prep')], ['coach', T('nav_coach')],
+    ['home', T('nav_home')], ['browse', T('nav_browse')], ['coach', T('nav_coach')], ['prep', T('nav_prep')],
     ['dashboard', myProfile ? T('nav_dash') : T('nav_start')]
   ];
   return `<div class="nav">
@@ -1416,46 +1509,33 @@ function prepView(){
   if(!prep.loaded){ loadPrep(); return `<div class="empty" style="margin-top:40px;">${esc(T('loading'))}</div>`; }
   if(prep.screen==='run' && prep.session && !prep.session.finished) return prepRunView();
   if(prep.screen==='results' && prep.session && prep.session.finished) return prepResultsView();
+  if(prep.screen==='learn') return prepGuideView();
   prep.screen = 'home';
   return prepHomeView();
 }
 
 function prepHomeView(){
   const exams = prep.exams;
-  const total = exams.reduce((a,e)=>a+(e.questionCount||0),0);
+  const total = exams.filter(e=>e.published).reduce((a,e)=>a+(e.questionCount||0),0);
   const paid = exams.filter(e=>!e.isFree && e.published);
   const ownsAll = prep.purchases.includes('all') || (paid.length && paid.every(e=>prep.purchases.includes(e.id)));
   const paidSum = paid.reduce((a,e)=>a+Number(e.priceUsd||0),0);
   const bundle = prepBundlePrice();
   const saveBundle = paidSum>bundle ? Math.round((1-bundle/paidSum)*100) : 0;
   const s = prep.session;
-  const recent = prep.attempts.slice(0,5);
-  return `
-  <section class="pp-hero">
-    <div class="pp-hero-text">
-      <span class="pp-kicker">${esc(T('prep_kicker'))}</span>
-      <h1>${esc(T('prep_title'))}</h1>
-      <p>${esc(T('prep_sub'))}</p>
-      <div class="pp-hero-stats">
-        <div><b>${total}</b><span>${esc(T('prep_stat_q'))}</span></div>
-        <div><b>${exams.filter(e=>e.published).length}</b><span>${esc(T('prep_stat_mocks'))}</span></div>
-        <div><b>3</b><span>${esc(T('prep_stat_domains'))}</span></div>
-      </div>
+  const recent = prep.attempts.slice(0,8);
+  const done = prepGuideDone().filter(id=>PREP_GUIDE.some(m=>m.id===id)).length;
+  if(!prep.tab) prep.tab = prep.attempts.length ? 'test' : 'learn';
+  const tabs = [['learn','📖','path_learn', `${done}/${PREP_GUIDE.length}`],['test','📝','path_test', `${exams.filter(e=>e.published).length}`],['review','📊','path_review', `${prep.attempts.length}`]];
+
+  const learnTab = prepGuideHome();
+
+  const testTab = `
+    <div class="pp-modes-line">
+      <span>💡 <b>${esc(T('prep_mode_practice'))}</b> — ${esc(T('prep_mode_practice_d'))}</span>
+      <span>⏱️ <b>${esc(T('prep_mode_exam'))}</b> — ${esc(T('prep_mode_exam_d'))}</span>
     </div>
-    <div class="pp-hero-modes">
-      <div class="pp-mode-tile"><div class="pp-mode-ico">💡</div><b>${esc(T('prep_mode_practice'))}</b><span>${esc(T('prep_mode_practice_d'))}</span></div>
-      <div class="pp-mode-tile"><div class="pp-mode-ico">⏱️</div><b>${esc(T('prep_mode_exam'))}</b><span>${esc(T('prep_mode_exam_d'))}</span></div>
-    </div>
-  </section>
-
-  ${s && !s.finished ? `<div class="pp-resume">
-    <div><b>${esc(T('prep_resume_t'))}</b> <span class="muted">${esc(s.title)} · ${Object.keys(s.ans).length}/${s.qs.length} ${esc(T('prep_answered'))}</span></div>
-    <div style="display:flex;gap:8px;"><button class="btn btn-primary btn-sm" id="pp-resume">${esc(T('prep_resume'))}</button><button class="btn btn-ghost btn-sm" id="pp-discard">${esc(T('prep_discard'))}</button></div>
-  </div>` : ''}
-
-  ${isAdmin() ? `<div style="text-align:end;margin:-6px 0 14px;"><button class="btn btn-outline btn-sm" data-nav="prepAdmin">✏️ ${esc(T('prep_manage'))}</button></div>` : ''}
-
-  <div class="pp-grid">
+    <div class="pp-grid">
     ${exams.map(ex=>{
       const access = prepHasAccess(ex), best = prepBest(ex.id);
       const badge = ex.isFree ? `<span class="pp-badge free">${esc(T('prep_free'))}</span>` : access ? `<span class="pp-badge owned">✓ ${esc(T('prep_unlocked'))}</span>` : `<span class="pp-badge paid">🔒 ${prepMoney(ex.priceUsd)}</span>`;
@@ -1473,25 +1553,54 @@ function prepHomeView(){
         : `<button class="btn btn-primary pp-cta" data-buy="${ex.id}">${esc(T('prep_unlock'))} · ${prepMoney(ex.priceUsd)}</button>`}
       </div>`;
     }).join('')}
-  </div>
+    </div>
+    ${paid.length>1 && !ownsAll ? `<div class="pp-bundle">
+      <div>
+        <span class="pp-kicker">${esc(T('prep_bundle_k'))}</span>
+        <h3>${esc(T('prep_bundle_t'))}</h3>
+        <p class="muted">${esc(T('prep_bundle_d').replace('{n}', paid.length))}</p>
+      </div>
+      <div class="pp-bundle-buy">
+        ${saveBundle ? `<div class="pp-strike">${prepMoney(paidSum.toFixed(2))}</div>` : ''}
+        <div class="pp-bundle-price">${prepMoney(bundle)}</div>
+        ${saveBundle ? `<div class="pp-save">${esc(T('pk_save').replace('{n}', saveBundle))}</div>` : ''}
+        <button class="btn btn-primary" data-buy="all">${esc(T('prep_bundle_btn'))}</button>
+      </div>
+    </div>` : ''}
+    ${isAdmin() ? `<div style="text-align:center;margin-top:18px;"><button class="btn btn-ghost btn-sm" data-nav="prepAdmin">✏️ ${esc(T('prep_manage'))}</button></div>` : ''}`;
 
-  ${paid.length>1 && !ownsAll ? `<div class="pp-bundle">
+  const reviewTab = recent.length ? `<div class="pp-history">${recent.map(a=>{ const ex = prep.exams.find(e=>e.id===a.examId); const pct = a.total?Math.round(100*a.score/a.total):0; const [cls,lbl]=prepBand(pct);
+      return `<div class="pp-hrow"><span><b>${esc(ex?ex.title:a.examId)}</b> <span class="muted">· ${esc(T('prep_mode_'+(a.mode==='exam'?'exam':'practice')))} · ${new Date(a.createdAt).toLocaleDateString()}</span></span><span class="pp-band ${cls}">${pct}% · ${esc(lbl)}</span></div>`; }).join('')}</div>`
+    : `<div class="empty" style="padding:30px;">${esc(T(uid ? 'prep_history_empty' : 'prep_login_save'))}
+        <div style="margin-top:14px;"><button class="btn btn-primary btn-sm" data-tab="test">${esc(T('prep_start'))}</button></div></div>`;
+
+  return `
+  <section class="pp-hero2">
     <div>
-      <span class="pp-kicker">${esc(T('prep_bundle_k'))}</span>
-      <h3>${esc(T('prep_bundle_t'))}</h3>
-      <p class="muted">${esc(T('prep_bundle_d').replace('{n}', paid.length))}</p>
+      <span class="pp-kicker">${esc(T('prep_kicker'))}</span>
+      <h1>${esc(T('prep_title'))}</h1>
+      <p>${esc(T('prep_sub'))}</p>
     </div>
-    <div class="pp-bundle-buy">
-      ${saveBundle ? `<div class="pp-strike">${prepMoney(paidSum.toFixed(2))}</div>` : ''}
-      <div class="pp-bundle-price">${prepMoney(bundle)}</div>
-      ${saveBundle ? `<div class="pp-save">${esc(T('pk_save').replace('{n}', saveBundle))}</div>` : ''}
-      <button class="btn btn-primary" data-buy="all">${esc(T('prep_bundle_btn'))}</button>
+    <div class="pp-hero2-stats">
+      <div><b>${PREP_GUIDE.length}</b><span>${esc(T('guide_modules'))}</span></div>
+      <div><b>${total}</b><span>${esc(T('prep_stat_q'))}</span></div>
+      <div><b>${exams.filter(e=>e.published).length}</b><span>${esc(T('prep_stat_mocks'))}</span></div>
     </div>
+  </section>
+
+  ${s && !s.finished ? `<div class="pp-resume">
+    <div><b>${esc(T('prep_resume_t'))}</b> <span class="muted">${esc(s.title)} · ${Object.keys(s.ans).length}/${s.qs.length} ${esc(T('prep_answered'))}</span></div>
+    <div style="display:flex;gap:8px;"><button class="btn btn-primary btn-sm" id="pp-resume">${esc(T('prep_resume'))}</button><button class="btn btn-ghost btn-sm" id="pp-discard">${esc(T('prep_discard'))}</button></div>
   </div>` : ''}
 
-  ${recent.length ? `<div class="section-head" style="margin-top:36px;"><h2>${esc(T('prep_history'))}</h2></div>
-  <div class="pp-history">${recent.map(a=>{ const ex = prep.exams.find(e=>e.id===a.examId); const pct = a.total?Math.round(100*a.score/a.total):0; const [cls,lbl]=prepBand(pct);
-    return `<div class="pp-hrow"><span><b>${esc(ex?ex.title:a.examId)}</b> <span class="muted">· ${esc(T('prep_mode_'+(a.mode==='exam'?'exam':'practice')))} · ${new Date(a.createdAt).toLocaleDateString()}</span></span><span class="pp-band ${cls}">${pct}% · ${esc(lbl)}</span></div>`; }).join('')}</div>` : ''}
+  <div class="pp-tabbar" role="tablist">
+    ${tabs.map(([k,ic,lbl,cnt],i)=>`<button class="pp-tabbtn ${prep.tab===k?'on':''}" data-tab="${k}" role="tab">
+      <span class="pp-tabnum">${i+1}</span><span>${ic} ${esc(T(lbl))}</span><span class="pp-tabcnt">${cnt}</span></button>`).join('')}
+  </div>
+
+  <div class="pp-tabpanel">
+    ${prep.tab==='learn' ? learnTab : prep.tab==='test' ? testTab : reviewTab}
+  </div>
 
   <p class="pp-disclaimer">${esc(T('prep_disclaimer'))}</p>
   ${prep.busy ? `<div class="pp-busy">${esc(T('loading'))}</div>` : ''}`;
@@ -1612,6 +1721,8 @@ function prepResultsView(){
 
 function wirePrep(){
   if(prep.timer){ clearInterval(prep.timer); prep.timer = null; }
+  wireGuide();
+  document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click', ()=>{ prep.tab = b.getAttribute('data-tab'); render(); }));
   const s = prep.session;
   const on = (id, fn)=>{ const el=document.getElementById(id); if(el) el.addEventListener('click', fn); };
   document.querySelectorAll('[data-pick]').forEach(b=>b.addEventListener('click', ()=>{ prep.pickExam = b.getAttribute('data-pick'); render(); }));
@@ -1645,8 +1756,8 @@ function wirePrep(){
   if(prep.screen==='results' && s && s.finished){
     document.querySelectorAll('[data-review]').forEach(b=>b.addEventListener('click', ()=>{ prep.review=b.getAttribute('data-review'); render(); }));
     on('pp-retry-wrong', ()=>{ const ids = s.qs.filter(q=>!prepIsRight(q,s.ans[q.id])).map(q=>q.id); startPrepExam(s.examId, 'practice', ids); });
-    on('pp-retake', ()=>{ prep.pickExam = s.examId; prep.session=null; savePrepSession(); prep.screen='home'; render(); window.scrollTo(0,0); });
-    on('pp-back', ()=>{ prep.screen='home'; render(); window.scrollTo(0,0); });
+    on('pp-retake', ()=>{ prep.pickExam = s.examId; prep.session=null; savePrepSession(); prep.screen='home'; prep.tab='test'; render(); window.scrollTo(0,0); });
+    on('pp-back', ()=>{ prep.screen='home'; prep.tab='review'; render(); window.scrollTo(0,0); });
   }
 }
 function prepSelect(i){
@@ -1829,6 +1940,287 @@ function wirePrepAdmin(){
     });
   });
 }
+
+/* ======================= PMP STUDY GUIDE (original Workar content) ======================= */
+// slide block types: p (paragraph), list (bullets), cards ([title, text]), table ({head, rows}), formula ([label, expr, note]), tip (text), flow ([steps])
+const PREP_GUIDE = [
+ { id:'start', icon:'🧭', title:'Start here: the PMP at a glance', mins:6, slides:[
+   { t:'What the exam really tests', blocks:[
+     {p:'The PMP is not a memory test. Most questions describe a situation and ask what a project manager should do — first, next, or best.'},
+     {cards:[['People','Leading and supporting teams, resolving conflict, engaging stakeholders.'],['Process','Planning and delivering the technical work: scope, schedule, cost, quality, risk, procurement.'],['Business Environment','Keeping the project aligned with strategy, value, compliance and change in the organization.']]},
+     {tip:'Expect predictive, agile and hybrid scenarios mixed together. Always check which approach the question describes before answering.'} ]},
+   { t:'How to study with Workar', blocks:[
+     {flow:['Learn — work through these modules','Test — take the free Starter Diagnostic','Review — read every explanation','Repeat — retry your weakest domain']},
+     {p:'Each module takes 5–10 minutes. Your progress is saved on this device, and you can jump into a mock at any time.'} ]},
+   { t:'Before you book', blocks:[
+     {list:['You need 35 contact hours of project management education plus the required project experience (checked when you apply to PMI).','The exam is long — around four hours — so practise under timed conditions at least twice.','PMI updates the exam outline periodically. Always confirm the current format on pmi.org before you book.']} ]}
+ ]},
+ { id:'framework', icon:'🗺️', title:'The process framework', mins:8, slides:[
+   { t:'Five process groups', blocks:[
+     {flow:['Initiating','Planning','Executing','Monitoring & Controlling','Closing']},
+     {p:'Process groups are not phases. Monitoring & Controlling runs alongside all the others, and a large project may repeat the whole cycle in every phase.'} ]},
+   { t:'Ten knowledge areas', blocks:[
+     {cards:[['Integration','Pulls everything together: charter, plan, change control, closure.'],['Scope','What is (and is not) included.'],['Schedule','When the work happens.'],['Cost','What it costs and how spending is controlled.'],['Quality','Meeting requirements and fitness for use.'],['Resources','People, equipment and materials.'],['Communications','Who needs what information, when and how.'],['Risk','Uncertainty, both threats and opportunities.'],['Procurement','Buying from outside the organization.'],['Stakeholders','Everyone affected, and how to engage them.']]} ]},
+   { t:'Where the processes sit', blocks:[
+     {table:{head:['Group','Typical processes'],rows:[
+       ['Initiating','Develop project charter · Identify stakeholders'],
+       ['Planning','Plan each knowledge area · Collect requirements · Define scope · Create WBS · Develop schedule · Determine budget · Identify & analyze risks'],
+       ['Executing','Direct & manage work · Manage quality · Acquire, develop & manage team · Manage communications · Implement risk responses · Conduct procurements · Manage stakeholder engagement'],
+       ['Monitoring & Controlling','Monitor & control work · Integrated change control · Validate & control scope · Control schedule, cost, quality, resources · Monitor risks, communications, procurements, engagement'],
+       ['Closing','Close project or phase']]}},
+     {tip:'Planning has by far the most processes. In a predictive question, "have we planned this?" is often the key.'} ]}
+ ]},
+ { id:'integration', icon:'🧩', title:'Integration management', mins:8, slides:[
+   { t:'From idea to authorized project', blocks:[
+     {flow:['Needs assessment','Business case','Project charter','Project management plan']},
+     {list:['The business case justifies the investment and supports a go / no-go decision.','The charter formally authorizes the project and gives the project manager authority to use resources. The sponsor issues it.','The project management plan combines all subsidiary plans and the baselines.']} ]},
+   { t:'Baselines and change control', blocks:[
+     {p:'The scope, schedule and cost baselines together form the performance measurement baseline. They only change through integrated change control.'},
+     {flow:['Change requested','Impact analyzed','Decision by authorized body (e.g. CCB)','Plans & baselines updated','Stakeholders informed']},
+     {tip:'Exam pattern: never implement a change before it is analyzed and approved, even if the sponsor asks informally.'} ]},
+   { t:'Key logs and registers', blocks:[
+     {table:{head:['Document','What it holds'],rows:[
+       ['Issue log','Problems happening now, with owners and due dates'],
+       ['Risk register','Uncertain future events, analysis, responses and owners'],
+       ['Change log','Every change request and its status'],
+       ['Lessons learned register','What worked, what did not, and recommendations — updated throughout, not just at the end'],
+       ['Assumption log','Assumptions and constraints that need validating']]}} ]},
+   { t:'Choosing projects: the numbers', blocks:[
+     {cards:[['NPV','Net present value. Higher is better; a positive NPV adds value.'],['IRR','Internal rate of return. Higher is better.'],['Payback period','Time to recover the investment. Shorter is better.'],['Benefit-cost ratio','Above 1 means benefits exceed costs.']]},
+     {tip:'Opportunity cost is the value of the option you did not choose — not a cost of the chosen project.'} ]},
+   { t:'Closing the project', blocks:[
+     {list:['Confirm formal acceptance of deliverables against acceptance criteria.','Transfer the product and knowledge to operations.','Close contracts and settle claims.','Finalize lessons learned and archive records.','Release resources and celebrate the team.']},
+     {tip:'Closure still applies when a project is cancelled early — scaled to what was done.'} ]}
+ ]},
+ { id:'stakeholders', icon:'🤝', title:'Stakeholders', mins:7, slides:[
+   { t:'Identify early, and keep identifying', blocks:[
+     {p:'Stakeholders are anyone who affects, or is affected by, the project. Identification starts at initiation and continues throughout, because new stakeholders appear and interests change.'},
+     {list:['Use several techniques: interviews, document review, brainstorming and expert judgment.','Record them in the stakeholder register: role, interests, influence, expectations and engagement level.']} ]},
+   { t:'Classifying stakeholders', blocks:[
+     {table:{head:['Power / Interest','Approach'],rows:[['High power, high interest','Manage closely'],['High power, low interest','Keep satisfied'],['Low power, high interest','Keep informed'],['Low power, low interest','Monitor']]}},
+     {p:'The salience model adds a third lens: power, legitimacy and urgency. Stakeholders with all three need the most attention.'} ]},
+   { t:'The engagement assessment matrix', blocks:[
+     {flow:['Unaware','Resistant','Neutral','Supportive','Leading']},
+     {p:'Mark each stakeholder\'s current (C) and desired (D) level, then plan specific actions to close the gap.'},
+     {tip:'Resistant stakeholder? Start by understanding their concerns directly before escalating.'} ]}
+ ]},
+ { id:'scope', icon:'📐', title:'Scope', mins:8, slides:[
+   { t:'Collecting requirements', blocks:[
+     {cards:[['Interviews & focus groups','Deep input from individuals or small groups.'],['Workshops','Bring cross-functional stakeholders together to agree requirements quickly.'],['Prototypes','Storyboards, wireframes and models help people react to something concrete.'],['Voting','Unanimity, majority, plurality, or the nominal group technique.']]},
+     {p:'The requirements traceability matrix links each requirement to its business need and to the deliverables and tests that satisfy it.'} ]},
+   { t:'The scope baseline', blocks:[
+     {flow:['Scope statement','WBS','WBS dictionary']},
+     {list:['The WBS decomposes the total scope into deliverables. The lowest level is the work package.','The 100% rule: the WBS contains all the work — and only the work — of the project.','The WBS dictionary gives details for each component: description, owner, acceptance criteria.']} ]},
+   { t:'Validate scope vs control quality', blocks:[
+     {table:{head:['','Control quality','Validate scope'],rows:[['Question','Is it correct?','Is it accepted?'],['Who','Project team','Customer or sponsor'],['Order','Usually first','Usually after'],['Output','Verified deliverables','Accepted deliverables']]}},
+     {tip:'Scope creep is uncontrolled change. Gold plating is the team adding extras nobody asked for. Both are wrong.'} ]},
+   { t:'Prioritization techniques', blocks:[
+     {cards:[['MoSCoW','Must have, Should have, Could have, Won\'t have (this time).'],['Value vs effort','Do high-value, low-effort items first.'],['Kano','Basic needs, performance needs and delighters.'],['Cost of delay','Prioritize by what waiting costs.']]} ]}
+ ]},
+ { id:'schedule', icon:'📅', title:'Schedule', mins:10, slides:[
+   { t:'Sequencing activities', blocks:[
+     {table:{head:['Relationship','Meaning'],rows:[['Finish-to-start (FS)','B starts after A finishes — the most common'],['Start-to-start (SS)','B starts after A starts'],['Finish-to-finish (FF)','B finishes after A finishes'],['Start-to-finish (SF)','B finishes after A starts — rare']]}},
+     {list:['Lead: the successor starts early (overlap).','Lag: a waiting time between activities (e.g. concrete curing).','Mandatory dependencies are hard logic; discretionary ones are preferences; external ones depend on outside parties.']} ]},
+   { t:'Critical path method', blocks:[
+     {list:['The critical path is the longest path through the network. It sets the shortest possible project duration.','Forward pass calculates early start and early finish. Backward pass calculates late start and late finish.','Total float = LS − ES (or LF − EF). Critical path activities usually have zero float.','Free float is how long an activity can slip without delaying the next activity\'s early start.']},
+     {tip:'Near-critical paths matter too — a small delay can make them critical.'} ]},
+   { t:'Estimating durations', blocks:[
+     {cards:[['Analogous','Top-down, from a similar past project. Fast, less accurate.'],['Parametric','Uses a statistical rate, e.g. 2 hours per unit. Accurate if the data is good.'],['Three-point','Optimistic, most likely and pessimistic values.'],['Bottom-up','Estimate each work package and add up. Most accurate, slowest.']]} ]},
+   { t:'Compressing and levelling', blocks:[
+     {table:{head:['Technique','What it does','Trade-off'],rows:[['Crashing','Adds resources to critical activities','Costs more'],['Fast tracking','Overlaps activities planned in sequence','More risk and rework'],['Resource levelling','Resolves over-allocation','May extend the end date'],['Resource smoothing','Adjusts within available float','End date unchanged']]}},
+     {p:'Rolling wave planning details near-term work now and plans later work at a higher level until more is known.'} ]}
+ ]},
+ { id:'cost', icon:'💰', title:'Cost & earned value', mins:10, slides:[
+   { t:'Estimate accuracy', blocks:[
+     {table:{head:['Estimate','Typical range','When'],rows:[['Rough order of magnitude','−25% to +75%','Initiating'],['Budget','−10% to +25%','Early planning'],['Definitive','−5% to +10%','Detailed planning']]}},
+     {p:'Accuracy is how close to the true value. Precision is how finely it is measured. An estimate can be precise and still wrong.'} ]},
+   { t:'Reserves', blocks:[
+     {cards:[['Contingency reserve','For identified risks ("known unknowns"). Part of the cost baseline; the PM can use it.'],['Management reserve','For unforeseen work ("unknown unknowns"). Outside the baseline, inside the budget; needs management approval.']]},
+     {flow:['Work package estimates','+ contingency = cost baseline','+ management reserve = project budget']} ]},
+   { t:'Earned value: the basics', blocks:[
+     {cards:[['PV','Planned value — what should be done by now, in money.'],['EV','Earned value — what is actually done, in money.'],['AC','Actual cost — what was actually spent.'],['BAC','Budget at completion — the total planned budget.']]},
+     {tip:'EV comes first in every variance and index formula.'} ]},
+   { t:'Earned value formulas', blocks:[
+     {formula:[['Cost variance','CV = EV − AC','Negative = over budget'],['Schedule variance','SV = EV − PV','Negative = behind schedule'],['Cost performance index','CPI = EV / AC','Below 1 = over budget'],['Schedule performance index','SPI = EV / PV','Below 1 = behind schedule']]} ]},
+   { t:'Forecasting', blocks:[
+     {formula:[['Estimate at completion (typical)','EAC = BAC / CPI','Current cost performance continues'],['EAC (atypical)','EAC = AC + (BAC − EV)','The variance was a one-off'],['Estimate to complete','ETC = EAC − AC','Money still needed'],['Variance at completion','VAC = BAC − EAC','Negative = expected overrun'],['To-complete performance index','TCPI = (BAC − EV) / (BAC − AC)','Efficiency needed to finish on budget']]} ]}
+ ]},
+ { id:'quality', icon:'✅', title:'Quality', mins:7, slides:[
+   { t:'Assurance vs control', blocks:[
+     {table:{head:['','Manage quality (assurance)','Control quality'],rows:[['Focus','The process','The product'],['Asks','Are we doing the work the right way?','Does this deliverable meet requirements?'],['Examples','Audits, process analysis','Inspections, testing, control charts']]}},
+     {tip:'Prevention over inspection: it is cheaper to build quality in than to find defects later.'} ]},
+   { t:'Cost of quality', blocks:[
+     {cards:[['Prevention','Training, standards, good design. (Conformance)'],['Appraisal','Testing, inspections, audits. (Conformance)'],['Internal failure','Rework and scrap found before delivery. (Nonconformance)'],['External failure','Warranty, returns, lost reputation. (Nonconformance)']]} ]},
+   { t:'Quality tools', blocks:[
+     {cards:[['Cause-and-effect (fishbone)','Traces a problem back to possible root causes.'],['Pareto chart','Ranks causes; about 80% of problems come from 20% of causes.'],['Control chart','Shows whether a process is stable over time.'],['Histogram','Shows how often values occur.'],['Scatter diagram','Shows the relationship between two variables.'],['Checklist vs check sheet','A checklist confirms steps were done; a check sheet tallies how often something happens.']]},
+     {tip:'Rule of seven: seven consecutive points on one side of the mean signals a non-random pattern, even inside the control limits.'} ]}
+ ]},
+ { id:'resources', icon:'👥', title:'Resources & leadership', mins:10, slides:[
+   { t:'Organizing the team', blocks:[
+     {list:['RACI chart: who is Responsible, Accountable (only one person), Consulted and Informed.','Team charter: values, working agreements, decision-making and conflict rules, created with the team.','Resource breakdown structure lists resources by category; the organizational breakdown structure maps work to departments.']} ]},
+   { t:'How teams develop (Tuckman)', blocks:[
+     {flow:['Forming','Storming','Norming','Performing','Adjourning']},
+     {p:'Adapt your leadership to the stage: direct in forming, coach through storming, support in norming, delegate in performing.'} ]},
+   { t:'Conflict resolution', blocks:[
+     {table:{head:['Mode','Also called','Result'],rows:[['Collaborate','Problem-solve','Win-win — usually best when time allows'],['Compromise','Reconcile','Both give something up'],['Smooth','Accommodate','Emphasizes agreement; temporary'],['Force','Direct','Win-lose; for emergencies'],['Withdraw','Avoid','Postpones the issue']]}},
+     {tip:'On the exam: address conflict early, privately and directly, focusing on the issue, not the person.'} ]},
+   { t:'Motivation theories', blocks:[
+     {cards:[['Maslow','Needs build from physiological up to self-actualization.'],['Herzberg','Hygiene factors (pay, conditions) prevent dissatisfaction; motivators (growth, recognition) drive satisfaction.'],['McGregor X / Y','Theory X assumes people avoid work; Theory Y assumes they seek responsibility.'],['McClelland','People are driven by achievement, affiliation or power.'],['Vroom','Motivation depends on believing effort leads to a valued reward.']]} ]},
+   { t:'Servant leadership & emotional intelligence', blocks:[
+     {list:['Servant leaders remove impediments, shield the team from distractions, and coach rather than command.','Emotional intelligence: self-awareness, self-management, social awareness and relationship management.','Psychological safety lets people raise risks and admit mistakes early.']} ]}
+ ]},
+ { id:'communications', icon:'💬', title:'Communications', mins:6, slides:[
+   { t:'Methods of communication', blocks:[
+     {cards:[['Interactive','Two-way, real time: meetings and calls. Best for complex or sensitive topics.'],['Push','Sent to recipients: emails, reports. Delivery is not the same as understanding.'],['Pull','Recipients access it themselves: dashboards, wikis, information radiators.']]} ]},
+   { t:'Channels and models', blocks:[
+     {formula:[['Communication channels','n × (n − 1) / 2','n = number of people']]},
+     {flow:['Sender encodes','Message sent','Noise interferes','Receiver decodes','Feedback confirms']},
+     {tip:'Communication is complete only when the receiver understands. Confirm understanding.'} ]},
+   { t:'Tailoring communication', blocks:[
+     {list:['The communications management plan defines who needs what information, when, how and from whom.','Tailor format and detail to each audience — a one-page view for executives, detail for the team.','Consider time zones, language and culture on distributed teams.']} ]}
+ ]},
+ { id:'risk', icon:'⚠️', title:'Risk', mins:10, slides:[
+   { t:'Risk vs issue', blocks:[
+     {cards:[['Risk','An uncertain future event that could affect objectives — positive (opportunity) or negative (threat).'],['Issue','Something happening now. It goes in the issue log and needs action.']]},
+     {flow:['Plan','Identify','Qualitative analysis','Quantitative analysis','Plan responses','Implement','Monitor']} ]},
+   { t:'Analyzing risk', blocks:[
+     {list:['Qualitative: rank risks by probability and impact using a probability-impact matrix. Quick; done for all risks.','Quantitative: numerical analysis of overall project risk — Monte Carlo simulation, decision trees, sensitivity (tornado) diagrams.']},
+     {formula:[['Expected monetary value','EMV = probability × impact','Threats negative, opportunities positive']]} ]},
+   { t:'Response strategies', blocks:[
+     {table:{head:['Threats','Opportunities'],rows:[['Escalate — outside the PM\'s authority','Escalate'],['Avoid — remove the cause','Exploit — make it certain'],['Transfer — shift impact (insurance, contract)','Share — partner with a third party'],['Mitigate — reduce probability or impact','Enhance — increase probability or impact'],['Accept — active (reserve) or passive','Accept']]}} ]},
+   { t:'After responses', blocks:[
+     {list:['Residual risk: what remains after a response.','Secondary risk: a new risk created by a response.','Risk owner: the person accountable for monitoring and responding.','Workaround: an unplanned response to a risk nobody identified.']},
+     {tip:'If an identified risk occurs, implement the planned response first — do not start re-planning from scratch.'} ]}
+ ]},
+ { id:'procurement', icon:'📦', title:'Procurement', mins:7, slides:[
+   { t:'Contract types', blocks:[
+     {table:{head:['Type','Examples','Who carries more risk'],rows:[['Fixed price','FFP, FPIF, FP-EPA','Seller'],['Cost-reimbursable','CPFF, CPIF, CPAF','Buyer'],['Time & materials','Hourly or daily rates','Shared; best for unclear or small scope']]}},
+     {tip:'Clear, stable scope → fixed price. Uncertain scope → cost-reimbursable or T&M with caps.'} ]},
+   { t:'From need to contract', blocks:[
+     {flow:['Make-or-buy analysis','Procurement documents (RFP/RFQ/RFI)','Bidder conference','Evaluate against source selection criteria','Negotiate & award']},
+     {p:'A bidder conference gives all potential sellers the same information at the same time, keeping the process fair.'} ]},
+   { t:'Managing the contract', blocks:[
+     {list:['The contract is legally binding: changes go through formal change control and written change orders.','Claims administration handles disputed changes, ideally by negotiation first.','Procurement closure: confirm acceptance, settle payments and claims, and archive records.']} ]}
+ ]},
+ { id:'agile', icon:'🔄', title:'Agile & hybrid', mins:12, slides:[
+   { t:'The agile mindset', blocks:[
+     {p:'Agile values people and interactions, working product, customer collaboration and responding to change — while still valuing processes, documentation, contracts and plans.'},
+     {list:['Deliver value in small increments and get feedback early.','Empower self-organizing, cross-functional teams.','Inspect and adapt continuously.']} ]},
+   { t:'Scrum in one slide', blocks:[
+     {cards:[['Product owner','Owns the product backlog and maximizes value.'],['Scrum master','Servant leader who coaches and removes impediments.'],['Developers','Self-managing team that builds the increment.']]},
+     {flow:['Sprint planning','Daily scrum','Sprint review','Retrospective']},
+     {p:'Artifacts: product backlog, sprint backlog and the increment. Each sprint produces a usable increment.'} ]},
+   { t:'Key agile terms', blocks:[
+     {cards:[['User story','"As a… I want… so that…" — should be INVEST: independent, negotiable, valuable, estimable, small, testable.'],['Definition of Done','Shared quality standard for every increment.'],['Definition of Ready','When a backlog item is clear enough to start.'],['Velocity','Story points completed per sprint — a planning tool for that team only.'],['MVP','Minimum viable product: the smallest release that tests value.'],['Spike','A time-boxed experiment to reduce uncertainty.']]} ]},
+   { t:'Kanban and flow', blocks:[
+     {list:['Visualize the workflow on a board.','Limit work in progress (WIP) to improve flow.','Measure lead time (request to delivery) and cycle time (start to finish).','Burndown shows remaining work; burnup shows completed work against total scope.']} ]},
+   { t:'Technical practices', blocks:[
+     {cards:[['Continuous integration','Merge and test code frequently.'],['Test-driven development','Write the test before the code.'],['Pair programming','Two people, one workstation; spreads knowledge.'],['Refactoring','Improve the code without changing behavior.']]} ]},
+   { t:'Hybrid and tailoring', blocks:[
+     {p:'Choose the approach per component: predictive where requirements are stable or regulated, adaptive where uncertainty is high. Manage the seams with shared milestones and integration points.'},
+     {tip:'In agile questions, the team decides how to work; the PM or scrum master facilitates rather than assigns tasks.'} ]}
+ ]},
+ { id:'formulas', icon:'🧮', title:'Formula cheat sheet', mins:5, slides:[
+   { t:'Earned value', blocks:[
+     {formula:[['CV','EV − AC',''],['SV','EV − PV',''],['CPI','EV / AC',''],['SPI','EV / PV',''],['EAC','BAC / CPI','typical'],['ETC','EAC − AC',''],['VAC','BAC − EAC',''],['TCPI','(BAC − EV) / (BAC − AC)','']]} ]},
+   { t:'Estimating, scheduling & more', blocks:[
+     {formula:[['PERT (beta)','(O + 4M + P) / 6',''],['Triangular','(O + M + P) / 3',''],['Standard deviation','(P − O) / 6',''],['Total float','LS − ES  or  LF − EF',''],['Communication channels','n(n − 1) / 2',''],['EMV','probability × impact','']]},
+     {tip:'Memorize these and practise one calculation question per day in the mocks.'} ]}
+ ]},
+ { id:'mindset', icon:'🎯', title:'Exam mindset', mins:5, slides:[
+   { t:'How PMI wants you to think', blocks:[
+     {list:['Assess before acting: gather information and analyze impact first.','Follow the agreed process, especially change control.','Talk to people directly and privately before escalating.','Be proactive: prevent problems rather than react to them.','Protect value: the project exists to deliver benefits, not just outputs.','Act ethically and transparently — never hide bad news.']} ]},
+   { t:'Reading the question', blocks:[
+     {list:['Identify the approach: predictive, agile or hybrid.','Notice the keyword: FIRST, NEXT, BEST, MOST.','Eliminate answers that ignore, delay, escalate too early or break process.','Of the remaining answers, choose the one that addresses the root cause.']},
+     {tip:'Ready? Take the free Starter Diagnostic, then use the results to choose what to review.'} ]}
+ ]}
+];
+
+function prepGuideDone(){ try{ return JSON.parse(localStorage.getItem('workar_guide_done')||'[]'); }catch(e){ return []; } }
+function prepGuideMark(id){ try{ const d = prepGuideDone(); if(!d.includes(id)){ d.push(id); localStorage.setItem('workar_guide_done', JSON.stringify(d)); } }catch(e){} }
+
+function prepGuideBlock(b){
+  if(b.p) return `<p class="gd-p">${esc(b.p)}</p>`;
+  if(b.list) return `<ul class="gd-list">${b.list.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`;
+  if(b.cards) return `<div class="gd-cards">${b.cards.map(([t,x])=>`<div class="gd-card"><b>${esc(t)}</b><span>${esc(x)}</span></div>`).join('')}</div>`;
+  if(b.table) return `<div class="gd-tablewrap"><table class="gd-table"><thead><tr>${b.table.head.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${b.table.rows.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  if(b.formula) return `<div class="gd-formulas">${b.formula.map(([l,e,n])=>`<div class="gd-f"><span class="gd-fl">${esc(l)}</span><code>${esc(e)}</code>${n?`<span class="gd-fn">${esc(n)}</span>`:''}</div>`).join('')}</div>`;
+  if(b.tip) return `<div class="gd-tip"><b>💡 ${esc(T('guide_tip'))}</b> ${esc(b.tip)}</div>`;
+  if(b.flow) return `<div class="gd-flow">${b.flow.map((x,i)=>`<div class="gd-step"><span>${i+1}</span>${esc(x)}</div>`).join('<div class="gd-arrow">→</div>')}</div>`;
+  return '';
+}
+
+function prepGuideHome(){
+  const done = prepGuideDone();
+  const pct = Math.round(100*done.filter(id=>PREP_GUIDE.some(m=>m.id===id)).length/PREP_GUIDE.length);
+  return `
+  <section>
+    <div class="gd-head">
+      <p class="muted" style="margin:0;max-width:60ch;">${esc(T('guide_sub').replace('{n}', PREP_GUIDE.length))}</p>
+      <div class="gd-progress-box"><b>${pct}%</b><span>${esc(T('guide_complete'))}</span><div class="pp-bar" style="height:6px;margin-top:6px;"><div style="width:${pct}%;background:var(--accent);"></div></div></div>
+    </div>
+    <div class="gd-grid">
+      ${PREP_GUIDE.map((m,i)=>`<button class="gd-mod ${done.includes(m.id)?'done':''}" data-guide="${m.id}">
+        <span class="gd-mod-ico">${m.icon}</span>
+        <span class="gd-mod-body"><b>${i+1}. ${esc(m.title)}</b><span>${m.slides.length} ${esc(T('guide_slides'))} · ${m.mins} ${esc(T('prep_min'))}</span></span>
+        <span class="gd-mod-state">${done.includes(m.id)?'✓':'→'}</span>
+      </button>`).join('')}
+    </div>
+  </section>`;
+}
+
+function prepGuideView(){
+  const g = prep.guide || {}; const mi = PREP_GUIDE.findIndex(m=>m.id===g.mod);
+  if(mi<0){ prep.screen='home'; return prepHomeView(); }
+  const m = PREP_GUIDE[mi], si = Math.min(g.slide||0, m.slides.length-1), sl = m.slides[si];
+  const last = si===m.slides.length-1, next = PREP_GUIDE[mi+1];
+  if(last) prepGuideMark(m.id);
+  return `
+  <div class="gd-viewer">
+    <div class="pp-top" style="margin-bottom:12px;">
+      <button class="btn btn-ghost btn-sm" id="gd-back">← ${esc(T('guide_all'))}</button>
+      <span class="muted" style="font-size:13px;">${esc(T('guide_module'))} ${mi+1}/${PREP_GUIDE.length} · ${esc(T('guide_slide_of').replace('{i}', si+1).replace('{n}', m.slides.length))}</span>
+    </div>
+    <div class="gd-slide" dir="ltr">
+      <div class="gd-band"><span class="gd-band-ico">${m.icon}</span><span>${esc(m.title)}</span><span class="gd-brand">WORKAR · PMP PREP</span></div>
+      <div class="gd-body">
+        <h2 class="gd-title">${esc(sl.t)}</h2>
+        ${sl.blocks.map(prepGuideBlock).join('')}
+      </div>
+    </div>
+    <div class="gd-nav">
+      <button class="btn btn-outline btn-sm" id="gd-prev" ${si===0?'disabled':''}>← ${esc(T('prep_prev'))}</button>
+      <div class="gd-dots">${m.slides.map((_,i)=>`<button class="gd-dot ${i===si?'on':''}" data-slide="${i}" aria-label="${i+1}"></button>`).join('')}</div>
+      ${!last ? `<button class="btn btn-primary btn-sm" id="gd-next">${esc(T('prep_next'))} →</button>` : `<span></span>`}
+    </div>
+    ${last ? `<div class="gd-end">
+      <b>✓ ${esc(T('guide_done_t').replace('{m}', m.title))}</b>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px;">
+        ${next ? `<button class="btn btn-primary btn-sm" data-guide="${next.id}">${esc(T('guide_next_mod'))}: ${esc(next.title)} →</button>` : ''}
+        <button class="btn btn-outline btn-sm" id="gd-test">📝 ${esc(T('guide_test_now'))}</button>
+      </div>
+    </div>` : ''}
+    <div class="pp-keys">${esc(T('guide_keys'))}</div>
+  </div>`;
+}
+
+function wireGuide(){
+  document.querySelectorAll('[data-guide]').forEach(b=>b.addEventListener('click', ()=>{ prep.guide = { mod:b.getAttribute('data-guide'), slide:0 }; prep.screen='learn'; render(); window.scrollTo(0,0); }));
+  if(prep.screen!=='learn') return;
+  const g = prep.guide; const m = PREP_GUIDE.find(x=>x.id===g.mod); if(!m) return;
+  const go = i => { g.slide = Math.max(0, Math.min(m.slides.length-1, i)); render(); };
+  const on = (id, fn)=>{ const el=document.getElementById(id); if(el) el.addEventListener('click', fn); };
+  on('gd-prev', ()=>go(g.slide-1)); on('gd-next', ()=>go(g.slide+1));
+  on('gd-back', ()=>{ prep.screen='home'; prep.tab='learn'; render(); window.scrollTo(0,0); });
+  on('gd-test', ()=>{ prep.screen='home'; prep.tab='test'; prep.pickExam = (prep.exams.find(e=>e.isFree)||{}).id || null; render(); window.scrollTo(0,0); });
+  document.querySelectorAll('[data-slide]').forEach(b=>b.addEventListener('click', ()=>go(parseInt(b.getAttribute('data-slide'),10))));
+}
+document.addEventListener('keydown', e=>{
+  if(state.view!=='prep' || prep.screen!=='learn') return;
+  if(/input|textarea|select/i.test((e.target && e.target.tagName)||'')) return;
+  if(e.key==='ArrowRight'){ const b=document.getElementById('gd-next'); if(b){ b.click(); e.preventDefault(); } }
+  if(e.key==='ArrowLeft'){ const b=document.getElementById('gd-prev'); if(b && !b.disabled){ b.click(); e.preventDefault(); } }
+});
 
 function homeView(){
   const mentors = Object.entries(cache.profiles).slice(0,3);
