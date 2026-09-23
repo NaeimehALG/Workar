@@ -1,19 +1,16 @@
-// Vercel Serverless Function: Stripe webhook. When a Checkout Session completes, this marks
-// the matching request as paid in Supabase using the SERVICE ROLE key — which must only ever
-// live here, as a Vercel Environment Variable, never in index.html or any client-side code.
+// Vercel Serverless Function: Stripe webhook. When a Checkout Session completes, this records the
+// result in Supabase using the SERVICE ROLE key — which must only ever live here, as a Vercel
+// Environment Variable, never in index.html or any client-side code.
 //
-// Set these Environment Variables in Vercel:
-//   STRIPE_WEBHOOK_SECRET      (Stripe Dashboard > Developers > Webhooks > your endpoint > Signing secret)
-//   SUPABASE_URL               (same project URL used in index.html, e.g. https://xxxx.supabase.co)
-//   SUPABASE_SERVICE_ROLE_KEY  (Supabase Project Settings > API > service_role key — NOT the anon key)
+// Handles three kinds of purchase (set in metadata[kind] by /api/create-checkout):
+//   booking    — marks the mentoring request as paid
+//   ai_credits — adds AI coaching messages to the buyer's profile
+//   exam       — unlocks a PMP Prep mock exam (or the all-access pass) for the buyer
 //
-// After deploying, add a webhook endpoint in Stripe pointing to:
-//   https://YOUR-VERCEL-DOMAIN/api/stripe-webhook
-// listening for the "checkout.session.completed" event.
+// Environment Variables in Vercel:
+//   STRIPE_WEBHOOK_SECRET, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 
 const crypto = require('crypto');
-
-module.exports.config = { api: { bodyParser: false } };
 
 function readRawBody(req) {
   return new Promise((resolve, reject) => {
@@ -28,7 +25,9 @@ function verifyStripeSignature(rawBody, sigHeader, secret) {
   if (!sigHeader) return false;
   const parts = {};
   sigHeader.split(',').forEach(p => {
-    const [k, v] = p.split('=');
+    const i = p.indexOf('=');
+    const k = p.slice(0, i), v = p.slice(i + 1);
+    if (k === 'v1' && parts.v1) return; // keep the first v1 signature
     parts[k] = v;
   });
   if (!parts.t || !parts.v1) return false;
@@ -40,7 +39,7 @@ function verifyStripeSignature(rawBody, sigHeader, secret) {
   }
 }
 
-module.exports = async (req, res) => {
+async function handler(req, res) {
   if (req.method !== 'POST') {
     res.status(405).end();
     return;
@@ -56,40 +55,63 @@ module.exports = async (req, res) => {
 
   const rawBody = await readRawBody(req);
   const sig = req.headers['stripe-signature'];
-
   if (!verifyStripeSignature(rawBody, sig, webhookSecret)) {
     res.status(400).json({ error: 'invalid-signature' });
     return;
   }
 
   let event;
-  try {
-    event = JSON.parse(rawBody);
-  } catch (e) {
+  try { event = JSON.parse(rawBody); } catch (e) {
     res.status(400).json({ error: 'invalid-json' });
     return;
   }
 
+  const h = {
+    apikey: serviceKey,
+    Authorization: 'Bearer ' + serviceKey,
+    'Content-Type': 'application/json'
+  };
+
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
-    const requestId = (session.metadata && session.metadata.requestId) || session.client_reference_id;
-    if (requestId) {
-      try {
-        await fetch(`${supabaseUrl}/rest/v1/requests?id=eq.${encodeURIComponent(requestId)}`, {
-          method: 'PATCH',
-          headers: {
-            apikey: serviceKey,
-            Authorization: 'Bearer ' + serviceKey,
-            'Content-Type': 'application/json',
-            Prefer: 'return=minimal'
-          },
-          body: JSON.stringify({ paid: true, stripeSessionId: session.id })
+    const md = session.metadata || {};
+    try {
+      if (md.kind === 'exam' && md.userId && md.examId) {
+        // stripeSessionId is unique, so a repeated webhook delivery is ignored
+        await fetch(`${supabaseUrl}/rest/v1/exam_purchases?on_conflict=stripeSessionId`, {
+          method: 'POST',
+          headers: Object.assign({ Prefer: 'resolution=ignore-duplicates,return=minimal' }, h),
+          body: JSON.stringify({ userId: md.userId, examId: md.examId, stripeSessionId: session.id })
         });
-      } catch (e) {
-        console.error('supabase-update-failed', e);
+      } else if (md.kind === 'ai_credits' && md.userId) {
+        const r = await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${encodeURIComponent(md.userId)}&select=aiCredits`, { headers: h });
+        const rows = await r.json();
+        const current = (Array.isArray(rows) && rows[0] && Number(rows[0].aiCredits)) || 0;
+        await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${encodeURIComponent(md.userId)}`, {
+          method: 'PATCH',
+          headers: Object.assign({ Prefer: 'return=minimal' }, h),
+          body: JSON.stringify({ aiCredits: current + (Number(md.credits) || 20) })
+        });
+      } else {
+        const requestId = md.requestId || session.client_reference_id;
+        if (requestId) {
+          await fetch(`${supabaseUrl}/rest/v1/requests?id=eq.${encodeURIComponent(requestId)}`, {
+            method: 'PATCH',
+            headers: Object.assign({ Prefer: 'return=minimal' }, h),
+            body: JSON.stringify({ paid: true, stripeSessionId: session.id })
+          });
+        }
       }
+    } catch (e) {
+      console.error('supabase-update-failed', e);
+      res.status(500).json({ error: 'update-failed' }); // Stripe will retry
+      return;
     }
   }
 
   res.status(200).json({ received: true });
-};
+}
+
+module.exports = handler;
+// Must be set AFTER module.exports is assigned, or Vercel ignores it
+module.exports.config = { api: { bodyParser: false } };
