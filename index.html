@@ -118,6 +118,14 @@
   .field .hint{font-size:12px;color:var(--muted);margin-top:5px;}
   .role-pick{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:8px;}
   @media (max-width:560px){.role-pick{grid-template-columns:1fr;}}
+  .opt-grid{display:flex;flex-wrap:wrap;gap:8px;}
+  .opt-pill{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border:1.5px solid var(--border);border-radius:999px;background:var(--surface);cursor:pointer;font-size:13.5px;user-select:none;}
+  .field .opt-pill input{width:auto;padding:0;border:0;background:none;accent-color:var(--accent);margin:0;}
+  .opt-pill:has(input:checked){border-color:var(--accent);background:var(--surface-2);font-weight:600;}
+  .form-section{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:22px 0 10px;padding-top:14px;border-top:1px solid var(--border);}
+  .detail-block{margin-bottom:18px;max-width:60ch;}
+  .detail-block h4{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 6px;}
+  .call-note{font-size:12.5px;color:var(--muted);}
   .role-opt{border:1.5px solid var(--border);border-radius:var(--radius-md);padding:20px;cursor:pointer;text-align:start;background:var(--surface);}
   .role-opt.selected{border-color:var(--accent);background:var(--surface-2);}
   .role-opt b{display:block;font-size:16px;margin-bottom:4px;font-weight:800;}
@@ -275,6 +283,18 @@ const I18N = {
     toast_profile_deleted:'Profile deleted', toast_delete_fail:'Could not delete — try again',
     admin_tools:'Admin tools', btn_delete_this_profile:'Delete this profile', confirm_delete_other:'Delete this profile permanently? This cannot be undone.',
     btn_save_admin_edit:'Save changes (admin)',
+    sec_about:'About you', sec_background:'Education & credentials', sec_mentoring:'Mentoring preferences', sec_links:'Links & pricing',
+    lbl_education:'Education', ph_education:'e.g. B.Sc. Civil Engineering, University of British Columbia',
+    lbl_certifications:'Certifications & licenses (comma-separated)', ph_certifications:'e.g. P.Eng., PMP, Microsoft PL-300',
+    lbl_formats_m:'Session formats you offer', lbl_formats_c:'Preferred session format',
+    fmt_video:'Video call', fmt_voice:'Voice call', fmt_chat:'Chat / messaging', fmt_ai:'AI coaching',
+    lbl_goals_c:'What are you hoping to get out of mentoring?',
+    goal_resume:'Resume review', goal_career:'Career advice', goal_interview:'Interview prep', goal_salary:'Salary negotiation', goal_switch:'Career change', goal_network:'Networking & LinkedIn',
+    lbl_field_c:'Which field or industry are you looking for a mentor in?', ph_field_c:'e.g. Data analytics, Construction, Software',
+    lbl_stage_c:'Career stage', stage_pick:'Select…', stage_student:'Student / new graduate', stage_entry:'Entry level (0–2 yrs)', stage_mid:'Mid level (3–7 yrs)', stage_senior:'Senior (8+ yrs)', stage_switch:'Changing careers',
+    detail_education:'Education', detail_certs:'Certifications', detail_formats:'Session formats',
+    btn_video_call:'🎥 Video call', btn_voice_call:'📞 Voice call',
+    call_after_accept:'Call options appear once the mentor accepts.', call_tip:'Opens in a new tab. The first person to join may be asked to sign in with Google or GitHub to start the room.',
     toast_email_confirmed:'Email confirmed — welcome to Workar!',
     nav_login:'Log in'
   },
@@ -371,6 +391,18 @@ const I18N = {
     toast_profile_deleted:'پروفایل حذف شد', toast_delete_fail:'حذف نشد — دوباره امتحان کن',
     admin_tools:'ابزار ادمین', btn_delete_this_profile:'حذف این پروفایل', confirm_delete_other:'این پروفایل برای همیشه حذف بشه؟ این کار برگشت‌ناپذیره.',
     btn_save_admin_edit:'ذخیره تغییرات (ادمین)',
+    sec_about:'درباره شما', sec_background:'تحصیلات و مدارک', sec_mentoring:'ترجیحات منتورینگ', sec_links:'لینک‌ها و قیمت',
+    lbl_education:'تحصیلات', ph_education:'مثلاً کارشناسی مهندسی عمران، دانشگاه تهران',
+    lbl_certifications:'گواهینامه‌ها و مدارک حرفه‌ای (با کاما جدا کنید)', ph_certifications:'مثلاً PMP، P.Eng.، Microsoft PL-300',
+    lbl_formats_m:'نوع جلساتی که ارائه می‌دهید', lbl_formats_c:'نوع جلسه‌ی ترجیحی',
+    fmt_video:'تماس تصویری', fmt_voice:'تماس صوتی', fmt_chat:'چت / پیام', fmt_ai:'کوچینگ با هوش مصنوعی',
+    lbl_goals_c:'از منتورینگ چه انتظاری دارید؟',
+    goal_resume:'بررسی رزومه', goal_career:'مشاوره شغلی', goal_interview:'آمادگی مصاحبه', goal_salary:'مذاکره حقوق', goal_switch:'تغییر مسیر شغلی', goal_network:'شبکه‌سازی و لینکدین',
+    lbl_field_c:'دنبال منتور در چه رشته یا صنعتی هستید؟', ph_field_c:'مثلاً تحلیل داده، ساخت‌وساز، نرم‌افزار',
+    lbl_stage_c:'مرحله‌ی شغلی', stage_pick:'انتخاب کنید…', stage_student:'دانشجو / تازه فارغ‌التحصیل', stage_entry:'تازه‌کار (۰ تا ۲ سال)', stage_mid:'میانی (۳ تا ۷ سال)', stage_senior:'ارشد (۸ سال به بالا)', stage_switch:'در حال تغییر مسیر شغلی',
+    detail_education:'تحصیلات', detail_certs:'گواهینامه‌ها', detail_formats:'نوع جلسات',
+    btn_video_call:'🎥 تماس تصویری', btn_voice_call:'📞 تماس صوتی',
+    call_after_accept:'گزینه‌های تماس بعد از تأیید منتور نمایش داده می‌شود.', call_tip:'در تب جدید باز می‌شود. ممکن است از اولین نفری که وارد می‌شود خواسته شود با گوگل یا گیت‌هاب وارد شود تا اتاق شروع شود.',
     toast_email_confirmed:'ایمیلت تأیید شد — به Workar خوش اومدی!',
     nav_login:'ورود'
   }
@@ -794,6 +826,19 @@ function wireAuth(){
   });
 }
 
+const FORMAT_KEYS = ['video','voice','chat','ai'];
+const GOAL_KEYS = ['resume','career','interview','salary','switch','network'];
+const STAGE_KEYS = ['student','entry','mid','senior','switch'];
+function optPills(name, keys, prefix, selected){
+  const sel = selected || [];
+  return `<div class="opt-grid">${keys.map(k=>`<label class="opt-pill"><input type="checkbox" name="${name}" value="${k}" ${sel.includes(k)?'checked':''}> ${esc(T(prefix+k))}</label>`).join('')}</div>`;
+}
+function stageSelect(attrs, current){
+  return `<select ${attrs}><option value="">${esc(T('stage_pick'))}</option>${STAGE_KEYS.map(k=>`<option value="${k}" ${current===k?'selected':''}>${esc(T('stage_'+k))}</option>`).join('')}</select>`;
+}
+function splitList(v){ return (v||'').split(',').map(x=>x.trim()).filter(Boolean); }
+function checkedVals(root, name){ return Array.from(root.querySelectorAll('input[name="'+name+'"]:checked')).map(c=>c.value); }
+
 function onboardView(){
   const preset = state.role;
   return `
@@ -810,15 +855,29 @@ function onboardView(){
         <div class="field"><label>${esc(T('lbl_headline'))}</label><input name="headline" required placeholder="${esc(T('ph_headline'))}"></div>
         <div class="field"><label>${esc(T('lbl_profession_m'))}</label><input name="profession" required placeholder="${esc(T('ph_profession_m'))}"></div>
         <div class="field"><label>${esc(T('lbl_bio_m'))}</label><textarea name="bio" required placeholder="${esc(T('ph_bio_m'))}"></textarea></div>
-        <div class="field"><label>${esc(T('lbl_skills'))}</label><input name="skills" placeholder="${esc(T('ph_skills'))}"></div>
         <div class="field"><label>${esc(T('lbl_experience'))}</label><input name="experience" type="number" min="0" placeholder="${esc(T('ph_experience'))}"></div>
         <div class="field"><label>${esc(T('lbl_languages'))}</label><input name="languages" placeholder="${esc(T('ph_languages'))}"></div>
+        <div class="form-section">${esc(T('sec_background'))}</div>
+        <div class="field"><label>${esc(T('lbl_education'))}</label><input name="education" placeholder="${esc(T('ph_education'))}"></div>
+        <div class="field"><label>${esc(T('lbl_certifications'))}</label><input name="certifications" placeholder="${esc(T('ph_certifications'))}"></div>
+        <div class="form-section">${esc(T('sec_mentoring'))}</div>
+        <div class="field"><label>${esc(T('lbl_skills'))}</label><input name="skills" placeholder="${esc(T('ph_skills'))}"></div>
+        <div class="field"><label>${esc(T('lbl_formats_m'))}</label>${optPills('formats', FORMAT_KEYS, 'fmt_', ['video','voice'])}</div>
+        <div class="form-section">${esc(T('sec_links'))}</div>
         <div class="field"><label>${esc(T('lbl_linkedin'))}</label><input name="linkedin" type="text" placeholder="${esc(T('ph_linkedin'))}"></div>
         <div class="field"><label>${esc(T('lbl_rate'))} <span class="hint" style="display:inline;">${esc(T('rate_hint'))}</span></label><input name="rate" placeholder="${esc(T('ph_rate'))}"></div>
       ` : `
         <div class="field"><label>${esc(T('lbl_profession_c'))}</label><input name="profession" required placeholder="${esc(T('ph_profession_c'))}"></div>
+        <div class="field"><label>${esc(T('lbl_stage_c'))}</label>${stageSelect('name="careerStage"', '')}</div>
+        <div class="field"><label>${esc(T('lbl_field_c'))}</label><input name="targetField" placeholder="${esc(T('ph_field_c'))}"></div>
+        <div class="form-section">${esc(T('sec_mentoring'))}</div>
+        <div class="field"><label>${esc(T('lbl_goals_c'))}</label>${optPills('goals', GOAL_KEYS, 'goal_', [])}</div>
+        <div class="field"><label>${esc(T('lbl_formats_c'))}</label>${optPills('formats', FORMAT_KEYS, 'fmt_', [])}</div>
         <div class="field"><label>${esc(T('lbl_goal_c'))}</label><textarea name="bio" placeholder="${esc(T('ph_goal_c'))}"></textarea></div>
-        <div class="field"><label>${esc(T('lbl_help_c'))}</label><input name="skills" placeholder="${esc(T('ph_skills'))}"></div>
+        <div class="form-section">${esc(T('sec_background'))}</div>
+        <div class="field"><label>${esc(T('lbl_education'))}</label><input name="education" placeholder="${esc(T('ph_education'))}"></div>
+        <div class="field"><label>${esc(T('lbl_certifications'))} <span class="hint" style="display:inline;">${esc(T('opt_label'))}</span></label><input name="certifications" placeholder="${esc(T('ph_certifications'))}"></div>
+        <div class="form-section">${esc(T('sec_links'))}</div>
         <div class="field"><label>${esc(T('lbl_linkedin_opt'))} <span class="hint" style="display:inline;">${esc(T('opt_label'))}</span></label><input name="linkedin" type="text" placeholder="${esc(T('ph_linkedin'))}"></div>
       `}
       <button class="btn btn-primary" type="submit" style="width:100%;">${esc(T('create_profile'))}</button>
@@ -903,7 +962,10 @@ function mentorView(){
     </div>
   </div>
   <p style="max-width:60ch;color:var(--muted);margin-bottom:18px;">${esc(p.bio||'')}</p>
-  <div style="margin-bottom:26px;">${(p.skills||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('')}</div>
+  <div style="margin-bottom:22px;">${(p.skills||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('')}</div>
+  ${p.education ? `<div class="detail-block"><h4>${esc(T('detail_education'))}</h4><div>${esc(p.education)}</div></div>` : ''}
+  ${(p.certifications||[]).length ? `<div class="detail-block"><h4>${esc(T('detail_certs'))}</h4><div>${p.certifications.map(c=>`<span class="chip">${esc(c)}</span>`).join('')}</div></div>` : ''}
+  ${(p.formats||[]).length ? `<div class="detail-block" style="margin-bottom:26px;"><h4>${esc(T('detail_formats'))}</h4><div>${p.formats.filter(f=>FORMAT_KEYS.includes(f)).map(f=>`<span class="chip">${esc(T('fmt_'+f))}</span>`).join('')}</div></div>` : ''}
 
   ${(myProfile && myProfile.isAdmin && !isSelf) ? `
   <div class="panel" style="max-width:480px;margin-bottom:26px;border-color:#b3412c;">
@@ -963,9 +1025,16 @@ function dashboardView(){
   <div class="panel wide" style="margin-bottom:32px;">
     <div class="field"><label>${esc(T('lbl_name'))}</label><input id="edit-name" value="${esc(myProfile.name||'')}"></div>
     ${isMentor ? `<div class="field"><label>${esc(T('lbl_headline'))}</label><input id="edit-headline" value="${esc(myProfile.headline||'')}"></div>` : ''}
-    <div class="field"><label>${esc(T('lbl_profession_m'))}</label><input id="edit-profession" value="${esc(myProfile.profession||'')}"></div>
-    <div class="field"><label>${esc(T('lbl_bio_m'))}</label><textarea id="edit-bio">${esc(myProfile.bio||'')}</textarea></div>
-    <div class="field"><label>${esc(T('lbl_skills'))}</label><input id="edit-skills" value="${esc((myProfile.skills||[]).join(', '))}"></div>
+    <div class="field"><label>${esc(T(isMentor?'lbl_profession_m':'lbl_profession_c'))}</label><input id="edit-profession" value="${esc(myProfile.profession||'')}"></div>
+    ${!isMentor ? `
+    <div class="field"><label>${esc(T('lbl_stage_c'))}</label>${stageSelect('id="edit-stage"', myProfile.careerStage||'')}</div>
+    <div class="field"><label>${esc(T('lbl_field_c'))}</label><input id="edit-target-field" value="${esc(myProfile.targetField||'')}" placeholder="${esc(T('ph_field_c'))}"></div>
+    <div class="field" id="edit-goals-wrap"><label>${esc(T('lbl_goals_c'))}</label>${optPills('goals', GOAL_KEYS, 'goal_', myProfile.goals||[])}</div>` : ''}
+    <div class="field"><label>${esc(T(isMentor?'lbl_bio_m':'lbl_goal_c'))}</label><textarea id="edit-bio">${esc(myProfile.bio||'')}</textarea></div>
+    ${isMentor ? `<div class="field"><label>${esc(T('lbl_skills'))}</label><input id="edit-skills" value="${esc((myProfile.skills||[]).join(', '))}"></div>` : ''}
+    <div class="field" id="edit-formats-wrap"><label>${esc(T(isMentor?'lbl_formats_m':'lbl_formats_c'))}</label>${optPills('formats', FORMAT_KEYS, 'fmt_', myProfile.formats||[])}</div>
+    <div class="field"><label>${esc(T('lbl_education'))}</label><input id="edit-education" value="${esc(myProfile.education||'')}" placeholder="${esc(T('ph_education'))}"></div>
+    <div class="field"><label>${esc(T('lbl_certifications'))}</label><input id="edit-certifications" value="${esc((myProfile.certifications||[]).join(', '))}" placeholder="${esc(T('ph_certifications'))}"></div>
     ${isMentor ? `
     <div class="field"><label>${esc(T('lbl_experience'))}</label><input id="edit-experience" type="number" min="0" value="${esc(myProfile.experience||'')}"></div>
     <div class="field"><label>${esc(T('lbl_languages'))}</label><input id="edit-languages" value="${esc((myProfile.languages||[]).join(', '))}"></div>
@@ -1014,7 +1083,10 @@ function dashboardView(){
             ? `<span class="muted" style="font-size:12.5px;">${esc(T('waiting_for_payment'))}</span>`
             : `<button class="btn btn-sm btn-primary" data-pay="${r.id}" data-amount="${r.amountCents}" data-mentor="${r.mentorId}">${esc(T('pay_to_confirm').replace('${amount}', (r.amountCents/100).toFixed(2)))}</button>`
         ) : ''}
-        ${r.status==='accepted' && (!r.amountCents || r.paid) ? `<button class="btn btn-sm btn-outline" data-call="${r.id}">${esc(T('join_call'))}</button>` : ''}
+        ${r.status==='accepted' && (!r.amountCents || r.paid) ? `
+          <button class="btn btn-sm btn-primary" data-call="${r.id}" data-mode="video" title="${esc(T('call_tip'))}">${esc(T('btn_video_call'))}</button>
+          <button class="btn btn-sm btn-outline" data-call="${r.id}" data-mode="voice" title="${esc(T('call_tip'))}">${esc(T('btn_voice_call'))}</button>` : ''}
+        ${r.status==='pending' ? `<span class="call-note">${esc(T('call_after_accept'))}</span>` : ''}
       </div>
     </div>`).join('') : `<div class="empty">${esc(T('no_requests'))}</div>`}
   `;
@@ -1090,6 +1162,14 @@ function wire(){
     if(linkedinVal && !/^https?:\/\//i.test(linkedinVal)) linkedinVal = 'https://'+linkedinVal;
     const doc = { role: state.role, name: fd.get('name')||'', profession: fd.get('profession')||'', bio: fd.get('bio')||'', linkedin: linkedinVal, aiCredits: 5 };
     doc.skills = (fd.get('skills')||'').split(',').map(s=>s.trim()).filter(Boolean);
+    doc.education = (fd.get('education')||'').trim();
+    doc.certifications = splitList(fd.get('certifications'));
+    doc.formats = checkedVals(form, 'formats');
+    if(state.role==='client'){
+      doc.goals = checkedVals(form, 'goals');
+      doc.careerStage = fd.get('careerStage')||'';
+      doc.targetField = (fd.get('targetField')||'').trim();
+    }
     if(state.role==='mentor'){
       doc.headline = fd.get('headline')||'';
       doc.experience = fd.get('experience')||'';
@@ -1193,6 +1273,18 @@ function wire(){
     if(skillsEl) patch.skills = skillsEl.value.split(',').map(s=>s.trim()).filter(Boolean);
     const headlineEl = document.getElementById('edit-headline');
     if(headlineEl) patch.headline = headlineEl.value;
+    const eduEl = document.getElementById('edit-education');
+    if(eduEl) patch.education = eduEl.value.trim();
+    const certEl = document.getElementById('edit-certifications');
+    if(certEl) patch.certifications = splitList(certEl.value);
+    const fmtWrap = document.getElementById('edit-formats-wrap');
+    if(fmtWrap) patch.formats = checkedVals(fmtWrap, 'formats');
+    const goalsWrap = document.getElementById('edit-goals-wrap');
+    if(goalsWrap) patch.goals = checkedVals(goalsWrap, 'goals');
+    const stageEl = document.getElementById('edit-stage');
+    if(stageEl) patch.careerStage = stageEl.value;
+    const tfEl = document.getElementById('edit-target-field');
+    if(tfEl) patch.targetField = tfEl.value.trim();
     const expEl = document.getElementById('edit-experience');
     if(expEl) patch.experience = expEl.value;
     const langEl = document.getElementById('edit-languages');
@@ -1260,7 +1352,11 @@ function wire(){
   document.querySelectorAll('[data-call]').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       const reqId = btn.getAttribute('data-call');
-      window.open('https://meet.jit.si/Workar-Session-' + encodeURIComponent(reqId), '_blank', 'noopener');
+      const voiceOnly = btn.getAttribute('data-mode')==='voice';
+      const displayName = (myProfile && myProfile.name) ? myProfile.name : 'Workar user';
+      let cfg = '#config.prejoinPageEnabled=false&userInfo.displayName=' + encodeURIComponent('"'+displayName+'"');
+      if(voiceOnly) cfg += '&config.startAudioOnly=true&config.startWithVideoMuted=true';
+      window.open('https://meet.jit.si/Workar-Session-' + encodeURIComponent(reqId) + cfg, '_blank', 'noopener');
     });
   });
 
