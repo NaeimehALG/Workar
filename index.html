@@ -83,6 +83,7 @@
   .lp-bar{width:64px;height:3px;border-radius:3px;background:var(--accent-2);opacity:.6;margin:18px auto 44px;}
   .why-row{display:flex;flex-wrap:wrap;justify-content:center;gap:26px;}
   .why-bubble{width:176px;height:176px;border-radius:50%;border:4px solid var(--c);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px;background:var(--surface);box-shadow:var(--shadow);}
+  .why-bubble b.word{font-size:22px;}
   .why-bubble b{font-size:30px;font-weight:800;line-height:1.1;color:var(--text);}
   .why-bubble span{font-size:13.5px;font-weight:600;line-height:1.35;margin-top:6px;color:var(--text);}
   .why-note{color:var(--muted);font-size:14px;max-width:60ch;margin:34px auto 0;}
@@ -119,6 +120,11 @@
   @media (prefers-reduced-motion: reduce){.reveal,html[dir="rtl"] .reveal{opacity:1;transform:none;transition:none;}}
   .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center;padding:36px 0 56px;}
   @media (max-width:760px){.hero{grid-template-columns:1fr;}}
+  .hero.hero-solo{display:block;text-align:center;padding:56px 0 24px;}
+  .hero.hero-solo h1{font-size:46px;max-width:18ch;margin-left:auto;margin-right:auto;}
+  .hero.hero-solo p{margin-left:auto;margin-right:auto;max-width:58ch;}
+  .hero.hero-solo .hero-actions{justify-content:center;}
+  @media (max-width:600px){.hero.hero-solo h1{font-size:34px;}}
   .hero h1{font-weight:800;font-size:42px;line-height:1.25;margin:0 0 18px;letter-spacing:-.01em;}
   .hero h1 i{font-style:normal;color:var(--accent);}
   .hero p{color:var(--muted);font-size:16.5px;max-width:46ch;margin:0 0 28px;}
@@ -241,6 +247,20 @@ const I18N = {
     cta_browse:'Browse mentors', cta_become:'Become a mentor',
     stat_mentors:'mentors on Workar', stat_reviews:'reviews written', stat_realtime:'real conversations',
     no_mentors_yet:'No mentors yet', be_first:'Be the first to sign up',
+    why_e1_n:'Real', why_e1:"mentors who've done the job you want",
+    why_e2_n:'Growing', why_e2:'new fields added every week',
+    why_e3_n:'EN · فا', why_e3:'mentoring in your language',
+    why_growing:"Workar is just getting started — and growing every week toward a mentor for every profession. Don't see your field yet? Tell us what you need and we'll find the right mentor for you.",
+    why_cta_find:'Find your mentor', why_cta_join:'Share your experience as a mentor',
+    adm_nav:'Edit site', adm_title:'Site editor', adm_sub:'Only you can see this page. Changes go live for everyone as soon as you save.',
+    adm_edit_prices:'Edit prices & text',
+    adm_prices:'Package prices', adm_prices_hint:'Prices in USD. The discount (Save %) is calculated automatically against the Single Session price.',
+    adm_col_pkg:'Package', adm_col_price:'Price ($)', adm_col_sessions:'Sessions', adm_col_save:'Save', adm_col_popular:'Most popular', adm_col_show:'Show',
+    adm_text:'Website text', adm_text_hint:'Edit any text in English and Persian. Clear a box to go back to the original wording.',
+    adm_items_hint:'For package feature lists, put each bullet on the same line separated by a | character.',
+    adm_g_hero:'Top of the home page', adm_g_why:'Why Workar', adm_g_steps:'How Workar works', adm_g_pk:'Packages', adm_g_footer:'Footer & tagline',
+    adm_save:'Save & publish', adm_reset:'Reset everything to default', adm_reset_confirm:'Reset all prices and text back to the original defaults?',
+    adm_saved:'Saved — the site is updated', adm_save_fail:'Could not save — check that the site_settings SQL has been run',
     hiw_title:'How it works',
     new_mentor:'New on Workar',
     why_title:'Why Workar?', why_sub:"Advice is everywhere. Guidance from someone who has already walked your path is rare.",
@@ -381,6 +401,20 @@ const I18N = {
     cta_browse:'مشاهده منتورها', cta_become:'منتور شو',
     stat_mentors:'منتور در Workar', stat_reviews:'ریویو نوشته‌شده', stat_realtime:'گفتگوی واقعی',
     no_mentors_yet:'هنوز منتوری نیست', be_first:'اولین نفری باش که ثبت‌نام می‌کنه',
+    why_e1_n:'واقعی', why_e1:'منتورهایی که همون کاری رو که می‌خوای انجام دادن',
+    why_e2_n:'در حال رشد', why_e2:'هر هفته رشته‌های جدید اضافه می‌شن',
+    why_e3_n:'EN · فا', why_e3:'منتورینگ به زبان خودت',
+    why_growing:'Workar تازه شروع کرده — و هر هفته بزرگ‌تر می‌شه تا برای هر شغلی یک منتور داشته باشیم. رشته‌ات رو هنوز نمی‌بینی؟ بگو به چی نیاز داری تا منتور مناسبت رو پیدا کنیم.',
+    why_cta_find:'منتورت رو پیدا کن', why_cta_join:'تجربه‌ات رو به‌عنوان منتور به اشتراک بذار',
+    adm_nav:'ویرایش سایت', adm_title:'ویرایشگر سایت', adm_sub:'این صفحه فقط برای تو نمایش داده می‌شه. تغییرات بعد از ذخیره برای همه اعمال می‌شن.',
+    adm_edit_prices:'ویرایش قیمت‌ها و متن‌ها',
+    adm_prices:'قیمت پکیج‌ها', adm_prices_hint:'قیمت‌ها به دلار. درصد تخفیف خودکار نسبت به قیمت «یک جلسه» محاسبه می‌شه.',
+    adm_col_pkg:'پکیج', adm_col_price:'قیمت ($)', adm_col_sessions:'تعداد جلسه', adm_col_save:'تخفیف', adm_col_popular:'محبوب‌ترین', adm_col_show:'نمایش',
+    adm_text:'متن‌های سایت', adm_text_hint:'هر متنی رو به انگلیسی و فارسی ویرایش کن. اگه کادر رو خالی کنی، متن اصلی برمی‌گرده.',
+    adm_items_hint:'برای لیست ویژگی‌های پکیج، هر مورد رو با علامت | از بقیه جدا کن.',
+    adm_g_hero:'بالای صفحه‌ی اصلی', adm_g_why:'چرا Workar', adm_g_steps:'Workar چطور کار می‌کنه', adm_g_pk:'پکیج‌ها', adm_g_footer:'فوتر و شعار',
+    adm_save:'ذخیره و انتشار', adm_reset:'برگرداندن همه‌چیز به حالت اولیه', adm_reset_confirm:'همه‌ی قیمت‌ها و متن‌ها به حالت اولیه برگردن؟',
+    adm_saved:'ذخیره شد — سایت به‌روز شد', adm_save_fail:'ذخیره نشد — مطمئن شو SQL مربوط به site_settings اجرا شده',
     hiw_title:'چطور کار می‌کنه',
     new_mentor:'تازه به Workar پیوسته',
     why_title:'چرا Workar؟', why_sub:'توصیه همه‌جا پیدا می‌شه؛ راهنمایی از کسی که قبلاً همین مسیر رو رفته، کمیابه.',
@@ -515,7 +549,16 @@ const I18N = {
     nav_login:'ورود'
   }
 };
-function T(key){ return (I18N[state.lang] && I18N[state.lang][key]) || I18N.en[key] || key; }
+const ADMIN_EMAIL = 'naeimeh.alaghehband@gmail.com';
+let siteSettings = {};
+function T(key){
+  const ov = siteSettings && siteSettings.text;
+  if(ov && ov[state.lang] && ov[state.lang][key]) return ov[state.lang][key];
+  if(ov && state.lang!=='en' && !(I18N[state.lang]||{})[key] && ov.en && ov.en[key]) return ov.en[key];
+  return (I18N[state.lang] && I18N[state.lang][key]) || I18N.en[key] || key;
+}
+function defaultT(lang, key){ return (I18N[lang] && I18N[lang][key]) || ''; }
+function isAdmin(){ return !!((userEmail && userEmail.toLowerCase()===ADMIN_EMAIL) || (myProfile && myProfile.isAdmin)); }
 
 /* ---------- state ---------- */
 let uid = null, myProfile = null, userEmail = null;
@@ -675,6 +718,10 @@ async function init(){
   // Public data — visible to everyone, signed in or not.
   const db = makeSupabaseDB();
   window.__db = db;
+  db.doc('site_settings/main').onSnapshot(d=>{
+    siteSettings = (d && d.data && d.data.data) || {};
+    render();
+  });
   db.collection('profiles').where('role','==','mentor').onSnapshot(list=>{
     cache.profiles = {};
     (list||[]).forEach(d=>{ cache.profiles[d.id] = d.data; });
@@ -791,6 +838,7 @@ function render(){
       case 'mentor': body = mentorView(); break;
       case 'dashboard': body = dashboardView(); break;
       case 'coach': body = coachView(); break;
+      case 'admin': body = isAdmin() ? adminView() : homeView(); break;
       default: body = homeView();
     }
   }
@@ -798,6 +846,7 @@ function render(){
   app.appendChild(el(`<footer>Workar · ${esc(T('footer_tag'))}<br><a class="ig-link" href="${INSTAGRAM_URL}" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg> @workarmentoring</a></footer>`));
   wire();
   setupReveal();
+  if(state.view==='admin') wireAdmin();
   if(state.recoveryMode) wireResetPassword();
   else if(showAuthScreen) wireAuth();
 }
@@ -811,6 +860,7 @@ function navHtml(){
     <div class="brand" data-nav="home"><img class="logo-mark" src="${LOGO_DATA_URI}" alt="Workar"><span class="tag">${esc(T('tag'))}</span></div>
     <div class="navlinks">
       ${items.map(([v,l])=>`<div class="navlink ${state.view===v?'active':''}" data-nav="${v}">${esc(l)}</div>`).join('')}
+      ${isAdmin() ? `<div class="navlink ${state.view==='admin'?'active':''}" data-nav="admin">✏️ ${esc(T('adm_nav'))}</div>` : ''}
       ${uid ? `<div class="navlink" id="signout-btn" title="${esc(T('signed_in_as'))} ${esc(userEmail||'')}">${esc(T('nav_signout'))}</div>` : `<div class="navlink" data-nav="dashboard">${esc(T('nav_login'))}</div>`}
       <div class="lang-switch" id="lang-toggle">${esc(T('lang_switch'))}</div>
     </div>
@@ -824,12 +874,19 @@ const STEP_ICONS = [
   `<svg class="step-ico" viewBox="0 0 64 64" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="12" width="48" height="44" rx="5"/><path d="M8 24h48M20 6v12M44 6v12"/><path d="M17 33h6M29 33h6M41 33h6M17 43h6M29 43h6"/><path d="M40 45l4 4 7-8"/></svg>`,
   `<svg class="step-ico" viewBox="0 0 64 64" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="10" width="40" height="30" rx="4"/><path d="M18 48h16M26 40v8"/><circle cx="26" cy="21" r="5"/><path d="M17 34c1-4 5-6 9-6s8 2 9 6"/><path d="M46 20l12-7v26l-12-7"/><path d="M52 50a6 6 0 1 0 0 .1"/></svg>`
 ];
-const PACKAGES = [
-  { key:'single',    sessions:1, price:49,  save:0 },
-  { key:'resume',    sessions:2, price:89,  save:9 },
-  { key:'interview', sessions:3, price:129, save:12, featured:true },
-  { key:'offer',     sessions:6, price:249, save:15 }
+const DEFAULT_PACKAGES = [
+  { key:'single',    sessions:1, price:49,  featured:false, hidden:false },
+  { key:'resume',    sessions:2, price:89,  featured:false, hidden:false },
+  { key:'interview', sessions:3, price:129, featured:true,  hidden:false },
+  { key:'offer',     sessions:6, price:249, featured:false, hidden:false }
 ];
+function getPackages(){
+  const saved = (siteSettings && Array.isArray(siteSettings.packages)) ? siteSettings.packages : [];
+  const list = DEFAULT_PACKAGES.map(d=>Object.assign({}, d, saved.find(x=>x.key===d.key)||{}));
+  const base = list[0] && list[0].sessions ? list[0].price/list[0].sessions : 0;
+  list.forEach(pk=>{ pk.save = (base && pk.sessions>1) ? Math.max(0, Math.round((1 - pk.price/(base*pk.sessions))*100)) : 0; });
+  return list;
+}
 const revealedKeys = new Set();
 function rv(key, i){ return `data-rk="${key}" style="--i:${i}"`; }
 
@@ -838,12 +895,19 @@ function landingSections(){
   const mentors = profiles.filter(p=>p.role==='mentor' || !p.role);
   const fields = new Set(mentors.map(p=>(p.profession||'').trim().toLowerCase()).filter(Boolean));
   const langs = new Set(mentors.flatMap(p=>(p.languages||[]).map(l=>l.trim().toLowerCase())).filter(Boolean));
-  const why = [
+  const grown = mentors.length >= 10;
+  const why = grown ? [
     { n: mentors.length, count:true, label: T('why_b1') },
     { n: fields.size,    count:true, label: T('why_b2') },
     { n: langs.size,     count:true, label: T('why_b3') },
     { n: '24/7',         label: T('why_b4') },
     { n: '1:1',          label: T('why_b5') }
+  ] : [
+    { n: T('why_e1_n'), label: T('why_e1') },
+    { n: T('why_e2_n'), label: T('why_e2') },
+    { n: T('why_e3_n'), label: T('why_e3') },
+    { n: '24/7',        label: T('why_b4') },
+    { n: '1:1',         label: T('why_b5') }
   ];
   const stepsHtml = [1,2,3,4].map((n,i)=>`
       <div class="step reveal" ${rv('step'+n,i)}>
@@ -851,7 +915,7 @@ function landingSections(){
         <h3><em>${n}.</em>${esc(T('step'+n+'_t'))}</h3>
         <p>${esc(T('step'+n+'_b'))}</p>
       </div>`).join('');
-  const priceHtml = PACKAGES.map((pk,i)=>`
+  const priceHtml = getPackages().filter(pk=>!pk.hidden).map((pk,i)=>`
       <div class="price-card reveal ${pk.featured?'featured':''}" ${rv('pk-'+pk.key,i)}>
         ${pk.featured ? `<div class="price-badge">${esc(T('pk_popular'))}</div>` : ''}
         <div class="price-name">${esc(T('pk_'+pk.key+'_name'))}</div>
@@ -870,11 +934,15 @@ function landingSections(){
     <div class="lp-bar"></div>
     <div class="why-row">
       ${why.map((w,i)=>`<div class="why-bubble reveal" data-rk="why${i}" style="--c:${WHY_COLORS[i]};--i:${i}">
-        <b ${w.count?`data-count="${w.n}"`:''}>${w.count ? (revealedKeys.has('why'+i) ? w.n : 0) : esc(w.n)}</b>
+        <b class="${!w.count && String(w.n).length>5 ? 'word' : ''}" ${w.count?`data-count="${w.n}"`:''}>${w.count ? (revealedKeys.has('why'+i) ? w.n : 0) : esc(w.n)}</b>
         <span>${esc(w.label)}</span>
       </div>`).join('')}
     </div>
-    <p class="why-note">${esc(T('why_note'))}</p>
+    <p class="why-note">${esc(T(grown ? 'why_note' : 'why_growing'))}</p>
+    ${grown ? '' : `<div class="hero-actions" style="justify-content:center;margin-top:18px;">
+      <button class="btn btn-primary btn-sm" data-nav="browse">${esc(T('why_cta_find'))}</button>
+      <button class="btn btn-outline btn-sm" data-nav="onboard" data-role="mentor">${esc(T('why_cta_join'))}</button>
+    </div>`}
   </section>
 
   <section class="lp-section alt">
@@ -890,6 +958,7 @@ function landingSections(){
     <div class="lp-bar"></div>
     <div class="price-row">${priceHtml}</div>
     <p class="price-foot">${esc(T('pk_foot'))}</p>
+    ${isAdmin() ? `<button class="btn btn-outline btn-sm" data-nav="admin" style="margin-top:12px;">✏️ ${esc(T('adm_edit_prices'))}</button>` : ''}
   </section>`;
 }
 
@@ -926,34 +995,126 @@ function setupReveal(){
   });
 }
 
+const EDIT_GROUPS = [
+  ['adm_g_hero', ['hero_h1a','hero_h1em','hero_h1b','hero_sub','cta_browse','cta_become']],
+  ['adm_g_why',  ['why_title','why_sub','why_e1_n','why_e1','why_e2_n','why_e2','why_e3_n','why_e3','why_b4','why_b5','why_growing','why_cta_find','why_cta_join','why_b1','why_b2','why_b3','why_note']],
+  ['adm_g_steps',['hiw2_title','hiw2_sub','step1_t','step1_b','step2_t','step2_b','step3_t','step3_b','step4_t','step4_b']],
+  ['adm_g_pk',   ['pk_title','pk_sub','pk_popular','pk_book','pk_foot',
+                  'pk_single_name','pk_single_tag','pk_single_items',
+                  'pk_resume_name','pk_resume_tag','pk_resume_items',
+                  'pk_interview_name','pk_interview_tag','pk_interview_items',
+                  'pk_offer_name','pk_offer_tag','pk_offer_items']],
+  ['adm_g_footer',['footer_tag','tag']]
+];
+function adminView(){
+  const pks = getPackages();
+  const cur = (lang,key)=>{ const ov=(siteSettings.text||{})[lang]||{}; return ov[key]!=null ? ov[key] : defaultT(lang,key); };
+  return `
+  <div class="section-head"><h2>✏️ ${esc(T('adm_title'))}</h2></div>
+  <p class="muted" style="margin-top:-8px;margin-bottom:22px;">${esc(T('adm_sub'))}</p>
+
+  <div class="panel wide" style="margin-bottom:28px;">
+    <h3 style="margin:0 0 4px;">${esc(T('adm_prices'))}</h3>
+    <p class="muted" style="font-size:13px;margin:0 0 16px;">${esc(T('adm_prices_hint'))}</p>
+    <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;min-width:560px;font-size:14px;">
+      <thead><tr style="text-align:start;">
+        <th style="text-align:start;padding:6px;">${esc(T('adm_col_pkg'))}</th>
+        <th style="padding:6px;">${esc(T('adm_col_price'))}</th>
+        <th style="padding:6px;">${esc(T('adm_col_sessions'))}</th>
+        <th style="padding:6px;">${esc(T('adm_col_save'))}</th>
+        <th style="padding:6px;">${esc(T('adm_col_popular'))}</th>
+        <th style="padding:6px;">${esc(T('adm_col_show'))}</th>
+      </tr></thead>
+      <tbody>${pks.map(pk=>`<tr style="border-top:1px solid var(--border);" data-pk="${pk.key}">
+        <td style="padding:8px 6px;font-weight:700;">${esc(T('pk_'+pk.key+'_name'))}</td>
+        <td style="padding:6px;"><input class="adm-in" type="number" min="0" step="1" data-f="price" value="${pk.price}" style="width:90px;padding:6px 8px;border:1px solid var(--border);border-radius:6px;background:var(--surface-2);color:var(--text);"></td>
+        <td style="padding:6px;"><input class="adm-in" type="number" min="1" step="1" data-f="sessions" value="${pk.sessions}" style="width:70px;padding:6px 8px;border:1px solid var(--border);border-radius:6px;background:var(--surface-2);color:var(--text);"></td>
+        <td style="padding:6px;text-align:center;color:#C2773A;font-weight:700;">${pk.save ? pk.save+'%' : '—'}</td>
+        <td style="padding:6px;text-align:center;"><input type="radio" name="adm-featured" value="${pk.key}" ${pk.featured?'checked':''}></td>
+        <td style="padding:6px;text-align:center;"><input type="checkbox" data-f="show" ${pk.hidden?'':'checked'}></td>
+      </tr>`).join('')}</tbody>
+    </table></div>
+  </div>
+
+  <div class="panel wide" style="margin-bottom:28px;">
+    <h3 style="margin:0 0 4px;">${esc(T('adm_text'))}</h3>
+    <p class="muted" style="font-size:13px;margin:0 0 6px;">${esc(T('adm_text_hint'))}</p>
+    ${EDIT_GROUPS.map(([g,keys])=>`
+      <details style="border-top:1px solid var(--border);padding:12px 0;">
+        <summary style="cursor:pointer;font-weight:700;">${esc(T(g))}</summary>
+        ${keys.map(k=>`<div class="adm-row" data-key="${k}" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;">
+          <div class="field" style="margin:0;"><label style="font-size:11.5px;">${esc(k)} · English</label><textarea class="adm-txt" data-lang="en" rows="${k.endsWith('_items')||k.endsWith('_sub')||k.endsWith('_b')||k.startsWith('why_note')||k==='why_growing'||k==='hero_sub'?3:1}" style="min-height:0;">${esc(cur('en',k))}</textarea></div>
+          <div class="field" style="margin:0;"><label style="font-size:11.5px;">${esc(k)} · فارسی</label><textarea class="adm-txt" data-lang="fa" dir="rtl" rows="${k.endsWith('_items')||k.endsWith('_sub')||k.endsWith('_b')||k.startsWith('why_note')||k==='why_growing'||k==='hero_sub'?3:1}" style="min-height:0;">${esc(cur('fa',k))}</textarea></div>
+        </div>`).join('')}
+      </details>`).join('')}
+    <p class="muted" style="font-size:12px;margin:10px 0 0;">${esc(T('adm_items_hint'))}</p>
+  </div>
+
+  <div style="display:flex;gap:10px;flex-wrap:wrap;position:sticky;bottom:0;background:var(--bg);padding:12px 0;border-top:1px solid var(--border);z-index:5;">
+    <button class="btn btn-primary" id="adm-save">${esc(T('adm_save'))}</button>
+    <button class="btn btn-ghost" id="adm-reset">${esc(T('adm_reset'))}</button>
+  </div>`;
+}
+function wireAdmin(){
+  const saveBtn = document.getElementById('adm-save');
+  if(!saveBtn) return;
+  const collect = ()=>{
+    const featured = (document.querySelector('input[name="adm-featured"]:checked')||{}).value;
+    const packages = Array.from(document.querySelectorAll('tr[data-pk]')).map(tr=>({
+      key: tr.getAttribute('data-pk'),
+      price: Math.max(0, Number(tr.querySelector('[data-f="price"]').value)||0),
+      sessions: Math.max(1, parseInt(tr.querySelector('[data-f="sessions"]').value)||1),
+      featured: tr.getAttribute('data-pk')===featured,
+      hidden: !tr.querySelector('[data-f="show"]').checked
+    }));
+    const text = { en:{}, fa:{} };
+    document.querySelectorAll('.adm-row').forEach(row=>{
+      const key = row.getAttribute('data-key');
+      row.querySelectorAll('.adm-txt').forEach(t=>{
+        const lang = t.getAttribute('data-lang');
+        const v = t.value;
+        if(v.trim() && v !== defaultT(lang,key)) text[lang][key] = v;
+      });
+    });
+    return { packages, text };
+  };
+  const persist = async (data, msg)=>{
+    saveBtn.disabled = true;
+    try{
+      await window.__db.doc('site_settings/main').set({ data });
+      siteSettings = data; toast(msg); render();
+    }catch(err){
+      console.error('settings save failed:', err);
+      toast(T('adm_save_fail')); saveBtn.disabled = false;
+    }
+  };
+  saveBtn.addEventListener('click', ()=> persist(collect(), T('adm_saved')));
+  document.getElementById('adm-reset').addEventListener('click', ()=>{
+    if(confirm(T('adm_reset_confirm'))) persist({}, T('adm_saved'));
+  });
+  // live-update the save % column when prices change
+  document.querySelectorAll('.adm-in').forEach(inp=>inp.addEventListener('input', ()=>{
+    const rows = Array.from(document.querySelectorAll('tr[data-pk]'));
+    const val = (tr,f)=>Number(tr.querySelector('[data-f="'+f+'"]').value)||0;
+    const base = val(rows[0],'sessions') ? val(rows[0],'price')/val(rows[0],'sessions') : 0;
+    rows.forEach(tr=>{
+      const ss = val(tr,'sessions'), pr = val(tr,'price');
+      const sv = (base && ss>1) ? Math.max(0, Math.round((1 - pr/(base*ss))*100)) : 0;
+      tr.children[3].textContent = sv ? sv+'%' : '—';
+    });
+  }));
+}
+
 function homeView(){
   const mentors = Object.entries(cache.profiles).slice(0,3);
   return `
-  <div class="hero">
-    <div>
-      <h1>${esc(T('hero_h1a'))}<i>${esc(T('hero_h1em'))}</i>${esc(T('hero_h1b'))}</h1>
-      <p>${esc(T('hero_sub'))}</p>
-      <div class="hero-actions">
-        <button class="btn btn-primary" data-nav="browse">${esc(T('cta_browse'))}</button>
-        <button class="btn btn-outline" data-nav="onboard" data-role="mentor">${esc(T('cta_become'))}</button>
-      </div>
-      ${(() => {
-        const mentorCount = Object.keys(cache.profiles).length;
-        const reviewCount = Object.values(cache.reviews).reduce((a,r)=>a+r.length,0);
-        return mentorCount > 0 ? `
-      <div class="stat-row">
-        <div class="stat"><b>${mentorCount}</b><span>${esc(T('stat_mentors'))}</span></div>
-        <div class="stat"><b>${reviewCount}</b><span>${esc(T('stat_reviews'))}</span></div>
-      </div>` : '';
-      })()}
-    </div>
-    <div class="hero-card">
-      ${mentors.length ? mentors.map(([id,p])=>`
-        <div class="row">
-          <div class="avatar">${initials(nameOf(id))}</div>
-          <div class="who"><b>${esc(nameOf(id))}</b><span>${esc(p.headline||p.profession||'')} · ${avgRating(id) ? `<span class="stars">${starsStr(avgRating(id))}</span>` : esc(T('new_mentor'))}</span></div>
-        </div>`).join('') : `
-        <div class="row"><div class="avatar">?</div><div class="who"><b>${esc(T('no_mentors_yet'))}</b><span>${esc(T('be_first'))}</span></div></div>`}
+  <div class="hero hero-solo">
+    <h1>${esc(T('hero_h1a'))}<i>${esc(T('hero_h1em'))}</i>${esc(T('hero_h1b'))}</h1>
+    <p>${esc(T('hero_sub'))}</p>
+    <div class="hero-actions">
+      <button class="btn btn-primary" data-nav="browse">${esc(T('cta_browse'))}</button>
+      <button class="btn btn-outline" data-nav="onboard" data-role="mentor">${esc(T('cta_become'))}</button>
     </div>
   </div>
 
@@ -1241,7 +1402,7 @@ function mentorView(){
   ${(p.certifications||[]).length ? `<div class="detail-block"><h4>${esc(T('detail_certs'))}</h4><div>${p.certifications.map(c=>`<span class="chip">${esc(c)}</span>`).join('')}</div></div>` : ''}
   ${`<div class="detail-block" style="margin-bottom:26px;"><h4>${esc(T('detail_formats'))}</h4><div>${((p.formats&&p.formats.length)?p.formats:['video','voice']).filter(f=>FORMAT_KEYS.includes(f)).map(f=>`<span class="chip">${esc(T('fmt_'+f))}</span>`).join('')}</div></div>`}
 
-  ${(myProfile && myProfile.isAdmin && !isSelf) ? `
+  ${(isAdmin() && !isSelf) ? `
   <div class="panel" style="max-width:480px;margin-bottom:26px;border-color:#b3412c;">
     <label style="font-size:13px;font-weight:700;display:block;margin-bottom:10px;">${esc(T('admin_tools'))}</label>
     <div class="field"><label>${esc(T('lbl_name'))}</label><input id="admin-edit-name" value="${esc(p.name||'')}"></div>
