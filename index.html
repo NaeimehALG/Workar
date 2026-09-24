@@ -432,6 +432,14 @@
   .goog-te-banner-frame, iframe.skiptranslate, #goog-gt-tt, .goog-te-balloon-frame, .goog-tooltip, .VIpgJd-ZVi9od-ORHb-OEVmcd, .VIpgJd-ZVi9od-aZ2wEe-wOHMyf{display:none !important;}
   body{top:0 !important;}
   font[style]{background:none !important;box-shadow:none !important;}
+
+  .bf-bar{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center;margin-bottom:22px;}
+  .bf-langs{display:flex;flex-wrap:wrap;align-items:center;gap:6px;}
+  .bf-label{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-inline-end:4px;}
+  .bf-chip{border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:999px;padding:7px 13px;font-family:inherit;font-size:13.5px;font-weight:600;cursor:pointer;transition:all .15s;}
+  .bf-chip:hover{border-color:var(--accent-2);}
+  .bf-chip.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);}
+  .bf-chip em{font-style:normal;font-size:11.5px;opacity:.65;margin-inline-start:3px;}
   /* ---------- PMP study guide ---------- */
   .pp-path{display:flex;align-items:stretch;gap:10px;margin:0 0 30px;flex-wrap:wrap;}
   .pp-path-step{flex:1 1 200px;position:relative;display:grid;grid-template-columns:auto 1fr;column-gap:10px;align-items:center;text-decoration:none;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px 16px;transition:border-color .15s,transform .15s;}
@@ -686,7 +694,7 @@ const I18N = {
     adm_save:'Save & publish', adm_reset:'Reset everything to default', adm_reset_confirm:'Reset all prices and text back to the original defaults?',
     adm_saved:'Saved — the site is updated', adm_save_fail:'Could not save — check that the site_settings SQL has been run',
     rv_empty_t:'No results yet', rv_login_t:'Track your progress', rv_taken:'Mocks taken', rv_avg:'Average score', rv_best:'Best score', rv_answered:'Questions answered', rv_trend:'Score trend', rv_trend_d:'Your last attempts, oldest to newest', rv_goal:'Target', rv_domains:'Strength by domain', rv_domains_d:'All attempts combined', rv_rec_k:'Recommended next', rv_rec_t:'Strengthen {d}', rv_rec_d:'This is your weakest domain so far. Review these modules, then retake a mock and watch your score move.',
-    prep_full_k:'The complete exam-day experience', guide_inputs:'Key inputs', guide_tools:'Tools & techniques', guide_outputs:'Key outputs', prep_title_short:'PMP Prep', prep_tagline:'Learn the essentials, practise with mock exams, and track your progress.', guide_scn:'Exam scenario — try it', guide_part:'Part', guide_part1:'Foundations', guide_part2:'Planning the work', guide_part3:'Delivering with people & control', guide_part4:'Agile & exam-ready', guide_left:'left', guide_begin:'Start here', guide_continue:'Continue where you left off', guide_begin_btn:'Begin', guide_continue_btn:'Continue', guide_all_done:'You have completed every module. Time to test yourself.', guide_start_btn:'Start', guide_review_btn:'Review',
+    filter_lang:'Speaks', filter_all:'Any language', filter_none:'No mentors speak {l} yet — try another language or ask us to find one.', prep_full_k:'The complete exam-day experience', guide_inputs:'Key inputs', guide_tools:'Tools & techniques', guide_outputs:'Key outputs', prep_title_short:'PMP Prep', prep_tagline:'Learn the essentials, practise with mock exams, and track your progress.', guide_scn:'Exam scenario — try it', guide_part:'Part', guide_part1:'Foundations', guide_part2:'Planning the work', guide_part3:'Delivering with people & control', guide_part4:'Agile & exam-ready', guide_left:'left', guide_begin:'Start here', guide_continue:'Continue where you left off', guide_begin_btn:'Begin', guide_continue_btn:'Continue', guide_all_done:'You have completed every module. Time to test yourself.', guide_start_btn:'Start', guide_review_btn:'Review',
     guide_modules:'study modules', guide_kicker:'Free study guide', guide_title:'Learn the essentials', guide_sub:'{n} bite-sized modules covering every exam area — written in plain English, with tips on how PMI thinks.',
     guide_complete:'complete', guide_slides:'slides', guide_tip:'Exam tip:', guide_all:'All modules', guide_module:'Module', guide_slide_of:'slide {i} of {n}',
     guide_done_t:'Module complete: {m}', guide_next_mod:'Next module', guide_test_now:'Test yourself — free diagnostic', guide_keys:'Tip: use ← → to move between slides',
@@ -889,7 +897,7 @@ const I18N = {
     adm_save:'ذخیره و انتشار', adm_reset:'برگرداندن همه‌چیز به حالت اولیه', adm_reset_confirm:'همه‌ی قیمت‌ها و متن‌ها به حالت اولیه برگردن؟',
     adm_saved:'ذخیره شد — سایت به‌روز شد', adm_save_fail:'ذخیره نشد — مطمئن شو SQL مربوط به site_settings اجرا شده',
     rv_empty_t:'هنوز نتیجه‌ای نداری', rv_login_t:'پیشرفتت رو دنبال کن', rv_taken:'آزمون داده‌شده', rv_avg:'میانگین نمره', rv_best:'بهترین نمره', rv_answered:'سؤال پاسخ‌داده', rv_trend:'روند نمره', rv_trend_d:'آزمون‌های اخیر، از قدیمی به جدید', rv_goal:'هدف', rv_domains:'قدرت در هر حوزه', rv_domains_d:'همه‌ی آزمون‌ها با هم', rv_rec_k:'پیشنهاد بعدی', rv_rec_t:'تقویت حوزه‌ی {d}', rv_rec_d:'این ضعیف‌ترین حوزه‌ی تو تا الانه. این ماژول‌ها رو مرور کن، بعد دوباره آزمون بده و ببین نمره‌ات چطور بالا می‌ره.',
-    prep_full_k:'تجربه‌ی کامل روز آزمون', guide_inputs:'ورودی‌های اصلی', guide_tools:'ابزارها و تکنیک‌ها', guide_outputs:'خروجی‌های اصلی', prep_title_short:'آمادگی PMP', prep_tagline:'مفاهیم اصلی رو یاد بگیر، با آزمون‌های آزمایشی تمرین کن و پیشرفتت رو ببین.', guide_scn:'سناریوی آزمون — امتحانش کن', guide_part:'بخش', guide_part1:'مبانی', guide_part2:'برنامه‌ریزی کار', guide_part3:'اجرا با تیم و کنترل', guide_part4:'اجایل و آمادگی آزمون', guide_left:'باقی‌مانده', guide_begin:'از اینجا شروع کن', guide_continue:'از همون جایی که موندی ادامه بده', guide_begin_btn:'شروع', guide_continue_btn:'ادامه', guide_all_done:'همه‌ی ماژول‌ها رو تموم کردی. وقت آزمونه.', guide_start_btn:'شروع', guide_review_btn:'مرور',
+    filter_lang:'زبان', filter_all:'همه‌ی زبان‌ها', filter_none:'هنوز منتوری که به {l} صحبت کنه نداریم — زبان دیگه‌ای رو امتحان کن.', prep_full_k:'تجربه‌ی کامل روز آزمون', guide_inputs:'ورودی‌های اصلی', guide_tools:'ابزارها و تکنیک‌ها', guide_outputs:'خروجی‌های اصلی', prep_title_short:'آمادگی PMP', prep_tagline:'مفاهیم اصلی رو یاد بگیر، با آزمون‌های آزمایشی تمرین کن و پیشرفتت رو ببین.', guide_scn:'سناریوی آزمون — امتحانش کن', guide_part:'بخش', guide_part1:'مبانی', guide_part2:'برنامه‌ریزی کار', guide_part3:'اجرا با تیم و کنترل', guide_part4:'اجایل و آمادگی آزمون', guide_left:'باقی‌مانده', guide_begin:'از اینجا شروع کن', guide_continue:'از همون جایی که موندی ادامه بده', guide_begin_btn:'شروع', guide_continue_btn:'ادامه', guide_all_done:'همه‌ی ماژول‌ها رو تموم کردی. وقت آزمونه.', guide_start_btn:'شروع', guide_review_btn:'مرور',
     guide_modules:'ماژول آموزشی', guide_kicker:'راهنمای مطالعه‌ی رایگان', guide_title:'مفاهیم اصلی رو یاد بگیر', guide_sub:'{n} ماژول کوتاه که همه‌ی حوزه‌های آزمون رو پوشش می‌ده — با نکته‌هایی درباره‌ی طرز فکر PMI.',
     guide_complete:'تکمیل‌شده', guide_slides:'اسلاید', guide_tip:'نکته‌ی آزمون:', guide_all:'همه‌ی ماژول‌ها', guide_module:'ماژول', guide_slide_of:'اسلاید {i} از {n}',
     guide_done_t:'ماژول تموم شد: {m}', guide_next_mod:'ماژول بعدی', guide_test_now:'خودت رو بسنج — آزمون تشخیصی رایگان', guide_keys:'نکته: با ← → بین اسلایدها جابه‌جا شو',
@@ -3142,11 +3150,19 @@ function onboardView(){
   </div>`;
 }
 
+const LANG_ALIASES = { farsi:'Persian', persian:'Persian', 'فارسی':'Persian', parsi:'Persian', english:'English', 'انگلیسی':'English', french:'French', 'français':'French', francais:'French', 'فرانسوی':'French', arabic:'Arabic', 'العربية':'Arabic', 'عربی':'Arabic', spanish:'Spanish', 'español':'Spanish', espanol:'Spanish', german:'German', deutsch:'German', turkish:'Turkish', 'türkçe':'Turkish', turkce:'Turkish', 'ترکی':'Turkish', russian:'Russian', chinese:'Chinese', mandarin:'Chinese', hindi:'Hindi', urdu:'Urdu', portuguese:'Portuguese', italian:'Italian', dari:'Dari', kurdish:'Kurdish', 'کردی':'Kurdish' };
+function normLang(l){ const k = String(l||'').trim().toLowerCase(); if(!k) return ''; return LANG_ALIASES[k] || (k.charAt(0).toUpperCase()+k.slice(1)); }
+function mentorLangs(p){ const arr = Array.isArray(p.languages) ? p.languages : String(p.languages||'').split(','); return [...new Set(arr.map(normLang).filter(Boolean))]; }
 function browseView(){
   const q = (state.query||'').toLowerCase();
+  const lf = state.langFilter || '';
+  const allLangs = {};
+  Object.values(cache.profiles).forEach(p=>mentorLangs(p).forEach(l=>{ allLangs[l] = (allLangs[l]||0)+1; }));
+  const langList = Object.keys(allLangs).sort((a,b)=>allLangs[b]-allLangs[a] || a.localeCompare(b));
   const entries = Object.entries(cache.profiles).filter(([id,p])=>{
+    if(lf && !mentorLangs(p).includes(lf)) return false;
     if(!q) return true;
-    return (p.profession||'').toLowerCase().includes(q) || (p.skills||[]).join(' ').toLowerCase().includes(q);
+    return (p.profession||'').toLowerCase().includes(q) || (p.skills||[]).join(' ').toLowerCase().includes(q) || (p.headline||'').toLowerCase().includes(q);
   });
   return `
   <div class="section-head"><h2>${esc(T('find_mentor_title'))}</h2></div>
@@ -3171,7 +3187,15 @@ function browseView(){
       </div>` : `<p class="muted" style="margin-top:14px;font-size:13.5px;">${esc(T('match_none'))}</p>`) : ''}
   </div>
 
-  <div class="field" style="max-width:420px;"><input id="search-input" placeholder="${esc(T('ph_search'))}" value="${esc(state.query||'')}"></div>
+  <div class="bf-bar">
+    <div class="field" style="margin:0;flex:1 1 280px;max-width:420px;"><input id="search-input" placeholder="${esc(T('ph_search'))}" value="${esc(state.query||'')}"></div>
+    ${langList.length ? `<div class="bf-langs">
+      <span class="bf-label">${esc(T('filter_lang'))}</span>
+      <button class="bf-chip ${!lf?'on':''}" data-langf="">${esc(T('filter_all'))}</button>
+      ${langList.map(l=>`<button class="bf-chip ${lf===l?'on':''}" data-langf="${esc(l)}">${esc(l)} <em>${allLangs[l]}</em></button>`).join('')}
+    </div>` : ''}
+  </div>
+  ${lf && !entries.length ? `<p class="muted" style="margin:6px 0 18px;">${esc(T('filter_none').replace('{l}', lf))}</p>` : ''}
   ${entries.length ? `<div class="grid">
     ${entries.map(([id,p])=>{
       const avg = avgRating(id);
@@ -3476,6 +3500,7 @@ function wire(){
     }
   });
 
+  document.querySelectorAll('[data-langf]').forEach(b=>b.addEventListener('click', ()=>{ state.langFilter = b.getAttribute('data-langf'); render(); }));
   const searchInput = document.getElementById('search-input');
   if(searchInput){
     searchInput.addEventListener('input', ()=>{
