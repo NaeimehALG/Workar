@@ -440,6 +440,24 @@
   .bf-chip:hover{border-color:var(--accent-2);}
   .bf-chip.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);}
   .bf-chip em{font-style:normal;font-size:11.5px;opacity:.65;margin-inline-start:3px;}
+
+  .bf-select{display:flex;align-items:center;gap:10px;}
+  .bf-select span{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);}
+  .bf-select select{padding:11px 36px 11px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-family:inherit;font-size:14.5px;min-width:190px;cursor:pointer;}
+  .rate-w{border:1px solid var(--border);border-radius:16px;padding:18px 18px 14px;background:var(--surface);}
+  .rate-w-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
+  .rate-w-val{font-size:15px;color:var(--muted);} .rate-w-val b{font-size:34px;font-weight:800;color:var(--text);}
+  .rate-w-sug{border:1px dashed var(--accent-2);background:none;color:var(--accent);border-radius:999px;padding:6px 12px;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;}
+  .rate-w-range{-webkit-appearance:none;appearance:none;width:100%;height:8px;border-radius:8px;padding:0 !important;border:none !important;background:linear-gradient(90deg,var(--accent) var(--p,0%),var(--surface-2) var(--p,0%)) !important;outline:none;margin:4px 0 14px;}
+  .rate-w-range::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid var(--accent);cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.2);}
+  .rate-w-range::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:3px solid var(--accent);cursor:pointer;}
+  .rate-w-tiers{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+  .rate-w-tier{border:1px solid var(--border);background:var(--surface);border-radius:10px;padding:8px 4px;font-family:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px;color:var(--muted);}
+  .rate-w-tier b{font-size:14px;color:var(--text);} .rate-w-tier span{font-size:11px;}
+  .rate-w-tier.on{border-color:var(--accent);background:var(--surface-2);color:var(--accent);}
+  .rate-w-note{font-size:12.5px;color:var(--muted);margin:12px 0 6px;}
+  .rate-w-preview{font-size:12.5px;color:var(--muted);line-height:1.6;} .rate-w-preview b{color:var(--text);}
+  .rate-w-preview span{font-weight:700;}
   /* ---------- PMP study guide ---------- */
   .pp-path{display:flex;align-items:stretch;gap:10px;margin:0 0 30px;flex-wrap:wrap;}
   .pp-path-step{flex:1 1 200px;position:relative;display:grid;grid-template-columns:auto 1fr;column-gap:10px;align-items:center;text-decoration:none;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px 16px;transition:border-color .15s,transform .15s;}
@@ -676,7 +694,7 @@ const I18N = {
     stat_mentors:'mentors on Workar', stat_reviews:'reviews written', stat_realtime:'real conversations',
     no_mentors_yet:'No mentors yet', be_first:'Be the first to sign up',
     from_price:'From ${p} / session', sec_links_only:'Links',
-    self_book_preview:"This is how clients book you. Session prices are set by Workar, so you don't need to add a rate.",
+    self_book_preview:"This is how clients book you. You can change your session rate any time in My profile.",
     no_slots_pick_own:"This mentor hasn't set weekly hours yet — suggest a date and time and they'll confirm.",
     choose_pkg_title:'Choose a package', multi_session_note:"You'll book your first session now — the remaining sessions are scheduled with your mentor afterwards.",
     why_e1_n:'Real', why_e1:"mentors who've done the job you want",
@@ -694,6 +712,7 @@ const I18N = {
     adm_save:'Save & publish', adm_reset:'Reset everything to default', adm_reset_confirm:'Reset all prices and text back to the original defaults?',
     adm_saved:'Saved — the site is updated', adm_save_fail:'Could not save — check that the site_settings SQL has been run',
     rv_empty_t:'No results yet', rv_login_t:'Track your progress', rv_taken:'Mocks taken', rv_avg:'Average score', rv_best:'Best score', rv_answered:'Questions answered', rv_trend:'Score trend', rv_trend_d:'Your last attempts, oldest to newest', rv_goal:'Target', rv_domains:'Strength by domain', rv_domains_d:'All attempts combined', rv_rec_k:'Recommended next', rv_rec_t:'Strengthen {d}', rv_rec_d:'This is your weakest domain so far. Review these modules, then retake a mock and watch your score move.',
+    sec_rate:'Your session rate', rate_per_session:'45-min session', rate_suggest:'Suggested for your experience', rate_min_note:'The Workar minimum is ${m} per session. You can charge more — package prices scale with your rate, and clients see your price before booking.', rate_preview:'Your packages:', tier_standard:'Standard', tier_experienced:'Experienced', tier_senior:'Senior', tier_executive:'Executive',
     filter_lang:'Speaks', filter_all:'Any language', filter_none:'No mentors speak {l} yet — try another language or ask us to find one.', prep_full_k:'The complete exam-day experience', guide_inputs:'Key inputs', guide_tools:'Tools & techniques', guide_outputs:'Key outputs', prep_title_short:'PMP Prep', prep_tagline:'Learn the essentials, practise with mock exams, and track your progress.', guide_scn:'Exam scenario — try it', guide_part:'Part', guide_part1:'Foundations', guide_part2:'Planning the work', guide_part3:'Delivering with people & control', guide_part4:'Agile & exam-ready', guide_left:'left', guide_begin:'Start here', guide_continue:'Continue where you left off', guide_begin_btn:'Begin', guide_continue_btn:'Continue', guide_all_done:'You have completed every module. Time to test yourself.', guide_start_btn:'Start', guide_review_btn:'Review',
     guide_modules:'study modules', guide_kicker:'Free study guide', guide_title:'Learn the essentials', guide_sub:'{n} bite-sized modules covering every exam area — written in plain English, with tips on how PMI thinks.',
     guide_complete:'complete', guide_slides:'slides', guide_tip:'Exam tip:', guide_all:'All modules', guide_module:'Module', guide_slide_of:'slide {i} of {n}',
@@ -879,7 +898,7 @@ const I18N = {
     stat_mentors:'منتور در Workar', stat_reviews:'ریویو نوشته‌شده', stat_realtime:'گفتگوی واقعی',
     no_mentors_yet:'هنوز منتوری نیست', be_first:'اولین نفری باش که ثبت‌نام می‌کنه',
     from_price:'از {p} دلار / جلسه', sec_links_only:'لینک‌ها',
-    self_book_preview:'مراجعه‌کننده‌ها این‌طوری با شما جلسه رزرو می‌کنن. قیمت جلسات رو Workar تعیین می‌کنه، پس لازم نیست نرخی وارد کنی.',
+    self_book_preview:'مراجعه‌کننده‌ها این‌طوری با شما جلسه رزرو می‌کنن. نرخ جلسه‌ات رو هر وقت خواستی از «پروفایل من» تغییر بده.',
     no_slots_pick_own:'این منتور هنوز ساعت‌های هفتگی‌اش رو تعیین نکرده — یک تاریخ و ساعت پیشنهاد بده تا تأیید کنه.',
     choose_pkg_title:'یک پکیج انتخاب کن', multi_session_note:'اولین جلسه رو الان رزرو می‌کنی — بقیه‌ی جلسات بعداً با منتور هماهنگ می‌شن.',
     why_e1_n:'واقعی', why_e1:'منتورهایی که همون کاری رو که می‌خوای انجام دادن',
@@ -897,6 +916,7 @@ const I18N = {
     adm_save:'ذخیره و انتشار', adm_reset:'برگرداندن همه‌چیز به حالت اولیه', adm_reset_confirm:'همه‌ی قیمت‌ها و متن‌ها به حالت اولیه برگردن؟',
     adm_saved:'ذخیره شد — سایت به‌روز شد', adm_save_fail:'ذخیره نشد — مطمئن شو SQL مربوط به site_settings اجرا شده',
     rv_empty_t:'هنوز نتیجه‌ای نداری', rv_login_t:'پیشرفتت رو دنبال کن', rv_taken:'آزمون داده‌شده', rv_avg:'میانگین نمره', rv_best:'بهترین نمره', rv_answered:'سؤال پاسخ‌داده', rv_trend:'روند نمره', rv_trend_d:'آزمون‌های اخیر، از قدیمی به جدید', rv_goal:'هدف', rv_domains:'قدرت در هر حوزه', rv_domains_d:'همه‌ی آزمون‌ها با هم', rv_rec_k:'پیشنهاد بعدی', rv_rec_t:'تقویت حوزه‌ی {d}', rv_rec_d:'این ضعیف‌ترین حوزه‌ی تو تا الانه. این ماژول‌ها رو مرور کن، بعد دوباره آزمون بده و ببین نمره‌ات چطور بالا می‌ره.',
+    sec_rate:'نرخ جلسه‌ی شما', rate_per_session:'جلسه‌ی ۴۵ دقیقه‌ای', rate_suggest:'پیشنهاد برای سابقه‌ی شما', rate_min_note:'حداقل نرخ Workar {m} دلار برای هر جلسه است. می‌تونی بیشتر بگیری — قیمت پکیج‌ها به نسبت نرخ تو تغییر می‌کنه و مراجعه‌کننده قبل از رزرو قیمت رو می‌بینه.', rate_preview:'پکیج‌های تو:', tier_standard:'استاندارد', tier_experienced:'باتجربه', tier_senior:'ارشد', tier_executive:'مدیر ارشد',
     filter_lang:'زبان', filter_all:'همه‌ی زبان‌ها', filter_none:'هنوز منتوری که به {l} صحبت کنه نداریم — زبان دیگه‌ای رو امتحان کن.', prep_full_k:'تجربه‌ی کامل روز آزمون', guide_inputs:'ورودی‌های اصلی', guide_tools:'ابزارها و تکنیک‌ها', guide_outputs:'خروجی‌های اصلی', prep_title_short:'آمادگی PMP', prep_tagline:'مفاهیم اصلی رو یاد بگیر، با آزمون‌های آزمایشی تمرین کن و پیشرفتت رو ببین.', guide_scn:'سناریوی آزمون — امتحانش کن', guide_part:'بخش', guide_part1:'مبانی', guide_part2:'برنامه‌ریزی کار', guide_part3:'اجرا با تیم و کنترل', guide_part4:'اجایل و آمادگی آزمون', guide_left:'باقی‌مانده', guide_begin:'از اینجا شروع کن', guide_continue:'از همون جایی که موندی ادامه بده', guide_begin_btn:'شروع', guide_continue_btn:'ادامه', guide_all_done:'همه‌ی ماژول‌ها رو تموم کردی. وقت آزمونه.', guide_start_btn:'شروع', guide_review_btn:'مرور',
     guide_modules:'ماژول آموزشی', guide_kicker:'راهنمای مطالعه‌ی رایگان', guide_title:'مفاهیم اصلی رو یاد بگیر', guide_sub:'{n} ماژول کوتاه که همه‌ی حوزه‌های آزمون رو پوشش می‌ده — با نکته‌هایی درباره‌ی طرز فکر PMI.',
     guide_complete:'تکمیل‌شده', guide_slides:'اسلاید', guide_tip:'نکته‌ی آزمون:', guide_all:'همه‌ی ماژول‌ها', guide_module:'ماژول', guide_slide_of:'اسلاید {i} از {n}',
@@ -1452,6 +1472,7 @@ function render(){
   if(state.langPrompt) app.appendChild(el(langPromptHtml()));
   app.appendChild(el(`<footer>Workar · ${esc(T('footer_tag'))}<br><a class="ig-link" href="${INSTAGRAM_URL}" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg> @workarmentoring</a></footer>`));
   wire();
+  wireRateWidgets();
   setupReveal();
   if(state.view==='admin') wireAdmin();
   if(state.view==='prep') wirePrep(); else if(prep.timer){ clearInterval(prep.timer); prep.timer=null; }
@@ -1490,6 +1511,46 @@ const DEFAULT_PACKAGES = [
   { key:'offer',     sessions:6, price:249, featured:false, hidden:false }
 ];
 function basePrice(){ const pk = getPackages()[0]; return pk ? Math.round(pk.price/pk.sessions) : 0; }
+function minRate(){ return basePrice() || 49; }
+function mentorRate(p){ const r = Number(p && p.sessionRate) || 0; return Math.max(minRate(), Math.round(r)); }
+function pkgPriceFor(pk, p){ return Math.round(pk.price * mentorRate(p) / minRate()); }
+const RATE_TIERS = [['tier_standard',1],['tier_experienced',1.6],['tier_senior',2.6],['tier_executive',4]];
+function suggestedRate(years){ const y = Number(years)||0, m = minRate(); const f = y>=15?4 : y>=8?2.6 : y>=3?1.6 : 1; return Math.round(m*f); }
+function rateWidget(current, years, nameAttr){
+  const m = minRate(), max = m*6, val = Math.max(m, Math.round(Number(current)||m));
+  const sug = suggestedRate(years);
+  return `<div class="rate-w" data-min="${m}">
+    <div class="rate-w-top"><div class="rate-w-val">$<b>${val}</b><span> / ${esc(T('rate_per_session'))}</span></div>
+      <button type="button" class="rate-w-sug" data-sug="${sug}">${esc(T('rate_suggest'))}: $${sug}</button></div>
+    <input type="range" class="rate-w-range" min="${m}" max="${max}" step="1" value="${val}">
+    <input type="hidden" ${nameAttr} value="${val}">
+    <div class="rate-w-tiers">${RATE_TIERS.map(([k,f])=>{ const v=Math.round(m*f); return `<button type="button" class="rate-w-tier ${val>=v?'on':''}" data-v="${v}"><b>$${v}</b><span>${esc(T(k))}</span></button>`; }).join('')}</div>
+    <p class="rate-w-note">${esc(T('rate_min_note').replace('{m}', m))}</p>
+    <div class="rate-w-preview"></div>
+  </div>`;
+}
+function wireRateWidgets(){
+  document.querySelectorAll('.rate-w').forEach(w=>{
+    const m = Number(w.getAttribute('data-min')), range = w.querySelector('.rate-w-range'), hid = w.querySelector('input[type="hidden"]');
+    const upd = v => {
+      v = Math.max(m, Math.round(Number(v)||m)); range.value = v; hid.value = v; w.querySelector('.rate-w-val b').textContent = v;
+      w.querySelectorAll('.rate-w-tier').forEach(t=>t.classList.toggle('on', v >= Number(t.getAttribute('data-v'))));
+      const pct = (v-m)/(Number(range.max)-m)*100; range.style.setProperty('--p', pct+'%');
+      w.querySelector('.rate-w-preview').innerHTML = `<span>${esc(T('rate_preview'))}</span> ` + getPackages().filter(pk=>!pk.hidden).map(pk=>`${esc(T('pk_'+pk.key+'_name'))} <b>$${Math.round(pk.price*v/m)}</b>`).join(' · ');
+    };
+    range.addEventListener('input', ()=>upd(range.value));
+    w.querySelectorAll('.rate-w-tier').forEach(t=>t.addEventListener('click', ()=>upd(t.getAttribute('data-v'))));
+    const sb = w.querySelector('.rate-w-sug');
+    const yIn = document.querySelector('input[name="experience"]') || document.getElementById('edit-experience');
+    const updSug = ()=>{ if(sb && yIn) sb.textContent = T('rate_suggest') + ': $' + suggestedRate(yIn.value); };
+    if(yIn) yIn.addEventListener('input', updSug); updSug();
+    if(sb) sb.addEventListener('click', ()=>{
+      const yEl = document.querySelector('input[name="experience"]') || document.getElementById('edit-experience');
+      upd(yEl && yEl.value ? suggestedRate(yEl.value) : sb.getAttribute('data-sug'));
+    });
+    upd(range.value);
+  });
+}
 function getPackages(){
   const saved = (siteSettings && Array.isArray(siteSettings.packages)) ? siteSettings.packages : [];
   const list = DEFAULT_PACKAGES.map(d=>Object.assign({}, d, saved.find(x=>x.key===d.key)||{}));
@@ -3129,6 +3190,8 @@ function onboardView(){
         <div class="form-section">${esc(T('sec_mentoring'))}</div>
         <div class="field"><label>${esc(T('lbl_skills'))}</label><input name="skills" placeholder="${esc(T('ph_skills'))}"></div>
         <div class="field"><label>${esc(T('lbl_formats_m'))}</label>${optPills('formats', FORMAT_KEYS, 'fmt_', ['video','voice'])}</div>
+        <div class="form-section">${esc(T('sec_rate'))}</div>
+        <div class="field">${rateWidget(minRate(), 0, 'name="sessionRate"')}</div>
         <div class="form-section">${esc(T('sec_links_only'))}</div>
         <div class="field"><label>${esc(T('lbl_linkedin'))}</label><input name="linkedin" type="text" placeholder="${esc(T('ph_linkedin'))}"></div>
       ` : `
@@ -3189,11 +3252,9 @@ function browseView(){
 
   <div class="bf-bar">
     <div class="field" style="margin:0;flex:1 1 280px;max-width:420px;"><input id="search-input" placeholder="${esc(T('ph_search'))}" value="${esc(state.query||'')}"></div>
-    ${langList.length ? `<div class="bf-langs">
-      <span class="bf-label">${esc(T('filter_lang'))}</span>
-      <button class="bf-chip ${!lf?'on':''}" data-langf="">${esc(T('filter_all'))}</button>
-      ${langList.map(l=>`<button class="bf-chip ${lf===l?'on':''}" data-langf="${esc(l)}">${esc(l)} <em>${allLangs[l]}</em></button>`).join('')}
-    </div>` : ''}
+    ${langList.length ? `<label class="bf-select"><span>${esc(T('filter_lang'))}</span>
+      <select id="lang-filter"><option value="">${esc(T('filter_all'))}</option>${langList.map(l=>`<option value="${esc(l)}" ${lf===l?'selected':''}>${esc(l)} (${allLangs[l]})</option>`).join('')}</select>
+    </label>` : ''}
   </div>
   ${lf && !entries.length ? `<p class="muted" style="margin:6px 0 18px;">${esc(T('filter_none').replace('{l}', lf))}</p>` : ''}
   ${entries.length ? `<div class="grid">
@@ -3208,7 +3269,7 @@ function browseView(){
         <div>${(p.skills||[]).slice(0,3).map(s=>`<span class="chip">${esc(s)}</span>`).join('')}</div>
         <div class="card-foot">
           <span class="stars">${avg ? starsStr(avg) : `<span class="muted">${esc(T('new_mentor'))}</span>`}</span>
-          <span class="muted">${esc(T('from_price').replace('{p}', basePrice()))}</span>
+          <span class="muted">${esc(T('from_price').replace('{p}', mentorRate(p)))}</span>
         </div>
         ${id!==uid ? `<button class="btn btn-primary btn-sm card-book" data-book="${id}" style="width:100%;margin-top:12px;">${esc(T('book_session'))}</button>` : ''}
       </div>`;
@@ -3239,7 +3300,7 @@ function mentorView(){
     </div>
     <div class="rate-badge">
       ${avg ? `<b>${avg.toFixed(1)} <span class="stars" style="font-size:14px;">★</span></b><div class="muted" style="font-size:12.5px;">${reviews.length} ${esc(T('reviews_title').toLowerCase())}</div>` : `<div class="chip" style="margin:0;">${esc(T('new_mentor'))}</div>`}
-      <div style="font-size:14px;font-weight:700;margin-top:8px;">${esc(T('from_price').replace('{p}', basePrice()))}</div>
+      <div style="font-size:14px;font-weight:700;margin-top:8px;">${esc(T('from_price').replace('{p}', mentorRate(p)))}</div>
     </div>
   </div>
   <p style="max-width:60ch;color:var(--muted);margin-bottom:18px;">${esc(p.bio||'')}</p>
@@ -3281,7 +3342,7 @@ function mentorView(){
           return `<label class="pkg-opt" style="display:flex;align-items:center;gap:10px;padding:10px 14px;border:1.5px solid ${sel?'var(--accent)':'var(--border)'};border-radius:var(--radius-sm);cursor:pointer;background:${sel?'var(--surface-2)':'var(--surface)'};">
             <input type="radio" name="pkg" value="${pk.key}" ${sel?'checked':''} style="accent-color:var(--accent);width:auto;">
             <span style="flex:1;"><b>${esc(T('pk_'+pk.key+'_name'))}</b><span class="muted" style="font-size:12.5px;display:block;">${pk.sessions} ${esc(T(pk.sessions===1?'pk_session':'pk_sessions'))} · 45 min${pk.save?` · ${esc(T('pk_save').replace('{n}',pk.save))}`:''}</span></span>
-            <b>$${pk.price}</b>
+            <b>$${pkgPriceFor(pk, cache.profiles[state.mentorId])}</b>
           </label>`;}).join('')}
       </div>
       ${(()=>{ const pk = getPackages().find(x=>x.key===(state.selectedPkg||'single')); return pk && pk.sessions>1 ? `<p class="call-note" style="margin:-8px 0 14px;">${esc(T('multi_session_note'))}</p>` : ''; })()}
@@ -3341,6 +3402,7 @@ function dashboardView(){
     <div class="field"><label>${esc(T('lbl_certifications'))}</label><input id="edit-certifications" value="${esc((myProfile.certifications||[]).join(', '))}" placeholder="${esc(T('ph_certifications'))}"></div>
     ${isMentor ? `
     <div class="field"><label>${esc(T('lbl_experience'))}</label><input id="edit-experience" type="number" min="0" value="${esc(myProfile.experience||'')}"></div>
+    <div class="field"><label>${esc(T('sec_rate'))}</label>${rateWidget(myProfile.sessionRate||minRate(), myProfile.experience, 'id="edit-session-rate"')}</div>
     <div class="field"><label>${esc(T('lbl_languages'))}</label><input id="edit-languages" value="${esc((myProfile.languages||[]).join(', '))}"></div>
     <div class="field">
       <label>${esc(T('lbl_availability'))}</label>
@@ -3483,7 +3545,7 @@ function wire(){
       doc.headline = fd.get('headline')||'';
       doc.experience = fd.get('experience')||'';
       doc.languages = (fd.get('languages')||'').split(',').map(s=>s.trim()).filter(Boolean);
-      doc.rate = fd.get('rate')||'';
+      doc.sessionRate = Math.max(minRate(), Number(fd.get('sessionRate'))||minRate());
     }
     try{
       await window.__db.doc('profiles/'+uid).set(doc);
@@ -3500,7 +3562,7 @@ function wire(){
     }
   });
 
-  document.querySelectorAll('[data-langf]').forEach(b=>b.addEventListener('click', ()=>{ state.langFilter = b.getAttribute('data-langf'); render(); }));
+  const lfSel = document.getElementById('lang-filter'); if(lfSel) lfSel.addEventListener('change', ()=>{ state.langFilter = lfSel.value; render(); });
   const searchInput = document.getElementById('search-input');
   if(searchInput){
     searchInput.addEventListener('input', ()=>{
@@ -3562,7 +3624,7 @@ function wire(){
     const message = messageEl ? messageEl.value : '';
     const reqId = 'req_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);
     const pk = getPackages().find(x=>x.key===(state.selectedPkg||'single')) || getPackages()[0];
-    const amountCents = Math.round(Number(pk.price)*100);
+    const amountCents = Math.round(pkgPriceFor(pk, cache.profiles[state.mentorId])*100);
     try{
       await window.__db.doc('requests/'+reqId).set({ mentorId: state.mentorId, clientId: uid, message, date, time, status:'pending', createdAt: Date.now(), amountCents, packageKey: pk.key, paid:false, stripeSessionId:null });
       toast(T('toast_request_sent'));
@@ -3613,6 +3675,8 @@ function wire(){
     if(stageEl) patch.careerStage = stageEl.value;
     const tfEl = document.getElementById('edit-target-field');
     if(tfEl) patch.targetField = tfEl.value.trim();
+    const srEl = document.getElementById('edit-session-rate');
+    if(srEl) patch.sessionRate = Math.max(minRate(), Number(srEl.value)||minRate());
     const expEl = document.getElementById('edit-experience');
     if(expEl) patch.experience = expEl.value;
     const langEl = document.getElementById('edit-languages');
