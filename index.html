@@ -458,6 +458,11 @@
   .rate-w-note{font-size:12.5px;color:var(--muted);margin:12px 0 6px;}
   .rate-w-preview{font-size:12.5px;color:var(--muted);line-height:1.6;} .rate-w-preview b{color:var(--text);}
   .rate-w-preview span{font-weight:700;}
+
+  .bf-combo{position:relative;display:inline-block;}
+  .bf-combo input{padding:11px 34px 11px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-family:inherit;font-size:14.5px;width:210px;}
+  .bf-combo input:focus{outline:2px solid var(--accent);outline-offset:1px;}
+  .bf-clear{position:absolute;inset-inline-end:8px;top:50%;transform:translateY(-50%);border:none;background:var(--border);color:var(--text);width:20px;height:20px;border-radius:50%;font-size:14px;line-height:1;cursor:pointer;}
   /* ---------- PMP study guide ---------- */
   .pp-path{display:flex;align-items:stretch;gap:10px;margin:0 0 30px;flex-wrap:wrap;}
   .pp-path-step{flex:1 1 200px;position:relative;display:grid;grid-template-columns:auto 1fr;column-gap:10px;align-items:center;text-decoration:none;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px 16px;transition:border-color .15s,transform .15s;}
@@ -713,7 +718,7 @@ const I18N = {
     adm_saved:'Saved — the site is updated', adm_save_fail:'Could not save — check that the site_settings SQL has been run',
     rv_empty_t:'No results yet', rv_login_t:'Track your progress', rv_taken:'Mocks taken', rv_avg:'Average score', rv_best:'Best score', rv_answered:'Questions answered', rv_trend:'Score trend', rv_trend_d:'Your last attempts, oldest to newest', rv_goal:'Target', rv_domains:'Strength by domain', rv_domains_d:'All attempts combined', rv_rec_k:'Recommended next', rv_rec_t:'Strengthen {d}', rv_rec_d:'This is your weakest domain so far. Review these modules, then retake a mock and watch your score move.',
     sec_rate:'Your session rate', rate_per_session:'45-min session', rate_suggest:'Suggested for your experience', rate_min_note:'The Workar minimum is ${m} per session. You can charge more — package prices scale with your rate, and clients see your price before booking.', rate_preview:'Your packages:', tier_standard:'Standard', tier_experienced:'Experienced', tier_senior:'Senior', tier_executive:'Executive',
-    filter_lang:'Speaks', filter_all:'Any language', filter_none:'No mentors speak {l} yet — try another language or ask us to find one.', prep_full_k:'The complete exam-day experience', guide_inputs:'Key inputs', guide_tools:'Tools & techniques', guide_outputs:'Key outputs', prep_title_short:'PMP Prep', prep_tagline:'Learn the essentials, practise with mock exams, and track your progress.', guide_scn:'Exam scenario — try it', guide_part:'Part', guide_part1:'Foundations', guide_part2:'Planning the work', guide_part3:'Delivering with people & control', guide_part4:'Agile & exam-ready', guide_left:'left', guide_begin:'Start here', guide_continue:'Continue where you left off', guide_begin_btn:'Begin', guide_continue_btn:'Continue', guide_all_done:'You have completed every module. Time to test yourself.', guide_start_btn:'Start', guide_review_btn:'Review',
+    filter_lang:'Speaks', filter_all:'Any language — type or pick', filter_none:'No mentors speak {l} yet — try another language or ask us to find one.', prep_full_k:'The complete exam-day experience', guide_inputs:'Key inputs', guide_tools:'Tools & techniques', guide_outputs:'Key outputs', prep_title_short:'PMP Prep', prep_tagline:'Learn the essentials, practise with mock exams, and track your progress.', guide_scn:'Exam scenario — try it', guide_part:'Part', guide_part1:'Foundations', guide_part2:'Planning the work', guide_part3:'Delivering with people & control', guide_part4:'Agile & exam-ready', guide_left:'left', guide_begin:'Start here', guide_continue:'Continue where you left off', guide_begin_btn:'Begin', guide_continue_btn:'Continue', guide_all_done:'You have completed every module. Time to test yourself.', guide_start_btn:'Start', guide_review_btn:'Review',
     guide_modules:'study modules', guide_kicker:'Free study guide', guide_title:'Learn the essentials', guide_sub:'{n} bite-sized modules covering every exam area — written in plain English, with tips on how PMI thinks.',
     guide_complete:'complete', guide_slides:'slides', guide_tip:'Exam tip:', guide_all:'All modules', guide_module:'Module', guide_slide_of:'slide {i} of {n}',
     guide_done_t:'Module complete: {m}', guide_next_mod:'Next module', guide_test_now:'Test yourself — free diagnostic', guide_keys:'Tip: use ← → to move between slides',
@@ -3214,6 +3219,7 @@ function onboardView(){
 }
 
 const LANG_ALIASES = { farsi:'Persian', persian:'Persian', 'فارسی':'Persian', parsi:'Persian', english:'English', 'انگلیسی':'English', french:'French', 'français':'French', francais:'French', 'فرانسوی':'French', arabic:'Arabic', 'العربية':'Arabic', 'عربی':'Arabic', spanish:'Spanish', 'español':'Spanish', espanol:'Spanish', german:'German', deutsch:'German', turkish:'Turkish', 'türkçe':'Turkish', turkce:'Turkish', 'ترکی':'Turkish', russian:'Russian', chinese:'Chinese', mandarin:'Chinese', hindi:'Hindi', urdu:'Urdu', portuguese:'Portuguese', italian:'Italian', dari:'Dari', kurdish:'Kurdish', 'کردی':'Kurdish' };
+const WORLD_LANGS = ['English','French','Spanish','Arabic','Persian','German','Portuguese','Italian','Turkish','Russian','Chinese','Hindi','Urdu','Punjabi','Bengali','Tamil','Telugu','Gujarati','Japanese','Korean','Vietnamese','Tagalog','Indonesian','Malay','Thai','Dutch','Polish','Ukrainian','Romanian','Greek','Hebrew','Swahili','Amharic','Somali','Kurdish','Dari','Pashto','Armenian','Azerbaijani','Serbian','Croatian','Czech','Hungarian','Swedish','Norwegian','Danish','Finnish'];
 function normLang(l){ const k = String(l||'').trim().toLowerCase(); if(!k) return ''; return LANG_ALIASES[k] || (k.charAt(0).toUpperCase()+k.slice(1)); }
 function mentorLangs(p){ const arr = Array.isArray(p.languages) ? p.languages : String(p.languages||'').split(','); return [...new Set(arr.map(normLang).filter(Boolean))]; }
 function browseView(){
@@ -3252,9 +3258,13 @@ function browseView(){
 
   <div class="bf-bar">
     <div class="field" style="margin:0;flex:1 1 280px;max-width:420px;"><input id="search-input" placeholder="${esc(T('ph_search'))}" value="${esc(state.query||'')}"></div>
-    ${langList.length ? `<label class="bf-select"><span>${esc(T('filter_lang'))}</span>
-      <select id="lang-filter"><option value="">${esc(T('filter_all'))}</option>${langList.map(l=>`<option value="${esc(l)}" ${lf===l?'selected':''}>${esc(l)} (${allLangs[l]})</option>`).join('')}</select>
-    </label>` : ''}
+    <label class="bf-select"><span>${esc(T('filter_lang'))}</span>
+      <span class="bf-combo">
+        <input id="lang-filter" list="lang-options" autocomplete="off" placeholder="${esc(T('filter_all'))}" value="${esc(lf)}">
+        ${lf ? `<button type="button" class="bf-clear" id="lang-clear" aria-label="clear">×</button>` : ''}
+      </span>
+      <datalist id="lang-options">${[...new Set(langList.concat(WORLD_LANGS))].map(l=>`<option value="${esc(l)}"></option>`).join('')}</datalist>
+    </label>
   </div>
   ${lf && !entries.length ? `<p class="muted" style="margin:6px 0 18px;">${esc(T('filter_none').replace('{l}', lf))}</p>` : ''}
   ${entries.length ? `<div class="grid">
@@ -3562,7 +3572,13 @@ function wire(){
     }
   });
 
-  const lfSel = document.getElementById('lang-filter'); if(lfSel) lfSel.addEventListener('change', ()=>{ state.langFilter = lfSel.value; render(); });
+  const lfIn = document.getElementById('lang-filter');
+  if(lfIn){
+    const apply = ()=>{ const v = normLang(lfIn.value); if(v !== (state.langFilter||'')){ state.langFilter = v; render(); const n=document.getElementById('lang-filter'); if(n && v){ n.focus(); } } };
+    lfIn.addEventListener('change', apply);
+    lfIn.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); apply(); } });
+  }
+  const lfClear = document.getElementById('lang-clear'); if(lfClear) lfClear.addEventListener('click', ()=>{ state.langFilter=''; render(); });
   const searchInput = document.getElementById('search-input');
   if(searchInput){
     searchInput.addEventListener('input', ()=>{
