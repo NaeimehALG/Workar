@@ -417,6 +417,21 @@
   .tx-bundle > div:first-child b{font-size:16px;} .tx-bundle > div:first-child span{font-size:13.5px;color:var(--muted);}
   .tx-bundle-r{display:flex;align-items:center;gap:12px;}
   .tx-bundle-r s{color:var(--muted);font-size:13px;} .tx-bundle-r b{font-size:22px;font-weight:800;}
+
+  .lang-wrap{position:relative;}
+  .lang-menu{position:absolute;top:calc(100% + 8px);inset-inline-end:0;z-index:60;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 18px 40px -16px rgba(0,0,0,.25);padding:6px;display:grid;grid-template-columns:1fr 1fr;gap:2px;min-width:250px;}
+  .lang-opt{border:none;background:none;text-align:start;padding:9px 12px;border-radius:9px;font-family:inherit;font-size:14px;color:var(--text);cursor:pointer;}
+  .lang-opt:hover{background:var(--surface-2);} .lang-opt.on{background:var(--surface-2);font-weight:800;color:var(--accent);}
+  .lang-modal{position:fixed;inset:0;z-index:100;background:rgba(40,28,20,.45);display:flex;align-items:center;justify-content:center;padding:20px;animation:ppIn .2s ease;}
+  .lang-card{background:var(--surface);border-radius:20px;padding:28px;max-width:440px;width:100%;box-shadow:0 30px 60px -20px rgba(0,0,0,.4);text-align:center;}
+  .lang-card h3{margin:0 0 4px;font-size:21px;font-weight:800;} .lang-card p{margin:0 0 18px;color:var(--muted);font-size:14px;}
+  .lang-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:14px;}
+  .lang-grid .lang-opt{text-align:center;border:1px solid var(--border);}
+  .lang-skip{border:none;background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:10px 22px;font-family:inherit;font-weight:700;cursor:pointer;}
+  /* hide Google Translate chrome */
+  .goog-te-banner-frame, iframe.skiptranslate, #goog-gt-tt, .goog-te-balloon-frame, .goog-tooltip, .VIpgJd-ZVi9od-ORHb-OEVmcd, .VIpgJd-ZVi9od-aZ2wEe-wOHMyf{display:none !important;}
+  body{top:0 !important;}
+  font[style]{background:none !important;box-shadow:none !important;}
   /* ---------- PMP study guide ---------- */
   .pp-path{display:flex;align-items:stretch;gap:10px;margin:0 0 30px;flex-wrap:wrap;}
   .pp-path-step{flex:1 1 200px;position:relative;display:grid;grid-template-columns:auto 1fr;column-gap:10px;align-items:center;text-decoration:none;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px 16px;transition:border-color .15s,transform .15s;}
@@ -658,7 +673,7 @@ const I18N = {
     choose_pkg_title:'Choose a package', multi_session_note:"You'll book your first session now — the remaining sessions are scheduled with your mentor afterwards.",
     why_e1_n:'Real', why_e1:"mentors who've done the job you want",
     why_e2_n:'Growing', why_e2:'new fields added every week',
-    why_e3_n:'EN · فا', why_e3:'mentoring in your language',
+    why_e3_n:'12+', why_e3:'languages — use Workar in yours',
     why_growing:"Workar is just getting started — and growing every week toward a mentor for every profession. Don't see your field yet? Tell us what you need and we'll find the right mentor for you.",
     why_cta_find:'Find your mentor', why_cta_join:'Share your experience as a mentor',
     adm_nav:'Edit site', adm_title:'Site editor', adm_sub:'Only you can see this page. Changes go live for everyone as soon as you save.',
@@ -861,7 +876,7 @@ const I18N = {
     choose_pkg_title:'یک پکیج انتخاب کن', multi_session_note:'اولین جلسه رو الان رزرو می‌کنی — بقیه‌ی جلسات بعداً با منتور هماهنگ می‌شن.',
     why_e1_n:'واقعی', why_e1:'منتورهایی که همون کاری رو که می‌خوای انجام دادن',
     why_e2_n:'در حال رشد', why_e2:'هر هفته رشته‌های جدید اضافه می‌شن',
-    why_e3_n:'EN · فا', why_e3:'منتورینگ به زبان خودت',
+    why_e3_n:'12+', why_e3:'منتورینگ به زبان خودت',
     why_growing:'Workar تازه شروع کرده — و هر هفته بزرگ‌تر می‌شه تا برای هر شغلی یک منتور داشته باشیم. رشته‌ات رو هنوز نمی‌بینی؟ بگو به چی نیاز داری تا منتور مناسبت رو پیدا کنیم.',
     why_cta_find:'منتورت رو پیدا کن', why_cta_join:'تجربه‌ات رو به‌عنوان منتور به اشتراک بذار',
     adm_nav:'ویرایش سایت', adm_title:'ویرایشگر سایت', adm_sub:'این صفحه فقط برای تو نمایش داده می‌شه. تغییرات بعد از ذخیره برای همه اعمال می‌شن.',
@@ -1238,6 +1253,8 @@ function onSignedIn(session){
 }
 
 async function init(){
+  initLanguage();
+  document.addEventListener('click', ()=>{ if(state.langMenu){ state.langMenu = false; render(); } });
   if(!sb){
     document.getElementById('app').innerHTML = `<div class="empty" style="margin-top:80px;">Workar isn't connected to a database yet.<br>Add your Supabase URL and key in the code to enable it.</div>`;
     return;
@@ -1338,10 +1355,61 @@ async function sampleMatch(prompt, mentorList, query){
   }
 }
 
+// Languages: English and Persian are hand-written; the rest are translated automatically.
+const LANGS = [
+  ['en','English'], ['fr','Français'], ['ar','العربية'], ['fa','فارسی'], ['es','Español'], ['de','Deutsch'],
+  ['pt','Português'], ['tr','Türkçe'], ['ru','Русский'], ['zh-CN','中文'], ['hi','हिन्दी'], ['ur','اردو']
+];
+const RTL_LANGS = ['ar','fa','ur','he'];
+function getUiLang(){ try{ return localStorage.getItem('workar_lang'); }catch(e){ return null; } }
+function currentUiLang(){ return getUiLang() || 'en'; }
+function setGoogTrans(code){
+  const v = code ? `/en/${code}` : '';
+  const exp = code ? '' : ';expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  const host = location.hostname, parts = host.split('.');
+  document.cookie = `googtrans=${v};path=/${exp}`;
+  if(parts.length>1){ document.cookie = `googtrans=${v};path=/;domain=.${parts.slice(-2).join('.')}${exp}`; document.cookie = `googtrans=${v};path=/;domain=${host}${exp}`; }
+}
+function setLanguage(code){
+  const prev = currentUiLang();
+  try{ localStorage.setItem('workar_lang', code); }catch(e){}
+  const auto = c => !['en','fa'].includes(c);
+  if(code==='fa' || code==='en'){
+    state.lang = code; setGoogTrans(null);
+    if(auto(prev)){ location.reload(); return; }
+    state.langMenu = false; render(); return;
+  }
+  state.lang = 'en'; setGoogTrans(code); location.reload();
+}
+function initLanguage(){
+  const code = getUiLang();
+  if(code==='fa'){ state.lang='fa'; setGoogTrans(null); return; }
+  state.lang = 'en';
+  if(code && code!=='en'){
+    setGoogTrans(code);
+    window.googleTranslateElementInit = function(){ try{ new google.translate.TranslateElement({ pageLanguage:'en', autoDisplay:false }, 'google_translate_element'); }catch(e){} };
+    const holder = document.createElement('div'); holder.id='google_translate_element'; holder.style.display='none'; document.body.appendChild(holder);
+    const sc = document.createElement('script'); sc.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit'; document.body.appendChild(sc);
+  } else { setGoogTrans(null); }
+  if(!code) state.langPrompt = true;
+}
 function applyDir(){
-  const rtl = state.lang==='fa';
+  const ui = currentUiLang();
+  const rtl = state.lang==='fa' || RTL_LANGS.includes(ui);
   document.documentElement.setAttribute('dir', rtl ? 'rtl' : 'ltr');
-  document.documentElement.setAttribute('lang', rtl ? 'fa' : 'en');
+  document.documentElement.setAttribute('lang', state.lang==='fa' ? 'fa' : (ui||'en'));
+}
+function langName(code){ const l = LANGS.find(x=>x[0]===code); return l ? l[1] : 'English'; }
+function langMenuHtml(){
+  const cur = currentUiLang();
+  return `<div class="lang-menu notranslate" translate="no">${LANGS.map(([c,n])=>`<button class="lang-opt ${c===cur?'on':''}" data-lang="${c}">${esc(n)}</button>`).join('')}</div>`;
+}
+function langPromptHtml(){
+  return `<div class="lang-modal notranslate" translate="no"><div class="lang-card">
+    <h3>Choose your language</h3><p>You can change this any time from the menu.</p>
+    <div class="lang-grid">${LANGS.map(([c,n])=>`<button class="lang-opt ${c==='en'?'on':''}" data-lang="${c}">${esc(n)}</button>`).join('')}</div>
+    <button class="lang-skip" data-lang="en">Continue in English</button>
+  </div></div>`;
 }
 
 function render(){
@@ -1373,6 +1441,7 @@ function render(){
     }
   }
   app.appendChild(el(body));
+  if(state.langPrompt) app.appendChild(el(langPromptHtml()));
   app.appendChild(el(`<footer>Workar · ${esc(T('footer_tag'))}<br><a class="ig-link" href="${INSTAGRAM_URL}" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg> @workarmentoring</a></footer>`));
   wire();
   setupReveal();
@@ -1394,7 +1463,7 @@ function navHtml(){
       ${items.map(([v,l])=>`<div class="navlink ${state.view===v?'active':''}" data-nav="${v}">${esc(l)}</div>`).join('')}
       ${isAdmin() ? `<div class="navlink ${state.view==='admin'?'active':''}" data-nav="admin">${esc(T('adm_nav'))}</div>` : ''}
       ${uid ? `<div class="navlink" id="signout-btn" title="${esc(T('signed_in_as'))} ${esc(userEmail||'')}">${esc(T('nav_signout'))}</div>` : `<div class="navlink" data-nav="dashboard">${esc(T('nav_login'))}</div>`}
-      <div class="lang-switch" id="lang-toggle">${esc(T('lang_switch'))}</div>
+      <div class="lang-wrap notranslate" translate="no"><div class="lang-switch" id="lang-toggle"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-inline-end:5px;"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>${esc(langName(currentUiLang()))}</div>${state.langMenu ? langMenuHtml() : ''}</div>
     </div>
   </div>`;
 }
@@ -3360,7 +3429,8 @@ function wire(){
   });
 
   const langBtn = document.getElementById('lang-toggle');
-  if(langBtn) langBtn.addEventListener('click', ()=>{ state.lang = state.lang==='en' ? 'fa' : 'en'; render(); });
+  if(langBtn) langBtn.addEventListener('click', (e)=>{ e.stopPropagation(); state.langMenu = !state.langMenu; render(); });
+  document.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click', (e)=>{ e.stopPropagation(); state.langPrompt = false; setLanguage(b.getAttribute('data-lang')); }));
 
   const signoutBtn = document.getElementById('signout-btn');
   if(signoutBtn) signoutBtn.addEventListener('click', async ()=>{ await sb.auth.signOut(); });
