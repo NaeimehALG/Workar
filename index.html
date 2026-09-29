@@ -1003,7 +1003,7 @@ const I18N = {
     send:'Send', thinking:'Thinking…',
     footer_tag:'a place for every career to find its guide',
     toast_profile_created:'Profile created', toast_save_fail:'Could not save — try again', toast_saved:'Saved',
-    toast_request_sent:'Request sent', toast_request_fail:'Could not send request', toast_pick_datetime:'Pick a date and time',
+    toast_request_sent:'Request sent', toast_request_fail:'Could not send request', toast_request_rls:'Booking is blocked by a database permission — run the latest Workar SQL', toast_pick_datetime:'Pick a date and time',
     toast_review_posted:'Review posted', toast_review_fail:'Could not post review', toast_update_fail:'Could not update',
     toast_no_mentors:'No mentors on Workar yet', toast_match_fail:'Could not find matches right now',
     toast_coach_fail:'Sorry — coaching is unavailable right now.',
@@ -1217,7 +1217,7 @@ const I18N = {
     send:'ارسال', thinking:'در حال فکر کردن…',
     footer_tag:'جایی که هر مسیر شغلی، راهنماشو پیدا می‌کنه',
     toast_profile_created:'پروفایل ساخته شد', toast_save_fail:'ذخیره نشد — دوباره امتحان کن', toast_saved:'ذخیره شد',
-    toast_request_sent:'درخواست ارسال شد', toast_request_fail:'درخواست ارسال نشد', toast_pick_datetime:'یه تاریخ و ساعت انتخاب کن',
+    toast_request_sent:'درخواست ارسال شد', toast_request_fail:'درخواست ارسال نشد', toast_request_rls:'دسترسی دیتابیس اجازه‌ی رزرو نمی‌ده — SQL جدید Workar رو اجرا کن', toast_pick_datetime:'یه تاریخ و ساعت انتخاب کن',
     toast_review_posted:'ریویو ثبت شد', toast_review_fail:'ریویو ثبت نشد', toast_update_fail:'به‌روزرسانی نشد',
     toast_no_mentors:'هنوز منتوری تو Workar نیست', toast_match_fail:'الان نشد بهترین گزینه رو پیدا کنیم',
     toast_coach_fail:'ببخشید — کوچینگ الان در دسترس نیست.',
@@ -1737,6 +1737,22 @@ async function saveProfileSafe(data, mode){
     if(!error) return;
     const m = /'([^']+)' column/.exec(error.message||'');
     if(m && m[1] in d){ console.warn('profiles is missing column', m[1], '— run the latest SQL'); delete d[m[1]]; continue; }
+    throw error;
+  }
+}
+// Inserts a row; drops fields the database doesn't have (or can't accept) and retries.
+async function insertSafe(table, row){
+  let d = Object.assign({}, row);
+  for(let i=0;i<15;i++){
+    const { error } = await sb.from(table).insert(d);
+    if(!error) return;
+    const msg = error.message || '';
+    const m = /'([^']+)' column/.exec(msg);
+    if(m && m[1] in d){ console.warn(table+' is missing column', m[1]); delete d[m[1]]; continue; }
+    if(/timestamp|date\/time|bigint|integer/i.test(msg) && 'createdAt' in d){ delete d.createdAt; continue; }
+    if(/null value in column "([^"]+)"/.test(msg)){ const c = /null value in column "([^"]+)"/.exec(msg)[1];
+      const snake = { mentor_id:'mentorId', client_id:'clientId' }[c];
+      if(snake && !(c in d)){ d[c] = d[snake]; continue; } }
     throw error;
   }
 }
@@ -4090,12 +4106,16 @@ function wire(){
     const pk = getPackages().find(x=>x.key===(state.selectedPkg||'single')) || getPackages()[0];
     const amountCents = Math.round(pkgPriceFor(pk, cache.profiles[state.mentorId])*100);
     try{
-      await window.__db.doc('requests/'+reqId).set({ mentorId: state.mentorId, clientId: uid, message, date, time, status:'pending', createdAt: Date.now(), amountCents, packageKey: pk.key, paid:false, stripeSessionId:null });
+      await insertSafe('requests', { id: reqId, mentorId: state.mentorId, clientId: uid, message, date, time, status:'pending', createdAt: Date.now(), amountCents, packageKey: pk.key, paid:false });
       toast(T('toast_request_sent'));
       state.bookingOpen = false;
       state.selectedSlot = null;
       loadRequests(); render();
-    }catch(err){ toast(T('toast_request_fail')); }
+    }catch(err){
+      console.error('booking failed:', err);
+      const m = (err && err.message) || '';
+      toast(T(/row-level security/i.test(m) ? 'toast_request_rls' : 'toast_request_fail') + (m ? ' — ' + m : ''), 9000);
+    }
   });
 
   document.querySelectorAll('#star-input span').forEach(s=>{
