@@ -463,6 +463,30 @@
   .bf-combo input{padding:11px 34px 11px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-family:inherit;font-size:14.5px;width:210px;}
   .bf-combo input:focus{outline:2px solid var(--accent);outline-offset:1px;}
   .bf-clear{position:absolute;inset-inline-end:8px;top:50%;transform:translateY(-50%);border:none;background:var(--border);color:var(--text);width:20px;height:20px;border-radius:50%;font-size:14px;line-height:1;cursor:pointer;}
+
+  .ms{position:relative;display:flex;align-items:center;gap:10px;}
+  .ms-label{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);}
+  .ms-btn{display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:220px;padding:11px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface-2);color:var(--muted);font-family:inherit;font-size:14.5px;cursor:pointer;text-align:start;}
+  .ms-btn.has{color:var(--text);font-weight:700;border-color:var(--accent-2);}
+  .ms-btn:hover{border-color:var(--accent-2);}
+  .ms-panel{position:absolute;top:calc(100% + 8px);inset-inline-start:0;z-index:50;width:300px;background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:0 22px 48px -18px rgba(60,40,25,.35);padding:12px;animation:ppIn .15s ease;}
+  @media (max-width:560px){.ms{flex-wrap:wrap;}.ms-panel{width:calc(100vw - 40px);}}
+  .ms-search{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-family:inherit;font-size:14px;}
+  .ms-search:focus{outline:2px solid var(--accent);outline-offset:1px;}
+  .ms-hint{font-size:12px;color:var(--muted);margin:8px 2px 6px;}
+  .ms-list{max-height:260px;overflow-y:auto;margin:0 -4px;padding:0 4px;}
+  .ms-opt{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;font-size:14.5px;}
+  .ms-opt:hover{background:var(--surface-2);}
+  .ms-opt input{position:absolute;opacity:0;pointer-events:none;width:0;height:0;}
+  .ms-box{flex:0 0 20px;height:20px;border-radius:6px;border:1.8px solid var(--border);display:flex;align-items:center;justify-content:center;color:transparent;transition:all .12s;}
+  .ms-box svg{width:12px;height:12px;}
+  .ms-opt.on .ms-box{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .ms-opt.on .ms-name{font-weight:700;}
+  .ms-name{flex:1;}
+  .ms-dot{width:7px;height:7px;border-radius:50%;background:#4E8A5B;}
+  .ms-foot{display:flex;justify-content:space-between;gap:8px;border-top:1px solid var(--border);margin-top:8px;padding-top:10px;}
+  .ms-clear{border:none;background:none;color:var(--muted);font-family:inherit;font-size:13.5px;font-weight:700;cursor:pointer;}
+  .ms-done{border:none;background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:8px 18px;font-family:inherit;font-size:13.5px;font-weight:700;cursor:pointer;}
   /* ---------- PMP study guide ---------- */
   .pp-path{display:flex;align-items:stretch;gap:10px;margin:0 0 30px;flex-wrap:wrap;}
   .pp-path-step{flex:1 1 200px;position:relative;display:grid;grid-template-columns:auto 1fr;column-gap:10px;align-items:center;text-decoration:none;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px 16px;transition:border-color .15s,transform .15s;}
@@ -669,6 +693,25 @@
   .status-pill.accepted{color:var(--accent-2);border-color:var(--accent-2);}
   .status-pill.declined{color:var(--danger);border-color:var(--danger);}
   .status-pill.paid{color:var(--accent);border-color:var(--accent);}
+  .status-pill.done{color:#4E8A5B;border-color:#4E8A5B;}
+  .sess{display:flex;align-items:center;gap:10px;margin-top:8px;font-size:12.5px;color:var(--muted);}
+  .sess-dots{display:flex;gap:4px;}
+  .sess-dots i{width:18px;height:6px;border-radius:3px;background:var(--border);}
+  .sess-dots i.on{background:var(--accent);}
+  .earn{margin-bottom:32px;}
+  .earn-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px;}
+  .earn-head h2{margin:0;}
+  .earn-head .muted{font-size:13px;}
+  .earn-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;}
+  .earn-row>div{padding:14px 18px;display:flex;flex-direction:column;gap:4px;}
+  .earn-row>div+div{border-inline-start:1px solid var(--border);}
+  .earn-row span{font-size:12.5px;color:var(--muted);}
+  .earn-row b{font-size:22px;font-variant-numeric:tabular-nums;}
+  .earn-row .due b{color:var(--accent);}
+  .pay-t{width:100%;border-collapse:collapse;min-width:560px;font-size:14px;}
+  .pay-t th{text-align:start;font-size:12.5px;color:var(--muted);font-weight:600;padding:6px 8px;}
+  .pay-t td{padding:10px 8px;border-top:1px solid var(--border);font-variant-numeric:tabular-nums;}
+  .pay-t td.owe{color:var(--accent);font-weight:700;}
   footer{text-align:center;padding:40px 0 10px;color:var(--muted);font-size:12.5px;}
   footer a.ig-link{color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:5px;margin-top:8px;}
   footer a.ig-link:hover{color:var(--text);}
@@ -718,7 +761,7 @@ const I18N = {
     adm_saved:'Saved — the site is updated', adm_save_fail:'Could not save — check that the site_settings SQL has been run',
     rv_empty_t:'No results yet', rv_login_t:'Track your progress', rv_taken:'Mocks taken', rv_avg:'Average score', rv_best:'Best score', rv_answered:'Questions answered', rv_trend:'Score trend', rv_trend_d:'Your last attempts, oldest to newest', rv_goal:'Target', rv_domains:'Strength by domain', rv_domains_d:'All attempts combined', rv_rec_k:'Recommended next', rv_rec_t:'Strengthen {d}', rv_rec_d:'This is your weakest domain so far. Review these modules, then retake a mock and watch your score move.',
     sec_rate:'Your session rate', rate_per_session:'45-min session', rate_suggest:'Suggested for your experience', rate_min_note:'The Workar minimum is ${m} per session. You can charge more — package prices scale with your rate, and clients see your price before booking.', rate_preview:'Your packages:', tier_standard:'Standard', tier_experienced:'Experienced', tier_senior:'Senior', tier_executive:'Executive',
-    filter_lang:'Speaks', filter_all:'Any language — type or pick', filter_none:'No mentors speak {l} yet — try another language or ask us to find one.', prep_full_k:'The complete exam-day experience', guide_inputs:'Key inputs', guide_tools:'Tools & techniques', guide_outputs:'Key outputs', prep_title_short:'PMP Prep', prep_tagline:'Learn the essentials, practise with mock exams, and track your progress.', guide_scn:'Exam scenario — try it', guide_part:'Part', guide_part1:'Foundations', guide_part2:'Planning the work', guide_part3:'Delivering with people & control', guide_part4:'Agile & exam-ready', guide_left:'left', guide_begin:'Start here', guide_continue:'Continue where you left off', guide_begin_btn:'Begin', guide_continue_btn:'Continue', guide_all_done:'You have completed every module. Time to test yourself.', guide_start_btn:'Start', guide_review_btn:'Review',
+    filter_search:'Search languages…', filter_hint:'Tick every language you speak — we\'ll show mentors who speak any of them.', filter_has_mentors:'Mentors available', filter_clear:'Clear', filter_done:'Done', filter_lang:'Speaks', filter_all:'Any language', filter_none:'No mentors speak {l} yet — try another language or ask us to find one.', prep_full_k:'The complete exam-day experience', guide_inputs:'Key inputs', guide_tools:'Tools & techniques', guide_outputs:'Key outputs', prep_title_short:'PMP Prep', prep_tagline:'Learn the essentials, practise with mock exams, and track your progress.', guide_scn:'Exam scenario — try it', guide_part:'Part', guide_part1:'Foundations', guide_part2:'Planning the work', guide_part3:'Delivering with people & control', guide_part4:'Agile & exam-ready', guide_left:'left', guide_begin:'Start here', guide_continue:'Continue where you left off', guide_begin_btn:'Begin', guide_continue_btn:'Continue', guide_all_done:'You have completed every module. Time to test yourself.', guide_start_btn:'Start', guide_review_btn:'Review',
     guide_modules:'study modules', guide_kicker:'Free study guide', guide_title:'Learn the essentials', guide_sub:'{n} bite-sized modules covering every exam area — written in plain English, with tips on how PMI thinks.',
     guide_complete:'complete', guide_slides:'slides', guide_tip:'Exam tip:', guide_all:'All modules', guide_module:'Module', guide_slide_of:'slide {i} of {n}',
     guide_done_t:'Module complete: {m}', guide_next_mod:'Next module', guide_test_now:'Test yourself — free diagnostic', guide_keys:'Tip: use ← → to move between slides',
@@ -850,6 +893,11 @@ const I18N = {
     offline_notice:'General tips (not personalized AI feedback):',
     lbl_price_usd:'Price to charge via card (USD)', price_usd_hint:'e.g. 40 — leave blank for free sessions',
     pay_to_confirm:'Pay ${amount} to confirm', waiting_for_payment:'Waiting for client payment…',
+    earn_title:'Your earnings', earn_note:'You keep {p}% of every paid booking. Workar sends payouts to you directly.', earn_total:'Earned', earn_paid:'Paid to you', earn_owed:'Owed to you',
+    sess_progress_m:'{d} of {t} sessions done', sess_progress_c:'{l} of {t} sessions left', sess_all_done:'All sessions done', sess_mark:'Mark a session done', sess_mark_one:'Mark session done', sess_completed:'Completed', sess_saved:'Session recorded', sess_fail:'Could not save — check that the payouts SQL has been run',
+    adm_share:'Mentor share (%)', adm_share_hint:'The part of each booking that goes to the mentor. Workar keeps the rest.',
+    pay_title:'Mentor payouts', pay_hint:'Every paid booking, grouped by mentor. After you send a mentor their money (e-Transfer, PayPal…), mark it as paid here.', pay_loading:'Loading payouts…', pay_error:'Could not load payouts — check that the payouts SQL has been run.', pay_none:'No paid bookings yet.', pay_tot_owed:'Owed to mentors', pay_tot_keep:'Workar keeps',
+    pay_c_mentor:'Mentor', pay_c_n:'Paid bookings', pay_c_collected:'Collected', pay_c_share:'Mentor share', pay_c_owed:'Owed now', pay_mark:'Mark as paid', pay_settled:'Settled', pay_confirm:'Record that you paid {a} to {n}?', pay_done:'Payout recorded', pay_fail:'Could not record the payout — check that the payouts SQL has been run',
     join_call:'Join video/voice call', paid_badge:'Paid',
     toast_payment_fail:'Could not start payment — try again',
     toast_payment_success:'Payment received — booking confirmed!',
@@ -922,7 +970,7 @@ const I18N = {
     adm_saved:'ذخیره شد — سایت به‌روز شد', adm_save_fail:'ذخیره نشد — مطمئن شو SQL مربوط به site_settings اجرا شده',
     rv_empty_t:'هنوز نتیجه‌ای نداری', rv_login_t:'پیشرفتت رو دنبال کن', rv_taken:'آزمون داده‌شده', rv_avg:'میانگین نمره', rv_best:'بهترین نمره', rv_answered:'سؤال پاسخ‌داده', rv_trend:'روند نمره', rv_trend_d:'آزمون‌های اخیر، از قدیمی به جدید', rv_goal:'هدف', rv_domains:'قدرت در هر حوزه', rv_domains_d:'همه‌ی آزمون‌ها با هم', rv_rec_k:'پیشنهاد بعدی', rv_rec_t:'تقویت حوزه‌ی {d}', rv_rec_d:'این ضعیف‌ترین حوزه‌ی تو تا الانه. این ماژول‌ها رو مرور کن، بعد دوباره آزمون بده و ببین نمره‌ات چطور بالا می‌ره.',
     sec_rate:'نرخ جلسه‌ی شما', rate_per_session:'جلسه‌ی ۴۵ دقیقه‌ای', rate_suggest:'پیشنهاد برای سابقه‌ی شما', rate_min_note:'حداقل نرخ Workar {m} دلار برای هر جلسه است. می‌تونی بیشتر بگیری — قیمت پکیج‌ها به نسبت نرخ تو تغییر می‌کنه و مراجعه‌کننده قبل از رزرو قیمت رو می‌بینه.', rate_preview:'پکیج‌های تو:', tier_standard:'استاندارد', tier_experienced:'باتجربه', tier_senior:'ارشد', tier_executive:'مدیر ارشد',
-    filter_lang:'زبان', filter_all:'همه‌ی زبان‌ها', filter_none:'هنوز منتوری که به {l} صحبت کنه نداریم — زبان دیگه‌ای رو امتحان کن.', prep_full_k:'تجربه‌ی کامل روز آزمون', guide_inputs:'ورودی‌های اصلی', guide_tools:'ابزارها و تکنیک‌ها', guide_outputs:'خروجی‌های اصلی', prep_title_short:'آمادگی PMP', prep_tagline:'مفاهیم اصلی رو یاد بگیر، با آزمون‌های آزمایشی تمرین کن و پیشرفتت رو ببین.', guide_scn:'سناریوی آزمون — امتحانش کن', guide_part:'بخش', guide_part1:'مبانی', guide_part2:'برنامه‌ریزی کار', guide_part3:'اجرا با تیم و کنترل', guide_part4:'اجایل و آمادگی آزمون', guide_left:'باقی‌مانده', guide_begin:'از اینجا شروع کن', guide_continue:'از همون جایی که موندی ادامه بده', guide_begin_btn:'شروع', guide_continue_btn:'ادامه', guide_all_done:'همه‌ی ماژول‌ها رو تموم کردی. وقت آزمونه.', guide_start_btn:'شروع', guide_review_btn:'مرور',
+    filter_search:'جستجوی زبان…', filter_hint:'همه‌ی زبان‌هایی که صحبت می‌کنی رو تیک بزن — منتورهایی که به هر کدوم صحبت می‌کنن نمایش داده می‌شن.', filter_has_mentors:'منتور موجوده', filter_clear:'پاک کردن', filter_done:'تأیید', filter_lang:'زبان', filter_all:'همه‌ی زبان‌ها', filter_none:'هنوز منتوری که به {l} صحبت کنه نداریم — زبان دیگه‌ای رو امتحان کن.', prep_full_k:'تجربه‌ی کامل روز آزمون', guide_inputs:'ورودی‌های اصلی', guide_tools:'ابزارها و تکنیک‌ها', guide_outputs:'خروجی‌های اصلی', prep_title_short:'آمادگی PMP', prep_tagline:'مفاهیم اصلی رو یاد بگیر، با آزمون‌های آزمایشی تمرین کن و پیشرفتت رو ببین.', guide_scn:'سناریوی آزمون — امتحانش کن', guide_part:'بخش', guide_part1:'مبانی', guide_part2:'برنامه‌ریزی کار', guide_part3:'اجرا با تیم و کنترل', guide_part4:'اجایل و آمادگی آزمون', guide_left:'باقی‌مانده', guide_begin:'از اینجا شروع کن', guide_continue:'از همون جایی که موندی ادامه بده', guide_begin_btn:'شروع', guide_continue_btn:'ادامه', guide_all_done:'همه‌ی ماژول‌ها رو تموم کردی. وقت آزمونه.', guide_start_btn:'شروع', guide_review_btn:'مرور',
     guide_modules:'ماژول آموزشی', guide_kicker:'راهنمای مطالعه‌ی رایگان', guide_title:'مفاهیم اصلی رو یاد بگیر', guide_sub:'{n} ماژول کوتاه که همه‌ی حوزه‌های آزمون رو پوشش می‌ده — با نکته‌هایی درباره‌ی طرز فکر PMI.',
     guide_complete:'تکمیل‌شده', guide_slides:'اسلاید', guide_tip:'نکته‌ی آزمون:', guide_all:'همه‌ی ماژول‌ها', guide_module:'ماژول', guide_slide_of:'اسلاید {i} از {n}',
     guide_done_t:'ماژول تموم شد: {m}', guide_next_mod:'ماژول بعدی', guide_test_now:'خودت رو بسنج — آزمون تشخیصی رایگان', guide_keys:'نکته: با ← → بین اسلایدها جابه‌جا شو',
@@ -1054,6 +1102,11 @@ const I18N = {
     offline_notice:'نکات کلی (نه فیدبک اختصاصی هوش مصنوعی):',
     lbl_price_usd:'قیمتی که با کارت دریافت می‌شه (دلار)', price_usd_hint:'مثلاً ۴۰ — برای جلسه‌ی رایگان خالی بذار',
     pay_to_confirm:'پرداخت ${amount} دلار برای تأیید', waiting_for_payment:'منتظر پرداخت جویای کار…',
+    earn_title:'درآمد شما', earn_note:'{p}٪ از هر رزرو پرداخت‌شده سهم شماست. Workar مستقیماً به شما پرداخت می‌کند.', earn_total:'کل درآمد', earn_paid:'پرداخت‌شده به شما', earn_owed:'طلب شما',
+    sess_progress_m:'{d} از {t} جلسه برگزار شد', sess_progress_c:'{l} از {t} جلسه باقی مانده', sess_all_done:'همه‌ی جلسات برگزار شد', sess_mark:'ثبت برگزاری یک جلسه', sess_mark_one:'ثبت برگزاری جلسه', sess_completed:'تمام‌شده', sess_saved:'جلسه ثبت شد', sess_fail:'ذخیره نشد — مطمئن شو SQL پرداخت منتورها اجرا شده',
+    adm_share:'سهم منتور (٪)', adm_share_hint:'بخشی از هر رزرو که به منتور می‌رسد. بقیه‌اش سهم Workar است.',
+    pay_title:'پرداخت به منتورها', pay_hint:'همه‌ی رزروهای پرداخت‌شده، به تفکیک منتور. بعد از اینکه پول منتور را فرستادی (ای‌ترانسفر، PayPal و…)، اینجا ثبتش کن.', pay_loading:'در حال بارگذاری…', pay_error:'بارگذاری نشد — مطمئن شو SQL پرداخت منتورها اجرا شده.', pay_none:'هنوز رزرو پرداخت‌شده‌ای نیست.', pay_tot_owed:'بدهی به منتورها', pay_tot_keep:'سهم Workar',
+    pay_c_mentor:'منتور', pay_c_n:'رزروهای پرداخت‌شده', pay_c_collected:'دریافتی', pay_c_share:'سهم منتور', pay_c_owed:'بدهی فعلی', pay_mark:'ثبت پرداخت', pay_settled:'تسویه‌شده', pay_confirm:'ثبت کنم که {a} به {n} پرداخت کردی؟', pay_done:'پرداخت ثبت شد', pay_fail:'ثبت نشد — مطمئن شو SQL پرداخت منتورها اجرا شده',
     join_call:'ورود به تماس تصویری/صوتی', paid_badge:'پرداخت‌شده',
     toast_payment_fail:'پرداخت شروع نشد — دوباره امتحان کن',
     toast_payment_success:'پرداخت انجام شد — رزرو تأیید شد!',
@@ -1287,7 +1340,7 @@ function onSignedIn(session){
 
 async function init(){
   initLanguage();
-  document.addEventListener('click', ()=>{ if(state.langMenu){ state.langMenu = false; render(); } });
+  document.addEventListener('click', ()=>{ if(state.langMenu || state.langOpen){ state.langMenu = false; state.langOpen = false; render(); } });
   if(!sb){
     document.getElementById('app').innerHTML = `<div class="empty" style="margin-top:80px;">Workar isn't connected to a database yet.<br>Add your Supabase URL and key in the code to enable it.</div>`;
     return;
@@ -1515,6 +1568,11 @@ const DEFAULT_PACKAGES = [
   { key:'interview', sessions:3, price:129, featured:true,  hidden:false },
   { key:'offer',     sessions:6, price:249, featured:false, hidden:false }
 ];
+function mentorSharePct(){ const v = Number(siteSettings && siteSettings.mentorShare); return (v>0 && v<=100) ? v : 75; }
+function reqSessionsTotal(r){ const pk = getPackages().find(x=>x.key===r.packageKey) || DEFAULT_PACKAGES.find(x=>x.key===r.packageKey); return Math.max(1, Number(r.sessions) || (pk ? pk.sessions : 1)); }
+function reqIsActive(r){ return r.status==='accepted' && (!r.amountCents || r.paid); }
+function reqMentorCents(r){ return Math.round((Number(r.amountCents)||0) * mentorSharePct() / 100); }
+function fmtMoney(c){ const v = (Number(c)||0)/100; return '$' + (Number.isInteger(v) ? v.toFixed(0) : v.toFixed(2)); }
 function basePrice(){ const pk = getPackages()[0]; return pk ? Math.round(pk.price/pk.sessions) : 0; }
 function minRate(){ return basePrice() || 49; }
 function mentorRate(p){ const r = Number(p && p.sessionRate) || 0; return Math.max(minRate(), Math.round(r)); }
@@ -1711,6 +1769,38 @@ function adminView(){
         <td style="padding:6px;text-align:center;"><input type="checkbox" data-f="show" ${pk.hidden?'':'checked'}></td>
       </tr>`).join('')}</tbody>
     </table></div>
+    <div class="field" style="margin:18px 0 0;max-width:320px;">
+      <label>${esc(T('adm_share'))}</label>
+      <input id="adm-share" type="number" min="1" max="100" step="1" value="${mentorSharePct()}">
+      <div class="muted" style="font-size:12.5px;margin-top:6px;">${esc(T('adm_share_hint'))}</div>
+    </div>
+  </div>
+
+  <div class="panel wide" style="margin-bottom:28px;">
+    <h3 style="margin:0 0 4px;">${esc(T('pay_title'))}</h3>
+    <p class="muted" style="font-size:13px;margin:0 0 16px;">${esc(T('pay_hint'))}</p>
+    ${state.payouts==null ? `<div class="muted">${esc(T('pay_loading'))}</div>` : state.payouts==='error' ? `<div class="muted">${esc(T('pay_error'))}</div>` : (()=>{
+      const by = {};
+      state.payouts.forEach(r=>{ (by[r.mentorId] = by[r.mentorId] || []).push(r); });
+      const rows = Object.keys(by).map(id=>{ const list = by[id];
+        const collected = list.reduce((a,r)=>a+(Number(r.amountCents)||0),0);
+        const share = list.reduce((a,r)=>a+reqMentorCents(r),0);
+        const dueList = list.filter(r=>!r.payoutDone);
+        const owed = dueList.reduce((a,r)=>a+reqMentorCents(r),0);
+        return { id, name:nameOf(id), n:list.length, collected, share, owed, ids: dueList.map(r=>r.id) }; }).sort((a,b)=>b.owed-a.owed);
+      if(!rows.length) return `<div class="empty">${esc(T('pay_none'))}</div>`;
+      const totOwed = rows.reduce((a,r)=>a+r.owed,0), totKeep = rows.reduce((a,r)=>a+r.collected-r.share,0);
+      return `<div class="earn-row" style="margin-bottom:16px;">
+          <div class="due"><span>${esc(T('pay_tot_owed'))}</span><b>${fmtMoney(totOwed)}</b></div>
+          <div><span>${esc(T('pay_tot_keep'))}</span><b>${fmtMoney(totKeep)}</b></div>
+        </div>
+        <div style="overflow-x:auto;"><table class="pay-t">
+        <thead><tr><th>${esc(T('pay_c_mentor'))}</th><th>${esc(T('pay_c_n'))}</th><th>${esc(T('pay_c_collected'))}</th><th>${esc(T('pay_c_share'))}</th><th>${esc(T('pay_c_owed'))}</th><th></th></tr></thead>
+        <tbody>${rows.map(r=>`<tr>
+          <td><b>${esc(r.name)}</b></td><td>${r.n}</td><td>${fmtMoney(r.collected)}</td><td>${fmtMoney(r.share)}</td>
+          <td class="${r.owed?'owe':''}">${fmtMoney(r.owed)}</td>
+          <td>${r.owed ? `<button class="btn btn-sm btn-outline" data-payout="${esc(r.ids.join(','))}" data-name="${esc(r.name)}" data-amt="${fmtMoney(r.owed)}">${esc(T('pay_mark'))}</button>` : `<span class="muted" style="font-size:12.5px;">${esc(T('pay_settled'))}</span>`}</td>
+        </tr>`).join('')}</tbody></table></div>`; })()}
   </div>
 
   <div class="panel wide" style="margin-bottom:28px;">
@@ -1732,7 +1822,22 @@ function adminView(){
     <button class="btn btn-ghost" id="adm-reset">${esc(T('adm_reset'))}</button>
   </div>`;
 }
+async function loadPayouts(){
+  if(!sb) { state.payouts = 'error'; return; }
+  const { data, error } = await sb.from('requests').select('*').eq('paid', true);
+  state.payouts = error ? 'error' : (data||[]).filter(r=>Number(r.amountCents)>0);
+  if(state.view==='admin') render();
+}
 function wireAdmin(){
+  if(state.payouts==null && !state.payoutsLoading){ state.payoutsLoading = true; loadPayouts().finally(()=>{ state.payoutsLoading = false; }); }
+  document.querySelectorAll('[data-payout]').forEach(btn=>btn.addEventListener('click', async ()=>{
+    const ids = btn.getAttribute('data-payout').split(',').filter(Boolean);
+    if(!ids.length || !confirm(T('pay_confirm').replace('{a}', btn.getAttribute('data-amt')).replace('{n}', btn.getAttribute('data-name')))) return;
+    btn.disabled = true;
+    const { error } = await sb.from('requests').update({ payoutDone: true, payoutAt: new Date().toISOString() }).in('id', ids);
+    if(error){ toast(T('pay_fail')); btn.disabled = false; return; }
+    toast(T('pay_done')); state.payouts = null; render();
+  }));
   const saveBtn = document.getElementById('adm-save');
   if(!saveBtn) return;
   const collect = ()=>{
@@ -1753,7 +1858,9 @@ function wireAdmin(){
         if(v.trim() && v !== defaultT(lang,key)) text[lang][key] = v;
       });
     });
-    return { packages, text };
+    const shEl = document.getElementById('adm-share');
+    const mentorShare = shEl ? Math.min(100, Math.max(1, Math.round(Number(shEl.value)||75))) : mentorSharePct();
+    return { packages, text, mentorShare };
   };
   const persist = async (data, msg)=>{
     saveBtn.disabled = true;
@@ -3224,12 +3331,12 @@ function normLang(l){ const k = String(l||'').trim().toLowerCase(); if(!k) retur
 function mentorLangs(p){ const arr = Array.isArray(p.languages) ? p.languages : String(p.languages||'').split(','); return [...new Set(arr.map(normLang).filter(Boolean))]; }
 function browseView(){
   const q = (state.query||'').toLowerCase();
-  const lf = state.langFilter || '';
+  const lf = Array.isArray(state.langFilter) ? state.langFilter : (state.langFilter ? [state.langFilter] : []);
   const allLangs = {};
   Object.values(cache.profiles).forEach(p=>mentorLangs(p).forEach(l=>{ allLangs[l] = (allLangs[l]||0)+1; }));
   const langList = Object.keys(allLangs).sort((a,b)=>allLangs[b]-allLangs[a] || a.localeCompare(b));
   const entries = Object.entries(cache.profiles).filter(([id,p])=>{
-    if(lf && !mentorLangs(p).includes(lf)) return false;
+    if(lf.length && !mentorLangs(p).some(l=>lf.includes(l))) return false;
     if(!q) return true;
     return (p.profession||'').toLowerCase().includes(q) || (p.skills||[]).join(' ').toLowerCase().includes(q) || (p.headline||'').toLowerCase().includes(q);
   });
@@ -3258,15 +3365,25 @@ function browseView(){
 
   <div class="bf-bar">
     <div class="field" style="margin:0;flex:1 1 280px;max-width:420px;"><input id="search-input" placeholder="${esc(T('ph_search'))}" value="${esc(state.query||'')}"></div>
-    <label class="bf-select"><span>${esc(T('filter_lang'))}</span>
-      <span class="bf-combo">
-        <input id="lang-filter" list="lang-options" autocomplete="off" placeholder="${esc(T('filter_all'))}" value="${esc(lf)}">
-        ${lf ? `<button type="button" class="bf-clear" id="lang-clear" aria-label="clear">×</button>` : ''}
-      </span>
-      <datalist id="lang-options">${[...new Set(langList.concat(WORLD_LANGS))].map(l=>`<option value="${esc(l)}"></option>`).join('')}</datalist>
-    </label>
+    <div class="ms" id="lang-ms">
+      <span class="ms-label">${esc(T('filter_lang'))}</span>
+      <button type="button" class="ms-btn ${lf.length?'has':''}" id="lang-ms-btn">
+        <span>${lf.length ? esc(lf.slice(0,2).join(', ')) + (lf.length>2 ? ` +${lf.length-2}` : '') : esc(T('filter_all'))}</span>
+        <svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      ${state.langOpen ? `<div class="ms-panel" id="lang-ms-panel">
+        <input class="ms-search" id="lang-ms-search" placeholder="${esc(T('filter_search'))}" autocomplete="off">
+        <p class="ms-hint">${esc(T('filter_hint'))}</p>
+        <div class="ms-list">${(state.langOrder || [...new Set(lf.concat(langList, WORLD_LANGS))]).map(l=>`<label class="ms-opt ${lf.includes(l)?'on':''}" data-name="${esc(l.toLowerCase())}">
+            <input type="checkbox" value="${esc(l)}" ${lf.includes(l)?'checked':''}>
+            <span class="ms-box"><svg viewBox="0 0 12 12"><path d="M2.5 6.2l2.4 2.4 4.6-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="ms-name">${esc(l)}</span>${langList.includes(l) ? `<span class="ms-dot" title="${esc(T('filter_has_mentors'))}"></span>` : ''}
+          </label>`).join('')}</div>
+        <div class="ms-foot"><button type="button" class="ms-clear" id="lang-ms-clear">${esc(T('filter_clear'))}</button><button type="button" class="ms-done" id="lang-ms-done">${esc(T('filter_done'))}</button></div>
+      </div>` : ''}
+    </div>
   </div>
-  ${lf && !entries.length ? `<p class="muted" style="margin:6px 0 18px;">${esc(T('filter_none').replace('{l}', lf))}</p>` : ''}
+  ${lf.length && !entries.length ? `<p class="muted" style="margin:6px 0 18px;">${esc(T('filter_none').replace('{l}', lf.join(', ')))}</p>` : ''}
   ${entries.length ? `<div class="grid">
     ${entries.map(([id,p])=>{
       const avg = avgRating(id);
@@ -3438,6 +3555,18 @@ function dashboardView(){
     <button class="btn btn-ghost btn-sm" id="delete-my-profile" style="color:#b3412c;">${esc(T('btn_delete_profile'))}</button>
   </div>
 
+  ${isMentor ? (()=>{ const paidR = myReqs.filter(r=>r.paid && r.amountCents>0);
+      const earned = paidR.reduce((a,r)=>a+reqMentorCents(r),0);
+      const out = paidR.filter(r=>r.payoutDone).reduce((a,r)=>a+reqMentorCents(r),0);
+      return `<div class="earn">
+        <div class="earn-head"><h2>${esc(T('earn_title'))}</h2><span class="muted">${esc(T('earn_note').replace('{p}', mentorSharePct()))}</span></div>
+        <div class="earn-row">
+          <div><span>${esc(T('earn_total'))}</span><b>${fmtMoney(earned)}</b></div>
+          <div><span>${esc(T('earn_paid'))}</span><b>${fmtMoney(out)}</b></div>
+          <div class="due"><span>${esc(T('earn_owed'))}</span><b>${fmtMoney(earned-out)}</b></div>
+        </div>
+      </div>`; })() : ''}
+
   <div class="section-head"><h2>${isMentor?esc(T('requests_from_clients')):esc(T('your_requests'))}</h2></div>
   ${myReqs.length ? myReqs.slice().reverse().map(r=>`
     <div class="req-item">
@@ -3446,9 +3575,14 @@ function dashboardView(){
         ${r.packageKey ? `<div style="font-size:12.5px;font-weight:700;color:var(--accent);margin-top:2px;">${esc(T('pk_'+r.packageKey+'_name'))}${r.amountCents?` · $${(r.amountCents/100).toFixed(0)}`:''}</div>` : ''}
         ${r.date ? `<div class="muted" style="font-size:12.5px;margin-top:2px;">${esc(r.date)} · ${esc(r.time||'')}</div>` : ''}
         <div class="muted" style="font-size:13.5px;margin-top:2px;">${esc(r.message||'')}</div>
+        ${reqIsActive(r) && reqSessionsTotal(r)>1 ? (()=>{ const tot = reqSessionsTotal(r), done = Math.min(tot, Number(r.sessionsDone)||0);
+          return `<div class="sess">
+            <div class="sess-dots">${Array.from({length:tot},(_,i)=>`<i class="${i<done?'on':''}"></i>`).join('')}</div>
+            <span>${esc(done>=tot ? T('sess_all_done') : (isMentor ? T('sess_progress_m') : T('sess_progress_c')).replace('{d}', done).replace('{t}', tot).replace('{l}', tot-done))}</span>
+          </div>`; })() : ''}
       </div>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-        <span class="status-pill ${r.paid ? 'paid' : r.status}">${r.paid ? esc(T('paid_badge')) : esc(r.status)}</span>
+        <span class="status-pill ${reqIsActive(r) && (Number(r.sessionsDone)||0) >= reqSessionsTotal(r) ? 'done' : (r.paid ? 'paid' : r.status)}">${reqIsActive(r) && (Number(r.sessionsDone)||0) >= reqSessionsTotal(r) ? esc(T('sess_completed')) : (r.paid ? esc(T('paid_badge')) : esc(r.status))}</span>
         ${isMentor && r.status==='pending' ? `
           <button class="btn btn-sm btn-outline" data-req="${r.id}" data-status="accepted">${esc(T('accept'))}</button>
           <button class="btn btn-sm btn-ghost" data-req="${r.id}" data-status="declined">${esc(T('decline'))}</button>
@@ -3458,7 +3592,8 @@ function dashboardView(){
             ? `<span class="muted" style="font-size:12.5px;">${esc(T('waiting_for_payment'))}</span>`
             : `<button class="btn btn-sm btn-primary" data-pay="${r.id}" data-amount="${r.amountCents}" data-mentor="${r.mentorId}">${esc(T('pay_to_confirm').replace('${amount}', (r.amountCents/100).toFixed(2)))}</button>`
         ) : ''}
-        ${r.status==='accepted' && (!r.amountCents || r.paid) ? `
+        ${isMentor && reqIsActive(r) && (Number(r.sessionsDone)||0) < reqSessionsTotal(r) ? `<button class="btn btn-sm btn-ghost" data-sess="${r.id}" data-next="${(Number(r.sessionsDone)||0)+1}">${esc(T(reqSessionsTotal(r)>1 ? 'sess_mark' : 'sess_mark_one'))}</button>` : ''}
+        ${reqIsActive(r) && (Number(r.sessionsDone)||0) < reqSessionsTotal(r) ? `
           <button class="btn btn-sm btn-primary" data-call="${r.id}" data-mode="video" title="${esc(T('call_tip'))}">${esc(T('btn_video_call'))}</button>
           <button class="btn btn-sm btn-outline" data-call="${r.id}" data-mode="voice" title="${esc(T('call_tip'))}">${esc(T('btn_voice_call'))}</button>` : ''}
         ${r.status==='pending' ? `<span class="call-note">${esc(T('call_after_accept'))}</span>` : ''}
@@ -3572,13 +3707,25 @@ function wire(){
     }
   });
 
-  const lfIn = document.getElementById('lang-filter');
-  if(lfIn){
-    const apply = ()=>{ const v = normLang(lfIn.value); if(v !== (state.langFilter||'')){ state.langFilter = v; render(); const n=document.getElementById('lang-filter'); if(n && v){ n.focus(); } } };
-    lfIn.addEventListener('change', apply);
-    lfIn.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); apply(); } });
+  const msBtn = document.getElementById('lang-ms-btn');
+  if(msBtn) msBtn.addEventListener('click', e=>{ e.stopPropagation(); state.langOpen = !state.langOpen; state.langSearch=''; { const cur = Array.isArray(state.langFilter)?state.langFilter:[]; const have = [...new Set(Object.values(cache.profiles).flatMap(mentorLangs))]; state.langOrder = [...new Set(cur.concat(have, WORLD_LANGS))]; } render(); const si=document.getElementById('lang-ms-search'); if(si) si.focus(); });
+  const msPanel = document.getElementById('lang-ms-panel');
+  if(msPanel){
+    msPanel.addEventListener('click', e=>e.stopPropagation());
+    const si = document.getElementById('lang-ms-search');
+    const filterList = ()=>{ const q = (si.value||'').trim().toLowerCase(); msPanel.querySelectorAll('.ms-opt').forEach(o=>{ o.style.display = !q || o.getAttribute('data-name').includes(q) ? '' : 'none'; }); };
+    if(si){ si.value = state.langSearch||''; filterList(); si.addEventListener('input', ()=>{ state.langSearch = si.value; filterList(); });
+      si.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); const first = [...msPanel.querySelectorAll('.ms-opt')].find(o=>o.style.display!=='none'); if(first) first.querySelector('input').click(); else if(si.value.trim()){ const v = normLang(si.value); const cur = Array.isArray(state.langFilter)?state.langFilter:[]; if(!cur.includes(v)) state.langFilter = cur.concat(v); state.langSearch=''; render(); } } if(e.key==='Escape'){ state.langOpen=false; render(); } }); }
+    msPanel.querySelectorAll('.ms-opt input').forEach(cb=>cb.addEventListener('change', ()=>{
+      const cur = Array.isArray(state.langFilter) ? state.langFilter.slice() : [];
+      const v = cb.value; state.langFilter = cb.checked ? (cur.includes(v)?cur:cur.concat(v)) : cur.filter(x=>x!==v);
+      const scroll = msPanel.querySelector('.ms-list').scrollTop;
+      render();
+      const np = document.getElementById('lang-ms-panel'); if(np){ np.querySelector('.ms-list').scrollTop = scroll; const nsi=document.getElementById('lang-ms-search'); if(nsi) nsi.focus(); }
+    }));
+    const clr = document.getElementById('lang-ms-clear'); if(clr) clr.addEventListener('click', ()=>{ state.langFilter=[]; render(); });
+    const dn = document.getElementById('lang-ms-done'); if(dn) dn.addEventListener('click', ()=>{ state.langOpen=false; state.langSearch=''; render(); });
   }
-  const lfClear = document.getElementById('lang-clear'); if(lfClear) lfClear.addEventListener('click', ()=>{ state.langFilter=''; render(); });
   const searchInput = document.getElementById('search-input');
   if(searchInput){
     searchInput.addEventListener('input', ()=>{
@@ -3727,6 +3874,14 @@ function wire(){
     btn.addEventListener('click', async ()=>{
       try{ await window.__db.doc('requests/'+btn.getAttribute('data-req')).update({status: btn.getAttribute('data-status')}); loadRequests(); }
       catch(err){ toast(T('toast_update_fail')); }
+    });
+  });
+
+  document.querySelectorAll('[data-sess]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      btn.disabled = true;
+      try{ await window.__db.doc('requests/'+btn.getAttribute('data-sess')).update({ sessionsDone: parseInt(btn.getAttribute('data-next'),10) }); toast(T('sess_saved')); loadRequests(); }
+      catch(err){ toast(T('sess_fail')); btn.disabled = false; }
     });
   });
 
