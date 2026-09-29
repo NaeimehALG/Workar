@@ -1006,6 +1006,7 @@
   .auth-forgot{margin:-4px 0 10px;}
   .auth-submit{padding:9px 16px;font-size:14px;}
   .auth-map text{font-size:13.5px;}
+  .md-hr{border:none;border-top:1px solid var(--border);margin:10px 0;}
 </style>
 </head>
 <body>
@@ -4315,7 +4316,7 @@ function coachView(){
   ${voiceControls}
   <div class="chat">
     <div class="chat-log" id="chat-log">
-      ${state.chatMsgs.length ? state.chatMsgs.map((m,i)=>`<div class="msg ${m.role==='user'?'user':'ai'}">${esc(m.content)}${(m.role==='ai' && state.coachMode==='interview' && window.speechSynthesis) ? `<div><button class="btn btn-ghost btn-sm replay-btn" type="button" data-msg-i="${i}" style="padding:2px 8px;margin-top:6px;">${esc(T('replay_audio'))}</button></div>` : ''}</div>`).join('')
+      ${state.chatMsgs.length ? state.chatMsgs.map((m,i)=>`<div class="msg ${m.role==='user'?'user':'ai'}">${m.role==='user' ? esc(m.content) : mdLite(m.content)}${(m.role==='ai' && state.coachMode==='interview' && window.speechSynthesis) ? `<div><button class="btn btn-ghost btn-sm replay-btn" type="button" data-msg-i="${i}" style="padding:2px 8px;margin-top:6px;">${esc(T('replay_audio'))}</button></div>` : ''}</div>`).join('')
         : `<div class="empty" style="border:none;">${state.coachMode==='resume' ? esc(T('empty_resume')) : esc(T('empty_career'))}</div>`}
       ${state.sending ? `<div class="msg ai">${esc(T('thinking'))}</div>` : ''}
     </div>
@@ -4759,7 +4760,7 @@ async function pushAndRespond(userText){
   const sysHints = {
     resume: 'You are a direct, encouraging career coach reviewing a resume. Reply in the same language the person writes in. Give specific, actionable feedback: what to cut, what to strengthen, and one concrete rewrite example. Keep it concise.',
     career: 'You are a warm, practical career coach. Reply in the same language the person writes in. Give specific, actionable advice for the career question, grounded in the details given. Keep it concise.',
-    interview: `You are conducting a mock interview for the role of "${state.interviewRole||'the target role'}". Reply in the same language the candidate uses. Ask one question at a time. After each answer, briefly note what was strong or missing in a line or two, then ask the next relevant question. If the candidate writes "feedback" or "done", stop asking questions and instead give a structured summary: strengths, areas to improve, and one example of a stronger answer.`
+    interview: `You are conducting a mock interview for the role of "${state.interviewRole||'the target role'}". Reply in the same language the candidate uses. Ask one question at a time. Talk exactly like a friendly, experienced human interviewer in a real conversation: natural, warm, spoken sentences. Never use markdown, asterisks, headings, bullet points, dividers, numbering or labels such as "Quick note", "Feedback" or "Question 3". After each answer, react in one or two natural sentences (what worked, or what was missing, for example: "Thanks, that gives me a good sense of your responsibilities. I'd love to hear a specific example, though."), then ask the next question in the same flowing reply. If the candidate writes "feedback" or "done", stop asking questions and instead give a structured summary: strengths, areas to improve, and one example of a stronger answer.`
   };
   const sysHint = sysHints[state.coachMode];
   try{
@@ -4787,9 +4788,19 @@ let __recognizer = null;
 function speechSupported(){
   return !!(window.SpeechRecognition || window.webkitSpeechRecognition);
 }
+function mdLite(text){
+  return esc(text||'')
+    .replace(/^\s*-{3,}\s*$/gm, '<hr class="md-hr">')
+    .replace(/^#{1,6}\s+(.*)$/gm, '<b>$1</b>')
+    .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
+    .replace(/(^|[\s(])\*(?!\s)(.+?)\*(?=[\s).,!?]|$)/gm, '$1<i>$2</i>')
+    .replace(/^\s*[-•]\s+/gm, '• ');
+}
 function cleanForSpeech(text){
   return (text||'')
     .replace(/^#{1,6}\s.*$/gm, '')       // drop whole heading lines (e.g. "# Mock Interview...")
+    .replace(/\**\s*\b(quick note|note|feedback|question\s*\d*|next question)\s*\**\s*:\s*\**/gi, '')  // spoken labels like "Quick note:" / "Question 3:"
+
     .replace(/^\s*-{2,}\s*$/gm, '')      // drop divider lines (---)
     .replace(/\*\*(.*?)\*\*/g, '$1')     // bold -> plain
     .replace(/\*(.*?)\*/g, '$1')         // italic -> plain
@@ -4810,6 +4821,13 @@ function pickVoice(lang){
   const pool = langMatches.length ? langMatches : voices;
   if(!pool.length) return null;
   const femaleNames = /female|zira|samantha|susan|victoria|karen|moira|tessa|joanna|salli|kimberly|amy|emma|ava|jenny|aria|nicole|olivia|sonia|natasha|shirin|dorsa/i;
+  if(!wantFa){
+    // American English only (no UK/AU/IN accents), best-sounding first
+    const us = voices.filter(v => /^en[-_]us/i.test(v.lang));
+    const rank = [/aria.*(natural|online)/i, /jenny.*(natural|online)/i, /ava.*(natural|online)/i, /(natural|neural|online)/i, /google us english/i, /samantha/i, /zira/i];
+    for(const r of rank){ const v = us.find(x => r.test(x.name)); if(v) return v; }
+    if(us.length) return us[0];
+  }
   // Prefer high-quality "Natural"/"Neural"/"Online" voices (e.g. Edge's "Microsoft Aria Online (Natural)") — these sound far less robotic than legacy voices
   const naturalFemale = pool.find(v => /natural|neural|online/i.test(v.name) && femaleNames.test(v.name));
   if(naturalFemale) return naturalFemale;
@@ -4831,7 +4849,7 @@ function speakText(text){
   const voice = pickVoice(langTag);
   if(voice) u.voice = voice;
   u.pitch = 1;
-  u.rate = 0.93;
+  u.rate = 1.0;
   u.onerror = ()=>{ toast(T('voice_speak_fail')); };
   window.speechSynthesis.speak(u);
 }
