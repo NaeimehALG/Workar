@@ -725,14 +725,14 @@
   /* ===== v43 polish: auth ===== */
   .auth-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;background:var(--surface);max-width:940px;margin:8px auto 0;}
   .auth-side{background:#4A3526;color:#F4EADF;padding:44px 40px;display:flex;flex-direction:column;justify-content:flex-end;min-height:520px;position:relative;}
-  .auth-path{position:absolute;top:34px;inset-inline:28px;width:calc(100% - 56px);height:auto;color:#D9B98A;opacity:.9;}
+  .auth-path{position:absolute;top:40px;inset-inline-start:34px;width:auto;height:150px;max-width:calc(100% - 68px);color:#D9B98A;opacity:.9;background:none !important;border:none !important;box-shadow:none !important;}
   [dir="rtl"] .auth-path{transform:scaleX(-1);}
   .auth-side h2{font-size:30px;line-height:1.2;font-weight:800;margin:0 0 22px;letter-spacing:-.01em;color:#FFF7EE;max-width:15ch;}
   .auth-points{list-style:none;margin:0;padding:0;display:grid;gap:12px;}
   .auth-points li{position:relative;padding-inline-start:22px;font-size:14.5px;line-height:1.5;color:#E9DCCB;}
   .auth-points li::before{content:"";position:absolute;inset-inline-start:0;top:.55em;width:9px;height:9px;border-radius:50%;border:1.5px solid #D9B98A;}
   .auth-main{padding:40px 44px;}
-  .auth-tabs{display:inline-flex;background:var(--surface-2);border:1px solid var(--border);border-radius:999px;padding:4px;margin-bottom:26px;}
+  .auth-tabs{display:inline-flex;background:var(--surface-2);border:1px solid var(--border);border-radius:999px;padding:4px;margin-bottom:18px;}
   .auth-tabs button{border:none;background:none;font:inherit;font-size:14px;font-weight:700;color:var(--muted);padding:8px 18px;border-radius:999px;cursor:pointer;}
   .auth-tabs button.on{background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(74,53,38,.12);}
   .auth-h{font-size:24px;font-weight:800;margin:0 0 6px;}
@@ -843,6 +843,45 @@
   .dash-edit[open] summary::after{transform:rotate(-135deg);}
   .dash-edit summary .muted{font-weight:500;font-size:13.5px;}
   .dash-edit .dash-form{border:none;border-top:1px solid var(--border);border-radius:0;margin:0 !important;}
+
+  /* ===== v45 requests + chat ===== */
+  .req-list{display:grid;gap:14px;}
+  .req{position:relative;border:1px solid var(--border);border-radius:var(--radius-md);padding:20px 22px;background:var(--surface);}
+  .req-act{border-color:var(--accent-2);background:linear-gradient(0deg,var(--surface),var(--surface)) padding-box;box-shadow:inset 4px 0 0 var(--accent), 0 14px 30px -24px rgba(74,53,38,.5);}
+  [dir="rtl"] .req-act{box-shadow:inset -4px 0 0 var(--accent), 0 14px 30px -24px rgba(74,53,38,.5);}
+  .req-off{opacity:.65;}
+  .req-flag{position:absolute;top:-10px;inset-inline-start:18px;background:var(--accent);color:var(--accent-ink);font-size:11.5px;font-weight:800;padding:3px 10px;border-radius:999px;}
+  .req-top{display:flex;align-items:center;gap:14px;}
+  .req-who{flex:1;min-width:0;}
+  .req-who b{font-size:16px;}
+  .req-who .muted{font-size:13px;}
+  .req-when{text-align:end;display:flex;flex-direction:column;line-height:1.3;}
+  .req-when b{font-size:14.5px;}
+  .req-when span{font-size:13px;color:var(--muted);}
+  .req-msg{margin:12px 0 0;font-size:14.5px;color:var(--text);background:var(--surface-2);border-radius:10px;padding:10px 14px;}
+  .req-steps{list-style:none;margin:16px 0 0;padding:0;display:flex;gap:6px;}
+  .req-steps li{flex:1;font-size:12px;color:var(--muted);padding-top:9px;border-top:3px solid var(--border);}
+  .req-steps li.done{border-top-color:var(--accent-2);}
+  .req-steps li.now{border-top-color:var(--accent);color:var(--text);font-weight:700;}
+  .req-next{margin:12px 0 0;font-size:13.5px;color:var(--muted);}
+  .req-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:14px;}
+  .req-chat-btn{margin-inline-start:auto;position:relative;}
+  .req-chat-btn.on{border-color:var(--accent);}
+  .req-badge{background:#B5533C;color:#fff;font-size:11px;font-weight:800;min-width:18px;height:18px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;padding:0 5px;}
+  .rchat{margin-top:16px;border-top:1px solid var(--border);padding-top:14px;}
+  .rc-list{max-height:320px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:4px 2px 10px;}
+  .bub{max-width:78%;align-self:flex-start;background:var(--surface-2);border-radius:14px 14px 14px 4px;padding:9px 13px;font-size:14.5px;line-height:1.5;white-space:pre-wrap;word-break:break-word;}
+  .bub.me{align-self:flex-end;background:var(--accent);color:var(--accent-ink);border-radius:14px 14px 4px 14px;}
+  .bub span{display:block;font-size:11px;opacity:.7;margin-top:3px;}
+  .rc-empty{font-size:13.5px;color:var(--muted);margin:4px 0 8px;}
+  .rc-err{font-size:13px;color:var(--danger);margin:0 0 8px;}
+  .rc-quick{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+  .rc-q{border:1px solid var(--border);background:var(--surface);color:var(--text);font:inherit;font-size:12.5px;padding:5px 11px;border-radius:999px;cursor:pointer;}
+  .rc-q:hover{border-color:var(--accent-2);}
+  .rc-send{display:flex;gap:8px;align-items:flex-end;}
+  .rc-send textarea{flex:1;resize:none;min-height:42px;padding:10px 13px;border-radius:12px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font:inherit;font-size:14.5px;line-height:1.45;}
+  .rc-send textarea:focus{outline:2px solid var(--accent);outline-offset:1px;}
+  @media (max-width:600px){.req{padding:18px 16px;}.req-top{flex-wrap:wrap;}.req-when{text-align:start;width:100%;flex-direction:row;gap:8px;}.req-chat-btn{margin-inline-start:0;}}
 </style>
 </head>
 <body>
@@ -1025,10 +1064,16 @@ const I18N = {
     adm_share:'Mentor share (%)', adm_share_hint:'The part of each booking that goes to the mentor. Workar keeps the rest.',
     pay_title:'Mentor payouts', pay_hint:'Every paid booking, grouped by mentor. After you send a mentor their money (e-Transfer, PayPal…), mark it as paid here.', pay_loading:'Loading payouts…', pay_error:'Could not load payouts — check that the payouts SQL has been run.', pay_none:'No paid bookings yet.', pay_tot_owed:'Owed to mentors', pay_tot_keep:'Workar keeps',
     pay_c_mentor:'Mentor', pay_c_n:'Paid bookings', pay_c_collected:'Collected', pay_c_share:'Mentor share', pay_c_owed:'Owed now', pay_mark:'Mark as paid', pay_settled:'Settled', pay_confirm:'Record that you paid {a} to {n}?', pay_done:'Payout recorded', pay_fail:'Could not record the payout — check that the payouts SQL has been run',
-    auth_side_h:'Someone has already walked the path you\'re on.', auth_pt1:'Mentors who have done the job you want, in your language', auth_pt2:'Video and voice sessions right here on Workar', auth_pt3:'Free to join. You only pay once a mentor accepts your booking', auth_tab_signup:'Sign up', auth_h_login:'Welcome back', auth_h_signup:'Create your account', auth_sub_login:'Log in to see your bookings and messages.', auth_sub_signup:'It takes a minute. You\'ll set up your profile next.', auth_forgot_h:'Reset your password', auth_fine_login:'New to Workar? Choose Sign up above.', auth_fine_signup:'Free to join — no card needed.', pw_show:'Show password', pw_hide:'Hide password',
+    auth_side_h:'Someone has already walked the path you\'re on.', auth_pt1:'Mentors who have done the job you want, in your language', auth_pt2:'Video and voice sessions right here on Workar', auth_pt3:'You only pay once a mentor accepts your booking', auth_tab_signup:'Sign up', auth_h_login:'Welcome back', auth_h_signup:'Create your account', auth_sub_login:'Welcome back. Your bookings and messages are waiting.', auth_sub_signup:'Just an email and a password — your profile comes next.', auth_forgot_h:'Reset your password', auth_fine_login:'New to Workar? Choose Sign up above.', auth_fine_signup:'Free to join — no card needed.', pw_show:'Show password', pw_hide:'Hide password',
     ob_sub:'Tell us who you are. It takes about two minutes and you can change everything later.', ob_s_about:'About you', ob_preview:'How clients will see you', ob_preview_note:'This card appears in Find a mentor. A clear headline and a bio written to a mentee get the most bookings.', ob_pv_name:'Your name', ob_pv_head:'Your title and company', ob_pv_bio:'Your bio will appear here.', ob_next:'What happens next', ob_next1_t:'Finish your profile', ob_next1_s:'So your mentor knows where you are and where you want to go.', ob_next2_t:'Pick a mentor and a time', ob_next2_s:'Choose a package and a slot that suits you.', ob_next3_t:'Meet on Workar', ob_next3_s:'Once the mentor accepts, join by video or voice right here.', ob_submit_book:'Save and pick a time',
     mp_back:'← All mentors', mp_speaks:'Speaks', mp_about:'About', mp_help:'Can help you with', mp_per:'per 45-min session', mp_per_short:'/ session', mp_tier_suffix:'mentor',
     dash_aiming:'Working toward {p}', dash_view_public:'View public profile', dash_edit:'Edit profile', dash_edit_sub:'Name, background, languages, rate and availability',
+    flag_new:'New request', flag_action:'Action needed', st_requested:'Requested', st_accepted:'Accepted', st_paid:'Paid', st_session:'Session', st_declined:'Declined',
+    nx_pending_m:'Accept to confirm this time. If it doesn\'t suit you, message {n} to agree on another one first.', nx_pending_c:'Waiting for {n} to accept. You can message them in the meantime.',
+    nx_pay_m:'Accepted. Waiting for {n} to pay — the call link unlocks right after.', nx_pay_c:'{n} accepted. Pay to confirm — the call link unlocks right after payment.',
+    nx_meet:'You\'re confirmed. At the session time, both of you press Join video call (or voice) — it opens a private Workar room.', nx_done:'All sessions are done. Leave a review on the mentor\'s page.', nx_declined:'This request was declined.',
+    join_video:'Join video call', join_voice:'Join voice call', chat_open:'Message', chat_hide:'Close chat', chat_send:'Send', chat_ph:'Write to {n}…', chat_empty:'No messages yet. Use chat to agree on a time or share what you\'d like to cover with {n}.', chat_err:'Message could not be sent — check that the latest Workar SQL has been run.',
+    chat_q1:'Does this time still work for you?', chat_q2:'Could we find another time?', chat_q3:'I\'ll share my resume before the session.',
     join_call:'Join video/voice call', paid_badge:'Paid',
     toast_payment_fail:'Could not start payment — try again',
     toast_payment_success:'Payment received — booking confirmed!',
@@ -1239,10 +1284,16 @@ const I18N = {
     adm_share:'سهم منتور (٪)', adm_share_hint:'بخشی از هر رزرو که به منتور می‌رسد. بقیه‌اش سهم Workar است.',
     pay_title:'پرداخت به منتورها', pay_hint:'همه‌ی رزروهای پرداخت‌شده، به تفکیک منتور. بعد از اینکه پول منتور را فرستادی (ای‌ترانسفر، PayPal و…)، اینجا ثبتش کن.', pay_loading:'در حال بارگذاری…', pay_error:'بارگذاری نشد — مطمئن شو SQL پرداخت منتورها اجرا شده.', pay_none:'هنوز رزرو پرداخت‌شده‌ای نیست.', pay_tot_owed:'بدهی به منتورها', pay_tot_keep:'سهم Workar',
     pay_c_mentor:'منتور', pay_c_n:'رزروهای پرداخت‌شده', pay_c_collected:'دریافتی', pay_c_share:'سهم منتور', pay_c_owed:'بدهی فعلی', pay_mark:'ثبت پرداخت', pay_settled:'تسویه‌شده', pay_confirm:'ثبت کنم که {a} به {n} پرداخت کردی؟', pay_done:'پرداخت ثبت شد', pay_fail:'ثبت نشد — مطمئن شو SQL پرداخت منتورها اجرا شده',
-    auth_side_h:'کسی قبلاً همین مسیری که تو داری می‌ری رو رفته.', auth_pt1:'منتورهایی که همون کاری که می‌خوای رو انجام دادن، به زبان خودت', auth_pt2:'جلسه‌ی تصویری و صوتی همین‌جا روی Workar', auth_pt3:'عضویت رایگانه. فقط وقتی منتور رزروت رو قبول کنه پرداخت می‌کنی', auth_tab_signup:'ثبت‌نام', auth_h_login:'خوش برگشتی', auth_h_signup:'حسابت رو بساز', auth_sub_login:'وارد شو تا رزروها و پیام‌هات رو ببینی.', auth_sub_signup:'یک دقیقه طول می‌کشه. قدم بعد پروفایلت رو می‌سازی.', auth_forgot_h:'بازیابی رمز عبور', auth_fine_login:'تازه واردی؟ بالا «ثبت‌نام» رو بزن.', auth_fine_signup:'عضویت رایگانه — کارت بانکی لازم نیست.', pw_show:'نمایش رمز', pw_hide:'پنهان کردن رمز',
+    auth_side_h:'کسی قبلاً همین مسیری که تو داری می‌ری رو رفته.', auth_pt1:'منتورهایی که همون کاری که می‌خوای رو انجام دادن، به زبان خودت', auth_pt2:'جلسه‌ی تصویری و صوتی همین‌جا روی Workar', auth_pt3:'فقط وقتی منتور رزروت رو قبول کنه پرداخت می‌کنی', auth_tab_signup:'ثبت‌نام', auth_h_login:'خوش برگشتی', auth_h_signup:'حسابت رو بساز', auth_sub_login:'خوش برگشتی. رزروها و پیام‌هات منتظرتن.', auth_sub_signup:'فقط ایمیل و رمز — پروفایلت رو قدم بعد می‌سازی.', auth_forgot_h:'بازیابی رمز عبور', auth_fine_login:'تازه واردی؟ بالا «ثبت‌نام» رو بزن.', auth_fine_signup:'عضویت رایگانه — کارت بانکی لازم نیست.', pw_show:'نمایش رمز', pw_hide:'پنهان کردن رمز',
     ob_sub:'بگو کی هستی. حدود دو دقیقه طول می‌کشه و بعداً همه‌چیز قابل تغییره.', ob_s_about:'درباره‌ی تو', ob_preview:'مراجعه‌کننده‌ها تو رو این‌طوری می‌بینن', ob_preview_note:'این کارت توی صفحه‌ی پیدا کردن منتور نمایش داده می‌شه. عنوان واضح و بیوگرافی‌ای که خطاب به منتی نوشته شده، بیشترین رزرو رو می‌گیره.', ob_pv_name:'اسم تو', ob_pv_head:'عنوان شغلی و شرکت', ob_pv_bio:'بیوگرافی‌ات اینجا نمایش داده می‌شه.', ob_next:'قدم‌های بعدی', ob_next1_t:'پروفایلت رو کامل کن', ob_next1_s:'تا منتور بدونه الان کجایی و می‌خوای به کجا برسی.', ob_next2_t:'منتور و زمان رو انتخاب کن', ob_next2_s:'پکیج و زمانی که برات مناسبه رو انتخاب کن.', ob_next3_t:'روی Workar جلسه بذار', ob_next3_s:'بعد از تأیید منتور، همین‌جا با تماس تصویری یا صوتی وصل شو.', ob_submit_book:'ذخیره و انتخاب زمان',
     mp_back:'→ همه‌ی منتورها', mp_speaks:'زبان‌ها:', mp_about:'درباره', mp_help:'می‌تونه کمکت کنه در', mp_per:'برای هر جلسه‌ی ۴۵ دقیقه‌ای', mp_per_short:'/ جلسه', mp_tier_suffix:'',
     dash_aiming:'هدف: {p}', dash_view_public:'دیدن پروفایل عمومی', dash_edit:'ویرایش پروفایل', dash_edit_sub:'اسم، سوابق، زبان‌ها، نرخ و زمان‌های آزاد',
+    flag_new:'درخواست جدید', flag_action:'نیاز به اقدام', st_requested:'درخواست', st_accepted:'تأیید', st_paid:'پرداخت', st_session:'جلسه', st_declined:'رد شد',
+    nx_pending_m:'با تأیید، این زمان قطعی می‌شه. اگه برات مناسب نیست، اول به {n} پیام بده و روی زمان دیگه‌ای توافق کنید.', nx_pending_c:'منتظر تأیید {n}. تا اون موقع می‌تونی بهش پیام بدی.',
+    nx_pay_m:'تأیید شد. منتظر پرداخت {n} — لینک تماس بلافاصله بعدش فعال می‌شه.', nx_pay_c:'{n} تأیید کرد. برای قطعی شدن پرداخت کن — لینک تماس بلافاصله بعد از پرداخت فعال می‌شه.',
+    nx_meet:'جلسه قطعی شد. سر ساعت، هر دو نفر «ورود به تماس تصویری» (یا صوتی) رو بزنید — یک اتاق خصوصی Workar باز می‌شه.', nx_done:'همه‌ی جلسات تموم شد. توی صفحه‌ی منتور نظرت رو بنویس.', nx_declined:'این درخواست رد شد.',
+    join_video:'ورود به تماس تصویری', join_voice:'ورود به تماس صوتی', chat_open:'پیام', chat_hide:'بستن گفتگو', chat_send:'ارسال', chat_ph:'به {n} بنویس…', chat_empty:'هنوز پیامی نیست. با گفتگو روی زمان توافق کنید یا بگو می‌خوای با {n} درباره‌ی چی صحبت کنی.', chat_err:'پیام ارسال نشد — مطمئن شو SQL جدید Workar اجرا شده.',
+    chat_q1:'این زمان هنوز برات مناسبه؟', chat_q2:'می‌تونیم زمان دیگه‌ای بذاریم؟', chat_q3:'رزومه‌ام رو قبل از جلسه می‌فرستم.',
     join_call:'ورود به تماس تصویری/صوتی', paid_badge:'پرداخت‌شده',
     toast_payment_fail:'پرداخت شروع نشد — دوباره امتحان کن',
     toast_payment_success:'پرداخت انجام شد — رزرو تأیید شد!',
@@ -1310,7 +1361,7 @@ let state = { view:'home', mentorId:null, coachMode:'resume', chatMsgs:[], sendi
   matchQuery:'', matchResults:null, matching:false, interviewRole:'', interviewStarted:false, bookingOpen:false, selectedSlot:null,
   authMode:'login', authError:'', authCheckEmail:false, authBusy:false,
   lang:'en', query:'', role:null, voiceMode:false, listening:false, outOfCredits:false };
-let cache = { profiles:{}, reviews:{}, requests:[], names:{} };
+let cache = { profiles:{}, reviews:{}, requests:[], names:{}, people:{}, msgs:{} };
 
 function el(html){ const t=document.createElement('template'); t.innerHTML=html.trim(); return t.content; }
 function esc(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
@@ -1333,7 +1384,13 @@ window.addEventListener('popstate', e=>{
 });
 try{ history.replaceState({ view: state.view }, ''); }catch(e){}
 
-async function resolveNames(ids){ /* names are resolved locally in nameOf() — nothing to fetch */ }
+async function resolveNames(ids){
+  if(!sb) return;
+  const need = [...new Set((ids||[]).filter(id=>id && id!==uid && !(cache.profiles[id] && cache.profiles[id].name) && !cache.people[id]))];
+  if(!need.length) return;
+  const { data } = await sb.from('profiles').select('id,name,profession,role').in('id', need);
+  (data||[]).forEach(p=>{ cache.people[p.id] = p; if(p.name) cache.names[p.id] = p.name; });
+}
 function nameOf(id){
   if(id===uid && myProfile && myProfile.name) return myProfile.name;
   if(cache.profiles[id] && cache.profiles[id].name) return cache.profiles[id].name;
@@ -3344,7 +3401,7 @@ function authView(){
         <button type="button" class="${mode==='login'?'on':''}" data-auth-mode="login">${esc(T('btn_login'))}</button>
         <button type="button" class="${mode==='signup'?'on':''}" data-auth-mode="signup">${esc(T('auth_tab_signup'))}</button>
       </div>
-      <h3 class="auth-h">${esc(T(mode==='signup' ? 'auth_h_signup' : 'auth_h_login'))}</h3>`}
+      `}
       <p class="muted auth-sub">${esc(T(mode==='signup' ? 'auth_sub_signup' : mode==='forgot' ? 'forgot_hint' : 'auth_sub_login'))}</p>
       ${state.authCheckEmail ? `
       <div class="auth-note">
@@ -3362,7 +3419,7 @@ function authView(){
         ${state.authError ? `<div class="form-err">${esc(state.authError)}</div>` : ''}
         <button class="btn btn-primary auth-submit" type="submit" ${state.authBusy?'disabled':''}>${esc(mode==='signup' ? T('btn_signup') : mode==='forgot' ? T('btn_send_reset') : T('btn_login'))}</button>
       </form>
-      ${mode==='forgot' ? `<p class="auth-alt"><a href="#" id="auth-toggle">${esc(T('back_to_login'))}</a></p>` : `<p class="auth-fine">${esc(T(mode==='signup' ? 'auth_fine_signup' : 'auth_fine_login'))}</p>`}
+      ${mode==='forgot' ? `<p class="auth-alt"><a href="#" id="auth-toggle">${esc(T('back_to_login'))}</a></p>` : ''}
     </div>
   </div>`;
 }
@@ -3808,6 +3865,98 @@ function mentorView(){
   </div>`;
 }
 
+function reqNeedsAction(r, isMentor){ return (isMentor && r.status==='pending') || (!isMentor && r.status==='accepted' && r.amountCents>0 && !r.paid) ? 1 : 0; }
+function reqStage(r){ if(r.status==='declined') return -1; if(r.status==='pending') return 0; if(r.amountCents>0 && !r.paid) return 1; const done = (Number(r.sessionsDone)||0) >= reqSessionsTotal(r); return done ? 3 : 2; }
+function reqNextText(r, isMentor, other){
+  const st = reqStage(r);
+  const k = st===-1 ? 'nx_declined' : st===0 ? (isMentor?'nx_pending_m':'nx_pending_c') : st===1 ? (isMentor?'nx_pay_m':'nx_pay_c') : st===2 ? 'nx_meet' : 'nx_done';
+  return T(k).replace('{n}', other);
+}
+function reqCard(r, isMentor){
+  const otherId = isMentor ? r.clientId : r.mentorId, other = nameOf(otherId);
+  const st = reqStage(r), act = reqNeedsAction(r, isMentor), paidFlow = r.amountCents>0;
+  const steps = ['st_requested','st_accepted'].concat(paidFlow?['st_paid']:[]).concat(['st_session']);
+  const cur = st<=0 ? 1 : st===1 ? 2 : st===2 ? steps.length-1 : steps.length;
+  const unread = chatUnread(r.id), open = state.chatOpen===r.id;
+  const person = cache.people[otherId] || cache.profiles[otherId] || {};
+  return `<div class="req ${act?'req-act':''} ${st<0?'req-off':''}">
+    ${act ? `<div class="req-flag">${esc(T(isMentor?'flag_new':'flag_action'))}</div>` : ''}
+    <div class="req-top">
+      <div class="avatar">${initials(other)}</div>
+      <div class="req-who">
+        <b>${esc(other)}</b>
+        <div class="muted">${[isMentor && person.profession ? T('dash_aiming').replace('{p}', person.profession) : '', r.packageKey ? T('pk_'+r.packageKey+'_name') + (r.amountCents?` · $${(r.amountCents/100).toFixed(0)}`:'') : ''].filter(Boolean).map(esc).join(' · ')}</div>
+      </div>
+      <div class="req-when">${r.date ? `<b>${esc(fmtReqDate(r.date))}</b><span>${esc(r.time||'')}</span>` : ''}</div>
+    </div>
+    ${r.message ? `<p class="req-msg">“${esc(r.message)}”</p>` : ''}
+    ${st>=0 ? `<ol class="req-steps">${steps.map((k,i)=>`<li class="${i<cur?'done':i===cur?'now':''}">${esc(T(k))}</li>`).join('')}</ol>` : ''}
+    ${reqIsActive(r) && reqSessionsTotal(r)>1 ? (()=>{ const tot = reqSessionsTotal(r), done = Math.min(tot, Number(r.sessionsDone)||0);
+      return `<div class="sess"><div class="sess-dots">${Array.from({length:tot},(_,i)=>`<i class="${i<done?'on':''}"></i>`).join('')}</div>
+        <span>${esc(done>=tot ? T('sess_all_done') : (isMentor ? T('sess_progress_m') : T('sess_progress_c')).replace('{d}', done).replace('{t}', tot).replace('{l}', tot-done))}</span></div>`; })() : ''}
+    <p class="req-next">${esc(reqNextText(r, isMentor, other))}</p>
+    <div class="req-actions">
+      ${isMentor && r.status==='pending' ? `
+        <button class="btn btn-sm btn-primary" data-req="${r.id}" data-status="accepted">${esc(T('accept'))}</button>
+        <button class="btn btn-sm btn-ghost" data-req="${r.id}" data-status="declined">${esc(T('decline'))}</button>` : ''}
+      ${!isMentor && st===1 ? `<button class="btn btn-sm btn-primary" data-pay="${r.id}" data-amount="${r.amountCents}" data-mentor="${r.mentorId}">${esc(T('pay_to_confirm').replace('${amount}', (r.amountCents/100).toFixed(2)))}</button>` : ''}
+      ${st===2 ? `
+        <button class="btn btn-sm btn-primary" data-call="${r.id}" data-mode="video" title="${esc(T('call_tip'))}">${esc(T('join_video'))}</button>
+        <button class="btn btn-sm btn-outline" data-call="${r.id}" data-mode="voice" title="${esc(T('call_tip'))}">${esc(T('join_voice'))}</button>
+        ${isMentor ? `<button class="btn btn-sm btn-ghost" data-sess="${r.id}" data-next="${(Number(r.sessionsDone)||0)+1}">${esc(T(reqSessionsTotal(r)>1 ? 'sess_mark' : 'sess_mark_one'))}</button>` : ''}` : ''}
+      ${st===3 ? `<span class="status-pill done">${esc(T('sess_completed'))}</span>` : ''}
+      ${st<0 ? `<span class="status-pill declined">${esc(T('st_declined'))}</span>` : ''}
+      <button class="btn btn-sm btn-outline req-chat-btn ${open?'on':''}" data-chat="${r.id}">${esc(T(open?'chat_hide':'chat_open'))}${unread && !open ? `<span class="req-badge">${unread}</span>` : ''}</button>
+    </div>
+    ${open ? chatPanel(r, isMentor, other) : ''}
+  </div>`;
+}
+function fmtReqDate(d){ try{ const x = new Date(d+'T12:00:00'); return x.toLocaleDateString(state.lang==='fa'?'fa-IR':'en-CA', { weekday:'short', month:'short', day:'numeric' }); }catch(e){ return d; } }
+// ---------- chat ----------
+function chatSeenKey(id){ return 'workar_seen_'+id; }
+function chatUnread(id){ const list = cache.msgs[id] || []; let seen = 0; try{ seen = Number(localStorage.getItem(chatSeenKey(id)))||0; }catch(e){}
+  return list.filter(m=>m.senderId!==uid && new Date(m.createdAt).getTime() > seen).length; }
+function markChatSeen(id){ try{ localStorage.setItem(chatSeenKey(id), String(Date.now())); }catch(e){} }
+function chatPanel(r, isMentor, other){
+  const list = cache.msgs[r.id] || [];
+  return `<div class="rchat">
+    <div class="rc-list" id="rc-list">
+      ${list.length ? list.map(m=>`<div class="bub ${m.senderId===uid?'me':''}"><div>${esc(m.text)}</div><span>${esc(new Date(m.createdAt).toLocaleString(state.lang==='fa'?'fa-IR':'en-CA',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}))}</span></div>`).join('')
+        : `<p class="rc-empty">${esc(T('chat_empty').replace('{n}', other))}</p>`}
+    </div>
+    ${cache.msgsError ? `<p class="rc-err">${esc(T('chat_err'))}</p>` : ''}
+    <div class="rc-quick">${['chat_q1','chat_q2','chat_q3'].map(k=>`<button type="button" class="rc-q" data-q="${esc(T(k))}">${esc(T(k))}</button>`).join('')}</div>
+    <div class="rc-send">
+      <textarea id="rc-input" rows="1" placeholder="${esc(T('chat_ph').replace('{n}', other))}">${esc(state.chatDraft||'')}</textarea>
+      <button class="btn btn-primary btn-sm" id="rc-send" data-req-id="${r.id}">${esc(T('chat_send'))}</button>
+    </div>
+  </div>`;
+}
+async function loadMsgs(){
+  if(!sb || !uid) return;
+  const ids = (cache.requests||[]).map(r=>r.id); if(!ids.length) return;
+  const { data, error } = await sb.from('messages').select('*').in('requestId', ids).order('createdAt', { ascending:true });
+  if(error){ cache.msgsError = true; return; }
+  cache.msgsError = false; const by = {};
+  (data||[]).forEach(m=>{ (by[m.requestId] = by[m.requestId] || []).push(m); });
+  cache.msgs = by;
+  if(state.chatOpen) markChatSeen(state.chatOpen);
+  if(state.view==='dashboard') render();
+}
+let __msgChannel = null, __msgPoll = null;
+function watchMsgs(){
+  if(!sb || __msgChannel) return;
+  __msgChannel = sb.channel('msgs-'+uid).on('postgres_changes', { event:'INSERT', schema:'public', table:'messages' }, ()=>loadMsgs()).subscribe();
+  __msgPoll = setInterval(()=>{ if(state.view==='dashboard' && document.visibilityState==='visible') loadMsgs(); }, 20000);
+}
+async function sendMsg(reqId, text){
+  text = (text||'').trim(); if(!text) return;
+  const row = { id: 'm_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7), requestId: reqId, senderId: uid, text: text.slice(0,2000), createdAt: new Date().toISOString() };
+  (cache.msgs[reqId] = cache.msgs[reqId] || []).push(row); state.chatDraft = ''; markChatSeen(reqId); render();
+  const { error } = await sb.from('messages').insert(row);
+  if(error){ cache.msgs[reqId] = cache.msgs[reqId].filter(m=>m!==row); state.chatDraft = text; render(); toast(T('chat_err'), 5000); console.error(error); }
+}
+
 function dashboardView(){
   const isMentor = myProfile.role==='mentor';
   const myReqs = cache.requests.filter(r=> isMentor ? r.mentorId===uid : r.clientId===uid);
@@ -3879,37 +4028,7 @@ function dashboardView(){
       </div>`; })() : ''}
 
   <div class="section-head"><h2>${isMentor?esc(T('requests_from_clients')):esc(T('your_requests'))}</h2></div>
-  ${myReqs.length ? myReqs.slice().reverse().map(r=>`
-    <div class="req-item">
-      <div>
-        <b>${esc(nameOf(isMentor ? r.clientId : r.mentorId))}</b>
-        ${r.packageKey ? `<div style="font-size:12.5px;font-weight:700;color:var(--accent);margin-top:2px;">${esc(T('pk_'+r.packageKey+'_name'))}${r.amountCents?` · $${(r.amountCents/100).toFixed(0)}`:''}</div>` : ''}
-        ${r.date ? `<div class="muted" style="font-size:12.5px;margin-top:2px;">${esc(r.date)} · ${esc(r.time||'')}</div>` : ''}
-        <div class="muted" style="font-size:13.5px;margin-top:2px;">${esc(r.message||'')}</div>
-        ${reqIsActive(r) && reqSessionsTotal(r)>1 ? (()=>{ const tot = reqSessionsTotal(r), done = Math.min(tot, Number(r.sessionsDone)||0);
-          return `<div class="sess">
-            <div class="sess-dots">${Array.from({length:tot},(_,i)=>`<i class="${i<done?'on':''}"></i>`).join('')}</div>
-            <span>${esc(done>=tot ? T('sess_all_done') : (isMentor ? T('sess_progress_m') : T('sess_progress_c')).replace('{d}', done).replace('{t}', tot).replace('{l}', tot-done))}</span>
-          </div>`; })() : ''}
-      </div>
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-        <span class="status-pill ${reqIsActive(r) && (Number(r.sessionsDone)||0) >= reqSessionsTotal(r) ? 'done' : (r.paid ? 'paid' : r.status)}">${reqIsActive(r) && (Number(r.sessionsDone)||0) >= reqSessionsTotal(r) ? esc(T('sess_completed')) : (r.paid ? esc(T('paid_badge')) : esc(r.status))}</span>
-        ${isMentor && r.status==='pending' ? `
-          <button class="btn btn-sm btn-outline" data-req="${r.id}" data-status="accepted">${esc(T('accept'))}</button>
-          <button class="btn btn-sm btn-ghost" data-req="${r.id}" data-status="declined">${esc(T('decline'))}</button>
-        ` : ''}
-        ${r.status==='accepted' && r.amountCents>0 && !r.paid ? (
-          isMentor
-            ? `<span class="muted" style="font-size:12.5px;">${esc(T('waiting_for_payment'))}</span>`
-            : `<button class="btn btn-sm btn-primary" data-pay="${r.id}" data-amount="${r.amountCents}" data-mentor="${r.mentorId}">${esc(T('pay_to_confirm').replace('${amount}', (r.amountCents/100).toFixed(2)))}</button>`
-        ) : ''}
-        ${isMentor && reqIsActive(r) && (Number(r.sessionsDone)||0) < reqSessionsTotal(r) ? `<button class="btn btn-sm btn-ghost" data-sess="${r.id}" data-next="${(Number(r.sessionsDone)||0)+1}">${esc(T(reqSessionsTotal(r)>1 ? 'sess_mark' : 'sess_mark_one'))}</button>` : ''}
-        ${reqIsActive(r) && (Number(r.sessionsDone)||0) < reqSessionsTotal(r) ? `
-          <button class="btn btn-sm btn-primary" data-call="${r.id}" data-mode="video" title="${esc(T('call_tip'))}">${esc(T('btn_video_call'))}</button>
-          <button class="btn btn-sm btn-outline" data-call="${r.id}" data-mode="voice" title="${esc(T('call_tip'))}">${esc(T('btn_voice_call'))}</button>` : ''}
-        ${r.status==='pending' ? `<span class="call-note">${esc(T('call_after_accept'))}</span>` : ''}
-      </div>
-    </div>`).join('') : `<div class="empty">${esc(T('no_requests'))}</div>`}
+  ${myReqs.length ? `<div class="req-list">${myReqs.slice().sort((x,y)=>(reqNeedsAction(y,isMentor)-reqNeedsAction(x,isMentor)) || ((Number(y.createdAt)||0)-(Number(x.createdAt)||0))).map(r=>reqCard(r,isMentor)).join('')}</div>` : `<div class="empty">${esc(T('no_requests'))}</div>`}
   `;
 }
 
@@ -4200,6 +4319,29 @@ function wire(){
     });
   });
 
+  document.querySelectorAll('[data-chat]').forEach(btn=>btn.addEventListener('click', ()=>{
+    const id = btn.getAttribute('data-chat');
+    state.chatOpen = state.chatOpen===id ? null : id; state.chatDraft = '';
+    if(state.chatOpen){ markChatSeen(id); state.chatFocus = true; loadMsgs(); }
+    render();
+  }));
+  const chatIn = document.getElementById('rc-input');
+  if(chatIn){
+    const fit = ()=>{ chatIn.style.height='auto'; chatIn.style.height = Math.min(140, chatIn.scrollHeight)+'px'; };
+    chatIn.addEventListener('input', ()=>{ state.chatDraft = chatIn.value; fit(); });
+    chatIn.addEventListener('focus', ()=>{ state.chatFocus = true; });
+    chatIn.addEventListener('blur', ()=>{ state.chatFocus = false; });
+    chatIn.addEventListener('keydown', e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); state.chatFocus = true; sendMsg(state.chatOpen, chatIn.value); } });
+    fit();
+    if(state.chatFocus){ chatIn.focus(); const n = chatIn.value.length; chatIn.setSelectionRange(n,n); }
+    const cl = document.getElementById('rc-list'); if(cl) cl.scrollTop = cl.scrollHeight;
+  }
+  const chatSend = document.getElementById('rc-send');
+  if(chatSend) chatSend.addEventListener('click', ()=>{ state.chatFocus = true; sendMsg(chatSend.getAttribute('data-req-id'), (document.getElementById('rc-input')||{}).value); });
+  document.querySelectorAll('.rc-q').forEach(b=>b.addEventListener('click', ()=>{
+    state.chatDraft = (state.chatDraft ? state.chatDraft.trim()+' ' : '') + b.getAttribute('data-q'); state.chatFocus = true; render();
+  }));
+
   document.querySelectorAll('[data-sess]').forEach(btn=>{
     btn.addEventListener('click', async ()=>{
       btn.disabled = true;
@@ -4459,6 +4601,7 @@ function loadRequests(){
   window.__db.collection('requests').where(field,'==',uid).onSnapshot(async list=>{
     cache.requests = (list||[]).map(d=>Object.assign({id:d.id}, d.data));
     await resolveNames(cache.requests.flatMap(r=>[r.mentorId, r.clientId]));
+    watchMsgs(); loadMsgs();
     if(state.view==='dashboard') render();
   });
 }
