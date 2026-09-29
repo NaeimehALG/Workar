@@ -979,6 +979,8 @@
   #auth-form .field input{height:44px !important;font-size:14px;}
   .auth-submit{padding:11px 18px;font-size:14.5px;}
   @media (max-width:760px){.auth-side{padding:26px 22px;}.auth-main{padding:26px 22px;}}
+
+  .auth-ill{display:block;width:100%;max-width:300px;height:auto;margin:0 0 22px;}
 </style>
 </head>
 <body>
@@ -3562,6 +3564,7 @@ function authView(){
   <div class="auth-wrap">
     <aside class="auth-side">
       <div class="auth-kicker">WORKAR</div>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 170" class="auth-ill" aria-hidden="true"><g fill="none" stroke="#D9B98A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">  <!-- floor -->  <path d="M20 158 H300" opacity=".35"/>  <!-- table -->  <path d="M112 112 H208"/><path d="M122 112 V158 M198 112 V158"/>  <!-- laptop -->  <path d="M146 111 L150 92 H172 L176 111 Z" fill="#43301F"/><path d="M140 112 H182"/>  <!-- cups -->  <path d="M124 104 v7 h8 v-7 z"/><path d="M196 104 v7 h-8 v-7 z" opacity=".0"/>  <!-- left person (mentor) -->  <circle cx="82" cy="58" r="15"/>  <path d="M70 46 q12 -12 26 0" />  <path d="M77 55 q2.5 -2 5 0"/><circle cx="79.5" cy="59" r="1" fill="#D9B98A"/>  <path d="M86 55 q2.5 -2 5 0"/><circle cx="88.5" cy="59" r="1" fill="#D9B98A"/>  <path d="M82 73 v5"/>  <path d="M64 120 C62 95 66 80 82 78 C98 80 102 92 104 104"/>  <path d="M100 96 L118 104"/>  <path d="M64 120 H96 V158"/><path d="M58 88 V158" opacity=".6"/><path d="M58 120 H64" opacity=".6"/>  <!-- right person (mentee) -->  <circle cx="240" cy="60" r="15"/>  <path d="M226 58 q-2 -18 14 -18 q16 0 14 18"/>  <path d="M232 57 q2.5 -2 5 0"/><circle cx="234.5" cy="61" r="1" fill="#D9B98A"/>  <path d="M241 57 q2.5 -2 5 0"/><circle cx="243.5" cy="61" r="1" fill="#D9B98A"/>  <path d="M240 75 v5"/>  <path d="M258 120 C260 97 256 82 240 80 C224 82 220 94 218 104"/>  <path d="M222 97 L204 104"/>  <path d="M258 120 H226 V158"/><path d="M264 90 V158" opacity=".6"/><path d="M258 120 H264" opacity=".6"/>  <!-- speech bubbles -->  <path d="M104 22 h40 a8 8 0 0 1 8 8 v8 a8 8 0 0 1 -8 8 h-26 l-8 7 v-7 h-6 a8 8 0 0 1 -8 -8 v-8 a8 8 0 0 1 8 -8 z"/>  <circle cx="115" cy="34" r="1.6" fill="#D9B98A"/><circle cx="124" cy="34" r="1.6" fill="#D9B98A"/><circle cx="133" cy="34" r="1.6" fill="#D9B98A"/>  <path d="M176 10 h34 a8 8 0 0 1 8 8 v6 a8 8 0 0 1 -8 8 h4 l-8 6 v-6 h-30 a8 8 0 0 1 -8 -8 v-6 a8 8 0 0 1 8 -8 z" opacity=".55"/>  <path d="M182 21 h24" opacity=".55"/></g></svg>
       <h2>${esc(T('auth_side_h'))}</h2>
       <p class="auth-lede">${esc(T('auth_side_p'))}</p>
       <ul class="auth-feats">
