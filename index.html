@@ -882,6 +882,70 @@
   .rc-send textarea{flex:1;resize:none;min-height:42px;padding:10px 13px;border-radius:12px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font:inherit;font-size:14.5px;line-height:1.45;}
   .rc-send textarea:focus{outline:2px solid var(--accent);outline-offset:1px;}
   @media (max-width:600px){.req{padding:18px 16px;}.req-top{flex-wrap:wrap;}.req-when{text-align:start;width:100%;flex-direction:row;gap:8px;}.req-chat-btn{margin-inline-start:0;}}
+
+  /* ===== v46 manage requests ===== */
+  .req-right{margin-inline-start:auto;display:flex;align-items:center;gap:6px;}
+  .req-right .req-chat-btn{margin-inline-start:0;}
+  .req-more{position:relative;}
+  .req-dots{border:1px solid var(--border);background:var(--surface);color:var(--muted);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  .req-dots:hover{color:var(--text);border-color:var(--accent-2);}
+  .req-menu{position:absolute;top:calc(100% + 6px);inset-inline-end:0;z-index:40;min-width:230px;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:0 18px 40px -18px rgba(60,40,25,.4);padding:6px;display:grid;}
+  .req-menu button{border:none;background:none;text-align:start;font:inherit;font-size:14px;color:var(--text);padding:9px 12px;border-radius:8px;cursor:pointer;}
+  .req-menu button:hover{background:var(--surface-2);}
+  .req-menu button.danger{color:var(--danger);}
+  .req-edit{display:grid;grid-template-columns:1fr 1fr;gap:0 12px;margin-top:14px;padding:16px;border-radius:12px;background:var(--surface-2);}
+  .req-edit .field{margin-bottom:10px;}
+  .req-edit .field input{background:var(--surface);}
+  .req-edit-btns{grid-column:1/-1;display:flex;gap:8px;}
+  .req-edit p{grid-column:1/-1;font-size:12.5px;margin:8px 0 0;}
+  .req-steps li em{font-style:normal;font-weight:500;color:var(--muted);margin-inline-start:6px;font-size:11.5px;}
+  .req-group{border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;background:var(--surface-2);display:grid;gap:12px;}
+  .req-group-head{display:flex;align-items:center;gap:12px;padding:2px 4px 4px;}
+  .req-group-head b{display:block;font-size:16px;}
+  .req-group-head .muted{font-size:13px;}
+  .req-in{padding:16px 18px;}
+  .req-in .req-top{min-height:0;}
+  .req-past{margin-top:22px;}
+  .req-past summary{cursor:pointer;font-weight:700;color:var(--muted);font-size:14.5px;padding:6px 0;}
+  .req-past .req-list{margin-top:10px;}
+  .rc-send textarea{overflow-y:hidden;}
+  @media (max-width:600px){.req-edit{grid-template-columns:1fr;}.req-right{margin-inline-start:0;}}
+
+  /* ===== v47 booking calendar ===== */
+  .cal{border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:16px;background:var(--surface);}
+  .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+  .cal-head b{font-size:14.5px;}
+  .cal-nav{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:18px;line-height:1;cursor:pointer;}
+  .cal-nav:disabled{opacity:.35;cursor:default;}
+  [dir="rtl"] .cal-nav{transform:scaleX(-1);}
+  .cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:12px;}
+  .cal-day{border:1px solid transparent;background:none;border-radius:10px;padding:6px 0 7px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px;font:inherit;color:var(--text);}
+  .cal-day span{font-size:10.5px;color:var(--muted);text-transform:none;}
+  .cal-day b{font-size:15px;}
+  .cal-day i{width:6px;height:6px;border-radius:50%;margin-top:2px;}
+  .cal-day.free i{background:#4E8A5B;}
+  .cal-day.full i{background:#C98B5A;}
+  .cal-day.off{opacity:.38;cursor:default;}
+  .cal-day.off i{background:transparent;}
+  .cal-day:not(.off):hover{border-color:var(--border);}
+  .cal-day.sel{background:var(--accent);color:var(--accent-ink);}
+  .cal-day.sel span{color:inherit;opacity:.85;}
+  .cal-day.sel.free i{background:#fff;}
+  .cal-slots{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+  .cal-slot{border:1px solid var(--border);background:var(--surface);border-radius:10px;padding:8px 4px;font:inherit;font-size:13.5px;font-weight:700;color:var(--text);cursor:pointer;display:flex;flex-direction:column;align-items:center;line-height:1.2;}
+  .cal-slot:hover:not(:disabled){border-color:#4E8A5B;}
+  .cal-slot.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);}
+  .cal-slot.busy{background:repeating-linear-gradient(135deg,var(--surface-2) 0 6px,transparent 6px 12px);color:var(--muted);text-decoration:line-through;cursor:not-allowed;font-weight:500;}
+  .cal-slot small{font-size:10.5px;text-decoration:none;display:block;}
+  .cal-empty{grid-column:1/-1;font-size:13px;margin:4px 0;}
+  .cal-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:12px;font-size:11.5px;color:var(--muted);}
+  .cal-legend span{display:inline-flex;align-items:center;gap:5px;}
+  .cal-legend i{width:8px;height:8px;border-radius:50%;display:inline-block;}
+  .lg-free{background:#4E8A5B;} .lg-full{background:#C98B5A;} .lg-off{background:var(--border);}
+  .cal-picked{margin:12px 0 0;font-size:13.5px;font-weight:700;color:var(--accent);}
+  .cal-note{font-size:12.5px;color:var(--muted);margin:0 0 10px;}
+  .cal-note.ok{color:#4E8A5B;}
+  .cal-note.bad{color:var(--danger);font-weight:700;}
 </style>
 </head>
 <body>
@@ -1074,6 +1138,13 @@ const I18N = {
     nx_meet:'You\'re confirmed. At the session time, both of you press Join video call (or voice) — it opens a private Workar room.', nx_done:'All sessions are done. Leave a review on the mentor\'s page.', nx_declined:'This request was declined.',
     join_video:'Join video call', join_voice:'Join voice call', chat_open:'Message', chat_hide:'Close chat', chat_send:'Send', chat_ph:'Write to {n}…', chat_empty:'No messages yet. Use chat to agree on a time or share what you\'d like to cover with {n}.', chat_err:'Message could not be sent — check that the latest Workar SQL has been run.',
     chat_q1:'Does this time still work for you?', chat_q2:'Could we find another time?', chat_q3:'I\'ll share my resume before the session.',
+    st_waiting:'waiting', st_next:'next', st_cancelled:'Cancelled', nx_cancelled:'This booking was cancelled.',
+    mg_more:'More options', mg_time:'Change date or time', mg_cancel_m:'Cancel this booking', mg_cancel_c:'Cancel my request', mg_cancel_paid:'Cancel (contact Workar for a refund)', mg_hide:'Hide from my list', mg_remove:'Remove from my list', mg_unhide:'Show hidden requests',
+    mg_save_time:'Save new time', mg_time_note:'{n} gets a message in your chat with the new time.', mg_time_saved:'Time updated', mg_time_msg:'I changed our session to {d} at {t}. Let me know if that works.',
+    mg_cancel_confirm:'Cancel this booking? The other person will be told in your chat.', mg_cancelled:'Booking cancelled', mg_cancel_msg:'I cancelled this booking. Message me here if you\'d like to find another time.',
+    mg_perm:'the database did not allow this change — run the latest Workar SQL', toast_accepted:'Accepted — the client can now pay to confirm', toast_declined:'Request declined',
+    grp_count:'{n} active requests', no_active_requests:'Nothing waiting right now.', past_title:'Past and closed ({n})',
+    cal_free:'Free', cal_booked:'Booked', cal_na:'Not available', cal_off:'Not available this day — pick a day with a green dot.', cal_picked:'Selected: {d} at {t}', cal_busy_on:'Already booked that day: {t}', cal_none_busy:'Nothing booked that day yet.', cal_clash:'That time is already booked — please pick another.', cal_taken:'Someone just booked that time. Please pick another.',
     join_call:'Join video/voice call', paid_badge:'Paid',
     toast_payment_fail:'Could not start payment — try again',
     toast_payment_success:'Payment received — booking confirmed!',
@@ -1294,6 +1365,13 @@ const I18N = {
     nx_meet:'جلسه قطعی شد. سر ساعت، هر دو نفر «ورود به تماس تصویری» (یا صوتی) رو بزنید — یک اتاق خصوصی Workar باز می‌شه.', nx_done:'همه‌ی جلسات تموم شد. توی صفحه‌ی منتور نظرت رو بنویس.', nx_declined:'این درخواست رد شد.',
     join_video:'ورود به تماس تصویری', join_voice:'ورود به تماس صوتی', chat_open:'پیام', chat_hide:'بستن گفتگو', chat_send:'ارسال', chat_ph:'به {n} بنویس…', chat_empty:'هنوز پیامی نیست. با گفتگو روی زمان توافق کنید یا بگو می‌خوای با {n} درباره‌ی چی صحبت کنی.', chat_err:'پیام ارسال نشد — مطمئن شو SQL جدید Workar اجرا شده.',
     chat_q1:'این زمان هنوز برات مناسبه؟', chat_q2:'می‌تونیم زمان دیگه‌ای بذاریم؟', chat_q3:'رزومه‌ام رو قبل از جلسه می‌فرستم.',
+    st_waiting:'در انتظار', st_next:'بعدی', st_cancelled:'لغو شد', nx_cancelled:'این رزرو لغو شد.',
+    mg_more:'گزینه‌های بیشتر', mg_time:'تغییر تاریخ یا ساعت', mg_cancel_m:'لغو این رزرو', mg_cancel_c:'لغو درخواست من', mg_cancel_paid:'لغو (برای بازپرداخت به Workar پیام بده)', mg_hide:'پنهان کردن از لیست', mg_remove:'حذف از لیست من', mg_unhide:'نمایش درخواست‌های پنهان',
+    mg_save_time:'ذخیره‌ی زمان جدید', mg_time_note:'زمان جدید توی گفتگو برای {n} فرستاده می‌شه.', mg_time_saved:'زمان به‌روز شد', mg_time_msg:'زمان جلسه رو به {d} ساعت {t} تغییر دادم. بگو مناسبه یا نه.',
+    mg_cancel_confirm:'این رزرو لغو بشه؟ توی گفتگو به طرف مقابل اطلاع داده می‌شه.', mg_cancelled:'رزرو لغو شد', mg_cancel_msg:'این رزرو رو لغو کردم. اگه خواستی زمان دیگه‌ای پیدا کنیم، همین‌جا پیام بده.',
+    mg_perm:'دیتابیس اجازه‌ی این تغییر رو نداد — SQL جدید Workar رو اجرا کن', toast_accepted:'تأیید شد — حالا مراجعه‌کننده می‌تونه پرداخت کنه', toast_declined:'درخواست رد شد',
+    grp_count:'{n} درخواست فعال', no_active_requests:'فعلاً چیزی در انتظار نیست.', past_title:'قبلی و بسته‌شده ({n})',
+    cal_free:'آزاد', cal_booked:'رزرو شده', cal_na:'در دسترس نیست', cal_off:'این روز در دسترس نیست — روزی با نقطه‌ی سبز انتخاب کن.', cal_picked:'انتخاب شد: {d} ساعت {t}', cal_busy_on:'در این روز رزرو شده: {t}', cal_none_busy:'هنوز رزروی برای این روز نیست.', cal_clash:'این زمان قبلاً رزرو شده — زمان دیگه‌ای انتخاب کن.', cal_taken:'همین الان کسی این زمان رو رزرو کرد. زمان دیگه‌ای انتخاب کن.',
     join_call:'ورود به تماس تصویری/صوتی', paid_badge:'پرداخت‌شده',
     toast_payment_fail:'پرداخت شروع نشد — دوباره امتحان کن',
     toast_payment_success:'پرداخت انجام شد — رزرو تأیید شد!',
@@ -1361,7 +1439,7 @@ let state = { view:'home', mentorId:null, coachMode:'resume', chatMsgs:[], sendi
   matchQuery:'', matchResults:null, matching:false, interviewRole:'', interviewStarted:false, bookingOpen:false, selectedSlot:null,
   authMode:'login', authError:'', authCheckEmail:false, authBusy:false,
   lang:'en', query:'', role:null, voiceMode:false, listening:false, outOfCredits:false };
-let cache = { profiles:{}, reviews:{}, requests:[], names:{}, people:{}, msgs:{} };
+let cache = { profiles:{}, reviews:{}, requests:[], names:{}, people:{}, msgs:{}, busy:{}, busyLoaded:{} };
 
 function el(html){ const t=document.createElement('template'); t.innerHTML=html.trim(); return t.content; }
 function esc(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
@@ -1429,6 +1507,74 @@ function upcomingSlotsFor(mentorId, template){
     }
   }
   return out;
+}
+// ---------- booking calendar: free / booked / unavailable ----------
+const BLOCK_HOURS = { morning:['09:00','10:00','11:00'], afternoon:['13:00','14:00','15:00','16:00'], evening:['17:00','18:00','19:00','20:00'] };
+const SESSION_MIN = 45;
+function toMin(t){ const m = /^(\d{1,2}):(\d{2})/.exec(t||''); return m ? (+m[1])*60 + (+m[2]) : -1; }
+function ymd(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function busyFor(mentorId){
+  const own = (cache.requests||[]).filter(r=>r.mentorId===mentorId && (r.status==='pending'||r.status==='accepted')).map(r=>({date:r.date,time:r.time}));
+  return own.concat(cache.busy[mentorId] || []);
+}
+function isBusy(busy, date, time){ const t = toMin(time); return busy.some(b=>b.date===date && Math.abs(toMin(b.time)-t) < SESSION_MIN); }
+async function loadBusy(mentorId){
+  if(!sb || cache.busyLoaded[mentorId]) return;
+  cache.busyLoaded[mentorId] = true;
+  const { data, error } = await sb.rpc('mentor_busy', { mid: mentorId });
+  if(!error){ cache.busy[mentorId] = (data||[]).map(r=>({ date:r.date, time:r.time })); if(state.view==='mentor') render(); }
+}
+function calDays(template, busy){
+  const tmpl = new Set(template||[]), now = new Date(), nowMin = now.getHours()*60+now.getMinutes(), out = [];
+  for(let i=0;i<21;i++){
+    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate()+i), date = ymd(d), dayName = JSDAY_TO_NAME[d.getDay()];
+    const slots = [];
+    AVAIL_BLOCKS.forEach(([blockKey])=>{ if(tmpl.has(dayName+'-'+blockKey)) (BLOCK_HOURS[blockKey]||[]).forEach(t=>{
+      if(i===0 && toMin(t) <= nowMin + 120) return; // same-day: at least 2 hours' notice
+      slots.push({ time:t, busy:isBusy(busy, date, t) }); }); });
+    out.push({ d, date, dayName, slots, free: slots.filter(x=>!x.busy).length });
+  }
+  return out;
+}
+function fmtTime(t){ const m = toMin(t); const h = Math.floor(m/60), mm = String(m%60).padStart(2,'0'); if(state.lang==='fa') return String(h).padStart(2,'0')+':'+mm; return ((h%12)||12)+(mm!=='00'?':'+mm:'')+(h<12?' am':' pm'); }
+function bookingCalendar(id, p){
+  const busy = busyFor(id);
+  if(!(p.availability||[]).length){
+    const sel = state.selectedSlot || {};
+    const dayBusy = sel.date ? busy.filter(b=>b.date===sel.date).map(b=>b.time).sort() : [];
+    return `<p class="muted" style="font-size:13px;margin-bottom:10px;">${esc(T('no_slots_pick_own'))}</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px;">
+        <div class="field"><label>${esc(T('lbl_date'))}</label><input type="date" id="book-date" min="${ymd(new Date())}" value="${esc(sel.date||'')}"></div>
+        <div class="field"><label>${esc(T('lbl_time'))}</label><input type="time" id="book-time" step="900" value="${esc(sel.time||'')}"></div>
+      </div>
+      ${sel.date ? `<p class="cal-note ${dayBusy.length?'':'ok'}">${dayBusy.length ? esc(T('cal_busy_on').replace('{t}', dayBusy.map(fmtTime).join(', '))) : esc(T('cal_none_busy'))}</p>` : ''}
+      ${sel.date && sel.time && isBusy(busy, sel.date, sel.time) ? `<p class="cal-note bad">${esc(T('cal_clash'))}</p>` : ''}`;
+  }
+  const days = calDays(p.availability, busy);
+  const wk = Math.min(2, Math.max(0, state.calWeek||0));
+  const week = days.slice(wk*7, wk*7+7);
+  let selDate = state.calDay && days.find(x=>x.date===state.calDay) ? state.calDay : ((week.find(x=>x.free) || week[0]).date);
+  if(!week.find(x=>x.date===selDate)) selDate = (week.find(x=>x.free) || week[0]).date;
+  const day = days.find(x=>x.date===selDate);
+  const loc = state.lang==='fa' ? 'fa-IR' : 'en-CA';
+  const monthLbl = week[0].d.toLocaleDateString(loc, { month:'long' }) + (week[6].d.getMonth()!==week[0].d.getMonth() ? ' – ' + week[6].d.toLocaleDateString(loc, { month:'long' }) : '');
+  return `<div class="cal">
+    <div class="cal-head">
+      <button type="button" class="cal-nav" data-cal-week="${wk-1}" ${wk===0?'disabled':''} aria-label="prev">‹</button>
+      <b>${esc(monthLbl)}</b>
+      <button type="button" class="cal-nav" data-cal-week="${wk+1}" ${wk===2?'disabled':''} aria-label="next">›</button>
+    </div>
+    <div class="cal-days">${week.map(x=>{ const st = !x.slots.length ? 'off' : x.free ? 'free' : 'full';
+      return `<button type="button" class="cal-day ${st} ${x.date===selDate?'sel':''}" data-cal-day="${x.date}" ${st==='off'?'disabled':''}>
+        <span>${esc(x.d.toLocaleDateString(loc,{weekday:'short'}))}</span><b>${x.d.getDate()}</b><i></i></button>`; }).join('')}</div>
+    <div class="cal-slots">
+      ${!day.slots.length ? `<p class="muted cal-empty">${esc(T('cal_off'))}</p>`
+        : day.slots.map(x=>{ const on = state.selectedSlot && state.selectedSlot.date===day.date && state.selectedSlot.time===x.time;
+          return `<button type="button" class="cal-slot ${x.busy?'busy':''} ${on?'on':''}" ${x.busy?'disabled':''} data-date="${day.date}" data-time="${x.time}">${esc(fmtTime(x.time))}${x.busy?`<small>${esc(T('cal_booked'))}</small>`:''}</button>`; }).join('')}
+    </div>
+    <div class="cal-legend"><span><i class="lg-free"></i>${esc(T('cal_free'))}</span><span><i class="lg-full"></i>${esc(T('cal_booked'))}</span><span><i class="lg-off"></i>${esc(T('cal_na'))}</span></div>
+    ${state.selectedSlot ? `<p class="cal-picked">${esc(T('cal_picked').replace('{d}', fmtReqDate(state.selectedSlot.date)).replace('{t}', fmtTime(state.selectedSlot.time)))}</p>` : ''}
+  </div>`;
 }
 function formatSlotLabel(slot){
   const d = slot.dateObj;
@@ -1542,7 +1688,7 @@ function onSignedIn(session){
 
 async function init(){
   initLanguage();
-  document.addEventListener('click', ()=>{ if(state.langMenu || state.langOpen){ state.langMenu = false; state.langOpen = false; render(); } });
+  document.addEventListener('click', ()=>{ if(state.langMenu || state.langOpen || state.reqMenu){ state.langMenu = false; state.langOpen = false; state.reqMenu = null; render(); } });
   if(!sb){
     document.getElementById('app').innerHTML = `<div class="empty" style="margin-top:80px;">Workar isn't connected to a database yet.<br>Add your Supabase URL and key in the code to enable it.</div>`;
     return;
@@ -3786,17 +3932,10 @@ function mentorView(){
       </div>
       ${(()=>{ const pk = getPackages().find(x=>x.key===(state.selectedPkg||'single')); return pk && pk.sessions>1 ? `<p class="call-note" style="margin:-8px 0 14px;">${esc(T('multi_session_note'))}</p>` : ''; })()}
       <label style="display:block;margin-bottom:8px;">${esc(T('choose_slot_title'))}</label>
-      ${slots.length ? `
-      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
-        ${slots.map(s=>`<button type="button" class="btn btn-sm ${state.selectedSlot && state.selectedSlot.date===s.date && state.selectedSlot.time===s.time ? 'btn-primary':'btn-outline'} slot-btn" data-date="${s.date}" data-time="${s.time}">${esc(formatSlotLabel(s))}</button>`).join('')}
-      </div>` : `<p class="muted" style="font-size:13px;margin-bottom:10px;">${esc(T('no_slots_pick_own'))}</p>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px;">
-        <div class="field"><label>${esc(T('lbl_date'))}</label><input type="date" id="book-date" min="${new Date().toISOString().slice(0,10)}" value="${esc((state.selectedSlot&&state.selectedSlot.date)||'')}"></div>
-        <div class="field"><label>${esc(T('lbl_time'))}</label><input type="time" id="book-time" step="900" value="${esc((state.selectedSlot&&state.selectedSlot.time)||'')}"></div>
-      </div>`}
-      <div class="field"><label>${esc(T('lbl_message'))}</label><textarea id="book-message" placeholder="${esc(T('ph_message'))}"></textarea></div>
+      ${bookingCalendar(id, p)}
+      <div class="field"><label>${esc(T('lbl_message'))}</label><textarea id="book-message" placeholder="${esc(T('ph_message'))}">${esc(state.bookMsg||'')}</textarea></div>
       <div style="display:flex;gap:10px;">
-        <button class="btn btn-primary btn-sm" id="book-submit" ${state.selectedSlot?'':'disabled'}>${esc(T('send_request'))}</button>
+        <button class="btn btn-primary btn-sm" id="book-submit" ${state.selectedSlot && state.selectedSlot.time?'':'disabled'}>${esc(T('send_request'))}</button>
         <button class="btn btn-ghost btn-sm" id="book-cancel">${esc(T('cancel'))}</button>
       </div>
     </div>`;
@@ -3866,31 +4005,31 @@ function mentorView(){
 }
 
 function reqNeedsAction(r, isMentor){ return (isMentor && r.status==='pending') || (!isMentor && r.status==='accepted' && r.amountCents>0 && !r.paid) ? 1 : 0; }
-function reqStage(r){ if(r.status==='declined') return -1; if(r.status==='pending') return 0; if(r.amountCents>0 && !r.paid) return 1; const done = (Number(r.sessionsDone)||0) >= reqSessionsTotal(r); return done ? 3 : 2; }
+function reqStage(r){ if(r.status==='declined' || r.status==='cancelled') return -1; if(r.status==='pending') return 0; if(r.amountCents>0 && !r.paid) return 1; const done = (Number(r.sessionsDone)||0) >= reqSessionsTotal(r); return done ? 3 : 2; }
 function reqNextText(r, isMentor, other){
   const st = reqStage(r);
-  const k = st===-1 ? 'nx_declined' : st===0 ? (isMentor?'nx_pending_m':'nx_pending_c') : st===1 ? (isMentor?'nx_pay_m':'nx_pay_c') : st===2 ? 'nx_meet' : 'nx_done';
+  const k = st===-1 ? (r.status==='cancelled' ? 'nx_cancelled' : 'nx_declined') : st===0 ? (isMentor?'nx_pending_m':'nx_pending_c') : st===1 ? (isMentor?'nx_pay_m':'nx_pay_c') : st===2 ? 'nx_meet' : 'nx_done';
   return T(k).replace('{n}', other);
 }
-function reqCard(r, isMentor){
+function reqCard(r, isMentor, grouped){
   const otherId = isMentor ? r.clientId : r.mentorId, other = nameOf(otherId);
   const st = reqStage(r), act = reqNeedsAction(r, isMentor), paidFlow = r.amountCents>0;
   const steps = ['st_requested','st_accepted'].concat(paidFlow?['st_paid']:[]).concat(['st_session']);
   const cur = st<=0 ? 1 : st===1 ? 2 : st===2 ? steps.length-1 : steps.length;
   const unread = chatUnread(r.id), open = state.chatOpen===r.id;
   const person = cache.people[otherId] || cache.profiles[otherId] || {};
-  return `<div class="req ${act?'req-act':''} ${st<0?'req-off':''}">
+  return `<div class="req ${act?'req-act':''} ${st<0?'req-off':''} ${grouped?'req-in':''}">
     ${act ? `<div class="req-flag">${esc(T(isMentor?'flag_new':'flag_action'))}</div>` : ''}
     <div class="req-top">
-      <div class="avatar">${initials(other)}</div>
+      ${grouped ? '' : `<div class="avatar">${initials(other)}</div>`}
       <div class="req-who">
-        <b>${esc(other)}</b>
-        <div class="muted">${[isMentor && person.profession ? T('dash_aiming').replace('{p}', person.profession) : '', r.packageKey ? T('pk_'+r.packageKey+'_name') + (r.amountCents?` · $${(r.amountCents/100).toFixed(0)}`:'') : ''].filter(Boolean).map(esc).join(' · ')}</div>
+        ${grouped ? '' : `<b>${esc(other)}</b>`}
+        <div class="muted">${[isMentor && !grouped && person.profession ? T('dash_aiming').replace('{p}', person.profession) : '', r.packageKey ? T('pk_'+r.packageKey+'_name') + (r.amountCents?` · $${(r.amountCents/100).toFixed(0)}`:'') : ''].filter(Boolean).map(esc).join(' · ')}</div>
       </div>
       <div class="req-when">${r.date ? `<b>${esc(fmtReqDate(r.date))}</b><span>${esc(r.time||'')}</span>` : ''}</div>
     </div>
     ${r.message ? `<p class="req-msg">“${esc(r.message)}”</p>` : ''}
-    ${st>=0 ? `<ol class="req-steps">${steps.map((k,i)=>`<li class="${i<cur?'done':i===cur?'now':''}">${esc(T(k))}</li>`).join('')}</ol>` : ''}
+    ${st>=0 ? `<ol class="req-steps">${steps.map((k,i)=>`<li class="${i<cur?'done':i===cur?'now':''}">${esc(T(k))}${i===cur && st<3 ? `<em>${esc(T(st===2?'st_next':'st_waiting'))}</em>` : ''}</li>`).join('')}</ol>` : ''}
     ${reqIsActive(r) && reqSessionsTotal(r)>1 ? (()=>{ const tot = reqSessionsTotal(r), done = Math.min(tot, Number(r.sessionsDone)||0);
       return `<div class="sess"><div class="sess-dots">${Array.from({length:tot},(_,i)=>`<i class="${i<done?'on':''}"></i>`).join('')}</div>
         <span>${esc(done>=tot ? T('sess_all_done') : (isMentor ? T('sess_progress_m') : T('sess_progress_c')).replace('{d}', done).replace('{t}', tot).replace('{l}', tot-done))}</span></div>`; })() : ''}
@@ -3905,9 +4044,26 @@ function reqCard(r, isMentor){
         <button class="btn btn-sm btn-outline" data-call="${r.id}" data-mode="voice" title="${esc(T('call_tip'))}">${esc(T('join_voice'))}</button>
         ${isMentor ? `<button class="btn btn-sm btn-ghost" data-sess="${r.id}" data-next="${(Number(r.sessionsDone)||0)+1}">${esc(T(reqSessionsTotal(r)>1 ? 'sess_mark' : 'sess_mark_one'))}</button>` : ''}` : ''}
       ${st===3 ? `<span class="status-pill done">${esc(T('sess_completed'))}</span>` : ''}
-      ${st<0 ? `<span class="status-pill declined">${esc(T('st_declined'))}</span>` : ''}
+      ${st<0 ? `<span class="status-pill declined">${esc(T(r.status==='cancelled'?'st_cancelled':'st_declined'))}</span>` : ''}
+      <span class="req-right">
       <button class="btn btn-sm btn-outline req-chat-btn ${open?'on':''}" data-chat="${r.id}">${esc(T(open?'chat_hide':'chat_open'))}${unread && !open ? `<span class="req-badge">${unread}</span>` : ''}</button>
+      <span class="req-more">
+        <button class="req-dots" data-menu="${r.id}" aria-label="${esc(T('mg_more'))}"><svg viewBox="0 0 20 20" width="18" height="18"><circle cx="4" cy="10" r="1.7" fill="currentColor"/><circle cx="10" cy="10" r="1.7" fill="currentColor"/><circle cx="16" cy="10" r="1.7" fill="currentColor"/></svg></button>
+        ${state.reqMenu===r.id ? `<div class="req-menu">
+          ${st>=0 && st<3 ? `<button data-edit-time="${r.id}">${esc(T('mg_time'))}</button>` : ''}
+          ${st>=0 && st<2 ? `<button data-set-status="${r.id}" data-to="cancelled" class="danger">${esc(T(isMentor?'mg_cancel_m':'mg_cancel_c'))}</button>` : ''}
+          ${st===2 && isMentor ? `<button data-set-status="${r.id}" data-to="cancelled" class="danger">${esc(T('mg_cancel_paid'))}</button>` : ''}
+          <button data-hide="${r.id}">${esc(T(st<0||st===3 ? 'mg_remove' : 'mg_hide'))}</button>
+        </div>` : ''}
+      </span>
+      </span>
     </div>
+    ${state.reqEdit===r.id ? `<div class="req-edit">
+      <div class="field"><label>${esc(T('lbl_date'))}</label><input type="date" id="re-date" min="${new Date().toISOString().slice(0,10)}" value="${esc(r.date||'')}"></div>
+      <div class="field"><label>${esc(T('lbl_time'))}</label><input type="time" id="re-time" step="900" value="${esc(r.time||'')}"></div>
+      <div class="req-edit-btns"><button class="btn btn-sm btn-primary" data-save-time="${r.id}">${esc(T('mg_save_time'))}</button><button class="btn btn-sm btn-ghost" data-edit-time="">${esc(T('cancel'))}</button></div>
+      <p class="muted">${esc(T('mg_time_note').replace('{n}', other))}</p>
+    </div>` : ''}
     ${open ? chatPanel(r, isMentor, other) : ''}
   </div>`;
 }
@@ -3956,6 +4112,40 @@ async function sendMsg(reqId, text){
   const { error } = await sb.from('messages').insert(row);
   if(error){ cache.msgs[reqId] = cache.msgs[reqId].filter(m=>m!==row); state.chatDraft = text; render(); toast(T('chat_err'), 5000); console.error(error); }
 }
+
+function hiddenReqs(){ try{ return JSON.parse(localStorage.getItem('workar_hidden_'+uid)||'[]'); }catch(e){ return []; } }
+function hideReq(id){ const h = hiddenReqs(); if(!h.includes(id)) h.push(id); try{ localStorage.setItem('workar_hidden_'+uid, JSON.stringify(h)); }catch(e){} }
+function reqListHtml(myReqs, isMentor){
+  if(!myReqs.length) return `<div class="empty">${esc(T('no_requests'))}</div>`;
+  const hid = hiddenReqs();
+  const vis = myReqs.filter(r=>!hid.includes(r.id));
+  const closed = vis.filter(r=>{ const st = reqStage(r); return st<0 || st===3; });
+  const active = vis.filter(r=>!closed.includes(r))
+    .sort((x,y)=>(reqNeedsAction(y,isMentor)-reqNeedsAction(x,isMentor)) || ((Number(y.createdAt)||0)-(Number(x.createdAt)||0)));
+  // group by the other person, keeping the order of each person's most urgent request
+  const order = [], by = {};
+  active.forEach(r=>{ const o = isMentor ? r.clientId : r.mentorId; if(!by[o]){ by[o]=[]; order.push(o); } by[o].push(r); });
+  const groups = order.map(o=>{
+    const list = by[o];
+    if(list.length===1) return reqCard(list[0], isMentor);
+    const person = cache.people[o] || cache.profiles[o] || {};
+    return `<div class="req-group">
+      <div class="req-group-head"><div class="avatar">${initials(nameOf(o))}</div>
+        <div><b>${esc(nameOf(o))}</b><span class="muted">${esc(T('grp_count').replace('{n}', list.length))}${isMentor && person.profession ? ' · ' + esc(T('dash_aiming').replace('{p}', person.profession)) : ''}</span></div></div>
+      ${list.map(r=>reqCard(r, isMentor, true)).join('')}
+    </div>`;
+  }).join('');
+  return `${active.length ? `<div class="req-list">${groups}</div>` : `<div class="empty">${esc(T('no_active_requests'))}</div>`}
+    ${closed.length ? `<details class="req-past"><summary>${esc(T('past_title').replace('{n}', closed.length))}</summary><div class="req-list">${closed.map(r=>reqCard(r,isMentor)).join('')}</div></details>` : ''}
+    ${hid.some(id=>myReqs.find(r=>r.id===id)) ? `<button class="btn btn-ghost btn-sm" id="unhide-reqs" style="margin-top:10px;">${esc(T('mg_unhide'))}</button>` : ''}`;
+}
+async function updateReq(id, patch){
+  const { data, error } = await sb.from('requests').update(patch).eq('id', id).select('id');
+  if(error) throw error;
+  if(!data || !data.length) throw new Error(T('mg_perm'));
+  const r = cache.requests.find(x=>x.id===id); if(r) Object.assign(r, patch);
+}
+async function postNote(reqId, text){ try{ await sb.from('messages').insert({ id:'m_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6), requestId:reqId, senderId:uid, text, createdAt:new Date().toISOString() }); loadMsgs(); }catch(e){} }
 
 function dashboardView(){
   const isMentor = myProfile.role==='mentor';
@@ -4028,7 +4218,7 @@ function dashboardView(){
       </div>`; })() : ''}
 
   <div class="section-head"><h2>${isMentor?esc(T('requests_from_clients')):esc(T('your_requests'))}</h2></div>
-  ${myReqs.length ? `<div class="req-list">${myReqs.slice().sort((x,y)=>(reqNeedsAction(y,isMentor)-reqNeedsAction(x,isMentor)) || ((Number(y.createdAt)||0)-(Number(x.createdAt)||0))).map(r=>reqCard(r,isMentor)).join('')}</div>` : `<div class="empty">${esc(T('no_requests'))}</div>`}
+  ${reqListHtml(myReqs, isMentor)}
   `;
 }
 
@@ -4176,8 +4366,8 @@ function wire(){
   const bd = document.getElementById('book-date'), bt = document.getElementById('book-time');
   const syncOwn = ()=>{
     const d = bd && bd.value, t = bt && bt.value;
-    state.selectedSlot = (d && t) ? { date:d, time:t } : null;
-    const sb2 = document.getElementById('book-submit'); if(sb2) sb2.disabled = !state.selectedSlot;
+    state.selectedSlot = d ? { date:d, time:t||'' } : null;
+    render();
   };
   if(bd) bd.addEventListener('change', syncOwn);
   if(bt) bt.addEventListener('change', syncOwn);
@@ -4208,6 +4398,11 @@ function wire(){
   const bookCancel = document.getElementById('book-cancel');
   if(bookCancel) bookCancel.addEventListener('click', ()=>{ state.bookingOpen = false; state.selectedSlot = null; render(); });
 
+  if(state.view==='mentor' && state.bookingOpen && state.mentorId) loadBusy(state.mentorId);
+  const bmsg = document.getElementById('book-message'); if(bmsg) bmsg.addEventListener('input', ()=>{ state.bookMsg = bmsg.value; });
+  document.querySelectorAll('[data-cal-week]').forEach(b=>b.addEventListener('click', ()=>{ state.calWeek = +b.getAttribute('data-cal-week'); state.calDay = null; render(); }));
+  document.querySelectorAll('[data-cal-day]').forEach(b=>b.addEventListener('click', ()=>{ state.calDay = b.getAttribute('data-cal-day'); render(); }));
+  document.querySelectorAll('.cal-slot').forEach(b=>b.addEventListener('click', ()=>{ state.selectedSlot = { date:b.getAttribute('data-date'), time:b.getAttribute('data-time') }; state.calDay = state.selectedSlot.date; render(); }));
   document.querySelectorAll('.slot-btn').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       state.selectedSlot = { date: btn.getAttribute('data-date'), time: btn.getAttribute('data-time') };
@@ -4217,8 +4412,9 @@ function wire(){
 
   const bookSubmit = document.getElementById('book-submit');
   if(bookSubmit) bookSubmit.addEventListener('click', async ()=>{
-    if(!state.selectedSlot){ toast(T('toast_pick_datetime')); return; }
+    if(!state.selectedSlot || !state.selectedSlot.time){ toast(T('toast_pick_datetime')); return; }
     const { date, time } = state.selectedSlot;
+    if(isBusy(busyFor(state.mentorId), date, time)){ toast(T('cal_clash'), 5000); return; }
     const messageEl = document.getElementById('book-message');
     const message = messageEl ? messageEl.value : '';
     const reqId = 'req_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);
@@ -4227,12 +4423,14 @@ function wire(){
     try{
       await insertSafe('requests', { id: reqId, mentorId: state.mentorId, clientId: uid, message, date, time, status:'pending', createdAt: Date.now(), amountCents, packageKey: pk.key, paid:false });
       toast(T('toast_request_sent'));
+      state.bookMsg = ''; cache.busyLoaded[state.mentorId] = false;
       state.bookingOpen = false;
       state.selectedSlot = null;
       loadRequests(); render();
     }catch(err){
       console.error('booking failed:', err);
       const m = (err && err.message) || '';
+      if(/duplicate key|one_active_booking/i.test(m)){ toast(T('cal_taken'), 6000); cache.busyLoaded[state.mentorId] = false; state.selectedSlot = null; loadBusy(state.mentorId); render(); return; }
       toast(T(/row-level security/i.test(m) ? 'toast_request_rls' : 'toast_request_fail') + (m ? ' — ' + m : ''), 9000);
     }
   });
@@ -4312,12 +4510,33 @@ function wire(){
     }
   });
 
+  const reqErr = err=>{ console.error(err); toast(T('toast_update_fail') + ' — ' + ((err && err.message) || ''), 8000); };
   document.querySelectorAll('[data-req]').forEach(btn=>{
     btn.addEventListener('click', async ()=>{
-      try{ await window.__db.doc('requests/'+btn.getAttribute('data-req')).update({status: btn.getAttribute('data-status')}); loadRequests(); }
-      catch(err){ toast(T('toast_update_fail')); }
+      btn.disabled = true; const to = btn.getAttribute('data-status');
+      try{ await updateReq(btn.getAttribute('data-req'), { status: to }); toast(T(to==='accepted'?'toast_accepted':'toast_declined')); render(); }
+      catch(err){ btn.disabled = false; reqErr(err); }
     });
   });
+  document.querySelectorAll('[data-menu]').forEach(b=>b.addEventListener('click', e=>{ e.stopPropagation(); const id=b.getAttribute('data-menu'); state.reqMenu = state.reqMenu===id ? null : id; render(); }));
+  document.querySelectorAll('.req-menu').forEach(m=>m.addEventListener('click', e=>e.stopPropagation()));
+  document.querySelectorAll('[data-edit-time]').forEach(b=>b.addEventListener('click', ()=>{ state.reqEdit = b.getAttribute('data-edit-time') || null; state.reqMenu = null; render(); }));
+  document.querySelectorAll('[data-save-time]').forEach(b=>b.addEventListener('click', async ()=>{
+    const id = b.getAttribute('data-save-time'), date = document.getElementById('re-date').value, time = document.getElementById('re-time').value;
+    if(!date || !time){ toast(T('toast_pick_datetime')); return; }
+    b.disabled = true;
+    try{ await updateReq(id, { date, time }); state.reqEdit = null; toast(T('mg_time_saved')); render();
+      postNote(id, T('mg_time_msg').replace('{d}', fmtReqDate(date)).replace('{t}', time)); }
+    catch(err){ b.disabled = false; reqErr(err); }
+  }));
+  document.querySelectorAll('[data-set-status]').forEach(b=>b.addEventListener('click', async ()=>{
+    if(!confirm(T('mg_cancel_confirm'))) return;
+    const id = b.getAttribute('data-set-status');
+    try{ await updateReq(id, { status: b.getAttribute('data-to') }); state.reqMenu = null; toast(T('mg_cancelled')); render(); postNote(id, T('mg_cancel_msg')); }
+    catch(err){ reqErr(err); }
+  }));
+  document.querySelectorAll('[data-hide]').forEach(b=>b.addEventListener('click', ()=>{ hideReq(b.getAttribute('data-hide')); state.reqMenu = null; render(); }));
+  const unh = document.getElementById('unhide-reqs'); if(unh) unh.addEventListener('click', ()=>{ try{ localStorage.removeItem('workar_hidden_'+uid); }catch(e){} render(); });
 
   document.querySelectorAll('[data-chat]').forEach(btn=>btn.addEventListener('click', ()=>{
     const id = btn.getAttribute('data-chat');
