@@ -4682,7 +4682,7 @@ function wire(){
   });
 
   const voiceToggle = document.getElementById('voice-mode-toggle');
-  if(voiceToggle) voiceToggle.addEventListener('change', ()=>{ state.voiceMode = voiceToggle.checked; if(!state.voiceMode) window.speechSynthesis && window.speechSynthesis.cancel(); });
+  if(voiceToggle) voiceToggle.addEventListener('change', ()=>{ state.voiceMode = voiceToggle.checked; if(!state.voiceMode) stopSpeaking(); });
 
   const micBtn = document.getElementById('mic-btn');
   if(micBtn) micBtn.addEventListener('click', ()=>{ state.listening ? stopListening() : startListening(); });
@@ -4838,10 +4838,33 @@ function pickVoice(lang){
   const notMale = pool.find(v => !/male|david|mark|guy|daniel|george|matthew|brian|christopher/i.test(v.name));
   return notMale || pool[0];
 }
-function speakText(text){
-  if(!window.speechSynthesis) return;
+// Natural voice (OpenAI via /api/tts); falls back to the browser voice if it isn't set up.
+let __ttsAudio = null, __ttsOff = false;
+function stopSpeaking(){ if(__ttsAudio){ try{ __ttsAudio.pause(); }catch(e){} __ttsAudio = null; } if(window.speechSynthesis) window.speechSynthesis.cancel(); }
+async function speakText(text){
   const clean = cleanForSpeech(text);
   if(!clean) return;
+  stopSpeaking();
+  if(!__ttsOff && sb){
+    try{
+      const { data } = await sb.auth.getSession();
+      const tok = data && data.session && data.session.access_token;
+      if(tok){
+        const r = await fetch('/api/tts', { method:'POST', headers:{ 'Content-Type':'application/json', Authorization:'Bearer '+tok }, body: JSON.stringify({ text: clean, lang: state.lang==='fa'?'fa':'en' }) });
+        if(r.ok){
+          const url = URL.createObjectURL(await r.blob());
+          const a = new Audio(url); __ttsAudio = a;
+          a.onended = ()=>{ URL.revokeObjectURL(url); if(__ttsAudio===a) __ttsAudio = null; };
+          await a.play(); return;
+        }
+        if(r.status===501 || r.status===404) __ttsOff = true; // not configured: use the browser voice from now on
+      }
+    }catch(e){ console.warn('natural voice unavailable, using browser voice', e); }
+  }
+  speakBrowser(clean);
+}
+function speakBrowser(clean){
+  if(!window.speechSynthesis) return;
   window.speechSynthesis.cancel(); // don't overlap with a previous utterance
   const langTag = state.lang === 'fa' ? 'fa-IR' : 'en-US';
   const u = new SpeechSynthesisUtterance(clean);
