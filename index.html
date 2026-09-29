@@ -693,6 +693,10 @@
   .status-pill.accepted{color:var(--accent-2);border-color:var(--accent-2);}
   .status-pill.declined{color:var(--danger);border-color:var(--danger);}
   .status-pill.paid{color:var(--accent);border-color:var(--accent);}
+  .first-job{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13.5px;font-weight:500;color:var(--muted);cursor:pointer;}
+  .first-job input{width:16px;height:16px;accent-color:var(--accent);}
+  .cur-job:disabled{opacity:.5;}
+  .form-err{margin:0 0 14px;padding:12px 14px;border-radius:var(--radius-sm);border:1px solid var(--danger);color:var(--danger);font-size:13.5px;}
   .status-pill.done{color:#4E8A5B;border-color:#4E8A5B;}
   .sess{display:flex;align-items:center;gap:10px;margin-top:8px;font-size:12.5px;color:var(--muted);}
   .sess-dots{display:flex;gap:4px;}
@@ -843,7 +847,7 @@ const I18N = {
     lbl_languages:'Languages (comma-separated)', ph_languages:'e.g. English, Farsi',
     lbl_linkedin:'LinkedIn profile', ph_linkedin:'https://linkedin.com/in/yourname',
     lbl_rate:'Price per session', rate_hint:'(leave blank if free)', ph_rate:'e.g. $40 / session',
-    lbl_profession_c:'Your current or target profession', ph_profession_c:'e.g. aspiring Data Analyst',
+    lbl_profession_c:'Your current or target profession', ph_profession_c:'e.g. aspiring Data Analyst', lbl_current_job:'Current profession', ph_current_job:'e.g. Document Controller', first_job:'N/A — this will be my first job', lbl_target_job:'Target profession', ph_target_job:'e.g. Data Analyst', onboard_err:'Your profile could not be saved. Send this message to Workar support:',
     lbl_goal_c:"What's your goal?", ph_goal_c:'What are you working toward, and by when?',
     lbl_help_c:'What kind of help do you need? (comma-separated)',
     lbl_linkedin_opt:'LinkedIn profile', opt_label:'(optional)',
@@ -936,6 +940,7 @@ const I18N = {
     lbl_field_c:'Which field or industry are you looking for a mentor in?', ph_field_c:'e.g. Data analytics, Construction, Software',
     lbl_stage_c:'Career stage', stage_pick:'Select…', stage_student:'Student / new graduate', stage_entry:'Entry level (0–2 yrs)', stage_mid:'Mid level (3–7 yrs)', stage_senior:'Senior (8+ yrs)', stage_switch:'Changing careers',
     detail_education:'Education', detail_certs:'Certifications', detail_formats:'Session formats',
+    book_profile_hint:'Your account is ready — add a few details about yourself, then pick a time.', onboard_title_book:'One quick step before booking', onboard_book_note:'Tell us a little about you so {m} can prepare for your session. You\'ll pick a time right after — you only do this once.',
     book_session:'Book a session', book_signup_hint:'Create a free mentee account to pick a time — it only takes a minute.',
     session_how:'Sessions take place by video or voice call right here on Workar, once the mentor confirms your booking.',
     btn_video_call:'Video call', btn_voice_call:'Voice call',
@@ -1052,7 +1057,7 @@ const I18N = {
     lbl_languages:'زبان‌ها (با کاما جدا کن)', ph_languages:'مثلاً فارسی، انگلیسی',
     lbl_linkedin:'پروفایل لینکدین', ph_linkedin:'https://linkedin.com/in/yourname',
     lbl_rate:'قیمت هر جلسه', rate_hint:'(اگه رایگانه خالی بذار)', ph_rate:'مثلاً ۴۰ دلار در جلسه',
-    lbl_profession_c:'شغل فعلی یا هدفت', ph_profession_c:'مثلاً تحلیل‌گر داده‌ی مشتاق',
+    lbl_profession_c:'شغل فعلی یا هدفت', ph_profession_c:'مثلاً تحلیل‌گر داده‌ی مشتاق', lbl_current_job:'شغل فعلی', ph_current_job:'مثلاً کنترل مدارک', first_job:'ندارم — این اولین شغل من خواهد بود', lbl_target_job:'شغل هدف', ph_target_job:'مثلاً تحلیل‌گر داده', onboard_err:'پروفایل ذخیره نشد. این پیام را برای پشتیبانی Workar بفرست:',
     lbl_goal_c:'هدفت چیه؟', ph_goal_c:'داری به سمت چی می‌ری و تا کی؟',
     lbl_help_c:'چه کمکی نیاز داری؟ (با کاما جدا کن)',
     lbl_linkedin_opt:'پروفایل لینکدین', opt_label:'(اختیاری)',
@@ -1145,6 +1150,7 @@ const I18N = {
     lbl_field_c:'دنبال منتور در چه رشته یا صنعتی هستید؟', ph_field_c:'مثلاً تحلیل داده، ساخت‌وساز، نرم‌افزار',
     lbl_stage_c:'مرحله‌ی شغلی', stage_pick:'انتخاب کنید…', stage_student:'دانشجو / تازه فارغ‌التحصیل', stage_entry:'تازه‌کار (۰ تا ۲ سال)', stage_mid:'میانی (۳ تا ۷ سال)', stage_senior:'ارشد (۸ سال به بالا)', stage_switch:'در حال تغییر مسیر شغلی',
     detail_education:'تحصیلات', detail_certs:'گواهینامه‌ها', detail_formats:'نوع جلسات',
+    book_profile_hint:'حسابت آماده‌ست — چند جمله درباره‌ی خودت بنویس و بعد زمان رو انتخاب کن.', onboard_title_book:'یک قدم کوتاه قبل از رزرو', onboard_book_note:'کمی درباره‌ی خودت بگو تا {m} برای جلسه آماده بشه. بلافاصله بعدش زمان رو انتخاب می‌کنی — این کار فقط یک بار لازمه.',
     book_session:'رزرو جلسه', book_signup_hint:'برای انتخاب زمان، یک حساب رایگان بسازید — فقط یک دقیقه طول می‌کشد.',
     session_how:'جلسات پس از تأیید منتور، به‌صورت تماس تصویری یا صوتی در همین سایت Workar برگزار می‌شوند.',
     btn_video_call:'تماس تصویری', btn_voice_call:'تماس صوتی',
@@ -1313,7 +1319,15 @@ function onSignedIn(session){
   state.authBusy = false; state.authError = ''; state.authCheckEmail = false;
 
   prep.loaded = false;
-  window.__db.doc('profiles/'+uid).onSnapshot(doc=>{ myProfile = doc && doc.data ? doc.data : null; render(); });
+  window.__db.doc('profiles/'+uid).onSnapshot(doc=>{
+    myProfile = doc && doc.data ? doc.data : null;
+    // the profile finished loading after the visitor clicked "Book a session": skip setup and open booking
+    if(myProfile && state.view==='onboard' && state.returnMentorId){
+      const back = state.returnMentorId; state.returnMentorId = null;
+      nav('mentor', { mentorId: back, bookingOpen: myProfile.role==='client' }); return;
+    }
+    render();
+  });
   render();
 
   if(__cameFromEmailLink){
@@ -1568,6 +1582,33 @@ const DEFAULT_PACKAGES = [
   { key:'interview', sessions:3, price:129, featured:true,  hidden:false },
   { key:'offer',     sessions:6, price:249, featured:false, hidden:false }
 ];
+function currentJobField(idOrName, val){
+  const na = val==='N/A';
+  const attr = idOrName.startsWith('#') ? `id="${idOrName.slice(1)}"` : `name="${idOrName}"`;
+  return `<div class="field"><label>${esc(T('lbl_current_job'))}</label>
+    <input ${attr} class="cur-job" value="${na?'':esc(val||'')}" placeholder="${esc(T('ph_current_job'))}" ${na?'disabled':''}>
+    <label class="first-job"><input type="checkbox" class="first-job-cb" ${na?'checked':''}> ${esc(T('first_job'))}</label></div>`;
+}
+function wireFirstJob(){
+  document.querySelectorAll('.first-job-cb').forEach(cb=>cb.addEventListener('change', ()=>{
+    const inp = cb.closest('.field').querySelector('.cur-job');
+    inp.disabled = cb.checked; if(cb.checked) inp.value = ''; else inp.focus();
+  }));
+}
+function readCurrentJob(inp){ if(!inp) return undefined; const cb = inp.closest('.field').querySelector('.first-job-cb'); return (cb && cb.checked) ? 'N/A' : inp.value.trim(); }
+// Saves a profile; if the database is missing a column, it drops that field and tries again,
+// so a missing SQL step can never block someone from creating their profile.
+async function saveProfileSafe(data, mode){
+  let d = Object.assign({}, data);
+  for(let i=0;i<15;i++){
+    const q = mode==='update' ? sb.from('profiles').update(d).eq('id', uid) : sb.from('profiles').upsert(Object.assign({ id: uid }, d));
+    const { error } = await q;
+    if(!error) return;
+    const m = /'([^']+)' column/.exec(error.message||'');
+    if(m && m[1] in d){ console.warn('profiles is missing column', m[1], '— run the latest SQL'); delete d[m[1]]; continue; }
+    throw error;
+  }
+}
 function mentorSharePct(){ const v = Number(siteSettings && siteSettings.mentorShare); return (v>0 && v<=100) ? v : 75; }
 function reqSessionsTotal(r){ const pk = getPackages().find(x=>x.key===r.packageKey) || DEFAULT_PACKAGES.find(x=>x.key===r.packageKey); return Math.max(1, Number(r.sessions) || (pk ? pk.sessions : 1)); }
 function reqIsActive(r){ return r.status==='accepted' && (!r.amountCents || r.paid); }
@@ -3281,7 +3322,8 @@ function checkedVals(root, name){ return Array.from(root.querySelectorAll('input
 function onboardView(){
   const preset = state.role;
   return `
-  <div class="section-head"><h2>${esc(T('onboard_title'))}</h2></div>
+  <div class="section-head"><h2>${esc(T(state.returnMentorId ? 'onboard_title_book' : 'onboard_title'))}</h2></div>
+  ${state.returnMentorId ? `<p class="muted" style="margin:-8px 0 20px;max-width:640px;">${esc(T('onboard_book_note').replace('{m}', nameOf(state.returnMentorId)))}</p>` : ''}
   <div class="panel">
     <div class="role-pick">
       <div class="role-opt ${preset==='client'?'selected':''}" data-role="client"><b>${esc(T('role_client_t'))}</b><span>${esc(T('role_client_s'))}</span></div>
@@ -3307,7 +3349,8 @@ function onboardView(){
         <div class="form-section">${esc(T('sec_links_only'))}</div>
         <div class="field"><label>${esc(T('lbl_linkedin'))}</label><input name="linkedin" type="text" placeholder="${esc(T('ph_linkedin'))}"></div>
       ` : `
-        <div class="field"><label>${esc(T('lbl_profession_c'))}</label><input name="profession" required placeholder="${esc(T('ph_profession_c'))}"></div>
+        ${currentJobField('currentProfession', '')}
+        <div class="field"><label>${esc(T('lbl_target_job'))}</label><input name="profession" required placeholder="${esc(T('ph_target_job'))}"></div>
         <div class="field"><label>${esc(T('lbl_stage_c'))}</label>${stageSelect('name="careerStage"', '')}</div>
         <div class="field"><label>${esc(T('lbl_field_c'))}</label><input name="targetField" placeholder="${esc(T('ph_field_c'))}"></div>
         <div class="form-section">${esc(T('sec_mentoring'))}</div>
@@ -3320,6 +3363,7 @@ function onboardView(){
         <div class="form-section">${esc(T('sec_links_only'))}</div>
         <div class="field"><label>${esc(T('lbl_linkedin_opt'))} <span class="hint" style="display:inline;">${esc(T('opt_label'))}</span></label><input name="linkedin" type="text" placeholder="${esc(T('ph_linkedin'))}"></div>
       `}
+      <div id="onboard-err" class="form-err" style="display:none;"></div>
       <button class="btn btn-primary" type="submit" style="width:100%;">${esc(T('create_profile'))}</button>
     </form>` : `<p class="muted" style="margin-top:14px;">${esc(T('pick_to_continue'))}</p>`}
   </div>`;
@@ -3458,7 +3502,7 @@ function mentorView(){
   <div style="margin-bottom:36px;">
     <p class="call-note" style="margin-bottom:12px;">${esc(T('session_how'))}</p>
     ${!myProfile ? `<button class="btn btn-primary" id="book-signup" data-mentor-id="${id}">${esc(T('book_session'))}</button>
-      <div class="call-note" style="margin-top:8px;">${esc(T('book_signup_hint'))}</div>` : (state.bookingOpen ? (()=>{
+      <div class="call-note" style="margin-top:8px;">${esc(T(uid ? 'book_profile_hint' : 'book_signup_hint'))}</div>` : (state.bookingOpen ? (()=>{
       const slots = upcomingSlotsFor(id, p.availability);
       return `
     <div class="panel" style="max-width:560px;">
@@ -3517,7 +3561,8 @@ function dashboardView(){
   <div class="panel wide" style="margin-bottom:32px;">
     <div class="field"><label>${esc(T('lbl_name'))}</label><input id="edit-name" value="${esc(myProfile.name||'')}"></div>
     ${isMentor ? `<div class="field"><label>${esc(T('lbl_headline'))}</label><input id="edit-headline" value="${esc(myProfile.headline||'')}"></div>` : ''}
-    <div class="field"><label>${esc(T(isMentor?'lbl_profession_m':'lbl_profession_c'))}</label><input id="edit-profession" value="${esc(myProfile.profession||'')}"></div>
+    ${isMentor ? '' : currentJobField('#edit-current-job', myProfile.currentProfession||'')}
+    <div class="field"><label>${esc(T(isMentor?'lbl_profession_m':'lbl_target_job'))}</label><input id="edit-profession" value="${esc(myProfile.profession||'')}"></div>
     ${!isMentor ? `
     <div class="field"><label>${esc(T('lbl_stage_c'))}</label>${stageSelect('id="edit-stage"', myProfile.careerStage||'')}</div>
     <div class="field"><label>${esc(T('lbl_field_c'))}</label><input id="edit-target-field" value="${esc(myProfile.targetField||'')}" placeholder="${esc(T('ph_field_c'))}"></div>
@@ -3670,6 +3715,7 @@ function wire(){
     node.addEventListener('click', ()=>{ state.role = node.getAttribute('data-role'); render(); });
   });
 
+  wireFirstJob();
   const form = document.getElementById('onboard-form');
   if(form) form.addEventListener('submit', async e=>{
     e.preventDefault();
@@ -3682,6 +3728,7 @@ function wire(){
     doc.certifications = splitList(fd.get('certifications'));
     doc.formats = checkedVals(form, 'formats');
     if(state.role==='client'){
+      doc.currentProfession = readCurrentJob(form.querySelector('.cur-job'));
       doc.goals = checkedVals(form, 'goals');
       doc.careerStage = fd.get('careerStage')||'';
       doc.targetField = (fd.get('targetField')||'').trim();
@@ -3693,7 +3740,8 @@ function wire(){
       doc.sessionRate = Math.max(minRate(), Number(fd.get('sessionRate'))||minRate());
     }
     try{
-      await window.__db.doc('profiles/'+uid).set(doc);
+      state.onboardError = '';
+      await saveProfileSafe(doc, 'set');
       toast(T('toast_profile_created'));
       if(state.role==='client' && state.returnMentorId){
         const back = state.returnMentorId; state.returnMentorId = null;
@@ -3704,6 +3752,8 @@ function wire(){
     }catch(err){
       console.error('profile create failed:', err);
       toast(T('toast_save_fail'));
+      const box = document.getElementById('onboard-err');
+      if(box){ box.textContent = T('onboard_err') + ' (' + (err && err.message ? err.message : 'unknown error') + ')'; box.style.display = 'block'; box.scrollIntoView({block:'center'}); }
     }
   });
 
@@ -3836,6 +3886,8 @@ function wire(){
     if(goalsWrap) patch.goals = checkedVals(goalsWrap, 'goals');
     const stageEl = document.getElementById('edit-stage');
     if(stageEl) patch.careerStage = stageEl.value;
+    const cjEl = document.getElementById('edit-current-job');
+    if(cjEl) patch.currentProfession = readCurrentJob(cjEl);
     const tfEl = document.getElementById('edit-target-field');
     if(tfEl) patch.targetField = tfEl.value.trim();
     const srEl = document.getElementById('edit-session-rate');
@@ -3850,7 +3902,7 @@ function wire(){
     if(priceEl) patch.priceUsd = priceEl.value==='' ? null : Math.max(0, Number(priceEl.value)||0);
     const availChecks = document.querySelectorAll('.avail-check');
     if(availChecks.length) patch.availability = Array.from(availChecks).filter(c=>c.checked).map(c=>c.getAttribute('data-slotkey'));
-    try{ await window.__db.doc('profiles/'+uid).update(patch); toast(T('toast_saved')); }
+    try{ await saveProfileSafe(patch, 'update'); toast(T('toast_saved')); }
     catch(err){
       console.error('profile save failed:', err);
       toast(T('toast_save_fail'));
