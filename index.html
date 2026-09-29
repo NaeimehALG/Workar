@@ -946,6 +946,19 @@
   .cal-note{font-size:12.5px;color:var(--muted);margin:0 0 10px;}
   .cal-note.ok{color:#4E8A5B;}
   .cal-note.bad{color:var(--danger);font-weight:700;}
+
+  /* ===== v51 auth panel ===== */
+  .auth-side{justify-content:center;padding:52px 46px;background:#43301F;}
+  .auth-kicker{font-size:12px;font-weight:700;letter-spacing:.24em;color:#CDAE84;margin-bottom:22px;}
+  .auth-side h2{font-size:28px;line-height:1.25;max-width:17ch;margin:0 0 14px;font-weight:700;letter-spacing:-.005em;}
+  .auth-lede{font-size:15px;line-height:1.65;color:#DCCBB6;margin:0 0 34px;max-width:40ch;}
+  .auth-feats{list-style:none;margin:0;padding:26px 0 0;border-top:1px solid rgba(233,220,203,.18);display:grid;gap:20px;}
+  .auth-feats li{display:grid;grid-template-columns:22px 1fr;gap:14px;align-items:start;}
+  .auth-feats svg{color:#D9B98A;margin-top:1px;}
+  .auth-feats b{display:block;font-size:14.5px;color:#FFF7EE;font-weight:700;margin-bottom:2px;}
+  .auth-feats span{font-size:13.5px;line-height:1.5;color:#CDBBA4;}
+  [dir="rtl"] .auth-kicker{letter-spacing:.1em;}
+  @media (max-width:760px){.auth-side{padding:34px 26px;}.auth-side h2{font-size:23px;}}
 </style>
 </head>
 <body>
@@ -1128,7 +1141,7 @@ const I18N = {
     adm_share:'Mentor share (%)', adm_share_hint:'The part of each booking that goes to the mentor. Workar keeps the rest.',
     pay_title:'Mentor payouts', pay_hint:'Every paid booking, grouped by mentor. After you send a mentor their money (e-Transfer, PayPal…), mark it as paid here.', pay_loading:'Loading payouts…', pay_error:'Could not load payouts — check that the payouts SQL has been run.', pay_none:'No paid bookings yet.', pay_tot_owed:'Owed to mentors', pay_tot_keep:'Workar keeps',
     pay_c_mentor:'Mentor', pay_c_n:'Paid bookings', pay_c_collected:'Collected', pay_c_share:'Mentor share', pay_c_owed:'Owed now', pay_mark:'Mark as paid', pay_settled:'Settled', pay_confirm:'Record that you paid {a} to {n}?', pay_done:'Payout recorded', pay_fail:'Could not record the payout — check that the payouts SQL has been run',
-    auth_side_h:'Stop guessing. Ask someone who\'s been there.', auth_pt1:'Book a 45-minute video or voice session in a few clicks', auth_pt2:'Chat with your mentor before you meet', auth_pt3:'Pay only after your mentor says yes', auth_tab_signup:'Sign up', auth_h_login:'Welcome back', auth_h_signup:'Create your account', auth_sub_login:'Welcome back. Your bookings and messages are waiting.', auth_sub_signup:'Just an email and a password — your profile comes next.', auth_forgot_h:'Reset your password', auth_fine_login:'New to Workar? Choose Sign up above.', auth_fine_signup:'Free to join — no card needed.', pw_show:'Show password', pw_hide:'Hide password',
+    auth_side_h:'Career guidance from professionals who have done the work.', auth_side_p:'Workar connects you with experienced mentors for focused, one-to-one sessions on your resume, interviews and next career move.', auth_f1_t:'Experienced professionals', auth_f1_s:'Mentors with real experience in the roles and industries you are targeting.', auth_f2_t:'Structured sessions', auth_f2_s:'Book 45-minute video or voice sessions and agree on the details by message.', auth_f3_t:'Secure payment', auth_f3_s:'You are only charged once your mentor confirms the booking.', auth_pt1:'Book a 45-minute video or voice session in a few clicks', auth_pt2:'Chat with your mentor before you meet', auth_pt3:'Pay only after your mentor says yes', auth_tab_signup:'Sign up', auth_h_login:'Welcome back', auth_h_signup:'Create your account', auth_sub_login:'Log in to manage your sessions and messages.', auth_sub_signup:'Create your account with an email and password. You will set up your profile next.', auth_forgot_h:'Reset your password', auth_fine_login:'New to Workar? Choose Sign up above.', auth_fine_signup:'Free to join — no card needed.', pw_show:'Show password', pw_hide:'Hide password',
     ob_sub:'Tell us who you are. It takes about two minutes and you can change everything later.', ob_s_about:'About you', ob_preview:'How clients will see you', ob_preview_note:'This card appears in Find a mentor. A clear headline and a bio written to a mentee get the most bookings.', ob_pv_name:'Your name', ob_pv_head:'Your title and company', ob_pv_bio:'Your bio will appear here.', ob_next:'What happens next', ob_next1_t:'Finish your profile', ob_next1_s:'So your mentor knows where you are and where you want to go.', ob_next2_t:'Pick a mentor and a time', ob_next2_s:'Choose a package and a slot that suits you.', ob_next3_t:'Meet on Workar', ob_next3_s:'Once the mentor accepts, join by video or voice right here.', ob_submit_book:'Save and pick a time',
     mp_back:'← All mentors', mp_speaks:'Speaks', mp_about:'About', mp_help:'Can help you with', mp_per:'per 45-min session', mp_per_short:'/ session', mp_tier_suffix:'mentor',
     dash_aiming:'Working toward {p}', dash_view_public:'View public profile', dash_edit:'Edit profile', dash_edit_sub:'Name, background, languages, rate and availability',
@@ -1355,7 +1368,7 @@ const I18N = {
     adm_share:'سهم منتور (٪)', adm_share_hint:'بخشی از هر رزرو که به منتور می‌رسد. بقیه‌اش سهم Workar است.',
     pay_title:'پرداخت به منتورها', pay_hint:'همه‌ی رزروهای پرداخت‌شده، به تفکیک منتور. بعد از اینکه پول منتور را فرستادی (ای‌ترانسفر، PayPal و…)، اینجا ثبتش کن.', pay_loading:'در حال بارگذاری…', pay_error:'بارگذاری نشد — مطمئن شو SQL پرداخت منتورها اجرا شده.', pay_none:'هنوز رزرو پرداخت‌شده‌ای نیست.', pay_tot_owed:'بدهی به منتورها', pay_tot_keep:'سهم Workar',
     pay_c_mentor:'منتور', pay_c_n:'رزروهای پرداخت‌شده', pay_c_collected:'دریافتی', pay_c_share:'سهم منتور', pay_c_owed:'بدهی فعلی', pay_mark:'ثبت پرداخت', pay_settled:'تسویه‌شده', pay_confirm:'ثبت کنم که {a} به {n} پرداخت کردی؟', pay_done:'پرداخت ثبت شد', pay_fail:'ثبت نشد — مطمئن شو SQL پرداخت منتورها اجرا شده',
-    auth_side_h:'حدس نزن. از کسی بپرس که این راه رو رفته.', auth_pt1:'با چند کلیک یک جلسه‌ی ۴۵ دقیقه‌ای تصویری یا صوتی رزرو کن', auth_pt2:'قبل از جلسه با منتورت پیام بده', auth_pt3:'فقط بعد از تأیید منتور پرداخت می‌کنی', auth_tab_signup:'ثبت‌نام', auth_h_login:'خوش برگشتی', auth_h_signup:'حسابت رو بساز', auth_sub_login:'خوش برگشتی. رزروها و پیام‌هات منتظرتن.', auth_sub_signup:'فقط ایمیل و رمز — پروفایلت رو قدم بعد می‌سازی.', auth_forgot_h:'بازیابی رمز عبور', auth_fine_login:'تازه واردی؟ بالا «ثبت‌نام» رو بزن.', auth_fine_signup:'عضویت رایگانه — کارت بانکی لازم نیست.', pw_show:'نمایش رمز', pw_hide:'پنهان کردن رمز',
+    auth_side_h:'راهنمایی شغلی از متخصصانی که این مسیر را طی کرده‌اند.', auth_side_p:'Workar شما را به منتورهای باتجربه وصل می‌کند؛ برای جلسات تک‌به‌تک درباره‌ی رزومه، مصاحبه و قدم بعدی مسیر شغلی‌تان.', auth_f1_t:'متخصصان باتجربه', auth_f1_s:'منتورهایی با تجربه‌ی واقعی در نقش‌ها و صنایعی که هدف شماست.', auth_f2_t:'جلسات ساختارمند', auth_f2_s:'جلسات ۴۵ دقیقه‌ای تصویری یا صوتی رزرو کنید و جزئیات را با پیام هماهنگ کنید.', auth_f3_t:'پرداخت امن', auth_f3_s:'مبلغ فقط پس از تأیید رزرو توسط منتور دریافت می‌شود.', auth_pt1:'با چند کلیک یک جلسه‌ی ۴۵ دقیقه‌ای تصویری یا صوتی رزرو کن', auth_pt2:'قبل از جلسه با منتورت پیام بده', auth_pt3:'فقط بعد از تأیید منتور پرداخت می‌کنی', auth_tab_signup:'ثبت‌نام', auth_h_login:'خوش برگشتی', auth_h_signup:'حسابت رو بساز', auth_sub_login:'برای مدیریت جلسات و پیام‌هایتان وارد شوید.', auth_sub_signup:'با ایمیل و رمز عبور حساب بسازید. در قدم بعد پروفایلتان را تکمیل می‌کنید.', auth_forgot_h:'بازیابی رمز عبور', auth_fine_login:'تازه واردی؟ بالا «ثبت‌نام» رو بزن.', auth_fine_signup:'عضویت رایگانه — کارت بانکی لازم نیست.', pw_show:'نمایش رمز', pw_hide:'پنهان کردن رمز',
     ob_sub:'بگو کی هستی. حدود دو دقیقه طول می‌کشه و بعداً همه‌چیز قابل تغییره.', ob_s_about:'درباره‌ی تو', ob_preview:'مراجعه‌کننده‌ها تو رو این‌طوری می‌بینن', ob_preview_note:'این کارت توی صفحه‌ی پیدا کردن منتور نمایش داده می‌شه. عنوان واضح و بیوگرافی‌ای که خطاب به منتی نوشته شده، بیشترین رزرو رو می‌گیره.', ob_pv_name:'اسم تو', ob_pv_head:'عنوان شغلی و شرکت', ob_pv_bio:'بیوگرافی‌ات اینجا نمایش داده می‌شه.', ob_next:'قدم‌های بعدی', ob_next1_t:'پروفایلت رو کامل کن', ob_next1_s:'تا منتور بدونه الان کجایی و می‌خوای به کجا برسی.', ob_next2_t:'منتور و زمان رو انتخاب کن', ob_next2_s:'پکیج و زمانی که برات مناسبه رو انتخاب کن.', ob_next3_t:'روی Workar جلسه بذار', ob_next3_s:'بعد از تأیید منتور، همین‌جا با تماس تصویری یا صوتی وصل شو.', ob_submit_book:'ذخیره و انتخاب زمان',
     mp_back:'→ همه‌ی منتورها', mp_speaks:'زبان‌ها:', mp_about:'درباره', mp_help:'می‌تونه کمکت کنه در', mp_per:'برای هر جلسه‌ی ۴۵ دقیقه‌ای', mp_per_short:'/ جلسه', mp_tier_suffix:'',
     dash_aiming:'هدف: {p}', dash_view_public:'دیدن پروفایل عمومی', dash_edit:'ویرایش پروفایل', dash_edit_sub:'اسم، سوابق، زبان‌ها، نرخ و زمان‌های آزاد',
@@ -3528,17 +3541,16 @@ function authView(){
   return `
   <div class="auth-wrap">
     <aside class="auth-side">
-      <svg class="auth-path" viewBox="0 0 320 180" aria-hidden="true">
-        <path d="M14 160 C 80 160, 70 90, 140 92 S 230 40, 300 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 7" stroke-linecap="round"/>
-        <circle cx="14" cy="160" r="6" fill="currentColor" opacity=".55"/>
-        <circle cx="300" cy="22" r="8" fill="none" stroke="currentColor" stroke-width="1.6"/>
-        <circle cx="300" cy="22" r="3" fill="currentColor"/>
-      </svg>
+      <div class="auth-kicker">WORKAR</div>
       <h2>${esc(T('auth_side_h'))}</h2>
-      <ul class="auth-points">
-        <li>${esc(T('auth_pt1'))}</li>
-        <li>${esc(T('auth_pt2'))}</li>
-        <li>${esc(T('auth_pt3'))}</li>
+      <p class="auth-lede">${esc(T('auth_side_p'))}</p>
+      <ul class="auth-feats">
+        <li><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>
+          <div><b>${esc(T('auth_f1_t'))}</b><span>${esc(T('auth_f1_s'))}</span></div></li>
+        <li><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>
+          <div><b>${esc(T('auth_f2_t'))}</b><span>${esc(T('auth_f2_s'))}</span></div></li>
+        <li><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>
+          <div><b>${esc(T('auth_f3_t'))}</b><span>${esc(T('auth_f3_s'))}</span></div></li>
       </ul>
     </aside>
     <div class="auth-main">
