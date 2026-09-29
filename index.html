@@ -1240,7 +1240,7 @@ const I18N = {
     mp_tz:'Mentor\'s time zone: {z}', mentor_not_available:'This mentor profile isn\'t available yet.', pending_review:'Your mentor profile is under review. Workar will email you once it\'s approved and visible in Find a mentor.',
     review_after_session:'You can leave a review after your first session with {n}.',
     apps_title:'Mentor applications', apps_hint:'New mentor profiles stay hidden until you approve them. The mentor gets an email when approved.', apps_none:'No applications waiting.', apps_error:'Could not load applications — run the latest Workar SQL.', apps_approve:'Approve', apps_view:'View profile', apps_done:'Mentor approved', apps_fail:'Could not approve — run the latest Workar SQL.',
-    join_call:'Join video/voice call', paid_badge:'Paid',
+    voice_tap_replay:'Tap Replay to hear the answer.', join_call:'Join video/voice call', paid_badge:'Paid',
     toast_payment_fail:'Could not start payment — try again',
     toast_payment_success:'Payment received — booking confirmed!',
     lbl_availability:'Weekly availability', availability_hint:'Check the times you\'re usually free — clients will only be able to request these slots.',
@@ -1473,7 +1473,7 @@ const I18N = {
     mp_tz:'منطقه‌ی زمانی منتور: {z}', mentor_not_available:'این پروفایل منتور هنوز در دسترس نیست.', pending_review:'پروفایل منتوری شما در حال بررسی است. پس از تأیید، Workar به شما ایمیل می‌زند و پروفایلتان در لیست منتورها نمایش داده می‌شود.',
     review_after_session:'بعد از اولین جلسه با {n} می‌توانید نظر بنویسید.',
     apps_title:'درخواست‌های منتوری', apps_hint:'پروفایل منتورهای جدید تا تأیید شما مخفی می‌ماند. بعد از تأیید، به منتور ایمیل ارسال می‌شود.', apps_none:'درخواستی در انتظار نیست.', apps_error:'بارگذاری نشد — SQL جدید Workar را اجرا کن.', apps_approve:'تأیید', apps_view:'دیدن پروفایل', apps_done:'منتور تأیید شد', apps_fail:'تأیید نشد — SQL جدید Workar را اجرا کن.',
-    join_call:'ورود به تماس تصویری/صوتی', paid_badge:'پرداخت‌شده',
+    voice_tap_replay:'برای شنیدن پاسخ، دکمه‌ی پخش دوباره را بزنید.', join_call:'ورود به تماس تصویری/صوتی', paid_badge:'پرداخت‌شده',
     toast_payment_fail:'پرداخت شروع نشد — دوباره امتحان کن',
     toast_payment_success:'پرداخت انجام شد — رزرو تأیید شد!',
     lbl_availability:'زمان‌های آزاد هفتگی', availability_hint:'ساعت‌هایی که معمولاً آزادی رو تیک بزن — جویای کار فقط همین‌ها رو می‌بینه.',
@@ -5057,7 +5057,7 @@ function pickVoice(lang){
   if(!wantFa){
     // American English only (no UK/AU/IN accents), best-sounding first
     const us = voices.filter(v => /^en[-_]us/i.test(v.lang));
-    const rank = [/aria.*(natural|online)/i, /jenny.*(natural|online)/i, /ava.*(natural|online)/i, /(natural|neural|online)/i, /google us english/i, /samantha/i, /zira/i];
+    const rank = [/aria.*(natural|online)/i, /jenny.*(natural|online)/i, /ava.*(natural|online)/i, /(natural|neural|online)/i, /premium/i, /enhanced/i, /google us english/i, /samantha/i, /zira/i];
     for(const r of rank){ const v = us.find(x => r.test(x.name)); if(v) return v; }
     if(us.length) return us[0];
   }
@@ -5073,6 +5073,17 @@ function pickVoice(lang){
 }
 // Natural voice (OpenAI via /api/tts); falls back to the browser voice if it isn't set up.
 let __ttsAudio = null, __ttsOff = false;
+// Phones (especially iPhone) only allow audio that starts from a tap. We "unlock" one audio player on the
+// first tap and reuse it for every answer, so the natural voice can play when the AI reply arrives later.
+const __ttsEl = (typeof Audio!=='undefined') ? new Audio() : null;
+const __SILENT = 'data:audio/wav;base64,UklGRkQDAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YSADAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgA==';
+let __ttsUnlocked = false;
+function unlockAudio(){
+  if(__ttsUnlocked || !__ttsEl) return;
+  try{ __ttsEl.src = __SILENT; const pr = __ttsEl.play(); if(pr && pr.then) pr.then(()=>{ __ttsUnlocked = true; }).catch(()=>{}); }catch(e){}
+  try{ if(window.speechSynthesis){ const u = new SpeechSynthesisUtterance(' '); u.volume = 0; window.speechSynthesis.speak(u); } }catch(e){}
+}
+['touchend','click','keydown'].forEach(ev=>document.addEventListener(ev, ()=>{ if(state.voiceMode || state.coachMode==='interview') unlockAudio(); }, { passive:true }));
 function stopSpeaking(){ if(__ttsAudio){ try{ __ttsAudio.pause(); }catch(e){} __ttsAudio = null; } if(window.speechSynthesis) window.speechSynthesis.cancel(); }
 async function speakText(text){
   const clean = cleanForSpeech(text);
@@ -5086,9 +5097,11 @@ async function speakText(text){
         const r = await fetch('/api/tts', { method:'POST', headers:{ 'Content-Type':'application/json', Authorization:'Bearer '+tok }, body: JSON.stringify({ text: clean, lang: state.lang==='fa'?'fa':'en' }) });
         if(r.ok){
           const url = URL.createObjectURL(await r.blob());
-          const a = new Audio(url); __ttsAudio = a;
+          const a = __ttsEl || new Audio(); __ttsAudio = a;
           a.onended = ()=>{ URL.revokeObjectURL(url); if(__ttsAudio===a) __ttsAudio = null; };
-          await a.play(); return;
+          a.src = url;
+          try{ await a.play(); return; }
+          catch(playErr){ console.warn('phone blocked audio; tap the Replay button', playErr); toast(T('voice_tap_replay'), 4000); return; }
         }
         if(r.status===501 || r.status===404) __ttsOff = true; // not configured: use the browser voice from now on
       }
