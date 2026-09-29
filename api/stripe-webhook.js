@@ -100,6 +100,16 @@ async function handler(req, res) {
             headers: Object.assign({ Prefer: 'return=minimal' }, h),
             body: JSON.stringify({ paid: true, stripeSessionId: session.id })
           });
+          // email the mentor that the session is paid and confirmed (never blocks the webhook)
+          try {
+            const M = require('./_mail');
+            const r = (await M.rows(`requests?id=eq.${encodeURIComponent(requestId)}&select=*`))[0];
+            if (r) {
+              const [mentor, client] = await Promise.all([M.profile(r.mentorId), M.profile(r.clientId)]);
+              await M.sendMail(await M.emailOf(r.mentorId), `${client.name} paid — your session is confirmed`,
+                M.layout('Session confirmed', [`<b>${M.esc(client.name)}</b> completed payment for the session on <b>${M.esc(M.when(r, mentor.timezone))}</b>.`, 'At the session time, open Workar and press Join video call.'], { text: 'Open Workar', url: M.SITE() + '/?go=dashboard' }));
+            }
+          } catch (e) { console.error('notify-paid-failed', e); }
         }
       }
     } catch (e) {
