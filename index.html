@@ -1007,6 +1007,34 @@
   .auth-submit{padding:9px 16px;font-size:14px;}
   .auth-map text{font-size:13.5px;}
   .md-hr{border:none;border-top:1px solid var(--border);margin:10px 0;}
+
+  /* ===== v59 legal, approvals, time zones ===== */
+  .legal{max-width:760px;margin:0 auto;}
+  .legal h1{font-size:30px;font-weight:800;margin:0 0 4px;}
+  .legal-date{font-size:13px;color:var(--muted);margin:0 0 18px;}
+  .legal-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:26px;}
+  .legal-tabs a{font-size:13px;font-weight:700;padding:6px 14px;border-radius:999px;border:1px solid var(--border);color:var(--muted);cursor:pointer;text-decoration:none;}
+  .legal-tabs a.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);}
+  .legal section{margin-bottom:22px;}
+  .legal h2{font-size:16.5px;font-weight:800;margin:0 0 6px;}
+  .legal p{font-size:14.5px;line-height:1.75;margin:0;color:var(--text);}
+  .foot-links{display:inline-block;margin:6px 0 4px;font-size:12.5px;}
+  .foot-links a{color:var(--muted);cursor:pointer;text-decoration:none;}
+  .foot-links a:hover{color:var(--text);text-decoration:underline;}
+  .auth-agree{display:flex;gap:9px;align-items:flex-start;font-size:12.5px;color:var(--muted);margin:2px 0 14px;line-height:1.5;cursor:pointer;}
+  .auth-agree input{margin-top:2px;accent-color:var(--accent);width:15px;height:15px;flex-shrink:0;}
+  .auth-agree a{color:var(--accent);font-weight:700;cursor:pointer;text-decoration:underline;}
+  .apps{display:grid;gap:12px;}
+  .app-row{display:grid;grid-template-columns:40px 1fr auto;gap:14px;align-items:start;border:1px solid var(--border);border-radius:14px;padding:14px 16px;}
+  .app-info b{display:block;font-size:15px;}
+  .app-info .muted{font-size:13px;}
+  .app-info p{font-size:13.5px;margin:6px 0 4px;line-height:1.55;}
+  .app-info a{font-size:13px;color:var(--accent);font-weight:700;}
+  .app-btns{display:flex;flex-direction:column;gap:6px;}
+  .pending-banner{border-color:#C98B5A;background:#FBF1E6;}
+  .cal-tz{font-size:11.5px;color:var(--muted);margin:10px 0 0;line-height:1.45;}
+  .mp-tzline{font-size:12.5px;color:var(--muted);margin:-10px 0 16px;}
+  @media (max-width:600px){.app-row{grid-template-columns:40px 1fr;}.app-btns{grid-column:1/-1;flex-direction:row;}}
 </style>
 </head>
 <body>
@@ -1206,6 +1234,12 @@ const I18N = {
     mg_perm:'the database did not allow this change — run the latest Workar SQL', toast_accepted:'Accepted — the client can now pay to confirm', toast_declined:'Request declined',
     grp_count:'{n} active requests', no_active_requests:'Nothing waiting right now.', past_title:'Past and closed ({n})',
     cal_free:'Free', cal_booked:'Booked', cal_na:'Not available', cal_off:'Not available this day — pick a day with a green dot.', cal_picked:'Selected: {d} at {t}', cal_busy_on:'Already booked that day: {t}', cal_none_busy:'Nothing booked that day yet.', cal_clash:'That time is already booked — please pick another.', cal_taken:'Someone just booked that time. Please pick another.',
+    ft_privacy:'Privacy', ft_terms:'Terms', ft_refunds:'Refunds', legal_back:'← Back to Workar', legal_updated:'Last updated: {d}',
+    auth_agree:'I agree to the {t} and {p}.', lbl_timezone:'Your time zone', tz_hint:'Your weekly availability is in this time zone. Clients see times converted to their own zone.',
+    cal_tz_same:'Times are in your time zone ({z}).', cal_tz_diff:'Times are shown in your time zone ({z}). The mentor is in {m}.', cal_tz_own:'Enter the date and time in your own time zone ({z}).', cal_past:'That time has already passed — please choose a later one.',
+    mp_tz:'Mentor\'s time zone: {z}', mentor_not_available:'This mentor profile isn\'t available yet.', pending_review:'Your mentor profile is under review. Workar will email you once it\'s approved and visible in Find a mentor.',
+    review_after_session:'You can leave a review after your first session with {n}.',
+    apps_title:'Mentor applications', apps_hint:'New mentor profiles stay hidden until you approve them. The mentor gets an email when approved.', apps_none:'No applications waiting.', apps_error:'Could not load applications — run the latest Workar SQL.', apps_approve:'Approve', apps_view:'View profile', apps_done:'Mentor approved', apps_fail:'Could not approve — run the latest Workar SQL.',
     join_call:'Join video/voice call', paid_badge:'Paid',
     toast_payment_fail:'Could not start payment — try again',
     toast_payment_success:'Payment received — booking confirmed!',
@@ -1433,6 +1467,12 @@ const I18N = {
     mg_perm:'دیتابیس اجازه‌ی این تغییر رو نداد — SQL جدید Workar رو اجرا کن', toast_accepted:'تأیید شد — حالا مراجعه‌کننده می‌تونه پرداخت کنه', toast_declined:'درخواست رد شد',
     grp_count:'{n} درخواست فعال', no_active_requests:'فعلاً چیزی در انتظار نیست.', past_title:'قبلی و بسته‌شده ({n})',
     cal_free:'آزاد', cal_booked:'رزرو شده', cal_na:'در دسترس نیست', cal_off:'این روز در دسترس نیست — روزی با نقطه‌ی سبز انتخاب کن.', cal_picked:'انتخاب شد: {d} ساعت {t}', cal_busy_on:'در این روز رزرو شده: {t}', cal_none_busy:'هنوز رزروی برای این روز نیست.', cal_clash:'این زمان قبلاً رزرو شده — زمان دیگه‌ای انتخاب کن.', cal_taken:'همین الان کسی این زمان رو رزرو کرد. زمان دیگه‌ای انتخاب کن.',
+    ft_privacy:'حریم خصوصی', ft_terms:'شرایط استفاده', ft_refunds:'بازپرداخت', legal_back:'→ بازگشت به Workar', legal_updated:'آخرین به‌روزرسانی: {d}',
+    auth_agree:'{t} و {p} را می‌پذیرم.', lbl_timezone:'منطقه‌ی زمانی شما', tz_hint:'زمان‌های آزاد هفتگی شما در این منطقه‌ی زمانی است. مراجعه‌کننده‌ها زمان را به وقت خودشان می‌بینند.',
+    cal_tz_same:'زمان‌ها به وقت شماست ({z}).', cal_tz_diff:'زمان‌ها به وقت شما ({z}) نمایش داده می‌شوند. منتور در {m} است.', cal_tz_own:'تاریخ و ساعت را به وقت خودتان ({z}) وارد کنید.', cal_past:'این زمان گذشته است — زمان دیرتری انتخاب کنید.',
+    mp_tz:'منطقه‌ی زمانی منتور: {z}', mentor_not_available:'این پروفایل منتور هنوز در دسترس نیست.', pending_review:'پروفایل منتوری شما در حال بررسی است. پس از تأیید، Workar به شما ایمیل می‌زند و پروفایلتان در لیست منتورها نمایش داده می‌شود.',
+    review_after_session:'بعد از اولین جلسه با {n} می‌توانید نظر بنویسید.',
+    apps_title:'درخواست‌های منتوری', apps_hint:'پروفایل منتورهای جدید تا تأیید شما مخفی می‌ماند. بعد از تأیید، به منتور ایمیل ارسال می‌شود.', apps_none:'درخواستی در انتظار نیست.', apps_error:'بارگذاری نشد — SQL جدید Workar را اجرا کن.', apps_approve:'تأیید', apps_view:'دیدن پروفایل', apps_done:'منتور تأیید شد', apps_fail:'تأیید نشد — SQL جدید Workar را اجرا کن.',
     join_call:'ورود به تماس تصویری/صوتی', paid_badge:'پرداخت‌شده',
     toast_payment_fail:'پرداخت شروع نشد — دوباره امتحان کن',
     toast_payment_success:'پرداخت انجام شد — رزرو تأیید شد!',
@@ -1500,6 +1540,7 @@ let state = { view:'home', mentorId:null, coachMode:'resume', chatMsgs:[], sendi
   matchQuery:'', matchResults:null, matching:false, interviewRole:'', interviewStarted:false, bookingOpen:false, selectedSlot:null,
   authMode:'login', authError:'', authCheckEmail:false, authBusy:false,
   lang:'en', query:'', role:null, voiceMode:false, listening:false, outOfCredits:false };
+try{ const __go = new URLSearchParams(location.search).get('go'); if(__go && ['dashboard','admin','privacy','terms','refunds','browse','coach','prep'].includes(__go)){ state.view = __go; history.replaceState(null, '', location.pathname + location.hash); } }catch(e){}
 let cache = { profiles:{}, reviews:{}, requests:[], names:{}, people:{}, msgs:{}, busy:{}, busyLoaded:{} };
 
 function el(html){ const t=document.createElement('template'); t.innerHTML=html.trim(); return t.content; }
@@ -1569,6 +1610,136 @@ function upcomingSlotsFor(mentorId, template){
   }
   return out;
 }
+const SUPPORT_EMAIL = 'support@workar.me';
+const LEGAL_UPDATED = 'September 29, 2026';
+const LEGAL = {
+en: {
+privacy: { title:'Privacy Policy', sections:[
+ ['Who we are','Workar ("we", "us") is an online career-mentoring platform operated from British Columbia, Canada, at workar.me. This policy explains what personal information we collect, why, and the choices you have. We follow Canada\'s Personal Information Protection and Electronic Documents Act (PIPEDA) and British Columbia\'s Personal Information Protection Act (PIPA).'],
+ ['What we collect','Account information: your email address and password (stored securely by our authentication provider; we never see your password). Profile information you choose to add, such as your name, profession, career goals, education, certifications, languages, LinkedIn link, time zone and, for mentors, bio, rate and availability. Bookings and messages: session requests, dates and times, packages, and the messages you exchange with mentors or clients. Payments: processed by Stripe. We receive confirmation that a payment succeeded and the amount, but never your full card number. AI coaching: text you send to the AI coach, and the text of AI interview questions when voice mode is on. Technical data: basic information your browser sends, and settings saved on your device such as your language choice.'],
+ ['How we use it','To create and run your account; to match clients with mentors and show mentor profiles; to schedule, confirm and remind you about sessions; to process payments, payouts and refunds; to send you service emails (for example a new request, an accepted booking, a new message or a session reminder); to provide AI coaching; to keep Workar safe, prevent misuse and resolve disputes; and to meet legal obligations. We do not sell your personal information and we do not use it for third-party advertising.'],
+ ['Who can see what','Mentor profiles (name, headline, bio, skills, rate, languages and reviews) are public. Your bookings and messages are visible only to you, the other person in that booking, and Workar administrators when needed to support you or resolve a problem. Other visitors can see that a mentor\'s time slot is booked, but not who booked it.'],
+ ['Service providers','We use trusted providers to run Workar: Supabase (database and sign-in), Vercel (hosting), Stripe (payments), Anthropic (AI coach), OpenAI (AI interview voice), Resend (email) and Jitsi Meet (video and voice calls). They process information only to provide their service to us. Some of these providers store data outside Canada, including in the United States, where it may be subject to local laws.'],
+ ['How long we keep it','We keep your information while your account is active. If you delete your profile, we delete or anonymise your personal information within 30 days, except records we must keep for legal, tax or accounting reasons (for example payment records, which we keep for up to 7 years).'],
+ ['Your choices and rights','You can view and edit your profile at any time from My profile, and delete it there. You may ask us for access to the personal information we hold about you, ask us to correct it, or withdraw your consent, subject to legal limits. Contact us at '+SUPPORT_EMAIL+' and we will reply within 30 days.'],
+ ['Security','We use encrypted connections (HTTPS), access controls so users can only read their own bookings and messages, and reputable providers. No system is perfectly secure, so please use a strong, unique password.'],
+ ['Age','Workar is for people aged 18 and over.'],
+ ['Changes and contact','We may update this policy and will show the new date at the top. Questions or complaints: '+SUPPORT_EMAIL+'. If you are not satisfied with our answer, you may contact the Office of the Privacy Commissioner of Canada or the Office of the Information and Privacy Commissioner for British Columbia.']
+]},
+terms: { title:'Terms of Service', sections:[
+ ['Agreement','By creating an account or using Workar (workar.me) you agree to these Terms, our Privacy Policy and our Refund & Cancellation Policy. If you do not agree, please do not use Workar.'],
+ ['What Workar is','Workar is a platform that connects people looking for career guidance ("clients") with experienced professionals ("mentors"). Mentors are independent professionals, not employees or agents of Workar. Workar does not guarantee any job, interview, promotion or other outcome.'],
+ ['Not professional advice','Mentoring sessions and the AI coach offer general career guidance only. They are not legal, immigration, financial, medical or other regulated professional advice. For those matters, please consult a licensed professional.'],
+ ['Accounts','You must be at least 18, give accurate information and keep your password secure. You are responsible for activity on your account. One person, one account.'],
+ ['Mentors','Mentor profiles are reviewed by Workar before they appear publicly. Mentors must describe their experience honestly, keep their availability up to date, attend confirmed sessions on time and treat clients respectfully. Mentors receive their share of each paid booking as shown in their dashboard; Workar keeps the remainder as a platform fee. Mentors are responsible for their own taxes.'],
+ ['Bookings and payments','Clients request a time; the booking is confirmed once the mentor accepts it and the client pays. Prices are shown before you pay and are charged in US dollars through Stripe. Cancellations and refunds follow our Refund & Cancellation Policy.'],
+ ['Sessions','Sessions take place by video or voice call through Workar. Do not record a session without the other person\'s consent. Please do not move payment for Workar bookings outside the platform.'],
+ ['Acceptable use','Do not harass, discriminate against or mislead others; share anyone\'s personal information without permission; post unlawful, hateful or sexual content; attempt to access other users\' data; or misuse the AI coach. We may remove content or suspend accounts that break these rules.'],
+ ['AI coach','AI responses can be inaccurate or incomplete. Review them with your own judgment. AI credits are used as you send messages.'],
+ ['Content','You keep ownership of what you write on Workar. You give Workar permission to display and store it as needed to run the service (for example showing a mentor profile or a review). Reviews must be honest and based on a real session.'],
+ ['Liability','Workar is provided "as is". To the extent allowed by law, Workar is not responsible for the advice given by mentors or the AI coach, or for indirect or consequential losses, and our total liability for any claim is limited to the amount you paid Workar in the 3 months before the claim.'],
+ ['Ending your account','You can delete your profile at any time. We may suspend or close accounts that break these Terms.'],
+ ['Law and changes','These Terms are governed by the laws of British Columbia and the federal laws of Canada that apply there. We may update these Terms; continuing to use Workar after an update means you accept it. Contact: '+SUPPORT_EMAIL+'.']
+]},
+refunds: { title:'Refund & Cancellation Policy', sections:[
+ ['Before a mentor accepts','You are not charged when you request a session. If the mentor declines or never accepts, nothing is owed.'],
+ ['If you cancel','24 hours or more before the session: full refund. Less than 24 hours before, or if you do not show up within 15 minutes of the start time: that session is not refundable. You can always change the time with your mentor through Workar messages, free of charge, if they agree.'],
+ ['If the mentor cancels or does not show up','You receive a full refund for that session, or you may choose to rebook with the same or another mentor.'],
+ ['Technical problems','If a session cannot happen because of a technical problem on Workar\'s side, we will reschedule it or refund it in full.'],
+ ['Packages','Unused sessions in a multi-session package can be refunded within 90 days of purchase. Sessions already completed are deducted at the package\'s per-session price, and the rest is refunded.'],
+ ['AI credits and PMP Prep','Unused AI credit packs and PMP Prep purchases can be refunded within 14 days of purchase. Once credits have been used or an exam has been started, that purchase is not refundable.'],
+ ['How to ask for a refund','Email '+SUPPORT_EMAIL+' with your booking details. Approved refunds go back to your original payment method through Stripe, usually within 5 to 10 business days.'],
+ ['Mentor payouts','When a session is refunded, the mentor\'s share for that session is not paid out.']
+]}
+},
+fa: {
+privacy: { title:'سیاست حریم خصوصی', sections:[
+ ['ما چه کسی هستیم','Workar یک پلتفرم آنلاین منتورینگ شغلی است که از بریتیش کلمبیا، کانادا، در workar.me اداره می‌شود. این سیاست توضیح می‌دهد چه اطلاعاتی جمع می‌کنیم، چرا، و چه اختیاراتی دارید. ما از قانون حفاظت از اطلاعات شخصی کانادا (PIPEDA) و قانون PIPA بریتیش کلمبیا پیروی می‌کنیم.'],
+ ['چه اطلاعاتی جمع می‌کنیم','اطلاعات حساب: ایمیل و رمز عبور (که به‌صورت امن نزد ارائه‌دهنده‌ی ورود ما نگهداری می‌شود و ما رمز شما را نمی‌بینیم). اطلاعات پروفایلی که خودتان وارد می‌کنید، مانند نام، شغل، اهداف، تحصیلات، مدارک، زبان‌ها، لینک LinkedIn، منطقه‌ی زمانی و برای منتورها بیوگرافی، نرخ و زمان‌های آزاد. رزروها و پیام‌ها. پرداخت‌ها از طریق Stripe انجام می‌شود و ما هرگز شماره‌ی کامل کارت شما را دریافت نمی‌کنیم. متن‌هایی که برای مربی هوش مصنوعی می‌فرستید. تنظیماتی مثل زبان که روی دستگاه شما ذخیره می‌شود.'],
+ ['چطور از آن استفاده می‌کنیم','برای ساخت و اداره‌ی حساب، نمایش منتورها، زمان‌بندی و یادآوری جلسات، پرداخت و بازپرداخت، ارسال ایمیل‌های خدماتی (مثل درخواست جدید، تأیید رزرو، پیام جدید و یادآوری جلسه)، ارائه‌ی مربی هوش مصنوعی، حفظ امنیت و رفع اختلافات، و انجام الزامات قانونی. ما اطلاعات شما را نمی‌فروشیم و برای تبلیغات شخص ثالث استفاده نمی‌کنیم.'],
+ ['چه کسی چه چیزی را می‌بیند','پروفایل منتورها عمومی است. رزروها و پیام‌ها فقط برای شما، طرف مقابل و در صورت نیاز مدیران Workar قابل مشاهده است. دیگران فقط می‌بینند که یک زمان رزرو شده، نه اینکه چه کسی رزرو کرده.'],
+ ['ارائه‌دهندگان خدمات','Supabase (پایگاه داده و ورود)، Vercel (میزبانی)، Stripe (پرداخت)، Anthropic (مربی هوش مصنوعی)، OpenAI (صدای مصاحبه)، Resend (ایمیل) و Jitsi Meet (تماس تصویری). برخی از این شرکت‌ها اطلاعات را خارج از کانادا، از جمله در آمریکا، نگهداری می‌کنند.'],
+ ['مدت نگهداری','تا زمانی که حساب شما فعال است. پس از حذف پروفایل، ظرف ۳۰ روز اطلاعات شخصی حذف یا بی‌نام می‌شود، به‌جز سوابقی که قانوناً باید نگه داریم (مثل سوابق پرداخت تا ۷ سال).'],
+ ['حقوق شما','از بخش پروفایل من می‌توانید اطلاعات خود را ویرایش یا حذف کنید. برای دسترسی، اصلاح یا لغو رضایت با '+SUPPORT_EMAIL+' تماس بگیرید. ظرف ۳۰ روز پاسخ می‌دهیم.'],
+ ['امنیت','از اتصال رمزگذاری‌شده، کنترل دسترسی و ارائه‌دهندگان معتبر استفاده می‌کنیم. لطفاً رمز قوی و منحصربه‌فرد انتخاب کنید.'],
+ ['سن','Workar برای افراد ۱۸ سال به بالا است.'],
+ ['تغییرات و تماس','ممکن است این سیاست را به‌روز کنیم. سؤال یا شکایت: '+SUPPORT_EMAIL+'. در صورت عدم رضایت می‌توانید با کمیسیونر حریم خصوصی کانادا یا بریتیش کلمبیا تماس بگیرید.']
+]},
+terms: { title:'شرایط استفاده', sections:[
+ ['توافق','با ساخت حساب یا استفاده از Workar، این شرایط، سیاست حریم خصوصی و سیاست لغو و بازپرداخت را می‌پذیرید.'],
+ ['Workar چیست','Workar افرادی را که به راهنمایی شغلی نیاز دارند به متخصصان باتجربه وصل می‌کند. منتورها متخصصان مستقل هستند، نه کارمند Workar. Workar هیچ نتیجه‌ای مانند استخدام یا مصاحبه را تضمین نمی‌کند.'],
+ ['مشاوره‌ی تخصصی نیست','جلسات و مربی هوش مصنوعی فقط راهنمایی عمومی شغلی هستند و مشاوره‌ی حقوقی، مهاجرتی، مالی یا پزشکی محسوب نمی‌شوند.'],
+ ['حساب کاربری','باید حداقل ۱۸ سال داشته باشید، اطلاعات درست وارد کنید و از رمز خود محافظت کنید. هر نفر یک حساب.'],
+ ['منتورها','پروفایل منتورها پیش از نمایش عمومی توسط Workar بررسی می‌شود. منتورها باید تجربه‌ی خود را صادقانه بیان کنند، زمان‌های آزاد را به‌روز نگه دارند و به‌موقع در جلسات حاضر شوند. سهم منتور از هر رزرو در داشبورد نمایش داده می‌شود و باقی‌مانده کارمزد Workar است. مسئولیت مالیات با خود منتور است.'],
+ ['رزرو و پرداخت','رزرو پس از تأیید منتور و پرداخت مراجعه‌کننده قطعی می‌شود. قیمت‌ها پیش از پرداخت نمایش داده می‌شود و به دلار آمریکا از طریق Stripe دریافت می‌شود.'],
+ ['جلسات','جلسات از طریق تماس تصویری یا صوتی Workar برگزار می‌شود. بدون رضایت طرف مقابل جلسه را ضبط نکنید و پرداخت را خارج از Workar انجام ندهید.'],
+ ['استفاده‌ی مجاز','آزار، تبعیض، فریب، انتشار اطلاعات شخصی دیگران، محتوای غیرقانونی یا نفرت‌آمیز و سوءاستفاده از سیستم ممنوع است و ممکن است به تعلیق حساب منجر شود.'],
+ ['مربی هوش مصنوعی','پاسخ‌های هوش مصنوعی ممکن است نادرست یا ناقص باشد؛ با قضاوت خودتان از آن استفاده کنید.'],
+ ['محتوا','مالکیت نوشته‌های شما با خودتان است و به Workar اجازه می‌دهید آن‌ها را برای اداره‌ی سرویس نمایش دهد. نظرات باید صادقانه و بر اساس جلسه‌ی واقعی باشد.'],
+ ['مسئولیت','Workar «همان‌طور که هست» ارائه می‌شود. تا حدی که قانون اجازه می‌دهد، مسئولیت کل ما محدود به مبلغی است که در ۳ ماه پیش از ادعا به Workar پرداخت کرده‌اید.'],
+ ['قانون حاکم','این شرایط تابع قوانین بریتیش کلمبیا و قوانین فدرال کانادا است. تماس: '+SUPPORT_EMAIL+'.']
+]},
+refunds: { title:'سیاست لغو و بازپرداخت', sections:[
+ ['پیش از تأیید منتور','هنگام درخواست جلسه پولی دریافت نمی‌شود. اگر منتور رد کند یا تأیید نکند، مبلغی بدهکار نیستید.'],
+ ['اگر شما لغو کنید','۲۴ ساعت یا بیشتر پیش از جلسه: بازپرداخت کامل. کمتر از ۲۴ ساعت یا عدم حضور تا ۱۵ دقیقه پس از شروع: آن جلسه قابل بازپرداخت نیست. تغییر زمان با توافق منتور از طریق پیام‌های Workar رایگان است.'],
+ ['اگر منتور لغو کند یا حاضر نشود','بازپرداخت کامل آن جلسه، یا رزرو دوباره با همان منتور یا منتوری دیگر.'],
+ ['مشکل فنی','اگر جلسه به دلیل مشکل فنی از سمت Workar برگزار نشود، آن را دوباره زمان‌بندی یا به‌طور کامل بازپرداخت می‌کنیم.'],
+ ['پکیج‌ها','جلسات استفاده‌نشده‌ی پکیج تا ۹۰ روز پس از خرید قابل بازپرداخت است. جلسات برگزارشده به قیمت هر جلسه در پکیج کسر می‌شود.'],
+ ['اعتبار هوش مصنوعی و PMP Prep','تا ۱۴ روز پس از خرید، در صورت عدم استفاده، قابل بازپرداخت است.'],
+ ['درخواست بازپرداخت','با جزئیات رزرو به '+SUPPORT_EMAIL+' ایمیل بزنید. بازپرداخت معمولاً ظرف ۵ تا ۱۰ روز کاری به همان روش پرداخت برمی‌گردد.'],
+ ['سهم منتور','برای جلسه‌ی بازپرداخت‌شده، سهمی به منتور پرداخت نمی‌شود.']
+]}
+}};
+function legalView(page){
+  const L = (LEGAL[state.lang] || LEGAL.en)[page] || LEGAL.en[page];
+  return `<article class="legal">
+    <a class="mp-back" data-nav="home">${esc(T('legal_back'))}</a>
+    <h1>${esc(L.title)}</h1>
+    <p class="legal-date">${esc(T('legal_updated').replace('{d}', LEGAL_UPDATED))}</p>
+    <nav class="legal-tabs">${['privacy','terms','refunds'].map(k=>`<a data-nav="${k}" class="${k===page?'on':''}">${esc(((LEGAL[state.lang]||LEGAL.en)[k]).title)}</a>`).join('')}</nav>
+    ${L.sections.map(([h,t],i)=>`<section><h2>${i+1}. ${esc(h)}</h2><p>${esc(t)}</p></section>`).join('')}
+  </article>`;
+}
+
+// ---------- time zones ----------
+const MY_TZ = (()=>{ try{ return Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/Vancouver'; }catch(e){ return 'America/Vancouver'; } })();
+const TZ_CHOICES = ['America/Vancouver','America/Edmonton','America/Regina','America/Winnipeg','America/Toronto','America/Halifax','America/St_Johns','America/Los_Angeles','America/Denver','America/Chicago','America/New_York','Europe/London','Europe/Paris','Europe/Berlin','Asia/Dubai','Asia/Tehran','Asia/Kolkata','Australia/Sydney'];
+function tzParts(date, tz){
+  const p = {}; new Intl.DateTimeFormat('en-US',{ timeZone:tz, hourCycle:'h23', year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit' }).formatToParts(date).forEach(x=>{ p[x.type]=x.value; });
+  return p;
+}
+function tzOffsetMin(tz, date){ const p = tzParts(date, tz); return (Date.UTC(+p.year, +p.month-1, +p.day, (+p.hour)%24, +p.minute, +p.second) - date.getTime())/60000; }
+function zonedToUtc(dateStr, timeStr, tz){
+  const [y,m,d] = String(dateStr).split('-').map(Number), [hh,mm] = String(timeStr).split(':').map(Number);
+  const guess = Date.UTC(y, m-1, d, hh||0, mm||0);
+  let t = guess - tzOffsetMin(tz, new Date(guess))*60000;
+  const off2 = tzOffsetMin(tz, new Date(t)); t = guess - off2*60000;
+  return new Date(t);
+}
+function utcToZoned(date, tz){ const p = tzParts(date, tz); return { date:`${p.year}-${p.month}-${p.day}`, time:`${String((+p.hour)%24).padStart(2,'0')}:${p.minute}` }; }
+function tzAbbr(tz, date){ try{ const x = new Intl.DateTimeFormat('en-US',{ timeZone:tz, timeZoneName:'short' }).formatToParts(date||new Date()).find(v=>v.type==='timeZoneName'); return x ? x.value : tz; }catch(e){ return tz; } }
+function tzCity(tz){ return String(tz||'').split('/').pop().replace(/_/g,' '); }
+function mentorTz(id){ const p = cache.profiles[id] || (id===uid ? myProfile : null); return (p && p.timezone) || 'America/Vancouver'; }
+function reqInstant(r){
+  if(r.startsAt) return new Date(r.startsAt);
+  if(r.date && r.time){ try{ return zonedToUtc(r.date, String(r.time).slice(0,5), r.tz || mentorTz(r.mentorId)); }catch(e){} }
+  return null;
+}
+function fmtLocalDay(d){ return d.toLocaleDateString(state.lang==='fa'?'fa-IR':'en-CA', { weekday:'short', month:'short', day:'numeric', timeZone: MY_TZ }); }
+function fmtLocalTime(d){ return d.toLocaleTimeString(state.lang==='fa'?'fa-IR':'en-US', { hour:'numeric', minute:'2-digit', timeZone: MY_TZ }) + ' ' + tzAbbr(MY_TZ, d); }
+// ---------- email notifications (sent by /api/notify) ----------
+async function notify(event, requestId, targetId){
+  try{
+    if(!sb) return;
+    const { data } = await sb.auth.getSession(); const tok = data && data.session && data.session.access_token; if(!tok) return;
+    fetch('/api/notify', { method:'POST', headers:{ 'Content-Type':'application/json', Authorization:'Bearer '+tok }, body: JSON.stringify({ event, requestId, targetId }) }).catch(()=>{});
+  }catch(e){}
+}
+function canReview(mentorId){
+  const now = Date.now();
+  return (cache.requests||[]).some(r=> r.clientId===uid && r.mentorId===mentorId && r.status==='accepted' && (r.paid || !r.amountCents)
+    && ((Number(r.sessionsDone)||0) > 0 || ((reqInstant(r)||{getTime:()=>Infinity}).getTime() < now)));
+}
 // ---------- booking calendar: free / booked / unavailable ----------
 const BLOCK_HOURS = { morning:['09:00','10:00','11:00'], afternoon:['13:00','14:00','15:00','16:00'], evening:['17:00','18:00','19:00','20:00'] };
 const SESSION_MIN = 45;
@@ -1580,19 +1751,21 @@ function busyFor(mentorId){
 }
 function isBusy(busy, date, time){ const t = toMin(time); return busy.some(b=>b.date===date && Math.abs(toMin(b.time)-t) < SESSION_MIN); }
 async function loadBusy(mentorId){
-  if(!sb || cache.busyLoaded[mentorId]) return;
+  if(!sb || !sb.rpc || cache.busyLoaded[mentorId]) return;
   cache.busyLoaded[mentorId] = true;
   const { data, error } = await sb.rpc('mentor_busy', { mid: mentorId });
   if(!error){ cache.busy[mentorId] = (data||[]).map(r=>({ date:r.date, time:r.time })); if(state.view==='mentor') render(); }
 }
-function calDays(template, busy){
-  const tmpl = new Set(template||[]), now = new Date(), nowMin = now.getHours()*60+now.getMinutes(), out = [];
+function calDays(template, busy, mtz){
+  const tmpl = new Set(template||[]), out = [], cutoff = Date.now() + 2*3600*1000; // at least 2 hours' notice
+  const today = utcToZoned(new Date(), mtz).date.split('-').map(Number);
   for(let i=0;i<21;i++){
-    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate()+i), date = ymd(d), dayName = JSDAY_TO_NAME[d.getDay()];
+    const d = new Date(today[0], today[1]-1, today[2]+i, 12), date = ymd(d), dayName = JSDAY_TO_NAME[d.getDay()];
     const slots = [];
     AVAIL_BLOCKS.forEach(([blockKey])=>{ if(tmpl.has(dayName+'-'+blockKey)) (BLOCK_HOURS[blockKey]||[]).forEach(t=>{
-      if(i===0 && toMin(t) <= nowMin + 120) return; // same-day: at least 2 hours' notice
-      slots.push({ time:t, busy:isBusy(busy, date, t) }); }); });
+      const inst = zonedToUtc(date, t, mtz);
+      if(inst.getTime() < cutoff) return;
+      slots.push({ time:t, inst, busy:isBusy(busy, date, t) }); }); });
     out.push({ d, date, dayName, slots, free: slots.filter(x=>!x.busy).length });
   }
   return out;
@@ -1602,16 +1775,19 @@ function bookingCalendar(id, p){
   const busy = busyFor(id);
   if(!(p.availability||[]).length){
     const sel = state.selectedSlot || {};
-    const dayBusy = sel.date ? busy.filter(b=>b.date===sel.date).map(b=>b.time).sort() : [];
+    const mtz0 = mentorTz(id);
+    const dayBusy = sel.date ? busy.map(b=>zonedToUtc(b.date, String(b.time).slice(0,5), mtz0)).filter(i=>utcToZoned(i, MY_TZ).date===sel.date).sort((a,b)=>a-b).map(i=>fmtLocalTime(i)) : [];
     return `<p class="muted" style="font-size:13px;margin-bottom:10px;">${esc(T('no_slots_pick_own'))}</p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px;">
         <div class="field"><label>${esc(T('lbl_date'))}</label><input type="date" id="book-date" min="${ymd(new Date())}" value="${esc(sel.date||'')}"></div>
         <div class="field"><label>${esc(T('lbl_time'))}</label><input type="time" id="book-time" step="900" value="${esc(sel.time||'')}"></div>
       </div>
-      ${sel.date ? `<p class="cal-note ${dayBusy.length?'':'ok'}">${dayBusy.length ? esc(T('cal_busy_on').replace('{t}', dayBusy.map(fmtTime).join(', '))) : esc(T('cal_none_busy'))}</p>` : ''}
-      ${sel.date && sel.time && isBusy(busy, sel.date, sel.time) ? `<p class="cal-note bad">${esc(T('cal_clash'))}</p>` : ''}`;
+      ${sel.date ? `<p class="cal-note ${dayBusy.length?'':'ok'}">${dayBusy.length ? esc(T('cal_busy_on').replace('{t}', dayBusy.join(', '))) : esc(T('cal_none_busy'))}</p>` : ''}
+      ${sel.date && sel.time && (()=>{ const w = utcToZoned(zonedToUtc(sel.date, sel.time, MY_TZ), mtz0); return isBusy(busy, w.date, w.time); })() ? `<p class="cal-note bad">${esc(T('cal_clash'))}</p>` : ''}
+      <p class="cal-tz">${esc(T('cal_tz_own').replace('{z}', tzAbbr(MY_TZ)))}</p>`;
   }
-  const days = calDays(p.availability, busy);
+  const mtz = mentorTz(id), sameTz = mtz===MY_TZ || tzOffsetMin(mtz, new Date())===tzOffsetMin(MY_TZ, new Date());
+  const days = calDays(p.availability, busy, mtz);
   const wk = Math.min(2, Math.max(0, state.calWeek||0));
   const week = days.slice(wk*7, wk*7+7);
   let selDate = state.calDay && days.find(x=>x.date===state.calDay) ? state.calDay : ((week.find(x=>x.free) || week[0]).date);
@@ -1631,10 +1807,14 @@ function bookingCalendar(id, p){
     <div class="cal-slots">
       ${!day.slots.length ? `<p class="muted cal-empty">${esc(T('cal_off'))}</p>`
         : day.slots.map(x=>{ const on = state.selectedSlot && state.selectedSlot.date===day.date && state.selectedSlot.time===x.time;
-          return `<button type="button" class="cal-slot ${x.busy?'busy':''} ${on?'on':''}" ${x.busy?'disabled':''} data-date="${day.date}" data-time="${x.time}">${esc(fmtTime(x.time))}${x.busy?`<small>${esc(T('cal_booked'))}</small>`:''}</button>`; }).join('')}
+          const lt = sameTz ? fmtTime(x.time) : x.inst.toLocaleTimeString(state.lang==='fa'?'fa-IR':'en-US', { hour:'numeric', minute:'2-digit', timeZone: MY_TZ });
+          const shift = !sameTz && utcToZoned(x.inst, MY_TZ).date !== day.date ? ' · ' + x.inst.toLocaleDateString(state.lang==='fa'?'fa-IR':'en-CA', { weekday:'short', timeZone: MY_TZ }) : '';
+          return `<button type="button" class="cal-slot ${x.busy?'busy':''} ${on?'on':''}" ${x.busy?'disabled':''} data-date="${day.date}" data-time="${x.time}">${esc(lt+shift)}${x.busy?`<small>${esc(T('cal_booked'))}</small>`:''}</button>`; }).join('')}
     </div>
     <div class="cal-legend"><span><i class="lg-free"></i>${esc(T('cal_free'))}</span><span><i class="lg-full"></i>${esc(T('cal_booked'))}</span><span><i class="lg-off"></i>${esc(T('cal_na'))}</span></div>
-    ${state.selectedSlot ? `<p class="cal-picked">${esc(T('cal_picked').replace('{d}', fmtReqDate(state.selectedSlot.date)).replace('{t}', fmtTime(state.selectedSlot.time)))}</p>` : ''}
+    ${state.selectedSlot && state.selectedSlot.time ? (()=>{ const inst = zonedToUtc(state.selectedSlot.date, state.selectedSlot.time, mtz);
+      return `<p class="cal-picked">${esc(T('cal_picked').replace('{d}', fmtLocalDay(inst)).replace('{t}', fmtLocalTime(inst)))}</p>`; })() : ''}
+    <p class="cal-tz">${esc(sameTz ? T('cal_tz_same').replace('{z}', tzAbbr(MY_TZ)) : T('cal_tz_diff').replace('{z}', tzAbbr(MY_TZ)).replace('{m}', tzCity(mtz) + ' (' + tzAbbr(mtz) + ')'))}</p>
   </div>`;
 }
 function formatSlotLabel(slot){
@@ -1932,12 +2112,13 @@ function render(){
       case 'prep': body = prepView(); break;
       case 'prepAdmin': body = isAdmin() ? prepAdminView() : prepView(); break;
       case 'admin': body = isAdmin() ? adminView() : homeView(); break;
+      case 'privacy': case 'terms': case 'refunds': body = legalView(state.view); break;
       default: body = homeView();
     }
   }
   app.appendChild(el(body));
   if(state.langPrompt) app.appendChild(el(langPromptHtml()));
-  app.appendChild(el(`<footer>Workar · ${esc(T('footer_tag'))}<br><a class="ig-link" href="${INSTAGRAM_URL}" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg> @workarmentoring</a></footer>`));
+  app.appendChild(el(`<footer>Workar · ${esc(T('footer_tag'))}<br><span class="foot-links"><a data-nav="privacy">${esc(T('ft_privacy'))}</a> · <a data-nav="terms">${esc(T('ft_terms'))}</a> · <a data-nav="refunds">${esc(T('ft_refunds'))}</a> · <a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a></span><br><a class="ig-link" href="${INSTAGRAM_URL}" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg> @workarmentoring</a></footer>`));
   wire();
   wireRateWidgets();
   setupReveal();
@@ -2200,6 +2381,18 @@ function adminView(){
   <p class="muted" style="margin-top:-8px;margin-bottom:22px;">${esc(T('adm_sub'))}</p>
 
   <div class="panel wide" style="margin-bottom:28px;">
+    <h3 style="margin:0 0 4px;">${esc(T('apps_title'))}</h3>
+    <p class="muted" style="font-size:13px;margin:0 0 14px;">${esc(T('apps_hint'))}</p>
+    ${state.apps==null ? `<div class="muted">${esc(T('pay_loading'))}</div>` : state.apps==='error' ? `<div class="muted">${esc(T('apps_error'))}</div>` : !state.apps.length ? `<div class="empty">${esc(T('apps_none'))}</div>` :
+      `<div class="apps">${state.apps.map(a=>`<div class="app-row">
+        <div class="avatar">${initials(a.name||'?')}</div>
+        <div class="app-info"><b>${esc(a.name||'')}</b><span class="muted">${esc([a.headline||a.profession, a.experience ? a.experience+' '+T('yrs_exp') : '', (a.languages||[]).join(', ')].filter(Boolean).join(' · '))}</span>
+          ${a.bio ? `<p>${esc(String(a.bio).slice(0,260))}</p>` : ''}${a.linkedin ? `<a href="${esc(a.linkedin)}" target="_blank" rel="noopener">${esc(T('linkedin_link'))}</a>` : ''}</div>
+        <div class="app-btns"><button class="btn btn-sm btn-primary" data-approve="${esc(a.id)}">${esc(T('apps_approve'))}</button><button class="btn btn-sm btn-ghost" data-nav="mentor" data-mentor="${esc(a.id)}">${esc(T('apps_view'))}</button></div>
+      </div>`).join('')}</div>`}
+  </div>
+
+  <div class="panel wide" style="margin-bottom:28px;">
     <h3 style="margin:0 0 4px;">${esc(T('adm_prices'))}</h3>
     <p class="muted" style="font-size:13px;margin:0 0 16px;">${esc(T('adm_prices_hint'))}</p>
     <div style="overflow-x:auto;">
@@ -2280,7 +2473,21 @@ async function loadPayouts(){
   state.payouts = error ? 'error' : (data||[]).filter(r=>Number(r.amountCents)>0);
   if(state.view==='admin') render();
 }
+async function loadApps(){
+  if(!sb){ state.apps = 'error'; return; }
+  const { data, error } = await sb.from('profiles').select('*').eq('role','mentor').eq('approved', false);
+  state.apps = error ? 'error' : (data||[]);
+  if(state.view==='admin') render();
+}
 function wireAdmin(){
+  if(state.apps==null && !state.appsLoading){ state.appsLoading = true; loadApps().finally(()=>{ state.appsLoading = false; }); }
+  document.querySelectorAll('[data-approve]').forEach(b=>b.addEventListener('click', async ()=>{
+    const id = b.getAttribute('data-approve'); b.disabled = true;
+    const { data, error } = await sb.from('profiles').update({ approved: true }).eq('id', id).select('id');
+    if(error || !data || !data.length){ b.disabled = false; toast(T('apps_fail'), 6000); return; }
+    if(cache.profiles[id]) cache.profiles[id].approved = true;
+    toast(T('apps_done')); notify('mentor_approved', null, id); state.apps = null; render();
+  }));
   if(state.payouts==null && !state.payoutsLoading){ state.payoutsLoading = true; loadPayouts().finally(()=>{ state.payoutsLoading = false; }); }
   document.querySelectorAll('[data-payout]').forEach(btn=>btn.addEventListener('click', async ()=>{
     const ids = btn.getAttribute('data-payout').split(',').filter(Boolean);
@@ -3632,6 +3839,7 @@ function authView(){
         ${pwField('password','lbl_password','ph_password', mode==='signup'?'new-password':'current-password')}
         ${mode==='signup' ? pwField('password2','lbl_confirm_password_signup','ph_confirm_password','new-password') : ''}
         ${mode==='login' ? `<div class="auth-forgot"><a href="#" id="auth-forgot">${esc(T('forgot_link'))}</a></div>` : ''}`}
+        ${mode==='signup' ? `<label class="auth-agree"><input type="checkbox" id="auth-agree" required> <span>${T('auth_agree').replace('{t}', `<a data-nav="terms">${esc(T('ft_terms'))}</a>`).replace('{p}', `<a data-nav="privacy">${esc(T('ft_privacy'))}</a>`)}</span></label>` : ''}
         ${state.authError ? `<div class="form-err">${esc(state.authError)}</div>` : ''}
         <button class="btn btn-primary auth-submit" type="submit" ${state.authBusy?'disabled':''}>${esc(mode==='signup' ? T('btn_signup') : mode==='forgot' ? T('btn_send_reset') : T('btn_login'))}</button>
       </form>
@@ -3895,7 +4103,7 @@ function browseView(){
   Object.values(cache.profiles).filter(p=>p.role!=='client').forEach(p=>mentorLangs(p).forEach(l=>{ allLangs[l] = (allLangs[l]||0)+1; }));
   const langList = Object.keys(allLangs).sort((a,b)=>allLangs[b]-allLangs[a] || a.localeCompare(b));
   const entries = Object.entries(cache.profiles).filter(([id,p])=>{
-    if(p.role==='client') return false;
+    if(p.role==='client' || p.approved===false) return false;
     if(lf.length && !mentorLangs(p).some(l=>lf.includes(l))) return false;
     if(!q) return true;
     return (p.profession||'').toLowerCase().includes(q) || (p.skills||[]).join(' ').toLowerCase().includes(q) || (p.headline||'').toLowerCase().includes(q);
@@ -3975,6 +4183,7 @@ function mentorView(){
   const id = state.mentorId;
   const p = cache.profiles[id];
   if(!p) return `<div class="empty">Not found.</div>`;
+  if(p.approved===false && id!==uid && !isAdmin()) return `<div class="empty">${esc(T('mentor_not_available'))}</div>`;
   const reviews = cache.reviews[id] || [];
   const avg = avgRating(id);
   const isSelf = id===uid;
@@ -4025,7 +4234,7 @@ function mentorView(){
       </div>
     </div>
   </div>
-  ${isSelf ? `<div class="banner">${esc(T('this_is_profile'))}</div>` : ''}
+  ${isSelf ? `<div class="banner">${esc(T(p.approved===false ? 'pending_review' : 'this_is_profile'))}</div>` : ''}
   <div class="mp-grid">
     <div class="mp-main">
       ${p.bio ? `<section class="mp-sec"><h3>${esc(T('mp_about'))}</h3><p class="mp-bio">${esc(p.bio)}</p></section>` : ''}
@@ -4048,7 +4257,8 @@ function mentorView(){
       </section>` : ''}
       <section class="mp-sec">
         <h3>${esc(T('reviews_title'))}</h3>
-        ${iAmClient && !isSelf ? `
+        ${iAmClient && !isSelf && !canReview(id) ? `<p class="muted mp-empty" style="margin-bottom:14px;">${esc(T('review_after_session').replace('{n}', nameOf(id)))}</p>` : ''}
+        ${iAmClient && !isSelf && canReview(id) ? `
         <form id="review-form" class="mp-review-form">
           <label style="font-size:13px;font-weight:700;display:block;margin-bottom:8px;">${esc(T('rate_experience'))}</label>
           <div class="star-input" id="star-input">${[1,2,3,4,5].map(n=>`<span data-star="${n}" class="${n<=state.ratingDraft?'on':''}">★</span>`).join('')}</div>
@@ -4066,6 +4276,7 @@ function mentorView(){
       <div class="mp-card">
         <div class="mp-price"><b>$${mentorRate(p)}</b><span>${esc(T('mp_per'))}</span></div>
         <div class="mp-tier">${esc(T(rateTierKey(p)))} ${esc(T('mp_tier_suffix'))}</div>
+        <div class="mp-tzline">${esc(T('mp_tz').replace('{z}', tzCity(mentorTz(id)) + ' (' + tzAbbr(mentorTz(id)) + ')'))}</div>
         <ul class="mp-formats">${formats.map(f=>`<li>${FMT_ICONS[f]||''}<span>${esc(T('fmt_'+f))}</span></li>`).join('')}</ul>
         ${bookingBlock}
         <p class="mp-how">${esc(T('session_how'))}</p>
@@ -4096,7 +4307,7 @@ function reqCard(r, isMentor, grouped){
         ${grouped ? '' : `<b>${esc(other)}</b>`}
         <div class="muted">${[isMentor && !grouped && person.profession ? T('dash_aiming').replace('{p}', person.profession) : '', r.packageKey ? T('pk_'+r.packageKey+'_name') + (r.amountCents?` · $${(r.amountCents/100).toFixed(0)}`:'') : ''].filter(Boolean).map(esc).join(' · ')}</div>
       </div>
-      <div class="req-when">${r.date ? `<b>${esc(fmtReqDate(r.date))}</b><span>${esc(r.time||'')}</span>` : ''}</div>
+      <div class="req-when">${(()=>{ const i = reqInstant(r); return i ? `<b>${esc(fmtLocalDay(i))}</b><span>${esc(fmtLocalTime(i))}</span>` : (r.date ? `<b>${esc(fmtReqDate(r.date))}</b><span>${esc(r.time||'')}</span>` : ''); })()}</div>
     </div>
     ${r.message ? `<p class="req-msg">“${esc(r.message)}”</p>` : ''}
     ${st>=0 ? `<ol class="req-steps">${steps.map((k,i)=>`<li class="${i<cur?'done':i===cur?'now':''}">${esc(T(k))}${i===cur && st<3 ? `<em>${esc(T(st===2?'st_next':'st_waiting'))}</em>` : ''}</li>`).join('')}</ol>` : ''}
@@ -4129,8 +4340,9 @@ function reqCard(r, isMentor, grouped){
       </span>
     </div>
     ${state.reqEdit===r.id ? `<div class="req-edit">
-      <div class="field"><label>${esc(T('lbl_date'))}</label><input type="date" id="re-date" min="${new Date().toISOString().slice(0,10)}" value="${esc(r.date||'')}"></div>
-      <div class="field"><label>${esc(T('lbl_time'))}</label><input type="time" id="re-time" step="900" value="${esc(r.time||'')}"></div>
+      ${(()=>{ const i = reqInstant(r), lz = i ? utcToZoned(i, MY_TZ) : { date:r.date||'', time:r.time||'' };
+        return `<div class="field"><label>${esc(T('lbl_date'))}</label><input type="date" id="re-date" min="${ymd(new Date())}" value="${esc(lz.date)}"></div>
+      <div class="field"><label>${esc(T('lbl_time'))} (${esc(tzAbbr(MY_TZ))})</label><input type="time" id="re-time" step="900" value="${esc(String(lz.time).slice(0,5))}"></div>`; })()}
       <div class="req-edit-btns"><button class="btn btn-sm btn-primary" data-save-time="${r.id}">${esc(T('mg_save_time'))}</button><button class="btn btn-sm btn-ghost" data-edit-time="">${esc(T('cancel'))}</button></div>
       <p class="muted">${esc(T('mg_time_note').replace('{n}', other))}</p>
     </div>` : ''}
@@ -4181,6 +4393,7 @@ async function sendMsg(reqId, text){
   (cache.msgs[reqId] = cache.msgs[reqId] || []).push(row); state.chatDraft = ''; markChatSeen(reqId); render();
   const { error } = await sb.from('messages').insert(row);
   if(error){ cache.msgs[reqId] = cache.msgs[reqId].filter(m=>m!==row); state.chatDraft = text; render(); toast(T('chat_err'), 5000); console.error(error); }
+  else notify('message', reqId);
 }
 
 function hiddenReqs(){ try{ return JSON.parse(localStorage.getItem('workar_hidden_'+uid)||'[]'); }catch(e){ return []; } }
@@ -4210,7 +4423,13 @@ function reqListHtml(myReqs, isMentor){
     ${hid.some(id=>myReqs.find(r=>r.id===id)) ? `<button class="btn btn-ghost btn-sm" id="unhide-reqs" style="margin-top:10px;">${esc(T('mg_unhide'))}</button>` : ''}`;
 }
 async function updateReq(id, patch){
-  const { data, error } = await sb.from('requests').update(patch).eq('id', id).select('id');
+  let d = Object.assign({}, patch), data, error;
+  for(let i=0;i<8;i++){
+    ({ data, error } = await sb.from('requests').update(d).eq('id', id).select('id'));
+    const m = error && /'([^']+)' column/.exec(error.message||'');
+    if(m && m[1] in d){ delete d[m[1]]; continue; }
+    break;
+  }
   if(error) throw error;
   if(!data || !data.length) throw new Error(T('mg_perm'));
   const r = cache.requests.find(x=>x.id===id); if(r) Object.assign(r, patch);
@@ -4230,6 +4449,7 @@ function dashboardView(){
     <span class="chip dash-role">${isMentor?esc(T('mentor_badge')):esc(T('client_badge'))}</span>
     ${isMentor ? `<button class="btn btn-outline btn-sm" data-nav="mentor" data-mentor="${uid}">${esc(T('dash_view_public'))}</button>` : `<button class="btn btn-outline btn-sm" data-nav="browse">${esc(T('find_mentor_title'))}</button>`}
   </div>
+  ${isMentor && myProfile.approved===false ? `<div class="banner pending-banner">${esc(T('pending_review'))}</div>` : ''}
   <details class="dash-edit" ${state.dashEditOpen?'open':''}>
   <summary><span>${esc(T('dash_edit'))}</span><span class="muted">${esc(T('dash_edit_sub'))}</span></summary>
   <div class="panel wide dash-form" style="margin-bottom:32px;">
@@ -4250,6 +4470,8 @@ function dashboardView(){
     <div class="field"><label>${esc(T('lbl_experience'))}</label><input id="edit-experience" type="number" min="0" value="${esc(myProfile.experience||'')}"></div>
     <div class="field"><label>${esc(T('sec_rate'))}</label>${rateWidget(myProfile.sessionRate||minRate(), myProfile.experience, 'id="edit-session-rate"')}</div>
     <div class="field"><label>${esc(T('lbl_languages'))}</label><input id="edit-languages" value="${esc((myProfile.languages||[]).join(', '))}"></div>
+    <div class="field"><label>${esc(T('lbl_timezone'))}</label><select id="edit-timezone">${[...new Set([myProfile.timezone||MY_TZ, MY_TZ].concat(TZ_CHOICES))].map(z=>`<option value="${esc(z)}" ${z===(myProfile.timezone||MY_TZ)?'selected':''}>${esc(tzCity(z) + ' (' + tzAbbr(z) + ')')}</option>`).join('')}</select>
+      <div class="muted" style="font-size:12.5px;margin-top:6px;">${esc(T('tz_hint'))}</div></div>
     <div class="field">
       <label>${esc(T('lbl_availability'))}</label>
       <div class="muted" style="font-size:12.5px;margin-bottom:8px;">${esc(T('availability_hint'))}</div>
@@ -4368,7 +4590,7 @@ function wire(){
     const fd = new FormData(form);
     let linkedinVal = (fd.get('linkedin')||'').trim();
     if(linkedinVal && !/^https?:\/\//i.test(linkedinVal)) linkedinVal = 'https://'+linkedinVal;
-    const doc = { role: state.role, name: fd.get('name')||'', profession: fd.get('profession')||'', bio: fd.get('bio')||'', linkedin: linkedinVal, aiCredits: 5 };
+    const doc = { role: state.role, name: fd.get('name')||'', profession: fd.get('profession')||'', bio: fd.get('bio')||'', linkedin: linkedinVal, aiCredits: 5, timezone: MY_TZ };
     doc.skills = (fd.get('skills')||'').split(',').map(s=>s.trim()).filter(Boolean);
     doc.education = (fd.get('education')||'').trim();
     doc.certifications = splitList(fd.get('certifications'));
@@ -4389,6 +4611,7 @@ function wire(){
       state.onboardError = '';
       await saveProfileSafe(doc, 'set');
       toast(T('toast_profile_created'));
+      if(state.role==='mentor') notify('mentor_applied');
       if(state.role==='client' && state.returnMentorId){
         const back = state.returnMentorId; state.returnMentorId = null;
         nav('mentor', { mentorId: back, bookingOpen: true });
@@ -4436,7 +4659,7 @@ function wire(){
   const bd = document.getElementById('book-date'), bt = document.getElementById('book-time');
   const syncOwn = ()=>{
     const d = bd && bd.value, t = bt && bt.value;
-    state.selectedSlot = d ? { date:d, time:t||'' } : null;
+    state.selectedSlot = d ? { date:d, time:t||'', local:true } : null;
     render();
   };
   if(bd) bd.addEventListener('change', syncOwn);
@@ -4483,7 +4706,10 @@ function wire(){
   const bookSubmit = document.getElementById('book-submit');
   if(bookSubmit) bookSubmit.addEventListener('click', async ()=>{
     if(!state.selectedSlot || !state.selectedSlot.time){ toast(T('toast_pick_datetime')); return; }
-    const { date, time } = state.selectedSlot;
+    const mtzB = mentorTz(state.mentorId);
+    const instB = state.selectedSlot.local ? zonedToUtc(state.selectedSlot.date, state.selectedSlot.time, MY_TZ) : zonedToUtc(state.selectedSlot.date, state.selectedSlot.time, mtzB);
+    const { date, time } = utcToZoned(instB, mtzB);
+    if(instB.getTime() < Date.now()){ toast(T('cal_past'), 5000); return; }
     if(isBusy(busyFor(state.mentorId), date, time)){ toast(T('cal_clash'), 5000); return; }
     const messageEl = document.getElementById('book-message');
     const message = messageEl ? messageEl.value : '';
@@ -4491,7 +4717,8 @@ function wire(){
     const pk = getPackages().find(x=>x.key===(state.selectedPkg||'single')) || getPackages()[0];
     const amountCents = Math.round(pkgPriceFor(pk, cache.profiles[state.mentorId])*100);
     try{
-      await insertSafe('requests', { id: reqId, mentorId: state.mentorId, clientId: uid, message, date, time, status:'pending', createdAt: Date.now(), amountCents, packageKey: pk.key, paid:false });
+      await insertSafe('requests', { id: reqId, mentorId: state.mentorId, clientId: uid, message, date, time, startsAt: instB.toISOString(), tz: mtzB, status:'pending', createdAt: Date.now(), amountCents, packageKey: pk.key, paid:false });
+      notify('request_new', reqId);
       toast(T('toast_request_sent'));
       state.bookMsg = ''; cache.busyLoaded[state.mentorId] = false;
       state.bookingOpen = false;
@@ -4530,6 +4757,8 @@ function wire(){
       bio: document.getElementById('edit-bio').value,
       linkedin: (()=>{ let v=(document.getElementById('edit-linkedin').value||'').trim(); if(v && !/^https?:\/\//i.test(v)) v='https://'+v; return v; })(),
     };
+    const tzEl = document.getElementById('edit-timezone');
+    if(tzEl) patch.timezone = tzEl.value;
     const skillsEl = document.getElementById('edit-skills');
     if(skillsEl) patch.skills = skillsEl.value.split(',').map(s=>s.trim()).filter(Boolean);
     const headlineEl = document.getElementById('edit-headline');
@@ -4584,7 +4813,7 @@ function wire(){
   document.querySelectorAll('[data-req]').forEach(btn=>{
     btn.addEventListener('click', async ()=>{
       btn.disabled = true; const to = btn.getAttribute('data-status');
-      try{ await updateReq(btn.getAttribute('data-req'), { status: to }); toast(T(to==='accepted'?'toast_accepted':'toast_declined')); render(); }
+      try{ await updateReq(btn.getAttribute('data-req'), { status: to }); toast(T(to==='accepted'?'toast_accepted':'toast_declined')); render(); notify('request_'+to, btn.getAttribute('data-req')); }
       catch(err){ btn.disabled = false; reqErr(err); }
     });
   });
@@ -4595,19 +4824,23 @@ function wire(){
     const id = b.getAttribute('data-save-time'), date = document.getElementById('re-date').value, time = document.getElementById('re-time').value;
     if(!date || !time){ toast(T('toast_pick_datetime')); return; }
     b.disabled = true;
-    try{ await updateReq(id, { date, time }); state.reqEdit = null; toast(T('mg_time_saved')); render();
-      postNote(id, T('mg_time_msg').replace('{d}', fmtReqDate(date)).replace('{t}', time)); }
+    const rr = cache.requests.find(x=>x.id===id) || {};
+    const inst = zonedToUtc(date, time, MY_TZ), mtzE = rr.tz || mentorTz(rr.mentorId), wall = utcToZoned(inst, mtzE);
+    if(inst.getTime() < Date.now()){ toast(T('cal_past'), 5000); b.disabled = false; return; }
+    try{ await updateReq(id, { date: wall.date, time: wall.time, startsAt: inst.toISOString(), tz: mtzE, remindedAt: null }); state.reqEdit = null; toast(T('mg_time_saved')); render();
+      postNote(id, T('mg_time_msg').replace('{d}', fmtLocalDay(inst)).replace('{t}', fmtLocalTime(inst))); notify('time_changed', id); }
     catch(err){ b.disabled = false; reqErr(err); }
   }));
   document.querySelectorAll('[data-set-status]').forEach(b=>b.addEventListener('click', async ()=>{
     if(!confirm(T('mg_cancel_confirm'))) return;
     const id = b.getAttribute('data-set-status');
-    try{ await updateReq(id, { status: b.getAttribute('data-to') }); state.reqMenu = null; toast(T('mg_cancelled')); render(); postNote(id, T('mg_cancel_msg')); }
+    try{ await updateReq(id, { status: b.getAttribute('data-to') }); state.reqMenu = null; toast(T('mg_cancelled')); render(); postNote(id, T('mg_cancel_msg')); notify('request_cancelled', id); }
     catch(err){ reqErr(err); }
   }));
   document.querySelectorAll('[data-hide]').forEach(b=>b.addEventListener('click', ()=>{ hideReq(b.getAttribute('data-hide')); state.reqMenu = null; render(); }));
   const unh = document.getElementById('unhide-reqs'); if(unh) unh.addEventListener('click', ()=>{ try{ localStorage.removeItem('workar_hidden_'+uid); }catch(e){} render(); });
 
+  if(state.view==='dashboard' && uid && myProfile && !myProfile.timezone && !state.tzSaved){ state.tzSaved = true; saveProfileSafe({ timezone: MY_TZ }, 'update').then(()=>{ myProfile.timezone = MY_TZ; }).catch(()=>{}); }
   document.querySelectorAll('[data-chat]').forEach(btn=>btn.addEventListener('click', ()=>{
     const id = btn.getAttribute('data-chat');
     state.chatOpen = state.chatOpen===id ? null : id; state.chatDraft = '';
@@ -4724,7 +4957,7 @@ function wire(){
   if(matchBtn) matchBtn.addEventListener('click', async ()=>{
     const val = document.getElementById('match-input').value.trim();
     if(!val) return;
-    const mentorList = Object.entries(cache.profiles).filter(([,p])=>p.role!=='client').map(([id,p])=>({ id, profession:p.profession||'', headline:p.headline||'', bio:(p.bio||'').slice(0,300), skills:p.skills||[] }));
+    const mentorList = Object.entries(cache.profiles).filter(([,p])=>p.role!=='client' && p.approved!==false).map(([id,p])=>({ id, profession:p.profession||'', headline:p.headline||'', bio:(p.bio||'').slice(0,300), skills:p.skills||[] }));
     if(!mentorList.length){ toast(T('toast_no_mentors')); return; }
     state.matchQuery = val; state.matching = true; state.matchResults = null; render();
     try{
