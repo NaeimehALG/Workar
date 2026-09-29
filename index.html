@@ -4647,7 +4647,7 @@ function wire(){
       const reqId = btn.getAttribute('data-call');
       const voiceOnly = btn.getAttribute('data-mode')==='voice';
       const displayName = (myProfile && myProfile.name) ? myProfile.name : 'Workar user';
-      let cfg = '#config.prejoinPageEnabled=false&userInfo.displayName=' + encodeURIComponent('"'+displayName+'"');
+      let cfg = '#config.prejoinPageEnabled=false&config.disableDeepLinking=true&userInfo.displayName=' + encodeURIComponent('"'+displayName+'"');
       if(voiceOnly) cfg += '&config.startAudioOnly=true&config.startWithVideoMuted=true';
       window.open('https://meet.jit.si/Workar-Session-' + encodeURIComponent(reqId) + cfg, '_blank', 'noopener');
     });
