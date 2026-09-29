@@ -1242,7 +1242,7 @@ const I18N = {
     mp_tz:'Mentor\'s time zone: {z}', mentor_not_available:'This mentor profile isn\'t available yet.', pending_review:'Your mentor profile is under review. Workar will email you once it\'s approved and visible in Find a mentor.',
     review_after_session:'You can leave a review after your first session with {n}.',
     apps_title:'Mentor applications', apps_hint:'New mentor profiles stay hidden until you approve them. The mentor gets an email when approved.', apps_none:'No applications waiting.', apps_error:'Could not load applications — run the latest Workar SQL.', apps_approve:'Approve', apps_view:'View profile', apps_done:'Mentor approved', apps_fail:'Could not approve — run the latest Workar SQL.',
-    voice_tap_replay:'Tap Replay to hear the answer.', ve_natural:'Natural voice ✓', ve_device:'Device voice', ve_nokey:'Device voice — OpenAI key missing', ve_nofile:'Device voice — api/tts.js not found', ve_signin:'Device voice — please sign in', ve_error:'Device voice — natural voice error', ve_blocked:'Phone blocked audio — tap Replay', join_call:'Join video/voice call', paid_badge:'Paid',
+    voice_tap_replay:'Tap Replay to hear the answer.', ve_natural:'Natural voice ✓', ve_device:'Device voice', ve_credit:'Natural voice: your OpenAI account has no credit. Add it at platform.openai.com → Billing.', ve_nokey:'Device voice — OpenAI key missing', ve_nofile:'Device voice — api/tts.js not found', ve_signin:'Device voice — please sign in', ve_error:'Device voice — natural voice error', ve_blocked:'Phone blocked audio — tap Replay', join_call:'Join video/voice call', paid_badge:'Paid',
     toast_payment_fail:'Could not start payment — try again',
     toast_payment_success:'Payment received — booking confirmed!',
     lbl_availability:'Weekly availability', availability_hint:'Check the times you\'re usually free — clients will only be able to request these slots.',
@@ -1475,7 +1475,7 @@ const I18N = {
     mp_tz:'منطقه‌ی زمانی منتور: {z}', mentor_not_available:'این پروفایل منتور هنوز در دسترس نیست.', pending_review:'پروفایل منتوری شما در حال بررسی است. پس از تأیید، Workar به شما ایمیل می‌زند و پروفایلتان در لیست منتورها نمایش داده می‌شود.',
     review_after_session:'بعد از اولین جلسه با {n} می‌توانید نظر بنویسید.',
     apps_title:'درخواست‌های منتوری', apps_hint:'پروفایل منتورهای جدید تا تأیید شما مخفی می‌ماند. بعد از تأیید، به منتور ایمیل ارسال می‌شود.', apps_none:'درخواستی در انتظار نیست.', apps_error:'بارگذاری نشد — SQL جدید Workar را اجرا کن.', apps_approve:'تأیید', apps_view:'دیدن پروفایل', apps_done:'منتور تأیید شد', apps_fail:'تأیید نشد — SQL جدید Workar را اجرا کن.',
-    voice_tap_replay:'برای شنیدن پاسخ، دکمه‌ی پخش دوباره را بزنید.', ve_natural:'صدای طبیعی ✓', ve_device:'صدای دستگاه', ve_nokey:'صدای دستگاه — کلید OpenAI تنظیم نشده', ve_nofile:'صدای دستگاه — فایل api/tts.js پیدا نشد', ve_signin:'صدای دستگاه — وارد حساب شوید', ve_error:'صدای دستگاه — خطای صدای طبیعی', ve_blocked:'گوشی صدا را مسدود کرد — پخش دوباره را بزنید', join_call:'ورود به تماس تصویری/صوتی', paid_badge:'پرداخت‌شده',
+    voice_tap_replay:'برای شنیدن پاسخ، دکمه‌ی پخش دوباره را بزنید.', ve_natural:'صدای طبیعی ✓', ve_device:'صدای دستگاه', ve_credit:'صدای طبیعی: حساب OpenAI اعتبار ندارد. در platform.openai.com → Billing شارژ کنید.', ve_nokey:'صدای دستگاه — کلید OpenAI تنظیم نشده', ve_nofile:'صدای دستگاه — فایل api/tts.js پیدا نشد', ve_signin:'صدای دستگاه — وارد حساب شوید', ve_error:'صدای دستگاه — خطای صدای طبیعی', ve_blocked:'گوشی صدا را مسدود کرد — پخش دوباره را بزنید', join_call:'ورود به تماس تصویری/صوتی', paid_badge:'پرداخت‌شده',
     toast_payment_fail:'پرداخت شروع نشد — دوباره امتحان کن',
     toast_payment_success:'پرداخت انجام شد — رزرو تأیید شد!',
     lbl_availability:'زمان‌های آزاد هفتگی', availability_hint:'ساعت‌هایی که معمولاً آزادی رو تیک بزن — جویای کار فقط همین‌ها رو می‌بینه.',
@@ -5086,31 +5086,62 @@ function unlockAudio(){
   try{ if(window.speechSynthesis){ const u = new SpeechSynthesisUtterance(' '); u.volume = 0; window.speechSynthesis.speak(u); } }catch(e){}
 }
 ['touchend','click','keydown'].forEach(ev=>document.addEventListener(ev, ()=>{ if(state.voiceMode || state.coachMode==='interview') unlockAudio(); }, { passive:true }));
-function stopSpeaking(){ if(__ttsAudio){ try{ __ttsAudio.pause(); }catch(e){} __ttsAudio = null; } if(window.speechSynthesis) window.speechSynthesis.cancel(); }
+function stopSpeaking(){ __speakGen++; if(__ttsAudio){ try{ __ttsAudio.pause(); }catch(e){} __ttsAudio = null; } if(window.speechSynthesis) window.speechSynthesis.cancel(); }
+let __speakGen = 0;
+function splitSpeech(t){
+  const parts = String(t).match(/[^.!?؟\n]+[.!?؟]*\s*/g) || [String(t)];
+  const out = []; let cur = '';
+  for(const p of parts){ if(cur && (cur + p).length > 240){ out.push(cur.trim()); cur = p; } else cur += p; }
+  if(cur.trim()) out.push(cur.trim());
+  return out.length ? out : [String(t)];
+}
+async function ttsFetch(text, tok){
+  const r = await fetch('/api/tts', { method:'POST', headers:{ 'Content-Type':'application/json', Authorization:'Bearer '+tok }, body: JSON.stringify({ text, lang: state.lang==='fa'?'fa':'en' }) });
+  if(!r.ok){ const e = new Error('tts ' + r.status); e.status = r.status; try{ e.detail = await r.text(); }catch(x){} throw e; }
+  return URL.createObjectURL(await r.blob());
+}
+// Speaks in short pieces: the first sentence starts playing within a second or two while the rest is prepared.
 async function speakText(text){
   const clean = cleanForSpeech(text);
   if(!clean) return;
   stopSpeaking();
+  const gen = ++__speakGen;
   if(!__ttsOff && sb){
     try{
       const { data } = await sb.auth.getSession();
       const tok = data && data.session && data.session.access_token;
-      if(tok){
-        const r = await fetch('/api/tts', { method:'POST', headers:{ 'Content-Type':'application/json', Authorization:'Bearer '+tok }, body: JSON.stringify({ text: clean, lang: state.lang==='fa'?'fa':'en' }) });
-        if(r.ok){
-          const url = URL.createObjectURL(await r.blob());
-          const a = __ttsEl || new Audio(); __ttsAudio = a;
-          a.onended = ()=>{ URL.revokeObjectURL(url); if(__ttsAudio===a) __ttsAudio = null; };
-          a.src = url;
-          try{ await a.play(); setEngine('natural'); return; }
-          catch(playErr){ console.warn('phone blocked audio; tap the Replay button', playErr); setEngine('blocked'); toast(T('voice_tap_replay'), 4000); return; }
+      if(!tok){ setEngine('signin'); }
+      else{
+        const chunks = splitSpeech(clean);
+        let next = ttsFetch(chunks[0], tok);
+        for(let i=0;i<chunks.length;i++){
+          let url;
+          try{ url = await next; }
+          catch(err){
+            if(i>0) return;                       // stop quietly if a later piece fails
+            console.warn('natural voice failed', err.status, err.detail);
+            if(err.status===501 || err.status===404) __ttsOff = true;
+            setEngine(err.status===501 ? 'nokey' : err.status===404 ? 'nofile' : err.status===401 ? 'signin' : 'error');
+            if(err.detail && /quota|billing|credit/i.test(err.detail)) toast(T('ve_credit'), 7000);
+            break;
+          }
+          if(gen!==__speakGen){ URL.revokeObjectURL(url); return; }
+          if(i+1 < chunks.length){ next = ttsFetch(chunks[i+1], tok); next.catch(()=>{}); }
+          const a = __ttsEl || new Audio(); __ttsAudio = a; a.src = url;
+          try{ await a.play(); }
+          catch(playErr){ console.warn('phone blocked audio', playErr); setEngine('blocked'); toast(T('voice_tap_replay'), 4000); URL.revokeObjectURL(url); return; }
+          setEngine('natural');
+          await new Promise(res=>{ a.onended = res; a.onerror = res; a.onpause = ()=>{ if(gen!==__speakGen) res(); }; });
+          URL.revokeObjectURL(url);
+          if(gen!==__speakGen) return;
+          if(i === chunks.length-1) return;
         }
-        if(r.status===501 || r.status===404) __ttsOff = true; // not configured: use the browser voice from now on
-        setEngine(r.status===501 ? 'nokey' : r.status===404 ? 'nofile' : r.status===401 ? 'signin' : 'error');
+        if(state.voiceEngine==='natural') return;
       }
     }catch(e){ console.warn('natural voice unavailable, using browser voice', e); }
   }
-  if(!__ttsOff && state.voiceEngine!=='nokey' && state.voiceEngine!=='nofile' && state.voiceEngine!=='signin' && state.voiceEngine!=='error') setEngine('device');
+  if(gen!==__speakGen) return;
+  if(!state.voiceEngine || state.voiceEngine==='natural' || state.voiceEngine==='blocked') setEngine('device');
   speakBrowser(clean);
 }
 function setEngine(k){ if(state.voiceEngine!==k){ state.voiceEngine = k; if(state.view==='coach') render(); } }
