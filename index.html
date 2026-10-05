@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#8B6A4C" media="(prefers-color-scheme: light)">
@@ -1039,6 +1041,158 @@
   .voice-engine.ok{background:#EAF3EC;color:#3E7A4C;}
   .voice-detail{flex-basis:100%;font-size:12px;color:#A0612F;margin-top:6px;word-break:break-word;}
   #voice-test{margin-inline-start:4px;}
+
+/* =====================================================================
+   WORKAR PROFESSIONAL THEME (Oct 2026)
+   Evergreen ink + brass (from the logo), crisp white, serif headlines.
+   This block overrides the earlier styles; remove it to go back.
+   ===================================================================== */
+:root{
+  --bg:#FFFFFF; --surface:#FFFFFF; --surface-2:#F3F5F2;
+  --accent:#1E4A40; --accent-ink:#FFFFFF; --accent-2:#A57A3F;
+  --text:#1B2B27; --muted:#5D6B66; --border:#E1E6E1; --danger:#B23A2E;
+  --ink-soft:#2F423D; --brass-soft:#F6EFE4; --ok:#2E7D5B;
+  --radius-sm:8px; --radius-md:12px; --radius-lg:16px;
+  --shadow:0 1px 2px rgba(16,32,28,.05), 0 6px 20px rgba(16,32,28,.06);
+  --shadow-lg:0 2px 4px rgba(16,32,28,.05), 0 24px 48px -12px rgba(16,32,28,.18);
+  --serif:'Newsreader','Vazirmatn',Georgia,'Times New Roman',serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1714; --surface:#15211D; --surface-2:#1B2A25;
+    --accent:#7FC2AE; --accent-ink:#0E1714; --accent-2:#D3AD72;
+    --text:#E7EDEA; --muted:#9DB0A9; --border:#263732; --danger:#F08A7E;
+    --ink-soft:#C9D6D1; --brass-soft:#2A2519; --ok:#6CC59C;
+    --shadow:0 1px 2px rgba(0,0,0,.35), 0 10px 26px rgba(0,0,0,.35);
+    --shadow-lg:0 2px 4px rgba(0,0,0,.35), 0 24px 48px -12px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1714; --surface:#15211D; --surface-2:#1B2A25;
+  --accent:#7FC2AE; --accent-ink:#0E1714; --accent-2:#D3AD72;
+  --text:#E7EDEA; --muted:#9DB0A9; --border:#263732; --danger:#F08A7E;
+  --ink-soft:#C9D6D1; --brass-soft:#2A2519; --ok:#6CC59C;
+  --shadow:0 1px 2px rgba(0,0,0,.35), 0 10px 26px rgba(0,0,0,.35);
+  --shadow-lg:0 2px 4px rgba(0,0,0,.35), 0 24px 48px -12px rgba(0,0,0,.6);
+}
+
+body{font-size:15.5px;line-height:1.6;text-rendering:optimizeLegibility;}
+#app{max-width:1120px;padding:0 24px 96px;}
+::selection{background:color-mix(in srgb,var(--accent) 22%,transparent);}
+
+/* Headlines: serif for Latin, Vazirmatn for Persian */
+h1,h2,.lp-title,.ob-head h2,.section-head h2,.pp-hero h1,.auth-side h2,.price-amount,.mp-name,.pp-bundle h3{font-family:var(--serif);font-weight:600;letter-spacing:-.012em;}
+html[dir="rtl"] h1,html[dir="rtl"] h2,html[dir="rtl"] .lp-title,html[dir="rtl"] .ob-head h2,html[dir="rtl"] .section-head h2{font-family:'Vazirmatn',sans-serif;font-weight:800;letter-spacing:0;}
+h3{letter-spacing:-.005em;}
+
+/* Navigation: quiet, sticky, underline for the current page */
+.nav{position:sticky;top:0;z-index:50;margin:0 -24px 40px;padding:14px 24px;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--border);}
+.brand img.logo-mark{height:44px;}
+.brand .tag{color:var(--muted);font-size:12px;letter-spacing:.01em;}
+.navlinks{gap:2px;}
+.navlink{border-radius:8px;padding:8px 12px;color:var(--ink-soft);font-weight:500;border:0;position:relative;}
+.navlink:hover{color:var(--text);background:var(--surface-2);}
+.navlink.active{background:transparent;color:var(--text);font-weight:700;border:0;}
+.navlink.active::after{content:"";position:absolute;left:12px;right:12px;bottom:2px;height:2px;border-radius:2px;background:var(--accent-2);}
+.lang-switch{border-radius:8px;color:var(--text);background:var(--surface);font-weight:600;}
+
+/* Buttons */
+.btn{border-radius:10px;font-weight:600;letter-spacing:.005em;transition:background-color .15s,border-color .15s,color .15s,box-shadow .15s;}
+.btn:active{transform:none;}
+.btn-primary{background:var(--accent);color:var(--accent-ink);box-shadow:0 1px 0 rgba(255,255,255,.08) inset,0 1px 2px rgba(16,32,28,.18);}
+.btn-primary:hover{background:color-mix(in srgb,var(--accent) 88%,#000);box-shadow:0 1px 2px rgba(16,32,28,.2);}
+.btn-outline{background:var(--surface);border-color:color-mix(in srgb,var(--text) 18%,transparent);color:var(--text);}
+.btn-outline:hover{border-color:var(--text);}
+.btn-ghost{color:var(--ink-soft);}
+.btn-ghost:hover{color:var(--text);background:var(--surface-2);}
+.btn:focus-visible,.navlink:focus-visible,.lang-switch:focus-visible,.card:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px;}
+
+/* Forms: white fields, clear borders, calm focus */
+.field label{font-weight:600;font-size:13.5px;color:var(--text);}
+.field input,.field textarea,.field select{background:var(--surface);border:1px solid color-mix(in srgb,var(--text) 16%,transparent);border-radius:10px;padding:11px 13px;transition:border-color .15s,box-shadow .15s;}
+.field input:hover,.field textarea:hover,.field select:hover{border-color:color-mix(in srgb,var(--text) 30%,transparent);}
+.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent);}
+.field input::placeholder,.field textarea::placeholder{color:color-mix(in srgb,var(--muted) 80%,transparent);}
+
+/* Surfaces */
+.panel,.card,.hero-card,.price-card,.pp-card,.req,.dash-edit,.role-opt,.auth-wrap{border-color:var(--border);}
+.panel{border-radius:var(--radius-lg);box-shadow:var(--shadow);}
+.card{border-radius:var(--radius-lg);transition:border-color .15s,box-shadow .2s;}
+.card:hover{border-color:color-mix(in srgb,var(--accent) 35%,var(--border));box-shadow:var(--shadow);}
+.chip{background:var(--surface-2);border-color:transparent;color:var(--ink-soft);font-size:12px;border-radius:6px;padding:3px 9px;}
+.avatar{background:var(--brass-soft);color:var(--accent-2);font-weight:700;}
+.empty{border-style:solid;background:var(--surface-2);border-color:transparent;color:var(--muted);}
+.status-pill{border-radius:6px;}
+.status-pill.done{color:var(--ok);border-color:var(--ok);}
+.toast{border-radius:10px;background:var(--text);color:var(--bg);}
+.role-opt.selected{background:color-mix(in srgb,var(--accent) 5%,var(--surface));}
+
+/* ---------- Home: hero ---------- */
+.hero.hero-pro{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:56px;align-items:center;padding:28px 0 72px;text-align:start;}
+.hero-pro h1{font-size:clamp(36px,4.6vw,56px);line-height:1.06;margin:0 0 20px;max-width:15ch;color:var(--text);}
+.hero-pro h1 i{font-style:normal;color:inherit;}
+.hero-pro p.lede{font-size:18px;line-height:1.6;color:var(--ink-soft);max-width:46ch;margin:0 0 30px;}
+.hero-pro .hero-actions .btn{padding:13px 22px;font-size:15px;}
+.hero-trust{list-style:none;margin:34px 0 0;padding:22px 0 0;border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;}
+.hero-trust li{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;line-height:1.45;color:var(--ink-soft);}
+.hero-trust svg{flex:none;margin-top:1px;color:var(--accent-2);}
+.hero-match{background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow-lg);padding:26px;position:relative;}
+.hero-match h2{font-size:22px;margin:0 0 6px;}
+.hero-match p{margin:0 0 16px;color:var(--muted);font-size:14px;line-height:1.5;}
+.hero-match textarea{width:100%;min-height:104px;resize:vertical;padding:13px 14px;border:1px solid color-mix(in srgb,var(--text) 16%,transparent);border-radius:12px;background:var(--surface);color:var(--text);font:inherit;font-size:15px;line-height:1.5;box-sizing:border-box;}
+.hero-match textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent);}
+.hero-examples{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 16px;}
+.hero-examples button{border:1px solid var(--border);background:var(--surface-2);color:var(--ink-soft);border-radius:8px;padding:6px 10px;font:inherit;font-size:12.5px;cursor:pointer;text-align:start;}
+.hero-examples button:hover{border-color:var(--accent);color:var(--text);}
+.hero-match .btn{width:100%;padding:13px 18px;}
+.hero-match small{display:block;margin-top:12px;color:var(--muted);font-size:12.5px;text-align:center;}
+@media (max-width:900px){.hero.hero-pro{grid-template-columns:1fr;gap:36px;padding-bottom:48px}.hero-trust{grid-template-columns:1fr;gap:10px}.hero-match::before{display:none}}
+
+/* ---------- Home: sections ---------- */
+.lp-section{padding:72px 0 16px;}
+.lp-section.alt{background:var(--surface-2);border-radius:24px;padding:64px 40px 48px;}
+.lp-title{font-size:clamp(28px,3.2vw,38px);line-height:1.15;margin:0 0 10px;}
+.lp-sub{font-size:16.5px;color:var(--muted);}
+.lp-bar{width:40px;height:2px;background:var(--accent-2);opacity:1;margin:22px auto 44px;}
+/* "Why Workar" as a clean ruled strip instead of circles */
+.why-row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.why-bubble{width:auto;height:auto;border-radius:0;border:0;border-inline-start:1px solid var(--border);background:transparent;box-shadow:none;padding:26px 18px;align-items:flex-start;text-align:start;justify-content:flex-start;}
+.why-bubble:first-child{border-inline-start:0;}
+.why-bubble b{font-family:var(--serif);font-weight:600;font-size:34px;color:var(--text);}
+html[dir="rtl"] .why-bubble b{font-family:'Vazirmatn',sans-serif;font-weight:800;}
+.why-bubble b.word{font-size:28px;}
+.why-bubble span{font-weight:400;color:var(--muted);font-size:13.5px;margin-top:8px;}
+@media (max-width:860px){.why-row{grid-template-columns:repeat(2,minmax(0,1fr))}.why-bubble{border-inline-start:0;border-top:1px solid var(--border)}.why-bubble:nth-child(-n+2){border-top:0}}
+.step{text-align:start;}
+.step-ico{margin:0 0 16px;width:56px;height:56px;}
+.step h3{font-size:18px;font-weight:700;}
+.step h3 em{color:var(--accent-2);}
+.price-card{border-radius:var(--radius-lg);box-shadow:none;transition:box-shadow .2s,border-color .2s;}
+.price-card:hover{box-shadow:var(--shadow);}
+.price-card.featured{border:1.5px solid var(--accent);box-shadow:var(--shadow-lg);}
+.price-badge{background:var(--accent);border-radius:6px;font-weight:700;}
+.price-name{color:var(--text);font-weight:700;}
+.price-amount{font-size:42px;}
+.price-save{color:var(--accent-2);}
+.price-list li::before{border-color:var(--accent);}
+.reveal{transform:translateY(12px);transition:opacity .6s ease,transform .6s ease;}
+html[dir="rtl"] .reveal{transform:translateY(12px);}
+
+/* ---------- Other pages ---------- */
+.ob-head h2{font-size:34px;}
+.ob-num{border-color:var(--accent-2);color:var(--accent-2);}
+.ob-preview .card{box-shadow:var(--shadow-lg);}
+.ob-steps{background:var(--surface-2);border-color:transparent;}
+.auth-side{background:#16302A;color:#E9EFEC;}
+.auth-side h2{color:#FFFFFF;}
+.section-head h2{font-size:26px;}
+.dash-edit{border-radius:var(--radius-lg);}
+.req{border-radius:var(--radius-lg);}
+footer{margin-top:48px;padding:40px 0 16px;border-top:1px solid var(--border);color:var(--muted);}
+footer a{text-decoration:none;}
+footer a:hover{color:var(--text);text-decoration:underline;}
+@media (prefers-reduced-motion:reduce){.btn,.card,.price-card{transition:none}}
+@media (max-width:700px){.nav{position:static;backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--bg);margin-bottom:24px}}
 </style>
 </head>
 <body>
@@ -1288,27 +1442,30 @@ const I18N = {
     btn_video_call:'Video call', btn_voice_call:'Voice call',
     call_after_accept:'Call options appear once the mentor accepts.', call_tip:'Opens in a new tab. The first person to join may be asked to sign in with Google or GitHub to start the room.',
     toast_email_confirmed:'Email confirmed — welcome to Workar!',
-    ag_coach_signin:'Create a free account or log in to use the AI coach. New accounts get free AI messages.',
-    ag_ob_paste_ph:'Paste your CV or LinkedIn "About" here', ag_ob_chip_cv:'Paste my CV', ag_ob_chip_q:'Ask me questions instead', ag_ob_chip_q_text:"I'd rather answer a few questions.", ag_ob_progress:'Profile {p}% filled in',
-    ag_note_btn:'Help me write this', ag_note_btn_again:'Rewrite it',
-    ag_pc_title:'Profile coach', ag_pc_sub:'An honest second opinion on how your profile reads to clients.', ag_pc_intro:'Get a score, what already works, and a stronger headline and bio built only from your own details.', ag_pc_run:'Review my profile', ag_pc_again:'Review again', ag_pc_busy:'Reading your profile…', ag_pc_good:'Working well', ag_pc_try:'Try this next', ag_pc_headline:'Suggested headline', ag_pc_bio:'Suggested bio', ag_pc_use:'Use this', ag_pc_applied:'Added to your profile form. Review it and save.', ag_pc_note:'Suggestions only. Nothing changes until you save your profile.',
+    ag_coach_signin:"Please create a free account or log in to use the AI coach. New accounts include complimentary AI messages.",
+    ag_ob_paste_ph:'Paste your CV or LinkedIn "About" here', ag_ob_chip_cv:"I will paste my CV", ag_ob_chip_q:"Please ask me questions", ag_ob_chip_q_text:"I would prefer to answer a few questions, please.", ag_ob_progress:'Profile {p}% filled in',
+    ag_note_btn:"Help me write this note", ag_note_btn_again:"Suggest another version",
+    ag_pc_title:"Profile review", ag_pc_sub:"A considered second opinion on how your profile reads to clients.", ag_pc_intro:"Receive a score, the strengths of your profile, and a refined headline and bio written only from your own details.", ag_pc_run:'Review my profile', ag_pc_again:'Review again', ag_pc_busy:'Reading your profile…', ag_pc_good:"Strengths", ag_pc_try:"Recommended improvements", ag_pc_headline:'Suggested headline', ag_pc_bio:'Suggested bio', ag_pc_use:"Use this text", ag_pc_applied:"The text has been added to your profile form. Please review it and save.", ag_pc_note:'Suggestions only. Nothing changes until you save your profile.',
     ag_fu_title:'Follow-up plan', ag_fu_title2:'Review before sending',
-    ag_fu_banner_1:'Send {n} a follow-up plan', ag_fu_banner_n:'{n} finished sessions are waiting for a follow-up', ag_fu_banner_sub:'Jot down a few notes and the AI turns them into clear next steps for your client. Clients who get one are more likely to book again.', ag_fu_banner_btn:'Write follow-up',
-    ag_help_sub:'Answers about booking, payments, calls and refunds', ag_help_q1:'How does booking work?', ag_help_q2:'How do refunds work?', ag_help_q3:'How do I become a mentor?', ag_help_q4:'Is my video call private?',
-    ag_signin:'Sign in first.', ag_writing:'Writing…', ag_sending:'Sending…', ag_send:'Send', ag_reset:'Start over', ag_cancel:'Cancel',
-    ag_ob_title:'Fill in your profile with AI', ag_ob_sub:'Answer a few questions or paste your CV or LinkedIn summary. The assistant fills in the form below, and you check it before submitting.',
-    ag_ob_hello:"Hi! I'll help you fill in your mentor profile. What do you do, and how long have you been doing it? You can also paste your CV or LinkedIn summary.",
-    ag_ob_ph:'Type your answer or paste your CV', ag_ob_foot:'Everything stays editable in the form.', ag_ob_ready:'The main details are in. Check the form, add your name, LinkedIn and rate, then submit.',
-    ag_fu_btn:'Send follow-up plan', ag_fu_again:'Send another follow-up', ag_fu_notes_lbl:'Jot down rough notes from the session. The AI turns them into a clear plan you can edit.', ag_fu_notes_ph:'e.g. worked on her resume summary, practice 2 STAR stories, apply to 5 PM roles, next session in 2 weeks',
-    ag_fu_write:'Write the plan', ag_fu_review_lbl:'Check and edit before sending. It goes to your client by message and email.', ag_fu_send:'Send to client', ag_fu_back:'Back to notes', ag_fu_short:'Add a few more notes first.', ag_fu_done:'Follow-up sent. Your client got it by message and email.', ag_fu_sent_toast:'Follow-up sent',
-    ag_help_btn:'Help', ag_help_close:'Close', ag_help_title:'Workar help', ag_help_hello:'Hi! Ask me anything about booking, payments, calls, refunds or becoming a mentor.', ag_help_ph:'Ask a question',
+    ag_fu_banner_1:"Send {n} a follow-up plan", ag_fu_banner_n:'{n} finished sessions are waiting for a follow-up', ag_fu_banner_sub:"Add a few notes from the session and the assistant will draft clear next steps for your client. Clients who receive a follow-up are more likely to book again.", ag_fu_banner_btn:"Write a follow-up",
+    ag_help_sub:"Booking, payments, calls and refunds", ag_help_q1:'How does booking work?', ag_help_q2:'How do refunds work?', ag_help_q3:'How do I become a mentor?', ag_help_q4:'Is my video call private?',
+    ag_signin:"Please sign in to continue.", ag_writing:"Preparing a response…", ag_sending:'Sending…', ag_send:'Send', ag_reset:'Start over', ag_cancel:'Cancel',
+    ag_ob_title:"Complete your profile with our assistant", ag_ob_sub:"Answer a few questions or paste your CV or LinkedIn summary. The assistant completes the form below for you to review before submitting.",
+    ag_ob_hello:"Hello, and welcome to Workar. I would be glad to help you complete your mentor profile. Could you tell me about your current role and how long you have worked in your field? If you prefer, you may paste your CV or LinkedIn summary instead.",
+    ag_ob_ph:'Type your answer or paste your CV', ag_ob_foot:'Everything stays editable in the form.', ag_ob_ready:"Thank you. The main details are complete. Please review the form, add your name, LinkedIn and session rate, and submit.",
+    ag_fu_btn:"Send a follow-up plan", ag_fu_again:'Send another follow-up', ag_fu_notes_lbl:"Please add brief notes from the session. The assistant will turn them into a clear plan that you can edit before sending.", ag_fu_notes_ph:'e.g. worked on her resume summary, practice 2 STAR stories, apply to 5 PM roles, next session in 2 weeks',
+    ag_fu_write:'Write the plan', ag_fu_review_lbl:'Check and edit before sending. It goes to your client by message and email.', ag_fu_send:'Send to client', ag_fu_back:'Back to notes', ag_fu_short:"Please add a little more detail to your notes first.", ag_fu_done:"Your follow-up has been sent. Your client received it as a message and by email.", ag_fu_sent_toast:'Follow-up sent',
+    ag_help_btn:'Help', ag_help_close:'Close', ag_help_title:"Workar support", ag_help_hello:"Hello, and thank you for visiting Workar. How may I help you today? I can answer questions about booking, payments, video calls, refunds and becoming a mentor.", ag_help_ph:"Type your question",
+    hero_trust1:'Every mentor is reviewed before their profile goes live', hero_trust2:'You pay only after your mentor accepts the request', hero_trust3:'A private video call and calendar invite for every session',
+    hm_title:'Tell us where you are', hm_sub:'Describe your situation in a sentence or two, and we will suggest the mentors who fit you best.', hm_ph:'For example: I have three years in QA and would like to move into product management.',
+    hm_ex1:'Moving from QA into product management', hm_ex2:'Preparing for senior engineering interviews', hm_ex3:'Starting my career after moving to Canada', hm_btn:'Find my mentor', hm_note:'Free to search. No account needed.',
     nav_login:'Log in'
   },
   fa: {
     tag:'راهنمای مسیر شغلی', nav_home:'خانه', nav_browse:'پیدا کردن منتور', nav_coach:'مربی هوش مصنوعی', nav_dash:'پروفایل من', nav_start:'شروع کن',
-    hero_h1a:'', hero_h1em:'کسی که قبلاً همین مسیر رو رفته', hero_h1b:' رو پیدا کن.',
-    hero_sub:'Workar آدم‌هایی که دارن مسیر شغلی‌شونو می‌سازن رو به منتورهایی که خودشون این کار رو تجربه کردن وصل می‌کنه — فیدبک واقعی برای رزومه، مصاحبه و قدم بعدیت.',
-    cta_browse:'مشاهده منتورها', cta_become:'منتور شو',
+    hero_h1a:"کسی را پیدا کنید که ", hero_h1em:"پیش‌تر همین مسیر را", hero_h1b:" پیموده است.",
+    hero_sub:"Workar افرادی را که در حال ساختن مسیر شغلی خود هستند به منتورهایی متصل می‌کند که خود این کار را تجربه کرده‌اند؛ بازخورد واقعی دربارهٔ رزومه، مصاحبه‌ها و گام بعدی شما.",
+    cta_browse:"مشاهدهٔ منتورها", cta_become:"منتور شوید",
     stat_mentors:'منتور در Workar', stat_reviews:'ریویو نوشته‌شده', stat_realtime:'گفتگوی واقعی',
     no_mentors_yet:'هنوز منتوری نیست', be_first:'اولین نفری باش که ثبت‌نام می‌کنه',
     from_price:'از {p} دلار / جلسه', sec_links_only:'لینک‌ها',
@@ -1535,20 +1692,23 @@ const I18N = {
     btn_video_call:'تماس تصویری', btn_voice_call:'تماس صوتی',
     call_after_accept:'گزینه‌های تماس بعد از تأیید منتور نمایش داده می‌شود.', call_tip:'در تب جدید باز می‌شود. ممکن است از اولین نفری که وارد می‌شود خواسته شود با گوگل یا گیت‌هاب وارد شود تا اتاق شروع شود.',
     toast_email_confirmed:'ایمیلت تأیید شد — به Workar خوش اومدی!',
-    ag_coach_signin:'برای استفاده از مربی هوش مصنوعی یک حساب رایگان بساز یا وارد شو. حساب‌های جدید چند پیام رایگان دارند.',
-    ag_ob_paste_ph:'رزومه یا بخش «About» لینکدینت را اینجا بچسبان', ag_ob_chip_cv:'رزومه‌ام را می‌چسبانم', ag_ob_chip_q:'ترجیح می‌دهم سؤال بپرسی', ag_ob_chip_q_text:'ترجیح می‌دهم به چند سؤال جواب بدهم.', ag_ob_progress:'{p}٪ پروفایل پر شده',
-    ag_note_btn:'کمکم کن این را بنویسم', ag_note_btn_again:'دوباره بنویس',
-    ag_pc_title:'مربی پروفایل', ag_pc_sub:'نظر صادقانه دربارهٔ اینکه پروفایلت در چشم مراجع‌ها چطور دیده می‌شود.', ag_pc_intro:'یک امتیاز، نقاط قوت، و یک تیتر و بیوی قوی‌تر که فقط از اطلاعات خودت ساخته می‌شود.', ag_pc_run:'بررسی پروفایلم', ag_pc_again:'بررسی دوباره', ag_pc_busy:'در حال خواندن پروفایل…', ag_pc_good:'نقاط قوت', ag_pc_try:'پیشنهادها', ag_pc_headline:'تیتر پیشنهادی', ag_pc_bio:'بیوی پیشنهادی', ag_pc_use:'استفاده کن', ag_pc_applied:'به فرم پروفایلت اضافه شد. بررسی کن و ذخیره کن.', ag_pc_note:'فقط پیشنهاد است. تا وقتی ذخیره نکنی چیزی تغییر نمی‌کند.',
-    ag_fu_title:'برنامهٔ پیگیری', ag_fu_title2:'قبل از ارسال بررسی کن',
-    ag_fu_banner_1:'برای {n} برنامهٔ پیگیری بفرست', ag_fu_banner_n:'{n} جلسهٔ تمام‌شده منتظر پیگیری است', ag_fu_banner_sub:'چند یادداشت بنویس تا هوش مصنوعی آن را به قدم‌های بعدی روشن برای مراجع تبدیل کند. مراجع‌هایی که پیگیری می‌گیرند بیشتر دوباره رزرو می‌کنند.', ag_fu_banner_btn:'نوشتن پیگیری',
-    ag_help_sub:'پاسخ دربارهٔ رزرو، پرداخت، تماس و بازپرداخت', ag_help_q1:'رزرو چطور کار می‌کند؟', ag_help_q2:'بازپرداخت چطور است؟', ag_help_q3:'چطور منتور شوم؟', ag_help_q4:'تماس تصویری خصوصی است؟',
-    ag_signin:'اول وارد حساب شوید.', ag_writing:'در حال نوشتن…', ag_sending:'در حال ارسال…', ag_send:'ارسال', ag_reset:'شروع دوباره', ag_cancel:'لغو',
-    ag_ob_title:'پروفایلت را با هوش مصنوعی پر کن', ag_ob_sub:'به چند سؤال جواب بده یا رزومه یا خلاصهٔ لینکدینت را بچسبان. دستیار فرم پایین را پر می‌کند و تو قبل از ارسال بررسی‌اش می‌کنی.',
-    ag_ob_hello:'سلام! کمکت می‌کنم پروفایل منتورت را پر کنی. چه کاری انجام می‌دهی و چند سال است در این کار هستی؟ می‌توانی رزومه یا خلاصهٔ لینکدینت را هم اینجا بچسبانی.',
-    ag_ob_ph:'جوابت را بنویس یا رزومه‌ات را بچسبان', ag_ob_foot:'همه چیز در فرم قابل ویرایش است.', ag_ob_ready:'اطلاعات اصلی پر شد. فرم را بررسی کن، نام، لینکدین و نرخت را اضافه کن و ارسال کن.',
-    ag_fu_btn:'ارسال برنامهٔ پیگیری', ag_fu_again:'ارسال پیگیری دیگر', ag_fu_notes_lbl:'یادداشت‌های کوتاه از جلسه بنویس. هوش مصنوعی آن را به یک برنامهٔ روشن و قابل ویرایش تبدیل می‌کند.', ag_fu_notes_ph:'مثلاً: روی خلاصهٔ رزومه کار کردیم، دو داستان STAR تمرین کند، به ۵ آگهی درخواست بدهد، جلسهٔ بعد دو هفتهٔ دیگر',
-    ag_fu_write:'نوشتن برنامه', ag_fu_review_lbl:'قبل از ارسال بررسی و ویرایش کن. با پیام و ایمیل برای مراجع فرستاده می‌شود.', ag_fu_send:'ارسال برای مراجع', ag_fu_back:'برگشت به یادداشت‌ها', ag_fu_short:'اول کمی یادداشت بیشتر بنویس.', ag_fu_done:'پیگیری ارسال شد. مراجع آن را با پیام و ایمیل دریافت کرد.', ag_fu_sent_toast:'پیگیری ارسال شد',
-    ag_help_btn:'راهنما', ag_help_close:'بستن', ag_help_title:'راهنمای Workar', ag_help_hello:'سلام! هر سؤالی دربارهٔ رزرو، پرداخت، تماس، بازپرداخت یا منتور شدن داری بپرس.', ag_help_ph:'سؤالت را بنویس',
+    ag_coach_signin:"لطفاً برای استفاده از مربی هوش مصنوعی یک حساب رایگان بسازید یا وارد شوید. حساب‌های جدید شامل چند پیام رایگان هستند.",
+    ag_ob_paste_ph:"رزومه یا بخش «About» لینکدین خود را اینجا وارد کنید", ag_ob_chip_cv:"رزومه‌ام را وارد می‌کنم", ag_ob_chip_q:"لطفاً از من سؤال بپرسید", ag_ob_chip_q_text:"ترجیح می‌دهم به چند پرسش پاسخ دهم.", ag_ob_progress:"{p}٪ از پروفایل تکمیل شده است",
+    ag_note_btn:"در نوشتن این پیام کمکم کنید", ag_note_btn_again:"پیشنهاد نسخهٔ دیگر",
+    ag_pc_title:"بررسی پروفایل", ag_pc_sub:"نظری سنجیده دربارهٔ اینکه پروفایل شما در نگاه مراجعان چگونه دیده می‌شود.", ag_pc_intro:"یک امتیاز، نقاط قوت پروفایل، و تیتر و معرفی بهتری که تنها بر اساس اطلاعات خود شما نوشته می‌شود دریافت کنید.", ag_pc_run:"بررسی پروفایل من", ag_pc_again:"بررسی دوباره", ag_pc_busy:"در حال بررسی پروفایل…", ag_pc_good:"نقاط قوت", ag_pc_try:"پیشنهادهای بهبود", ag_pc_headline:"تیتر پیشنهادی", ag_pc_bio:"معرفی پیشنهادی", ag_pc_use:"استفاده از این متن", ag_pc_applied:"متن به فرم پروفایل شما اضافه شد. لطفاً آن را بررسی و ذخیره کنید.", ag_pc_note:"این موارد تنها پیشنهاد است و تا زمانی که پروفایل را ذخیره نکنید تغییری ایجاد نمی‌شود.",
+    ag_fu_title:"برنامهٔ پیگیری", ag_fu_title2:"پیش از ارسال بررسی کنید",
+    ag_fu_banner_1:"ارسال برنامهٔ پیگیری برای {n}", ag_fu_banner_n:"{n} جلسهٔ پایان‌یافته در انتظار پیگیری است", ag_fu_banner_sub:"چند یادداشت از جلسه وارد کنید تا دستیار گام‌های بعدی را برای مراجع شما پیش‌نویس کند. مراجعانی که پیگیری دریافت می‌کنند بیشتر دوباره رزرو می‌کنند.", ag_fu_banner_btn:"نوشتن پیگیری",
+    ag_help_sub:"رزرو، پرداخت، تماس و بازپرداخت", ag_help_q1:"رزرو جلسه چگونه انجام می‌شود؟", ag_help_q2:"شرایط بازپرداخت چیست؟", ag_help_q3:"چگونه منتور شوم؟", ag_help_q4:"آیا تماس تصویری خصوصی است؟",
+    ag_signin:"لطفاً برای ادامه وارد حساب خود شوید.", ag_writing:"در حال آماده‌سازی پاسخ…", ag_sending:'در حال ارسال…', ag_send:'ارسال', ag_reset:'شروع دوباره', ag_cancel:"انصراف",
+    ag_ob_title:"تکمیل پروفایل با کمک دستیار", ag_ob_sub:"به چند پرسش پاسخ دهید یا رزومه یا خلاصهٔ لینکدین خود را وارد کنید. دستیار فرم زیر را تکمیل می‌کند تا پیش از ارسال آن را بررسی کنید.",
+    ag_ob_hello:"سلام و به Workar خوش آمدید. خوشحال می‌شوم در تکمیل پروفایل منتوری به شما کمک کنم. لطفاً بفرمایید در حال حاضر در چه سمتی فعالیت می‌کنید و چند سال سابقه دارید؟ در صورت تمایل می‌توانید رزومه یا خلاصهٔ لینکدین خود را وارد کنید.",
+    ag_ob_ph:"پاسخ خود را بنویسید یا رزومه را وارد کنید", ag_ob_foot:"همهٔ موارد در فرم قابل ویرایش است.", ag_ob_ready:"سپاسگزارم. اطلاعات اصلی تکمیل شد. لطفاً فرم را بررسی کنید، نام، لینکدین و نرخ جلسه را وارد کرده و ارسال کنید.",
+    ag_fu_btn:"ارسال برنامهٔ پیگیری", ag_fu_again:"ارسال پیگیری دیگر", ag_fu_notes_lbl:"لطفاً یادداشت‌های کوتاهی از جلسه وارد کنید. دستیار آن را به برنامه‌ای روشن تبدیل می‌کند که پیش از ارسال قابل ویرایش است.", ag_fu_notes_ph:"برای مثال: خلاصهٔ رزومه را بررسی کردیم، دو نمونه پاسخ به روش STAR تمرین شود، درخواست برای ۵ موقعیت، جلسهٔ بعد دو هفتهٔ دیگر",
+    ag_fu_write:"نوشتن برنامه", ag_fu_review_lbl:"لطفاً پیش از ارسال بررسی و ویرایش کنید. این متن به صورت پیام و ایمیل برای مراجع ارسال می‌شود.", ag_fu_send:"ارسال برای مراجع", ag_fu_back:"بازگشت به یادداشت‌ها", ag_fu_short:"لطفاً ابتدا کمی جزئیات بیشتری به یادداشت‌ها اضافه کنید.", ag_fu_done:"پیگیری شما ارسال شد. مراجع آن را به صورت پیام و ایمیل دریافت کرد.", ag_fu_sent_toast:'پیگیری ارسال شد',
+    ag_help_btn:'راهنما', ag_help_close:'بستن', ag_help_title:"پشتیبانی Workar", ag_help_hello:"سلام و از مراجعهٔ شما به Workar سپاسگزاریم. چگونه می‌توانم کمکتان کنم؟ می‌توانم به پرسش‌های شما دربارهٔ رزرو، پرداخت، تماس تصویری، بازپرداخت و منتور شدن پاسخ دهم.", ag_help_ph:"پرسش خود را بنویسید",
+    hero_trust1:'پروفایل هر منتور پیش از انتشار بررسی می‌شود', hero_trust2:'پرداخت فقط پس از پذیرش درخواست توسط منتور انجام می‌شود', hero_trust3:'تماس تصویری خصوصی و دعوت‌نامهٔ تقویم برای هر جلسه',
+    hm_title:'از وضعیت خود بگویید', hm_sub:'شرایط خود را در یک یا دو جمله توضیح دهید تا منتورهای مناسب را به شما پیشنهاد کنیم.', hm_ph:'برای مثال: سه سال در تست نرم‌افزار کار کرده‌ام و می‌خواهم وارد مدیریت محصول شوم.',
+    hm_ex1:'ورود از تست نرم‌افزار به مدیریت محصول', hm_ex2:'آمادگی برای مصاحبه‌های مهندسی ارشد', hm_ex3:'شروع مسیر شغلی پس از مهاجرت به کانادا', hm_btn:'یافتن منتور من', hm_note:'جستجو رایگان است و نیازی به حساب کاربری ندارد.',
     nav_login:'ورود'
   }
 };
@@ -3807,14 +3967,30 @@ document.addEventListener('keydown', e=>{
 function homeView(){
   const mentors = Object.entries(cache.profiles).slice(0,3);
   return `
-  <div class="hero hero-solo">
-    <h1>${esc(T('hero_h1a'))}<i>${esc(T('hero_h1em'))}</i>${esc(T('hero_h1b'))}</h1>
-    <p>${esc(T('hero_sub'))}</p>
-    <div class="hero-actions">
-      <button class="btn btn-primary" data-nav="browse">${esc(T('cta_browse'))}</button>
-      <button class="btn btn-outline" data-nav="onboard" data-role="mentor">${esc(T('cta_become'))}</button>
+  <section class="hero hero-pro">
+    <div class="hero-copy">
+      <h1>${esc(T('hero_h1a'))}<i>${esc(T('hero_h1em'))}</i>${esc(T('hero_h1b'))}</h1>
+      <p class="lede">${esc(T('hero_sub'))}</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary" data-nav="browse">${esc(T('cta_browse'))}</button>
+        <button class="btn btn-outline" data-nav="onboard" data-role="mentor">${esc(T('cta_become'))}</button>
+      </div>
+      <ul class="hero-trust">
+        <li><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="10" cy="10" r="9" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M6 10.4l2.6 2.5L14 7.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>${esc(T('hero_trust1'))}</span></li>
+        <li><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="10" cy="10" r="9" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M6 10.4l2.6 2.5L14 7.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>${esc(T('hero_trust2'))}</span></li>
+        <li><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="10" cy="10" r="9" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M6 10.4l2.6 2.5L14 7.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>${esc(T('hero_trust3'))}</span></li>
+      </ul>
     </div>
-  </div>
+    <div class="hero-match">
+      <h2>${esc(T('hm_title'))}</h2>
+      <p>${esc(T('hm_sub'))}</p>
+      <label for="hero-match-input" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">${esc(T('hm_title'))}</label>
+      <textarea id="hero-match-input" placeholder="${esc(T('hm_ph'))}"></textarea>
+      <div class="hero-examples">${['hm_ex1','hm_ex2','hm_ex3'].map(k=>`<button type="button" data-hm-ex="${esc(T(k))}">${esc(T(k))}</button>`).join('')}</div>
+      <button type="button" class="btn btn-primary" id="hero-match-go">${esc(T('hm_btn'))}</button>
+      <small>${esc(T('hm_note'))}</small>
+    </div>
+  </section>
 
   ${landingSections()}
   `;
@@ -5518,6 +5694,18 @@ init();
     });
     anchor.parentNode.insertBefore(div, anchor);
   }
+
+  /* ---------- Home: "Tell us where you are" runs the AI matcher ---------- */
+  document.addEventListener('click', e=>{
+    const ex = e.target.closest && e.target.closest('[data-hm-ex]');
+    const ta = document.getElementById('hero-match-input');
+    if(ex && ta){ ta.value = ex.getAttribute('data-hm-ex'); ta.focus(); return; }
+    if(e.target.closest && e.target.closest('#hero-match-go') && ta){
+      const v = ta.value.trim(); if(!v){ ta.focus(); return; }
+      state.matchQuery = v; nav('browse');
+      setTimeout(()=>{ const b = document.getElementById('match-btn'); if(b) b.click(); window.scrollTo(0,0); }, 60);
+    }
+  });
 
   /* ---------- 5. Help desk ---------- */
   const hd = { open:false, messages:null, busy:false, error:'' };
