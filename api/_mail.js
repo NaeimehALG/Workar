@@ -32,6 +32,7 @@ async function rows(path) {
 async function patch(path, body) {
   return fetch(`${SB()}/rest/v1/${path}`, { method: 'PATCH', headers: Object.assign({ Prefer: 'return=minimal' }, svc()), body: JSON.stringify(body) });
 }
+async function fullProfile(id) { const p = await rows(`profiles?id=eq.${encodeURIComponent(id)}&select=*`); return p[0] || { id, name: 'Someone' }; }
 async function profile(id) { const p = await rows(`profiles?id=eq.${encodeURIComponent(id)}&select=id,name,role,timezone`); return p[0] || { id, name: 'Someone' }; }
 
 // "Sat, Oct 3 at 6:00 PM PDT", shown in the recipient's own time zone when we know it
@@ -45,7 +46,7 @@ function when(req, tz) {
 }
 
 function layout(title, paragraphs, cta) {
-  const p = paragraphs.filter(Boolean).map(x => `<p style="margin:0 0 14px;font-size:15px;line-height:1.6;color:#5B4433;">${x}</p>`).join('');
+  const p = paragraphs.filter(Boolean).map(x => /^<(ul|h3|div)/.test(x) ? `<div style="margin:0 0 14px;font-size:15px;line-height:1.6;color:#5B4433;">${x}</div>` : `<p style="margin:0 0 14px;font-size:15px;line-height:1.6;color:#5B4433;">${x}</p>`).join('');
   const button = cta ? `<p style="margin:22px 0 6px;"><a href="${cta.url}" style="display:inline-block;background:#8B6A4C;color:#fff;text-decoration:none;font-weight:700;font-size:15px;padding:12px 22px;border-radius:999px;">${esc(cta.text)}</a></p>` : '';
   return `<!doctype html><html><body style="margin:0;background:#F7F1E9;font-family:Arial,Helvetica,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#F7F1E9;padding:28px 12px;"><tr><td align="center">
@@ -57,16 +58,21 @@ function layout(title, paragraphs, cta) {
   </td></tr></table></body></html>`;
 }
 
-async function sendMail(to, subject, html) {
+async function sendMail(to, subject, html, attachments) {
   const key = process.env.RESEND_API_KEY;
   if (!key || !to) return { skipped: true };
+  const payload = { from: process.env.MAIL_FROM || 'Workar <notifications@workar.me>', to: [to], subject, html };
+  if (attachments && attachments.length) payload.attachments = attachments; // [{ filename, content (base64) }]
   const r = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: process.env.MAIL_FROM || 'Workar <notifications@workar.me>', to: [to], subject, html })
+    body: JSON.stringify(payload)
   });
   if (!r.ok) console.error('resend-error', r.status, await r.text());
   return { ok: r.ok };
 }
 
-module.exports = { SITE, esc, userFromToken, emailOf, rows, patch, profile, when, layout, sendMail };
+function link(url, text) { return `<a href="${esc(url)}" style="color:#8B6A4C;font-weight:700;">${esc(text)}</a>`; }
+function list(items) { const li = (items || []).filter(Boolean).map(x => `<li style="margin:0 0 6px;">${esc(x)}</li>`).join(''); return li ? `<ul style="margin:0;padding-left:20px;">${li}</ul>` : ''; }
+
+module.exports = { SITE, esc, userFromToken, emailOf, rows, patch, profile, fullProfile, when, layout, sendMail, link, list };

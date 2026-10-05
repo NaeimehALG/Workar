@@ -3,7 +3,8 @@
 // Environment Variable, never in index.html or any client-side code.
 //
 // Handles three kinds of purchase (set in metadata[kind] by /api/create-checkout):
-//   booking    — marks the mentoring request as paid
+//   booking    — marks the mentoring request as paid, creates the private call link,
+//                and emails mentor + client the link with a calendar invite
 //   ai_credits — adds AI coaching messages to the buyer's profile
 //   exam       — unlocks a PMP Prep mock exam (or the all-access pass) for the buyer
 //
@@ -100,16 +101,11 @@ async function handler(req, res) {
             headers: Object.assign({ Prefer: 'return=minimal' }, h),
             body: JSON.stringify({ paid: true, stripeSessionId: session.id })
           });
-          // email the mentor that the session is paid and confirmed (never blocks the webhook)
+          // private meeting link + confirmation email with calendar invite to BOTH people.
+          // Runs once per booking (safe if Stripe re-sends the webhook) and never blocks the payment update.
           try {
-            const M = require('./_mail');
-            const r = (await M.rows(`requests?id=eq.${encodeURIComponent(requestId)}&select=*`))[0];
-            if (r) {
-              const [mentor, client] = await Promise.all([M.profile(r.mentorId), M.profile(r.clientId)]);
-              await M.sendMail(await M.emailOf(r.mentorId), `${client.name} paid — your session is confirmed`,
-                M.layout('Session confirmed', [`<b>${M.esc(client.name)}</b> completed payment for the session on <b>${M.esc(M.when(r, mentor.timezone))}</b>.`, 'At the session time, open Workar and press Join video call.'], { text: 'Open Workar', url: M.SITE() + '/?go=dashboard' }));
-            }
-          } catch (e) { console.error('notify-paid-failed', e); }
+            await require('./_session').confirmPaidSession(requestId);
+          } catch (e) { console.error('session-confirm-failed', e); }
         }
       }
     } catch (e) {

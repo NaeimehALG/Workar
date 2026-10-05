@@ -40,7 +40,7 @@ module.exports = async (req, res) => {
     const whenTxt = M.when(r, to.timezone);
     const fromName = M.esc(from.name || 'Someone');
     const dash = { text: 'Open Workar', url: site + '/?go=dashboard' };
-    let subject, title, paras;
+    let subject, title, paras, attachments = [];
 
     switch (event) {
       case 'request_new':
@@ -62,11 +62,20 @@ module.exports = async (req, res) => {
         paras = [`<b>${fromName}</b> couldn't take the session on ${M.esc(whenTxt)}.`, 'You can book another time or choose a different mentor.'];
         dash.text = 'Find another time'; break;
       case 'request_cancelled':
+        if (r.paid && r.startsAt) {
+          const MT = require('./_meeting');
+          attachments = MT.icsAttachment(MT.buildIcs({ r, title: `Workar session with ${from.name}`, description: 'This session was cancelled.', cancelled: true }));
+        }
         subject = `Session cancelled by ${from.name}`;
         title = 'A session was cancelled';
         paras = [`<b>${fromName}</b> cancelled the session planned for ${M.esc(whenTxt)}.`, r.paid ? 'If you paid, see our refund policy for what happens next.' : ''];
         break;
       case 'time_changed':
+        if (r.paid) {
+          // paid session: both people get the new time, the call link and an updated calendar invite
+          await require('./_session').sendConfirmation(r, { updated: true });
+          res.status(200).json({ ok: true }); return;
+        }
         subject = `New time proposed by ${from.name}`;
         title = 'Your session time changed';
         paras = [`<b>${fromName}</b> changed your session to <b>${M.esc(whenTxt)}</b>.`, 'If that doesn’t work, reply to them in your Workar messages.'];
@@ -83,7 +92,7 @@ module.exports = async (req, res) => {
       }
     }
     if (!subject) { res.status(400).json({ error: 'unknown event' }); return; }
-    await M.sendMail(toEmail, subject, M.layout(title, paras, dash));
+    await M.sendMail(toEmail, subject, M.layout(title, paras, dash), attachments);
     res.status(200).json({ ok: true });
   } catch (e) {
     console.error(e);
