@@ -1040,6 +1040,38 @@
   .voice-detail{flex-basis:100%;font-size:12px;color:#A0612F;margin-top:6px;word-break:break-word;}
   #voice-test{margin-inline-start:4px;}
 
+
+/* ---------- Photos (keeps the original colour scheme) ---------- */
+.ph{margin:0;overflow:hidden;border-radius:var(--radius-lg,22px);background:var(--surface-2);box-shadow:var(--shadow, 0 10px 30px rgba(74,53,38,.10));}
+.ph img{display:block;width:100%;height:100%;object-fit:cover;filter:saturate(.92) sepia(.06);}
+.ph-mosaic{display:grid;grid-template-columns:2fr 1fr;grid-template-rows:1fr 1fr;gap:14px;height:440px;margin:8px 0 72px;}
+.ph-a{grid-row:1 / span 2;}
+.ph-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px;align-items:center;margin:96px 0 24px;}
+.ph-tall{aspect-ratio:4/5;max-height:560px;}
+.ph-kicker{display:inline-block;font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-2,var(--accent));margin-bottom:10px;}
+html[dir="rtl"] .ph-kicker{letter-spacing:0;}
+.ph-copy h2{font-size:clamp(26px,3vw,36px);line-height:1.2;margin:0 0 14px;color:var(--text);}
+.ph-copy p{color:var(--muted);font-size:16px;line-height:1.7;margin:0 0 22px;}
+.ph-points{list-style:none;padding:0;margin:0 0 28px;display:grid;gap:14px;}
+.ph-points li{padding-inline-start:16px;border-inline-start:3px solid var(--accent-2,var(--accent));}
+.ph-points b{display:block;color:var(--text);font-size:15.5px;margin-bottom:2px;}
+.ph-points span{color:var(--muted);font-size:14.5px;line-height:1.55;}
+.ph-cta{position:relative;overflow:hidden;border-radius:var(--radius-lg,22px);margin:88px 0 24px;min-height:340px;display:flex;align-items:center;background:var(--accent);}
+.ph-cta img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.85) sepia(.1);}
+.ph-cta::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(43,31,22,.86) 0%,rgba(43,31,22,.62) 48%,rgba(43,31,22,.15) 100%);}
+html[dir="rtl"] .ph-cta::after{background:linear-gradient(270deg,rgba(43,31,22,.86) 0%,rgba(43,31,22,.62) 48%,rgba(43,31,22,.15) 100%);}
+.ph-cta-in{position:relative;z-index:1;max-width:470px;padding:48px;}
+.ph-cta-in h2{color:#FFF;font-size:clamp(26px,3vw,34px);line-height:1.2;margin:0 0 12px;}
+.ph-cta-in p{color:rgba(255,255,255,.88);font-size:16px;line-height:1.65;margin:0 0 24px;}
+.ph-cta .btn-primary{background:#FFF;color:#4A3526;}
+@media (max-width:860px){
+  .ph-mosaic{grid-template-columns:1fr 1fr;grid-template-rows:240px 150px;height:auto;margin-bottom:48px}
+  .ph-a{grid-column:1 / span 2;grid-row:auto}
+  .ph-split{grid-template-columns:1fr;gap:28px;margin-top:64px}
+  .ph-tall{aspect-ratio:16/11}
+  .ph-cta-in{padding:32px 24px}
+  .ph-cta::after{background:rgba(43,31,22,.72)}
+}
 </style>
 </head>
 <body>
@@ -1296,16 +1328,21 @@ const I18N = {
     ag_fu_title:'Follow-up plan', ag_fu_title2:'Review before sending',
     ag_fu_banner_1:"Send {n} a follow-up plan", ag_fu_banner_n:'{n} finished sessions are waiting for a follow-up', ag_fu_banner_sub:"Add a few notes from the session and the assistant will draft clear next steps for your client. Clients who receive a follow-up are more likely to book again.", ag_fu_banner_btn:"Write a follow-up",
     ag_help_sub:"Booking, payments, calls and refunds", ag_help_q1:'How does booking work?', ag_help_q2:'How do refunds work?', ag_help_q3:'How do I become a mentor?', ag_help_q4:'Is my video call private?',
+    ag_help_q5:'I need help with my booking', ag_tk_title:'Support request {id} created', ag_tk_sub:'A confirmation has been sent to your email. Our team will reply within one business day.',
     ag_signin:"Please sign in to continue.", ag_writing:"Preparing a response…", ag_sending:'Sending…', ag_send:'Send', ag_reset:'Start over', ag_cancel:'Cancel',
     ag_ob_title:"Complete your profile with our assistant", ag_ob_sub:"Answer a few questions or paste your CV or LinkedIn summary. The assistant completes the form below for you to review before submitting.",
     ag_ob_hello:"Hello, and welcome to Workar. I would be glad to help you complete your mentor profile. Could you tell me about your current role and how long you have worked in your field? If you prefer, you may paste your CV or LinkedIn summary instead.",
     ag_ob_ph:'Type your answer or paste your CV', ag_ob_foot:'Everything stays editable in the form.', ag_ob_ready:"Thank you. The main details are complete. Please review the form, add your name, LinkedIn and session rate, and submit.",
     ag_fu_btn:"Send a follow-up plan", ag_fu_again:'Send another follow-up', ag_fu_notes_lbl:"Please add brief notes from the session. The assistant will turn them into a clear plan that you can edit before sending.", ag_fu_notes_ph:'e.g. worked on her resume summary, practice 2 STAR stories, apply to 5 PM roles, next session in 2 weeks',
     ag_fu_write:'Write the plan', ag_fu_review_lbl:'Check and edit before sending. It goes to your client by message and email.', ag_fu_send:'Send to client', ag_fu_back:'Back to notes', ag_fu_short:"Please add a little more detail to your notes first.", ag_fu_done:"Your follow-up has been sent. Your client received it as a message and by email.", ag_fu_sent_toast:'Follow-up sent',
-    ag_help_btn:'Help', ag_help_close:'Close', ag_help_title:"Workar support", ag_help_hello:"Hello, and thank you for visiting Workar. How may I help you today? I can answer questions about booking, payments, video calls, refunds and becoming a mentor.", ag_help_ph:"Type your question",
+    ag_help_btn:'Help', ag_help_close:'Close', ag_help_title:"Workar support", ag_help_hello:"Hello, and thank you for visiting Workar. How may I help you today? I can answer questions about booking, payments, video calls and refunds, check the status of your sessions when you are signed in, and pass anything else to our support team.", ag_help_ph:"Type your question",
     hero_trust1:'Every mentor is reviewed before their profile goes live', hero_trust2:'You pay only after your mentor accepts the request', hero_trust3:'A private video call and calendar invite for every session',
     hm_title:'Tell us where you are', hm_sub:'Describe your situation in a sentence or two, and we will suggest the mentors who fit you best.', hm_ph:'For example: I have three years in QA and would like to move into product management.',
     hm_ex1:'Moving from QA into product management', hm_ex2:'Preparing for senior engineering interviews', hm_ex3:'Starting my career after moving to Canada', hm_btn:'Find my mentor', hm_note:'Free to search. No account needed.',
+    ph_alt_a:'A mentor reviewing a plan with two professionals at a laptop', ph_alt_b:'Two professionals in a one-to-one conversation', ph_alt_c:'Colleagues discussing documents over coffee', ph_alt_d:'A mentor meeting with two professionals in a modern office',
+    ph_kicker:'One-to-one guidance', ph_title:'Advice from someone who has been in your seat', ph_body:'Every session is a private conversation with a professional who has done the work you are aiming for. You leave with honest feedback and a clear next step.',
+    ph_p1t:'Real experience', ph_p1:'Mentors are reviewed before their profile goes live.', ph_p2t:'Focused sessions', ph_p2:'45 minutes on your resume, interviews or next move.', ph_p3t:'A plan to follow', ph_p3:'Your mentor can send you a written plan after the session.',
+    ph_cta_t:'Share what you have learned', ph_cta_b:'Help people take the next step in a career you know well. Set your own rate and hours, and meet clients by private video call.',
     nav_login:'Log in'
   },
   fa: {
@@ -1546,16 +1583,21 @@ const I18N = {
     ag_fu_title:"برنامهٔ پیگیری", ag_fu_title2:"پیش از ارسال بررسی کنید",
     ag_fu_banner_1:"ارسال برنامهٔ پیگیری برای {n}", ag_fu_banner_n:"{n} جلسهٔ پایان‌یافته در انتظار پیگیری است", ag_fu_banner_sub:"چند یادداشت از جلسه وارد کنید تا دستیار گام‌های بعدی را برای مراجع شما پیش‌نویس کند. مراجعانی که پیگیری دریافت می‌کنند بیشتر دوباره رزرو می‌کنند.", ag_fu_banner_btn:"نوشتن پیگیری",
     ag_help_sub:"رزرو، پرداخت، تماس و بازپرداخت", ag_help_q1:"رزرو جلسه چگونه انجام می‌شود؟", ag_help_q2:"شرایط بازپرداخت چیست؟", ag_help_q3:"چگونه منتور شوم؟", ag_help_q4:"آیا تماس تصویری خصوصی است؟",
+    ag_help_q5:'دربارهٔ رزرو خود به کمک نیاز دارم', ag_tk_title:'درخواست پشتیبانی {id} ثبت شد', ag_tk_sub:'تأییدیه به ایمیل شما ارسال شد. تیم ما ظرف یک روز کاری پاسخ می‌دهد.',
     ag_signin:"لطفاً برای ادامه وارد حساب خود شوید.", ag_writing:"در حال آماده‌سازی پاسخ…", ag_sending:'در حال ارسال…', ag_send:'ارسال', ag_reset:'شروع دوباره', ag_cancel:"انصراف",
     ag_ob_title:"تکمیل پروفایل با کمک دستیار", ag_ob_sub:"به چند پرسش پاسخ دهید یا رزومه یا خلاصهٔ لینکدین خود را وارد کنید. دستیار فرم زیر را تکمیل می‌کند تا پیش از ارسال آن را بررسی کنید.",
     ag_ob_hello:"سلام و به Workar خوش آمدید. خوشحال می‌شوم در تکمیل پروفایل منتوری به شما کمک کنم. لطفاً بفرمایید در حال حاضر در چه سمتی فعالیت می‌کنید و چند سال سابقه دارید؟ در صورت تمایل می‌توانید رزومه یا خلاصهٔ لینکدین خود را وارد کنید.",
     ag_ob_ph:"پاسخ خود را بنویسید یا رزومه را وارد کنید", ag_ob_foot:"همهٔ موارد در فرم قابل ویرایش است.", ag_ob_ready:"سپاسگزارم. اطلاعات اصلی تکمیل شد. لطفاً فرم را بررسی کنید، نام، لینکدین و نرخ جلسه را وارد کرده و ارسال کنید.",
     ag_fu_btn:"ارسال برنامهٔ پیگیری", ag_fu_again:"ارسال پیگیری دیگر", ag_fu_notes_lbl:"لطفاً یادداشت‌های کوتاهی از جلسه وارد کنید. دستیار آن را به برنامه‌ای روشن تبدیل می‌کند که پیش از ارسال قابل ویرایش است.", ag_fu_notes_ph:"برای مثال: خلاصهٔ رزومه را بررسی کردیم، دو نمونه پاسخ به روش STAR تمرین شود، درخواست برای ۵ موقعیت، جلسهٔ بعد دو هفتهٔ دیگر",
     ag_fu_write:"نوشتن برنامه", ag_fu_review_lbl:"لطفاً پیش از ارسال بررسی و ویرایش کنید. این متن به صورت پیام و ایمیل برای مراجع ارسال می‌شود.", ag_fu_send:"ارسال برای مراجع", ag_fu_back:"بازگشت به یادداشت‌ها", ag_fu_short:"لطفاً ابتدا کمی جزئیات بیشتری به یادداشت‌ها اضافه کنید.", ag_fu_done:"پیگیری شما ارسال شد. مراجع آن را به صورت پیام و ایمیل دریافت کرد.", ag_fu_sent_toast:'پیگیری ارسال شد',
-    ag_help_btn:'راهنما', ag_help_close:'بستن', ag_help_title:"پشتیبانی Workar", ag_help_hello:"سلام و از مراجعهٔ شما به Workar سپاسگزاریم. چگونه می‌توانم کمکتان کنم؟ می‌توانم به پرسش‌های شما دربارهٔ رزرو، پرداخت، تماس تصویری، بازپرداخت و منتور شدن پاسخ دهم.", ag_help_ph:"پرسش خود را بنویسید",
+    ag_help_btn:'راهنما', ag_help_close:'بستن', ag_help_title:"پشتیبانی Workar", ag_help_hello:"سلام و از مراجعهٔ شما به Workar سپاسگزاریم. چگونه می‌توانم کمکتان کنم؟ به پرسش‌های شما دربارهٔ رزرو، پرداخت، تماس تصویری و بازپرداخت پاسخ می‌دهم، در صورت ورود به حساب وضعیت جلسات شما را بررسی می‌کنم و هر موضوع دیگری را به تیم پشتیبانی ارجاع می‌دهم.", ag_help_ph:"پرسش خود را بنویسید",
     hero_trust1:'پروفایل هر منتور پیش از انتشار بررسی می‌شود', hero_trust2:'پرداخت فقط پس از پذیرش درخواست توسط منتور انجام می‌شود', hero_trust3:'تماس تصویری خصوصی و دعوت‌نامهٔ تقویم برای هر جلسه',
     hm_title:'از وضعیت خود بگویید', hm_sub:'شرایط خود را در یک یا دو جمله توضیح دهید تا منتورهای مناسب را به شما پیشنهاد کنیم.', hm_ph:'برای مثال: سه سال در تست نرم‌افزار کار کرده‌ام و می‌خواهم وارد مدیریت محصول شوم.',
     hm_ex1:'ورود از تست نرم‌افزار به مدیریت محصول', hm_ex2:'آمادگی برای مصاحبه‌های مهندسی ارشد', hm_ex3:'شروع مسیر شغلی پس از مهاجرت به کانادا', hm_btn:'یافتن منتور من', hm_note:'جستجو رایگان است و نیازی به حساب کاربری ندارد.',
+    ph_alt_a:'منتوری که با دو متخصص یک برنامه را روی لپ‌تاپ بررسی می‌کند', ph_alt_b:'گفت‌وگوی دونفره میان دو متخصص', ph_alt_c:'همکارانی که در کنار قهوه اسناد را بررسی می‌کنند', ph_alt_d:'جلسهٔ منتور با دو متخصص در دفتری مدرن',
+    ph_kicker:'راهنمایی دونفره', ph_title:'مشاوره از کسی که پیش‌تر جای شما بوده است', ph_body:'هر جلسه گفت‌وگویی خصوصی با متخصصی است که همان مسیری را پیموده که شما در پیش دارید. با بازخوردی صادقانه و گام بعدی روشن جلسه را ترک می‌کنید.',
+    ph_p1t:'تجربهٔ واقعی', ph_p1:'پروفایل منتورها پیش از انتشار بررسی می‌شود.', ph_p2t:'جلسات متمرکز', ph_p2:'۴۵ دقیقه برای رزومه، مصاحبه یا گام بعدی شما.', ph_p3t:'برنامه‌ای برای ادامهٔ مسیر', ph_p3:'منتور می‌تواند پس از جلسه برنامه‌ای مکتوب برای شما ارسال کند.',
+    ph_cta_t:'تجربهٔ خود را به اشتراک بگذارید', ph_cta_b:'به دیگران کمک کنید در مسیری که به خوبی می‌شناسید گام بعدی را بردارند. نرخ و ساعات کاری را خودتان تعیین می‌کنید و با مراجعان از طریق تماس تصویری خصوصی دیدار می‌کنید.',
     nav_login:'ورود'
   }
 };
@@ -3811,6 +3853,7 @@ document.addEventListener('keydown', e=>{
   if(e.key==='ArrowLeft'){ const b=document.getElementById('gd-prev'); if(b && !b.disabled){ b.click(); e.preventDefault(); } }
 });
 
+const PHOTOS = { a:'https://images.pexels.com/photos/8112165/pexels-photo-8112165.jpeg?auto=compress&cs=tinysrgb&w=1100', a2:'https://images.pexels.com/photos/8112165/pexels-photo-8112165.jpeg?auto=compress&cs=tinysrgb&w=2000', b:'https://images.pexels.com/photos/8439650/pexels-photo-8439650.jpeg?auto=compress&cs=tinysrgb&w=700', c:'https://images.pexels.com/photos/8112158/pexels-photo-8112158.jpeg?auto=compress&cs=tinysrgb&w=700', d:'https://images.pexels.com/photos/7821522/pexels-photo-7821522.jpeg?auto=compress&cs=tinysrgb&w=1000', e:'https://images.pexels.com/photos/8112162/pexels-photo-8112162.jpeg?auto=compress&cs=tinysrgb&w=1600' };
 function homeView(){
   const mentors = Object.entries(cache.profiles).slice(0,3);
   return `
@@ -3822,8 +3865,36 @@ function homeView(){
       <button class="btn btn-outline" data-nav="onboard" data-role="mentor">${esc(T('cta_become'))}</button>
     </div>
   </div>
+  <!-- Photos: Pexels (free licence, no attribution required). Swap the IDs in PHOTOS to change them. -->
+  <div class="ph-mosaic reveal" aria-hidden="false">
+    <figure class="ph ph-a"><img src="${PHOTOS.a}" srcset="${PHOTOS.a} 1x, ${PHOTOS.a2} 2x" alt="${esc(T('ph_alt_a'))}" loading="eager" decoding="async" onerror="this.closest('figure').remove()"></figure>
+    <figure class="ph ph-b"><img src="${PHOTOS.b}" alt="${esc(T('ph_alt_b'))}" loading="lazy" decoding="async" onerror="this.closest('figure').remove()"></figure>
+    <figure class="ph ph-c"><img src="${PHOTOS.c}" alt="${esc(T('ph_alt_c'))}" loading="lazy" decoding="async" onerror="this.closest('figure').remove()"></figure>
+  </div>
 
   ${landingSections()}
+  <section class="ph-split reveal">
+    <figure class="ph ph-tall"><img src="${PHOTOS.d}" alt="${esc(T('ph_alt_d'))}" loading="lazy" decoding="async" onerror="this.closest('figure').remove()"></figure>
+    <div class="ph-copy">
+      <span class="ph-kicker">${esc(T('ph_kicker'))}</span>
+      <h2>${esc(T('ph_title'))}</h2>
+      <p>${esc(T('ph_body'))}</p>
+      <ul class="ph-points">
+        <li><b>${esc(T('ph_p1t'))}</b><span>${esc(T('ph_p1'))}</span></li>
+        <li><b>${esc(T('ph_p2t'))}</b><span>${esc(T('ph_p2'))}</span></li>
+        <li><b>${esc(T('ph_p3t'))}</b><span>${esc(T('ph_p3'))}</span></li>
+      </ul>
+      <button class="btn btn-primary" data-nav="browse">${esc(T('cta_browse'))}</button>
+    </div>
+  </section>
+  <section class="ph-cta reveal">
+    <img src="${PHOTOS.e}" alt="" loading="lazy" decoding="async" onerror="this.remove()">
+    <div class="ph-cta-in">
+      <h2>${esc(T('ph_cta_t'))}</h2>
+      <p>${esc(T('ph_cta_b'))}</p>
+      <button class="btn btn-primary" data-nav="onboard" data-role="mentor">${esc(T('cta_become'))}</button>
+    </div>
+  </section>
   `;
 }
 
@@ -5315,6 +5386,11 @@ init();
   .ag-progress{display:flex;align-items:center;gap:8px;}
   .ag-bar{width:110px;height:6px;border-radius:99px;background:var(--border);overflow:hidden;}
   .ag-bar b{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .4s;}
+  .ag-m a{color:inherit;font-weight:700;text-decoration:underline;text-underline-offset:2px;word-break:break-all;}
+  .ag-ticket{align-self:stretch;display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border:1px solid var(--border);border-inline-start:3px solid var(--accent);border-radius:12px;background:var(--surface);}
+  .ag-ticket-ico{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:var(--accent-ink);font-size:13px;font-weight:800;}
+  .ag-ticket b{display:block;color:var(--text);font-size:14px;}
+  .ag-ticket div span{display:block;color:var(--muted);font-size:13px;line-height:1.45;margin-top:2px;}
   .ag-link{background:none;border:0;padding:0;color:var(--muted);text-decoration:underline;cursor:pointer;font:inherit;font-size:13px;}
   .ag-inline{display:inline-flex;align-items:center;gap:6px;margin-top:8px;background:none;border:1px dashed var(--accent);color:var(--accent);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;}
   .ag-inline[disabled]{opacity:.6;cursor:wait;}
@@ -5351,7 +5427,14 @@ init();
   function ensureStyle(){ if(!document.getElementById('ag-css')){ const s=document.createElement('style'); s.id='ag-css'; s.textContent=STYLE; document.head.appendChild(s); } }
   function grow(ta){ ta.style.height='auto'; ta.style.height=Math.min(ta.scrollHeight,160)+'px'; }
   function head(title, sub, extra){ return `<div class="ag-card-head"><span class="ag-badge">${SPARK}</span><div><h3>${h(title)}</h3>${sub?`<p>${h(sub)}</p>`:''}</div>${extra||''}</div>`; }
-  function logHtml(msgs, busy, err){ return msgs.map(m=>`<div dir="auto" class="ag-m ${m.role==='user'?'me':'ai'}">${h(m.content)}</div>`).join('') + (busy?`<div class="ag-dots" role="status" aria-label="${h(t('ag_writing'))}"><i></i><i></i><i></i></div>`:'') + (err?`<div class="ag-m err">${h(err)}</div>`:''); }
+  // Clickable links and email addresses inside assistant messages (text is escaped first).
+  function linkify(text){
+    return h(text)
+      .replace(/(https?:\/\/[^\s<]+[^\s<.,;:!?)])/g, '<a href="$1" target="_blank" rel="noopener">$1</a>')
+      .replace(/(^|[\s(])([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})/g, '$1<a href="mailto:$2">$2</a>');
+  }
+  function ticketCard(tk){ return `<div class="ag-ticket" role="status"><span class="ag-ticket-ico" aria-hidden="true"><svg viewBox="0 0 16 16" width="12" height="12"><path d="M3.5 8.4l2.9 2.8 6.1-6.4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><b>${h(t('ag_tk_title').replace('{id}', tk.id))}</b><span>${h(t('ag_tk_sub'))}</span></div></div>`; }
+  function logHtml(msgs, busy, err){ return msgs.map(m=>`<div dir="auto" class="ag-m ${m.role==='user'?'me':'ai'}">${m.role==='user'?h(m.content):linkify(m.content)}</div>${m.ticket?ticketCard(m.ticket):''}`).join('') + (busy?`<div class="ag-dots" role="status" aria-label="${h(t('ag_writing'))}"><i></i><i></i><i></i></div>`:'') + (err?`<div class="ag-m err">${h(err)}</div>`:''); }
   function chat(box, opts){ // shared chat wiring
     const ta = box.querySelector('textarea'), btn = box.querySelector('.ag-row .btn');
     const go = ()=>{ const v = ta.value.trim(); if(!v || opts.busy()) return; opts.send(v); };
@@ -5557,14 +5640,18 @@ init();
     if(!hd.open){ if(p) p.remove(); return; }
     if(!hd.messages) hd.messages = [{ role:'assistant', content:t('ag_help_hello') }];
     if(!p){ p=document.createElement('div'); p.id='ag-help'; p.className='ag-help'; p.setAttribute('role','dialog'); p.setAttribute('aria-label', t('ag_help_title')); document.body.appendChild(p); }
-    const chips = hd.messages.length<=1 ? `<div class="ag-chips">${['ag_help_q1','ag_help_q2','ag_help_q3','ag_help_q4'].map(k=>`<button type="button" class="ag-chip" data-ag-chip="${h(t(k))}">${h(t(k))}</button>`).join('')}</div>` : '';
+    const chips = hd.messages.length<=1 ? `<div class="ag-chips">${['ag_help_q1','ag_help_q2','ag_help_q5','ag_help_q3','ag_help_q4'].map(k=>`<button type="button" class="ag-chip" data-ag-chip="${h(t(k))}">${h(t(k))}</button>`).join('')}</div>` : '';
     p.innerHTML = `${head(t('ag_help_title'), t('ag_help_sub'), `<button type="button" class="ag-x" aria-label="${h(t('ag_help_close'))}">×</button>`)}
       <div class="ag-log" aria-live="polite">${logHtml(hd.messages, hd.busy, hd.error)}</div>${chips}
       <div class="ag-row"><textarea rows="1" aria-label="${h(t('ag_help_ph'))}" placeholder="${h(t('ag_help_ph'))}"></textarea><button type="button" class="btn btn-primary btn-sm" ${hd.busy?'disabled':''}>${h(t('ag_send'))}</button></div>`;
     const close = ()=>{ hd.open=false; drawHelp(); const b=document.getElementById('ag-help-btn'); if(b) b.focus(); };
     const ta = chat(p, { busy:()=>hd.busy, esc:close, send: async v=>{
       hd.error=''; hd.messages.push({ role:'user', content:v }); hd.busy=true; drawHelp();
-      try{ const d = await api({ task:'help', messages: hd.messages }, false); hd.messages.push({ role:'assistant', content:d.reply }); }
+      try{
+        const d = await api({ task:'help', messages: hd.messages.map(m=>({ role:m.role, content:m.content })) }, false);
+        const msg = { role:'assistant', content:d.reply }; if(d.ticket && d.ticket.id) msg.ticket = d.ticket;
+        hd.messages.push(msg);
+      }
       catch(err){ hd.messages.pop(); hd.error = err.message; }
       hd.busy=false; drawHelp(); const nt = document.querySelector('#ag-help textarea'); if(nt && hd.error) nt.value=v;
     }});
