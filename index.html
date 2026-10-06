@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#8B6A4C" media="(prefers-color-scheme: light)">
@@ -1042,157 +1040,6 @@
   .voice-detail{flex-basis:100%;font-size:12px;color:#A0612F;margin-top:6px;word-break:break-word;}
   #voice-test{margin-inline-start:4px;}
 
-/* =====================================================================
-   WORKAR PROFESSIONAL THEME (Oct 2026)
-   Evergreen ink + brass (from the logo), crisp white, serif headlines.
-   This block overrides the earlier styles; remove it to go back.
-   ===================================================================== */
-:root{
-  --bg:#FFFFFF; --surface:#FFFFFF; --surface-2:#F3F5F2;
-  --accent:#1E4A40; --accent-ink:#FFFFFF; --accent-2:#A57A3F;
-  --text:#1B2B27; --muted:#5D6B66; --border:#E1E6E1; --danger:#B23A2E;
-  --ink-soft:#2F423D; --brass-soft:#F6EFE4; --ok:#2E7D5B;
-  --radius-sm:8px; --radius-md:12px; --radius-lg:16px;
-  --shadow:0 1px 2px rgba(16,32,28,.05), 0 6px 20px rgba(16,32,28,.06);
-  --shadow-lg:0 2px 4px rgba(16,32,28,.05), 0 24px 48px -12px rgba(16,32,28,.18);
-  --serif:'Newsreader','Vazirmatn',Georgia,'Times New Roman',serif;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#0E1714; --surface:#15211D; --surface-2:#1B2A25;
-    --accent:#7FC2AE; --accent-ink:#0E1714; --accent-2:#D3AD72;
-    --text:#E7EDEA; --muted:#9DB0A9; --border:#263732; --danger:#F08A7E;
-    --ink-soft:#C9D6D1; --brass-soft:#2A2519; --ok:#6CC59C;
-    --shadow:0 1px 2px rgba(0,0,0,.35), 0 10px 26px rgba(0,0,0,.35);
-    --shadow-lg:0 2px 4px rgba(0,0,0,.35), 0 24px 48px -12px rgba(0,0,0,.6);
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#0E1714; --surface:#15211D; --surface-2:#1B2A25;
-  --accent:#7FC2AE; --accent-ink:#0E1714; --accent-2:#D3AD72;
-  --text:#E7EDEA; --muted:#9DB0A9; --border:#263732; --danger:#F08A7E;
-  --ink-soft:#C9D6D1; --brass-soft:#2A2519; --ok:#6CC59C;
-  --shadow:0 1px 2px rgba(0,0,0,.35), 0 10px 26px rgba(0,0,0,.35);
-  --shadow-lg:0 2px 4px rgba(0,0,0,.35), 0 24px 48px -12px rgba(0,0,0,.6);
-}
-
-body{font-size:15.5px;line-height:1.6;text-rendering:optimizeLegibility;}
-#app{max-width:1120px;padding:0 24px 96px;}
-::selection{background:color-mix(in srgb,var(--accent) 22%,transparent);}
-
-/* Headlines: serif for Latin, Vazirmatn for Persian */
-h1,h2,.lp-title,.ob-head h2,.section-head h2,.pp-hero h1,.auth-side h2,.price-amount,.mp-name,.pp-bundle h3{font-family:var(--serif);font-weight:600;letter-spacing:-.012em;}
-html[dir="rtl"] h1,html[dir="rtl"] h2,html[dir="rtl"] .lp-title,html[dir="rtl"] .ob-head h2,html[dir="rtl"] .section-head h2{font-family:'Vazirmatn',sans-serif;font-weight:800;letter-spacing:0;}
-h3{letter-spacing:-.005em;}
-
-/* Navigation: quiet, sticky, underline for the current page */
-.nav{position:sticky;top:0;z-index:50;margin:0 -24px 40px;padding:14px 24px;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--border);}
-.brand img.logo-mark{height:44px;}
-.brand .tag{color:var(--muted);font-size:12px;letter-spacing:.01em;}
-.navlinks{gap:2px;}
-.navlink{border-radius:8px;padding:8px 12px;color:var(--ink-soft);font-weight:500;border:0;position:relative;}
-.navlink:hover{color:var(--text);background:var(--surface-2);}
-.navlink.active{background:transparent;color:var(--text);font-weight:700;border:0;}
-.navlink.active::after{content:"";position:absolute;left:12px;right:12px;bottom:2px;height:2px;border-radius:2px;background:var(--accent-2);}
-.lang-switch{border-radius:8px;color:var(--text);background:var(--surface);font-weight:600;}
-
-/* Buttons */
-.btn{border-radius:10px;font-weight:600;letter-spacing:.005em;transition:background-color .15s,border-color .15s,color .15s,box-shadow .15s;}
-.btn:active{transform:none;}
-.btn-primary{background:var(--accent);color:var(--accent-ink);box-shadow:0 1px 0 rgba(255,255,255,.08) inset,0 1px 2px rgba(16,32,28,.18);}
-.btn-primary:hover{background:color-mix(in srgb,var(--accent) 88%,#000);box-shadow:0 1px 2px rgba(16,32,28,.2);}
-.btn-outline{background:var(--surface);border-color:color-mix(in srgb,var(--text) 18%,transparent);color:var(--text);}
-.btn-outline:hover{border-color:var(--text);}
-.btn-ghost{color:var(--ink-soft);}
-.btn-ghost:hover{color:var(--text);background:var(--surface-2);}
-.btn:focus-visible,.navlink:focus-visible,.lang-switch:focus-visible,.card:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px;}
-
-/* Forms: white fields, clear borders, calm focus */
-.field label{font-weight:600;font-size:13.5px;color:var(--text);}
-.field input,.field textarea,.field select{background:var(--surface);border:1px solid color-mix(in srgb,var(--text) 16%,transparent);border-radius:10px;padding:11px 13px;transition:border-color .15s,box-shadow .15s;}
-.field input:hover,.field textarea:hover,.field select:hover{border-color:color-mix(in srgb,var(--text) 30%,transparent);}
-.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent);}
-.field input::placeholder,.field textarea::placeholder{color:color-mix(in srgb,var(--muted) 80%,transparent);}
-
-/* Surfaces */
-.panel,.card,.hero-card,.price-card,.pp-card,.req,.dash-edit,.role-opt,.auth-wrap{border-color:var(--border);}
-.panel{border-radius:var(--radius-lg);box-shadow:var(--shadow);}
-.card{border-radius:var(--radius-lg);transition:border-color .15s,box-shadow .2s;}
-.card:hover{border-color:color-mix(in srgb,var(--accent) 35%,var(--border));box-shadow:var(--shadow);}
-.chip{background:var(--surface-2);border-color:transparent;color:var(--ink-soft);font-size:12px;border-radius:6px;padding:3px 9px;}
-.avatar{background:var(--brass-soft);color:var(--accent-2);font-weight:700;}
-.empty{border-style:solid;background:var(--surface-2);border-color:transparent;color:var(--muted);}
-.status-pill{border-radius:6px;}
-.status-pill.done{color:var(--ok);border-color:var(--ok);}
-.toast{border-radius:10px;background:var(--text);color:var(--bg);}
-.role-opt.selected{background:color-mix(in srgb,var(--accent) 5%,var(--surface));}
-
-/* ---------- Home: hero ---------- */
-.hero.hero-pro{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:56px;align-items:center;padding:28px 0 72px;text-align:start;}
-.hero-pro h1{font-size:clamp(36px,4.6vw,56px);line-height:1.06;margin:0 0 20px;max-width:15ch;color:var(--text);}
-.hero-pro h1 i{font-style:normal;color:inherit;}
-.hero-pro p.lede{font-size:18px;line-height:1.6;color:var(--ink-soft);max-width:46ch;margin:0 0 30px;}
-.hero-pro .hero-actions .btn{padding:13px 22px;font-size:15px;}
-.hero-trust{list-style:none;margin:34px 0 0;padding:22px 0 0;border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;}
-.hero-trust li{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;line-height:1.45;color:var(--ink-soft);}
-.hero-trust svg{flex:none;margin-top:1px;color:var(--accent-2);}
-.hero-match{background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow-lg);padding:26px;position:relative;}
-.hero-match h2{font-size:22px;margin:0 0 6px;}
-.hero-match p{margin:0 0 16px;color:var(--muted);font-size:14px;line-height:1.5;}
-.hero-match textarea{width:100%;min-height:104px;resize:vertical;padding:13px 14px;border:1px solid color-mix(in srgb,var(--text) 16%,transparent);border-radius:12px;background:var(--surface);color:var(--text);font:inherit;font-size:15px;line-height:1.5;box-sizing:border-box;}
-.hero-match textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent);}
-.hero-examples{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 16px;}
-.hero-examples button{border:1px solid var(--border);background:var(--surface-2);color:var(--ink-soft);border-radius:8px;padding:6px 10px;font:inherit;font-size:12.5px;cursor:pointer;text-align:start;}
-.hero-examples button:hover{border-color:var(--accent);color:var(--text);}
-.hero-match .btn{width:100%;padding:13px 18px;}
-.hero-match small{display:block;margin-top:12px;color:var(--muted);font-size:12.5px;text-align:center;}
-@media (max-width:900px){.hero.hero-pro{grid-template-columns:1fr;gap:36px;padding-bottom:48px}.hero-trust{grid-template-columns:1fr;gap:10px}.hero-match::before{display:none}}
-
-/* ---------- Home: sections ---------- */
-.lp-section{padding:72px 0 16px;}
-.lp-section.alt{background:var(--surface-2);border-radius:24px;padding:64px 40px 48px;}
-.lp-title{font-size:clamp(28px,3.2vw,38px);line-height:1.15;margin:0 0 10px;}
-.lp-sub{font-size:16.5px;color:var(--muted);}
-.lp-bar{width:40px;height:2px;background:var(--accent-2);opacity:1;margin:22px auto 44px;}
-/* "Why Workar" as a clean ruled strip instead of circles */
-.why-row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
-.why-bubble{width:auto;height:auto;border-radius:0;border:0;border-inline-start:1px solid var(--border);background:transparent;box-shadow:none;padding:26px 18px;align-items:flex-start;text-align:start;justify-content:flex-start;}
-.why-bubble:first-child{border-inline-start:0;}
-.why-bubble b{font-family:var(--serif);font-weight:600;font-size:34px;color:var(--text);}
-html[dir="rtl"] .why-bubble b{font-family:'Vazirmatn',sans-serif;font-weight:800;}
-.why-bubble b.word{font-size:28px;}
-.why-bubble span{font-weight:400;color:var(--muted);font-size:13.5px;margin-top:8px;}
-@media (max-width:860px){.why-row{grid-template-columns:repeat(2,minmax(0,1fr))}.why-bubble{border-inline-start:0;border-top:1px solid var(--border)}.why-bubble:nth-child(-n+2){border-top:0}}
-.step{text-align:start;}
-.step-ico{margin:0 0 16px;width:56px;height:56px;}
-.step h3{font-size:18px;font-weight:700;}
-.step h3 em{color:var(--accent-2);}
-.price-card{border-radius:var(--radius-lg);box-shadow:none;transition:box-shadow .2s,border-color .2s;}
-.price-card:hover{box-shadow:var(--shadow);}
-.price-card.featured{border:1.5px solid var(--accent);box-shadow:var(--shadow-lg);}
-.price-badge{background:var(--accent);border-radius:6px;font-weight:700;}
-.price-name{color:var(--text);font-weight:700;}
-.price-amount{font-size:42px;}
-.price-save{color:var(--accent-2);}
-.price-list li::before{border-color:var(--accent);}
-.reveal{transform:translateY(12px);transition:opacity .6s ease,transform .6s ease;}
-html[dir="rtl"] .reveal{transform:translateY(12px);}
-
-/* ---------- Other pages ---------- */
-.ob-head h2{font-size:34px;}
-.ob-num{border-color:var(--accent-2);color:var(--accent-2);}
-.ob-preview .card{box-shadow:var(--shadow-lg);}
-.ob-steps{background:var(--surface-2);border-color:transparent;}
-.auth-side{background:#16302A;color:#E9EFEC;}
-.auth-side h2{color:#FFFFFF;}
-.section-head h2{font-size:26px;}
-.dash-edit{border-radius:var(--radius-lg);}
-.req{border-radius:var(--radius-lg);}
-footer{margin-top:48px;padding:40px 0 16px;border-top:1px solid var(--border);color:var(--muted);}
-footer a{text-decoration:none;}
-footer a:hover{color:var(--text);text-decoration:underline;}
-@media (prefers-reduced-motion:reduce){.btn,.card,.price-card{transition:none}}
-@media (max-width:700px){.nav{position:static;backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--bg);margin-bottom:24px}}
 </style>
 </head>
 <body>
@@ -1463,9 +1310,9 @@ const I18N = {
   },
   fa: {
     tag:'راهنمای مسیر شغلی', nav_home:'خانه', nav_browse:'پیدا کردن منتور', nav_coach:'مربی هوش مصنوعی', nav_dash:'پروفایل من', nav_start:'شروع کن',
-    hero_h1a:"کسی را پیدا کنید که ", hero_h1em:"پیش‌تر همین مسیر را", hero_h1b:" پیموده است.",
-    hero_sub:"Workar افرادی را که در حال ساختن مسیر شغلی خود هستند به منتورهایی متصل می‌کند که خود این کار را تجربه کرده‌اند؛ بازخورد واقعی دربارهٔ رزومه، مصاحبه‌ها و گام بعدی شما.",
-    cta_browse:"مشاهدهٔ منتورها", cta_become:"منتور شوید",
+    hero_h1a:'', hero_h1em:'کسی که قبلاً همین مسیر رو رفته', hero_h1b:' رو پیدا کن.',
+    hero_sub:'Workar آدم‌هایی که دارن مسیر شغلی‌شونو می‌سازن رو به منتورهایی که خودشون این کار رو تجربه کردن وصل می‌کنه — فیدبک واقعی برای رزومه، مصاحبه و قدم بعدیت.',
+    cta_browse:'مشاهده منتورها', cta_become:'منتور شو',
     stat_mentors:'منتور در Workar', stat_reviews:'ریویو نوشته‌شده', stat_realtime:'گفتگوی واقعی',
     no_mentors_yet:'هنوز منتوری نیست', be_first:'اولین نفری باش که ثبت‌نام می‌کنه',
     from_price:'از {p} دلار / جلسه', sec_links_only:'لینک‌ها',
@@ -3967,30 +3814,14 @@ document.addEventListener('keydown', e=>{
 function homeView(){
   const mentors = Object.entries(cache.profiles).slice(0,3);
   return `
-  <section class="hero hero-pro">
-    <div class="hero-copy">
-      <h1>${esc(T('hero_h1a'))}<i>${esc(T('hero_h1em'))}</i>${esc(T('hero_h1b'))}</h1>
-      <p class="lede">${esc(T('hero_sub'))}</p>
-      <div class="hero-actions">
-        <button class="btn btn-primary" data-nav="browse">${esc(T('cta_browse'))}</button>
-        <button class="btn btn-outline" data-nav="onboard" data-role="mentor">${esc(T('cta_become'))}</button>
-      </div>
-      <ul class="hero-trust">
-        <li><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="10" cy="10" r="9" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M6 10.4l2.6 2.5L14 7.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>${esc(T('hero_trust1'))}</span></li>
-        <li><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="10" cy="10" r="9" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M6 10.4l2.6 2.5L14 7.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>${esc(T('hero_trust2'))}</span></li>
-        <li><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="10" cy="10" r="9" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M6 10.4l2.6 2.5L14 7.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>${esc(T('hero_trust3'))}</span></li>
-      </ul>
+  <div class="hero hero-solo">
+    <h1>${esc(T('hero_h1a'))}<i>${esc(T('hero_h1em'))}</i>${esc(T('hero_h1b'))}</h1>
+    <p>${esc(T('hero_sub'))}</p>
+    <div class="hero-actions">
+      <button class="btn btn-primary" data-nav="browse">${esc(T('cta_browse'))}</button>
+      <button class="btn btn-outline" data-nav="onboard" data-role="mentor">${esc(T('cta_become'))}</button>
     </div>
-    <div class="hero-match">
-      <h2>${esc(T('hm_title'))}</h2>
-      <p>${esc(T('hm_sub'))}</p>
-      <label for="hero-match-input" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">${esc(T('hm_title'))}</label>
-      <textarea id="hero-match-input" placeholder="${esc(T('hm_ph'))}"></textarea>
-      <div class="hero-examples">${['hm_ex1','hm_ex2','hm_ex3'].map(k=>`<button type="button" data-hm-ex="${esc(T(k))}">${esc(T(k))}</button>`).join('')}</div>
-      <button type="button" class="btn btn-primary" id="hero-match-go">${esc(T('hm_btn'))}</button>
-      <small>${esc(T('hm_note'))}</small>
-    </div>
-  </section>
+  </div>
 
   ${landingSections()}
   `;
