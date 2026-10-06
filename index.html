@@ -1044,7 +1044,8 @@
 /* ---------- Photos (keeps the original colour scheme) ---------- */
 .ph{margin:0;overflow:hidden;border-radius:var(--radius-lg,22px);background:var(--surface-2);box-shadow:var(--shadow, 0 10px 30px rgba(74,53,38,.10));}
 .ph img{display:block;width:100%;height:100%;object-fit:cover;filter:saturate(.92) sepia(.06);}
-.ph-mosaic{display:grid;grid-template-columns:2fr 1fr;grid-template-rows:1fr 1fr;gap:14px;height:440px;margin:8px 0 72px;}
+.ph-mosaic{display:grid;grid-template-columns:2fr 1fr;grid-template-rows:213px 213px;gap:14px;margin:8px 0 72px;}
+.ph-mosaic:not(:has(figure)){display:none;}
 .ph-a{grid-row:1 / span 2;}
 .ph-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px;align-items:center;margin:96px 0 24px;}
 .ph-tall{aspect-ratio:4/5;max-height:560px;}
@@ -1072,6 +1073,197 @@ html[dir="rtl"] .ph-cta::after{background:linear-gradient(270deg,rgba(43,31,22,.
   .ph-cta-in{padding:32px 24px}
   .ph-cta::after{background:rgba(43,31,22,.72)}
 }
+
+/* ---------- Career routes, sample plan, quick start, FAQ (original colours) ---------- */
+.rt{margin:24px 0 40px;}
+.rt-head{max-width:640px;margin:0 auto 34px;text-align:center;}
+.rt-head h2,.ex-copy h2,.qs h2,.fq-head h2{font-size:clamp(26px,3vw,36px);line-height:1.2;margin:0 0 12px;color:var(--text);}
+.rt-head p,.ex-copy>p,.fq-head p{color:var(--muted);font-size:16px;line-height:1.7;margin:0;}
+.rt-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;}
+.rt-card{position:relative;border-radius:var(--radius-lg,22px);overflow:hidden;background:var(--surface);border:1px solid var(--border);display:flex;flex-direction:column;box-shadow:0 10px 30px rgba(74,53,38,.07);transition:transform .25s,box-shadow .25s;}
+.rt-card:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(74,53,38,.13);}
+.rt-art svg{display:block;width:100%;height:auto;}
+.rt-num{position:absolute;top:14px;inset-inline-end:16px;color:var(--accent);font-weight:800;font-size:12.5px;letter-spacing:.12em;}
+.rt-badge{position:absolute;top:12px;inset-inline-start:12px;width:40px;height:40px;border-radius:50%;background:#FFFDF9;display:grid;place-items:center;box-shadow:0 4px 14px rgba(74,53,38,.18);animation:badgeFloat 6s ease-in-out infinite;animation-delay:var(--d,0s);z-index:2;}
+.rt-badge img{width:26px;height:auto;display:block;}
+.rt-badge.sm{position:static;width:34px;height:34px;animation:none;box-shadow:none;border:1px solid var(--border);}
+.rt-badge.sm img{width:22px;}
+.reveal.in .rt-badge{animation:badgeStamp .9s cubic-bezier(.2,.9,.3,1.3) both, badgeFloat 6s ease-in-out .9s infinite;animation-delay:var(--d,0s), calc(var(--d,0s) + .9s);}
+.rt-body{padding:18px 18px 20px;display:flex;flex-direction:column;flex:1;}
+.rt-tag{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-2,var(--accent));margin-bottom:6px;}
+html[dir="rtl"] .rt-tag,html[dir="rtl"] .rt-num{letter-spacing:0;}
+.rt-body h3{margin:0 0 6px;font-size:18px;line-height:1.3;color:var(--text);}
+.rt-body p{margin:0;color:var(--muted);font-size:14px;line-height:1.55;flex:1;}
+.rt-cta{text-align:center;margin-top:30px;}
+.rt-cta .btn{padding:13px 30px;}
+@keyframes badgeFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes badgeStamp{0%{opacity:0;transform:scale(1.8) rotate(-25deg)}60%{opacity:1;transform:scale(.92) rotate(4deg)}100%{transform:scale(1) rotate(0)}}
+
+.ar-wing{transform-box:fill-box;animation:arWing 1.1s ease-in-out infinite;}
+.ar-wing-l{transform-origin:right bottom;}
+.ar-wing-r{transform-origin:left bottom;}
+@keyframes arWing{0%,100%{transform:rotate(0)}50%{transform:rotate(-14deg)}}
+.ar-wing-r{animation-name:arWingR;}
+@keyframes arWingR{0%,100%{transform:rotate(0)}50%{transform:rotate(14deg)}}
+.ar-halo{animation:arHalo 2.4s ease-in-out infinite;}
+@keyframes arHalo{0%,100%{opacity:1}50%{opacity:.55}}
+.ar-sparks circle{animation:arSpark 1.6s ease-in-out infinite;}
+@keyframes arSpark{0%,100%{opacity:0;transform:translateY(4px)}50%{opacity:1;transform:translateY(-4px)}}
+
+/* topics: no cards, same type scale as the rest of the home page */
+.tp-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px;text-align:center;}
+.tp-art{max-width:230px;margin:0 auto 6px;}
+.tp-art svg{display:block;width:100%;height:auto;}
+.tp-item h3{margin:4px 0 6px;font-size:17px;line-height:1.35;color:var(--text);}
+.tp-item p{margin:0 auto;max-width:240px;color:var(--muted);font-size:14.5px;line-height:1.6;}
+.tp-item .ar-spot{transition:transform .35s ease;}
+.tp-item:hover .ar-spot{transform:translateY(-6px) rotate(-1deg);}
+.tp-cta{text-align:center;margin-top:34px;}
+.tp-cta .btn{padding:13px 30px;}
+.ex-copy .lp-title,.fq-head .lp-title{text-align:start;}
+.fq-head .lp-sub{text-align:start;margin:0;}
+.ar-twinkle{transform-box:fill-box;transform-origin:center;animation:arTwinkle 2.4s ease-in-out infinite;}
+@keyframes arTwinkle{0%,100%{opacity:.35;transform:scale(.7) rotate(0)}50%{opacity:1;transform:scale(1.1) rotate(20deg)}}
+.ar-pin{animation:arPin 2.2s ease-in-out infinite;}
+@keyframes arPin{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@media (max-width:900px){.tp-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 16px}}
+
+/* hero: headline beside an arch window */
+.hero.hero-arch{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:56px;padding:40px 0 56px;}
+.hero.hero-arch h1{font-size:44px;max-width:15ch;}
+.hero-arch .ar-hero-wrap{position:relative;max-width:440px;width:100%;margin:0 auto;}
+.hero-arch .ar-hero-wrap svg{display:block;width:100%;height:auto;border-radius:0;box-shadow:none;filter:drop-shadow(0 22px 40px rgba(74,53,38,.10));}
+.ar-chip{position:absolute;inset-inline-end:-34px;top:150px;display:flex;gap:10px;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:10px 14px 10px 12px;box-shadow:0 12px 30px rgba(74,53,38,.12);animation:chipIn .8s .6s both cubic-bezier(.2,.8,.2,1);}
+.ar-chip b{display:block;font-size:13px;color:var(--text);}
+.ar-chip small{display:block;font-size:12px;color:var(--muted);margin-top:1px;}
+.ar-chip-dot{width:26px;height:26px;border-radius:50%;background:var(--surface-2);position:relative;flex:none;}
+.ar-chip-dot::after{content:"";position:absolute;inset:8px;border-radius:50%;background:var(--accent);}
+@keyframes chipIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.ar-birds{animation:arBirds 9s ease-in-out infinite;}
+@keyframes arBirds{0%,100%{transform:translate(0,0)}50%{transform:translate(14px,-6px)}}
+@media (max-width:900px){
+  .hero.hero-arch{grid-template-columns:1fr;gap:28px;text-align:center;padding-top:24px}
+  .hero.hero-arch h1{font-size:34px;margin-left:auto;margin-right:auto}
+  .hero.hero-arch p{margin-left:auto;margin-right:auto}
+  .hero.hero-arch .hero-actions{justify-content:center}
+  .hero-arch .ar-hero-wrap{max-width:330px}
+  .ar-chip{inset-inline-end:10px;top:96px;max-width:calc(100% - 20px)}
+}
+
+.hero p.hero-note{font-size:13px;color:var(--muted);margin:16px 0 0;max-width:52ch;}
+.close{text-align:center;padding-bottom:24px;}
+.ar-crest{filter:drop-shadow(0 4px 10px rgba(74,53,38,.15));}
+
+.hero-trust{list-style:none;padding:0;margin:22px 0 0;display:flex;flex-wrap:wrap;gap:8px 18px;}
+.hero-trust li{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;font-weight:600;color:var(--text);}
+.hero-trust svg{color:var(--accent);flex:none;}
+.hero.hero-arch p{font-size:17px;line-height:1.7;color:var(--muted);max-width:44ch;}
+@media (max-width:900px){.hero-trust{justify-content:center}}
+/* topic illustrations: gentle, slow motion (stops for reduced motion) */
+.tp-art .ar-float{animation:arFloat 6s ease-in-out infinite !important;}
+.tp-art .ar-lens{animation:arLens 7s ease-in-out infinite !important;}
+.tp-art .ar-stamp{animation:arStamp 5s ease-in-out infinite !important;}
+.tp-art .ar-bubble{animation:arFloat 5s ease-in-out infinite !important;}
+.tp-art .ar-bubble.b2{animation-delay:-2.5s !important;}
+.tp-art .ar-sign{animation:arSign 4.5s ease-in-out infinite !important;}
+.tp-art .ar-pin{animation:arPin 3s ease-in-out infinite !important;}
+.tp-art .ar-twinkle{animation:arTwinkle 3s ease-in-out infinite !important;}
+.tp-item.reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease var(--d,0s),transform .7s ease var(--d,0s);}
+.tp-item.reveal.in{opacity:1;transform:none;}
+@media (prefers-reduced-motion:reduce){.tp-art *{animation:none !important}.tp-item.reveal{opacity:1;transform:none}}
+/* illustration motion */
+.ar-hero-wrap{max-width:900px;margin:8px auto 64px;}
+.ar-hero-wrap svg{display:block;width:100%;height:auto;border-radius:28px;box-shadow:0 18px 50px rgba(74,53,38,.12);}
+.ar-drift{animation:arDrift linear infinite alternate;}
+@keyframes arDrift{from{transform:translateX(-14px)}to{transform:translateX(26px)}}
+.ar-sunpulse{transform-box:fill-box;transform-origin:center;animation:arSun 6s ease-in-out infinite;}
+@keyframes arSun{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes arSpin{to{transform:rotate(360deg)}}
+.ar-flag{transform-origin:0 -54px;transform-box:view-box;animation:arFlag 2.6s ease-in-out infinite;}
+@keyframes arFlag{0%,100%{transform:skewY(0)}50%{transform:skewY(-6deg)}}
+.ar-float{animation:arFloat 5s ease-in-out infinite;}
+@keyframes arFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.ar-stamp{transform-box:fill-box;transform-origin:center;animation:arStamp 4.5s ease-in-out infinite;}
+@keyframes arStamp{0%,55%,100%{transform:scale(1);opacity:1}25%{transform:scale(1.15);opacity:.85}}
+.ar-lens{animation:arLens 6s ease-in-out infinite;}
+@keyframes arLens{0%,100%{transform:translate(0,0)}50%{transform:translate(18px,-26px)}}
+.ar-bubble{animation:arFloat 4s ease-in-out infinite;}
+.ar-bubble.b2{animation-delay:-2s;}
+.ar-sign{transform-box:fill-box;transform-origin:left center;animation:arSign 3.5s ease-in-out infinite;}
+@keyframes arSign{0%,100%{transform:rotate(0)}50%{transform:rotate(-4deg)}}
+.ph.kb .rt-badge{top:auto;bottom:18px;inset-inline-start:18px;}
+
+.ex{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:56px;align-items:center;margin:96px 0 24px;}
+.ex-steps{list-style:none;counter-reset:ex;padding:0;margin:26px 0 0;display:grid;gap:18px;}
+.ex-steps li{counter-increment:ex;position:relative;padding-inline-start:46px;}
+.ex-steps li::before{content:counter(ex);position:absolute;inset-inline-start:0;top:0;width:30px;height:30px;border-radius:50%;border:1.5px solid var(--accent);color:var(--accent);display:grid;place-items:center;font-weight:800;font-size:13px;}
+.ex-steps b{display:block;color:var(--text);margin-bottom:2px;}
+.ex-steps span{color:var(--muted);font-size:14.5px;line-height:1.55;}
+.ex-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg,22px);box-shadow:var(--shadow,0 14px 40px rgba(74,53,38,.12));padding:24px;}
+.ex-card-head{margin-bottom:12px;}
+.ex-pill{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);background:var(--surface-2);border-radius:999px;padding:4px 10px;margin-bottom:8px;}
+.ex-card-head h3{margin:0;font-size:20px;color:var(--text);}
+.ex-card-head p{margin:2px 0 0;color:var(--muted);font-size:13.5px;}
+.ex-item{border-top:1px solid var(--border);padding:12px 0;}
+.ex-item summary{list-style:none;display:flex;gap:12px;align-items:center;cursor:pointer;}
+.ex-item summary::-webkit-details-marker{display:none;}
+.ex-dot{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--border);color:#fff;}
+.ex-item.done .ex-dot{background:var(--accent);border-color:var(--accent);}
+.ex-item.now .ex-dot{border-color:var(--accent);}
+.ex-item.now .ex-dot i{width:10px;height:10px;border-radius:50%;background:var(--accent);animation:pulse 1.8s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.75)}}
+.ex-st{display:flex;flex-direction:column;}
+.ex-st b{color:var(--text);font-size:15px;}
+.ex-st em{font-style:normal;font-size:12.5px;color:var(--muted);}
+.ex-item>p,.ex-item .ex-flag{margin:10px 0 0 40px;color:var(--muted);font-size:14px;line-height:1.55;}
+html[dir="rtl"] .ex-item>p,html[dir="rtl"] .ex-item .ex-flag{margin:10px 40px 0 0;}
+.ex-table{width:calc(100% - 40px);margin:10px 0 0;margin-inline-start:40px;border-collapse:collapse;font-size:13.5px;}
+.ex-table td{padding:7px 0;border-bottom:1px dashed var(--border);color:var(--text);}
+.ex-table td:last-child{text-align:end;}
+.ex-table span{font-size:12px;font-weight:700;border-radius:999px;padding:3px 9px;}
+.ex-table .ok{background:var(--surface-2);color:var(--accent);}
+.ex-table .wip{background:#FBF1E3;color:#9A6A2E;}
+.ex-table .todo{border:1px solid var(--border);color:var(--muted);}
+.ex-flag{border-inline-start:3px solid #C99A5B;padding-inline-start:10px;}
+.ex-split{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0 0;margin-inline-start:40px;}
+.ex-split div{background:var(--surface-2);border-radius:12px;padding:10px 12px;}
+.ex-split b{display:block;font-size:12.5px;color:var(--accent);}
+.ex-split span{font-size:13.5px;color:var(--text);line-height:1.5;}
+.ex-foot{display:flex;gap:10px;align-items:center;border-top:1px solid var(--border);padding-top:12px;margin-top:4px;}
+.ex-foot small{color:var(--muted);font-size:12px;line-height:1.5;}
+
+.qs{margin:96px 0 24px;padding:44px;border-radius:var(--radius-lg,22px);background:var(--surface-2);text-align:center;}
+.qs-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:12px;align-items:end;margin-top:22px;text-align:start;}
+.qs-row label span{display:block;font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.qs-row select{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text);font:inherit;font-size:14.5px;}
+.qs-row .btn{padding:13px 22px;}
+.qs-trust{list-style:none;padding:0;margin:20px 0 0;display:flex;flex-wrap:wrap;justify-content:center;gap:10px 26px;color:var(--muted);font-size:13.5px;}
+.qs-trust li{display:inline-flex;gap:8px;align-items:center;}
+.qs-trust svg{color:var(--accent);}
+
+.fq{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:48px;margin:96px 0 24px;align-items:start;}
+.fq-item{border-bottom:1px solid var(--border);}
+.fq-item summary{list-style:none;cursor:pointer;padding:18px 32px 18px 0;position:relative;font-weight:700;color:var(--text);font-size:16px;}
+html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
+.fq-item summary::-webkit-details-marker{display:none;}
+.fq-item summary::after{content:"+";position:absolute;inset-inline-end:4px;top:14px;font-size:22px;font-weight:400;color:var(--accent);transition:transform .2s;}
+.fq-item[open] summary::after{transform:rotate(45deg);}
+.fq-item p{margin:0 0 18px;color:var(--muted);line-height:1.65;font-size:15px;}
+.ex-item summary:focus-visible,.fq-item summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px;}
+
+@media (max-width:900px){
+  .rt-row{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:14px;padding-bottom:8px;margin:0 -20px;padding-inline:20px;}
+  .rt-card{flex:0 0 76%;scroll-snap-align:start;}
+  .ar-hero-wrap{margin-bottom:40px}
+  .ex,.fq{grid-template-columns:1fr;gap:28px;margin-top:64px;}
+  .qs{padding:28px 20px;}
+  .qs-row{grid-template-columns:1fr;}
+}
+@media (prefers-reduced-motion:reduce){
+  .rt-badge,.reveal.in .rt-badge,.ex-item.now .ex-dot i,.ar-drift,.ar-sunpulse,.ar-flag,.ar-float,.ar-stamp,.ar-lens,.ar-bubble,.ar-sign,.ar-wing,.ar-halo,.ar-sparks circle,.ar-twinkle,.ar-pin,.ar-birds,.ar-chip{animation:none !important;}
+  .tp-item:hover .ar-spot{transform:none}
+  .rt-card:hover{transform:none}
+}
 </style>
 </head>
 <body>
@@ -1093,7 +1285,7 @@ const I18N = {
   en: {
     tag:'career mentoring', nav_home:'Home', nav_browse:'Find a mentor', nav_coach:'AI coach', nav_dash:'My profile', nav_start:'Get started',
     hero_h1a:"Find the person who's ", hero_h1em:'already walked', hero_h1b:" the path you're on.",
-    hero_sub:"Workar pairs people building a career with mentors who've done the job — real feedback on your resume, your interviews, and your next move.",
+    hero_sub:"Book a private one-to-one session with a professional who has done the job you want, and get honest, practical feedback on your resume, your interviews and your next move.",
     cta_browse:'Browse mentors', cta_become:'Become a mentor',
     stat_mentors:'mentors on Workar', stat_reviews:'reviews written', stat_realtime:'real conversations',
     no_mentors_yet:'No mentors yet', be_first:'Be the first to sign up',
@@ -1343,12 +1535,120 @@ const I18N = {
     ph_kicker:'One-to-one guidance', ph_title:'Advice from someone who has been in your seat', ph_body:'Every session is a private conversation with a professional who has done the work you are aiming for. You leave with honest feedback and a clear next step.',
     ph_p1t:'Real experience', ph_p1:'Mentors are reviewed before their profile goes live.', ph_p2t:'Focused sessions', ph_p2:'45 minutes on your resume, interviews or next move.', ph_p3t:'A plan to follow', ph_p3:'Your mentor can send you a written plan after the session.',
     ph_cta_t:'Share what you have learned', ph_cta_b:'Help people take the next step in a career you know well. Set your own rate and hours, and meet clients by private video call.',
+    ar_hero_alt:"Illustration: a person walks a winding path past a resume, an interview and an offer, guided by an angel, towards a mentor waving at the top",
+    rt_kicker:"Your career path",
+    rt_title_a:"How a mentor can help",
+    rt_title_b:"",
+    rt_sub:"Choose what you need most right now. We will suggest mentors who have faced the same challenge.",
+    rt_cta:"Find a mentor",
+    rt1_tag:"Resume review",
+    rt1_title:"Resume and LinkedIn",
+    rt1_line:"Line-by-line feedback from someone who reviews candidates in your field.",
+    rt1_q:"I would like a mentor to review my resume and LinkedIn profile.",
+    rt1_alt:"A consultant reviewing documents at a laptop",
+    rt2_tag:"Interview preparation",
+    rt2_title:"Interview practice",
+    rt2_line:"Rehearse real questions and receive specific, honest feedback on every answer.",
+    rt2_q:"I am preparing for job interviews and would like to practise with a mentor who hires for my field.",
+    rt2_alt:"Three professionals discussing at a laptop",
+    rt3_tag:"Career switch",
+    rt3_title:"Changing careers",
+    rt3_line:"Discover which of your skills transfer, and what to learn next.",
+    rt3_q:"I would like to switch careers into a new field and need a clear plan.",
+    rt3_alt:"Two professionals in a one-to-one conversation",
+    rt4_tag:"New country",
+    rt4_title:"Starting in a new country",
+    rt4_line:"Understand local expectations, credentials and how to build your network.",
+    rt4_q:"I recently moved to a new country and want to restart my career here.",
+    rt4_alt:"Colleagues reviewing documents over coffee",
+    rt5_tag:"Promotion and leadership",
+    rt5_title:"Grow into the next role",
+    rt5_line:"Prepare for the conversations that lead to promotion.",
+    rt5_q:"I want to grow into a senior or leadership role and prepare for a promotion.",
+    rt5_alt:"An advisor discussing a plan with clients",
+    rt6_tag:"Salary negotiation",
+    rt6_title:"Know your worth before the offer",
+    rt6_line:"Benchmarks, scripts and confidence for the negotiation.",
+    rt6_q:"I have a job offer or review coming up and want help negotiating my salary.",
+    rt6_alt:"Professionals shaking hands after a meeting",
+    ex_kicker:"An example, not a promise",
+    ex_title_a:"What you receive",
+    ex_title_b:"when you work with a mentor.",
+    ex_sub:"We would rather show you than tell you. This sample plan shows how a mentor follows your progress between sessions.",
+    ex_s1t:"Session booked",
+    ex_s1:"Your mentor accepts, you pay securely, and your private call link arrives by email with a calendar invite.",
+    ex_s2t:"Work in progress",
+    ex_s2:"Your mentor reviews your materials, and anything that needs attention is clear before the next step.",
+    ex_s3t:"Your next step",
+    ex_s3:"You always know what happens next, and who is doing it.",
+    ex_card_title:"Mentoring plan",
+    ex_card_sub:"Career switch into product management",
+    ex_example:"Example",
+    ex_i1t:"First session completed",
+    ex_done:"Completed",
+    ex_i1:"Goals agreed and a written follow-up plan sent after the call.",
+    ex_i2t:"Resume and LinkedIn review",
+    ex_now:"In progress",
+    ex_r1:"Resume summary",
+    ex_r2:"Work experience",
+    ex_r3:"LinkedIn headline",
+    ex_r4:"Portfolio case study",
+    ex_rewritten:"Rewritten",
+    ex_inprog:"In progress",
+    ex_pending:"Pending",
+    ex_flag:"The dates on two roles do not match LinkedIn. Updating them before applying is recommended.",
+    ex_i3t:"Next: mock interview",
+    ex_next:"Upcoming",
+    ex_you:"You",
+    ex_you_t:"Practise two STAR stories and apply to five roles.",
+    ex_mentor:"Your mentor",
+    ex_mentor_t:"Role-specific questions and detailed feedback.",
+    ex_note:"A fictional example, not a real client. Your plan depends on your goals and your mentor.",
+    qs_kicker:"Your first step",
+    qs_title:"Where would you like to go next?",
+    qs_goal:"Your goal",
+    qs_field:"Your field",
+    qs_when:"Timing",
+    qs_btn:"Find my mentors",
+    qs_f1:"Technology and data",
+    qs_f2:"Business and management",
+    qs_f3:"Finance and accounting",
+    qs_f4:"Engineering",
+    qs_f5:"Healthcare and life sciences",
+    qs_f6:"Marketing and sales",
+    qs_f7:"Design and creative",
+    qs_f8:"Other",
+    qs_w1:"This month",
+    qs_w2:"In the next three months",
+    qs_w3:"Just exploring",
+    qs_t1:"Free to search, no account needed",
+    qs_t2:"Pay only after a mentor accepts",
+    qs_t3:"Private video call for every session",
+    fq_kicker:"Your questions",
+    fq_title_a:"Clarity first,",
+    fq_title_b:"then the first step.",
+    fq_sub:"If your question is not here, our support assistant is available at any time using the Help button.",
+    fq_q1:"How does booking work?",
+    fq_a1:"Choose a mentor, pick a package and a free time in their calendar, and send your request. You are not charged until the mentor accepts. Once you pay, you both receive a private call link and a calendar invite.",
+    fq_q2:"Can I cancel or get a refund?",
+    fq_a2:"Cancel 24 hours or more before your session for a full refund. If the mentor cancels or does not attend, you receive a full refund or can rebook. Unused sessions in a package can be refunded within 90 days.",
+    fq_q3:"How are mentors selected?",
+    fq_a3:"Every mentor profile is reviewed by Workar before it is published, and clients can only leave a review after a real session.",
+    fq_q4:"Is my video call private?",
+    fq_a4:"Yes. Each paid booking receives its own private link, and only you and your mentor can see your booking details and messages.",
+    fq_q5:"Can I use Workar in Persian or another language?",
+    fq_a5:"Yes. The site is available in English and Persian, and you can filter mentors by the languages they speak.",
+    fq_q6:"How do I become a mentor?",
+    fq_a6:"Select \"Become a mentor\", complete your profile with the help of our assistant, and set your own rate. We will email you once your profile is approved.",
+    ar_chip_t:"Next session confirmed", ar_chip_s:"Tuesday, 6:00 PM · private video call",
+    hero_note:"You pay only after your mentor accepts. Every mentor is reviewed before their profile goes live.", close_t:"Let's plan your next step.", close_s:"A goal, a question or just an idea. Find a mentor who has already walked that path.",
+    ht1:"Pay only after your mentor accepts", ht2:"Every mentor is reviewed", ht3:"Private video sessions",
     nav_login:'Log in'
   },
   fa: {
     tag:'راهنمای مسیر شغلی', nav_home:'خانه', nav_browse:'پیدا کردن منتور', nav_coach:'مربی هوش مصنوعی', nav_dash:'پروفایل من', nav_start:'شروع کن',
     hero_h1a:'', hero_h1em:'کسی که قبلاً همین مسیر رو رفته', hero_h1b:' رو پیدا کن.',
-    hero_sub:'Workar آدم‌هایی که دارن مسیر شغلی‌شونو می‌سازن رو به منتورهایی که خودشون این کار رو تجربه کردن وصل می‌کنه — فیدبک واقعی برای رزومه، مصاحبه و قدم بعدیت.',
+    hero_sub:"یک جلسهٔ خصوصی و دونفره با متخصصی رزرو کنید که همان کاری را انجام داده که شما در پی آن هستید، و بازخوردی صادقانه و کاربردی دربارهٔ رزومه، مصاحبه‌ها و گام بعدی خود دریافت کنید.",
     cta_browse:'مشاهده منتورها', cta_become:'منتور شو',
     stat_mentors:'منتور در Workar', stat_reviews:'ریویو نوشته‌شده', stat_realtime:'گفتگوی واقعی',
     no_mentors_yet:'هنوز منتوری نیست', be_first:'اولین نفری باش که ثبت‌نام می‌کنه',
@@ -1598,6 +1898,114 @@ const I18N = {
     ph_kicker:'راهنمایی دونفره', ph_title:'مشاوره از کسی که پیش‌تر جای شما بوده است', ph_body:'هر جلسه گفت‌وگویی خصوصی با متخصصی است که همان مسیری را پیموده که شما در پیش دارید. با بازخوردی صادقانه و گام بعدی روشن جلسه را ترک می‌کنید.',
     ph_p1t:'تجربهٔ واقعی', ph_p1:'پروفایل منتورها پیش از انتشار بررسی می‌شود.', ph_p2t:'جلسات متمرکز', ph_p2:'۴۵ دقیقه برای رزومه، مصاحبه یا گام بعدی شما.', ph_p3t:'برنامه‌ای برای ادامهٔ مسیر', ph_p3:'منتور می‌تواند پس از جلسه برنامه‌ای مکتوب برای شما ارسال کند.',
     ph_cta_t:'تجربهٔ خود را به اشتراک بگذارید', ph_cta_b:'به دیگران کمک کنید در مسیری که به خوبی می‌شناسید گام بعدی را بردارند. نرخ و ساعات کاری را خودتان تعیین می‌کنید و با مراجعان از طریق تماس تصویری خصوصی دیدار می‌کنید.',
+    ar_hero_alt:"تصویر: فردی با راهنمایی یک فرشته در مسیری پرپیچ‌وخم از رزومه، مصاحبه و پیشنهاد شغلی می‌گذرد و به سوی منتوری می‌رود که در بالای مسیر دست تکان می‌دهد",
+    rt_kicker:"مسیر شغلی شما",
+    rt_title_a:"منتور چگونه می‌تواند کمک کند",
+    rt_title_b:"",
+    rt_sub:"آنچه را اکنون بیشتر به آن نیاز دارید انتخاب کنید. منتورهایی را پیشنهاد می‌کنیم که با همین چالش روبه‌رو بوده‌اند.",
+    rt_cta:"یافتن منتور",
+    rt1_tag:"بررسی رزومه",
+    rt1_title:"رزومه و لینکدین",
+    rt1_line:"بازخورد سطر به سطر از کسی که در حوزهٔ شما متقاضیان را ارزیابی می‌کند.",
+    rt1_q:"مایلم منتوری رزومه و پروفایل لینکدین مرا بررسی کند.",
+    rt1_alt:"مشاوری که اسناد را کنار لپ‌تاپ بررسی می‌کند",
+    rt2_tag:"آمادگی مصاحبه",
+    rt2_title:"تمرین مصاحبه",
+    rt2_line:"پرسش‌های واقعی را تمرین کنید و برای هر پاسخ بازخوردی دقیق و صادقانه دریافت کنید.",
+    rt2_q:"برای مصاحبه‌های شغلی آماده می‌شوم و مایلم با منتوری که در حوزهٔ من استخدام می‌کند تمرین کنم.",
+    rt2_alt:"سه متخصص در حال گفت‌وگو کنار لپ‌تاپ",
+    rt3_tag:"تغییر مسیر شغلی",
+    rt3_title:"تغییر مسیر شغلی",
+    rt3_line:"بدانید کدام مهارت‌هایتان قابل انتقال است و چه چیزی را باید یاد بگیرید.",
+    rt3_q:"می‌خواهم وارد حوزهٔ شغلی جدیدی شوم و به برنامه‌ای روشن نیاز دارم.",
+    rt3_alt:"گفت‌وگوی دونفره میان دو متخصص",
+    rt4_tag:"کشور جدید",
+    rt4_title:"شروع کار در کشوری جدید",
+    rt4_line:"با انتظارات بازار کار، مدارک لازم و شیوهٔ ساختن شبکهٔ حرفه‌ای آشنا شوید.",
+    rt4_q:"به تازگی به کشور جدیدی آمده‌ام و می‌خواهم مسیر شغلی‌ام را اینجا از سر بگیرم.",
+    rt4_alt:"همکارانی که در کنار قهوه اسناد را بررسی می‌کنند",
+    rt5_tag:"ارتقا و رهبری",
+    rt5_title:"آمادگی برای جایگاه بعدی",
+    rt5_line:"برای گفت‌وگوهایی که به ارتقا منجر می‌شوند آماده شوید.",
+    rt5_q:"می‌خواهم به جایگاه ارشد یا مدیریتی برسم و برای ارتقا آماده شوم.",
+    rt5_alt:"مشاوری که برنامه‌ای را با مراجعان بررسی می‌کند",
+    rt6_tag:"مذاکرهٔ حقوق",
+    rt6_title:"پیش از پیشنهاد، ارزش خود را بدانید",
+    rt6_line:"معیارهای بازار، جمله‌های آماده و اعتمادبه‌نفس برای مذاکره.",
+    rt6_q:"پیشنهاد شغلی یا ارزیابی سالانه پیش رو دارم و برای مذاکرهٔ حقوق به کمک نیاز دارم.",
+    rt6_alt:"دست دادن متخصصان پس از جلسه",
+    ex_kicker:"یک نمونه، نه یک وعده",
+    ex_title_a:"آنچه دریافت می‌کنید",
+    ex_title_b:"وقتی با یک منتور کار می‌کنید.",
+    ex_sub:"ترجیح می‌دهیم نشان دهیم تا اینکه توضیح دهیم. این برنامهٔ نمونه نشان می‌دهد منتور چگونه پیشرفت شما را میان جلسات پیگیری می‌کند.",
+    ex_s1t:"رزرو جلسه",
+    ex_s1:"منتور درخواست را می‌پذیرد، شما به صورت امن پرداخت می‌کنید و لینک تماس خصوصی همراه با دعوت‌نامهٔ تقویم به ایمیل شما ارسال می‌شود.",
+    ex_s2t:"کار در جریان",
+    ex_s2:"منتور مدارک شما را بررسی می‌کند و هر موردی که نیاز به توجه دارد پیش از قدم بعدی روشن می‌شود.",
+    ex_s3t:"قدم بعدی شما",
+    ex_s3:"همیشه می‌دانید قدم بعدی چیست و چه کسی آن را انجام می‌دهد.",
+    ex_card_title:"برنامهٔ منتورینگ",
+    ex_card_sub:"تغییر مسیر به مدیریت محصول",
+    ex_example:"نمونه",
+    ex_i1t:"جلسهٔ اول انجام شد",
+    ex_done:"انجام شد",
+    ex_i1:"اهداف مشخص شد و برنامهٔ پیگیری مکتوب پس از جلسه ارسال شد.",
+    ex_i2t:"بررسی رزومه و لینکدین",
+    ex_now:"در جریان",
+    ex_r1:"خلاصهٔ رزومه",
+    ex_r2:"سوابق کاری",
+    ex_r3:"تیتر لینکدین",
+    ex_r4:"نمونه‌کار",
+    ex_rewritten:"بازنویسی شد",
+    ex_inprog:"در جریان",
+    ex_pending:"در انتظار",
+    ex_flag:"تاریخ دو سابقهٔ کاری با لینکدین مطابقت ندارد. اصلاح آن پیش از ارسال درخواست توصیه می‌شود.",
+    ex_i3t:"قدم بعدی: مصاحبهٔ تمرینی",
+    ex_next:"پیش رو",
+    ex_you:"شما",
+    ex_you_t:"تمرین دو پاسخ به روش STAR و ارسال درخواست برای پنج موقعیت.",
+    ex_mentor:"منتور شما",
+    ex_mentor_t:"پرسش‌های مخصوص نقش و بازخورد دقیق.",
+    ex_note:"این یک نمونهٔ فرضی است و به مراجع واقعی تعلق ندارد. برنامهٔ شما به اهداف شما و منتورتان بستگی دارد.",
+    qs_kicker:"نخستین قدم شما",
+    qs_title:"دوست دارید قدم بعدی‌تان به کجا باشد؟",
+    qs_goal:"هدف شما",
+    qs_field:"حوزهٔ کاری",
+    qs_when:"زمان",
+    qs_btn:"یافتن منتورهای من",
+    qs_f1:"فناوری و داده",
+    qs_f2:"کسب‌وکار و مدیریت",
+    qs_f3:"مالی و حسابداری",
+    qs_f4:"مهندسی",
+    qs_f5:"سلامت و علوم زیستی",
+    qs_f6:"بازاریابی و فروش",
+    qs_f7:"طراحی و خلاقیت",
+    qs_f8:"سایر",
+    qs_w1:"همین ماه",
+    qs_w2:"طی سه ماه آینده",
+    qs_w3:"فعلاً در حال بررسی",
+    qs_t1:"جستجو رایگان و بدون نیاز به حساب کاربری",
+    qs_t2:"پرداخت فقط پس از پذیرش منتور",
+    qs_t3:"تماس تصویری خصوصی برای هر جلسه",
+    fq_kicker:"پرسش‌های شما",
+    fq_title_a:"اول شفافیت،",
+    fq_title_b:"سپس نخستین قدم.",
+    fq_sub:"اگر پاسخ پرسش خود را اینجا نیافتید، دستیار پشتیبانی ما از طریق دکمهٔ راهنما همیشه در دسترس است.",
+    fq_q1:"رزرو جلسه چگونه انجام می‌شود؟",
+    fq_a1:"منتور، بسته و یک زمان آزاد در تقویم او را انتخاب کنید و درخواست خود را ارسال کنید. تا زمانی که منتور نپذیرد هزینه‌ای از شما دریافت نمی‌شود. پس از پرداخت، لینک تماس خصوصی و دعوت‌نامهٔ تقویم برای هر دو نفر ارسال می‌شود.",
+    fq_q2:"آیا امکان لغو یا بازپرداخت وجود دارد؟",
+    fq_a2:"اگر ۲۴ ساعت یا بیشتر پیش از جلسه لغو کنید، تمام مبلغ بازگردانده می‌شود. اگر منتور جلسه را لغو کند یا حاضر نشود، تمام مبلغ را دریافت می‌کنید یا می‌توانید دوباره رزرو کنید. جلسات استفاده‌نشدهٔ بسته‌ها تا ۹۰ روز قابل بازپرداخت است.",
+    fq_q3:"منتورها چگونه انتخاب می‌شوند؟",
+    fq_a3:"پروفایل هر منتور پیش از انتشار توسط Workar بررسی می‌شود و مراجعان تنها پس از برگزاری جلسهٔ واقعی می‌توانند نظر ثبت کنند.",
+    fq_q4:"آیا تماس تصویری من خصوصی است؟",
+    fq_a4:"بله. هر رزرو پرداخت‌شده لینک خصوصی خود را دارد و جزئیات رزرو و پیام‌ها فقط برای شما و منتورتان قابل مشاهده است.",
+    fq_q5:"آیا می‌توانم از Workar به فارسی یا زبان دیگری استفاده کنم؟",
+    fq_a5:"بله. سایت به زبان‌های انگلیسی و فارسی در دسترس است و می‌توانید منتورها را بر اساس زبان‌هایی که صحبت می‌کنند فیلتر کنید.",
+    fq_q6:"چگونه منتور شوم؟",
+    fq_a6:"گزینهٔ «منتور شوید» را انتخاب کنید، پروفایل خود را با کمک دستیار ما تکمیل کنید و نرخ جلسات را خودتان تعیین کنید. پس از تأیید پروفایل به شما ایمیل می‌زنیم.",
+    ar_chip_t:"جلسهٔ بعدی تأیید شد", ar_chip_s:"سه‌شنبه، ساعت ۱۸:۰۰ · تماس تصویری خصوصی",
+    hero_note:"پرداخت فقط پس از پذیرش درخواست توسط منتور. پروفایل همهٔ منتورها پیش از انتشار بررسی می‌شود.", close_t:"قدم بعدی خود را با هم برنامه‌ریزی کنیم.", close_s:"یک هدف، یک پرسش یا فقط یک ایده؛ منتوری را پیدا کنید که این مسیر را پیموده است.",
+    ht1:"پرداخت پس از پذیرش منتور", ht2:"منتورهای بررسی‌شده", ht3:"جلسات خصوصی تصویری",
     nav_login:'ورود'
   }
 };
@@ -2379,37 +2787,11 @@ function landingSections(){
         <button class="btn ${pk.featured?'btn-primary':'btn-outline'}" data-nav="browse">${esc(T('pk_book'))}</button>
       </div>`).join('');
   return `
-  <section class="lp-section">
-    <h2 class="lp-title">${esc(T('why_title'))}</h2>
-    <p class="lp-sub">${esc(T('why_sub'))}</p>
-    <div class="lp-bar"></div>
-    <div class="why-row">
-      ${why.map((w,i)=>`<div class="why-bubble reveal" data-rk="why${i}" style="--c:${WHY_COLORS[i]};--i:${i}">
-        <b class="${!w.count && String(w.n).length>5 ? 'word' : ''}" ${w.count?`data-count="${w.n}"`:''}>${w.count ? (revealedKeys.has('why'+i) ? w.n : 0) : esc(w.n)}</b>
-        <span>${esc(w.label)}</span>
-      </div>`).join('')}
-    </div>
-    <p class="why-note">${esc(T(grown ? 'why_note' : 'why_growing'))}</p>
-    ${grown ? '' : `<div class="hero-actions" style="justify-content:center;margin-top:18px;">
-      <button class="btn btn-primary btn-sm" data-nav="browse">${esc(T('why_cta_find'))}</button>
-      <button class="btn btn-outline btn-sm" data-nav="onboard" data-role="mentor">${esc(T('why_cta_join'))}</button>
-    </div>`}
-  </section>
-
   <section class="lp-section alt">
     <h2 class="lp-title">${esc(T('hiw2_title'))}</h2>
     <p class="lp-sub">${esc(T('hiw2_sub'))}</p>
     <div class="lp-bar"></div>
     <div class="steps-row">${stepsHtml}</div>
-  </section>
-
-  <section class="lp-section">
-    <h2 class="lp-title">${esc(T('pk_title'))}</h2>
-    <p class="lp-sub">${esc(T('pk_sub'))}</p>
-    <div class="lp-bar"></div>
-    <div class="price-row">${priceHtml}</div>
-    <p class="price-foot">${esc(T('pk_foot'))}</p>
-    ${isAdmin() ? `<button class="btn btn-outline btn-sm" data-nav="admin" style="margin-top:12px;">${esc(T('adm_edit_prices'))}</button>` : ''}
   </section>`;
 }
 
@@ -3853,46 +4235,226 @@ document.addEventListener('keydown', e=>{
   if(e.key==='ArrowLeft'){ const b=document.getElementById('gd-prev'); if(b && !b.disabled){ b.click(); e.preventDefault(); } }
 });
 
-const PHOTOS = { a:'https://images.pexels.com/photos/8112165/pexels-photo-8112165.jpeg?auto=compress&cs=tinysrgb&w=1100', a2:'https://images.pexels.com/photos/8112165/pexels-photo-8112165.jpeg?auto=compress&cs=tinysrgb&w=2000', b:'https://images.pexels.com/photos/8439650/pexels-photo-8439650.jpeg?auto=compress&cs=tinysrgb&w=700', c:'https://images.pexels.com/photos/8112158/pexels-photo-8112158.jpeg?auto=compress&cs=tinysrgb&w=700', d:'https://images.pexels.com/photos/7821522/pexels-photo-7821522.jpeg?auto=compress&cs=tinysrgb&w=1000', e:'https://images.pexels.com/photos/8112162/pexels-photo-8112162.jpeg?auto=compress&cs=tinysrgb&w=1600' };
+/* ===== Workar illustrations (hand-drawn SVG in the site's own palette) ===== */
+const ART = (()=>{
+  const C = { deep:'#4A3526', brown:'#6B4F3A', accent:'#8B6A4C', gold:'#B98D5E', sand:'#D9C2A3', beige:'#EAE0D2', cream:'#F7F1E9', paper:'#FFFDF9', skin1:'#E9C4A0', skin2:'#C08A63', skin3:'#8E5E40' };
+  // a simple flat person: x,y = feet centre
+  function person(x,y,o){ o=o||{}; const s=o.s||1, skin=o.skin||C.skin1, top=o.top||C.accent, hair=o.hair||C.deep, legs=o.legs||C.brown;
+    return `<g transform="translate(${x} ${y}) scale(${s})">
+      <rect x="-9" y="-34" width="7" height="34" rx="3.5" fill="${legs}"/><rect x="2" y="-34" width="7" height="34" rx="3.5" fill="${legs}"/>
+      <path d="M-16 -36 Q-16 -70 0 -70 Q16 -70 16 -36 Z" fill="${top}"/>
+      ${o.wave?`<path d="M14 -64 Q24 -78 28 -92" stroke="${top}" stroke-width="7" stroke-linecap="round" fill="none"/><circle cx="28" cy="-94" r="4.5" fill="${skin}"/>`:`<path d="M15 -62 Q20 -48 18 -38" stroke="${top}" stroke-width="7" stroke-linecap="round" fill="none"/>`}
+      <path d="M-15 -62 Q-20 -48 -18 -38" stroke="${top}" stroke-width="7" stroke-linecap="round" fill="none"/>
+      <circle cx="0" cy="-84" r="13" fill="${skin}"/>
+      <path d="M-13 -86 Q-13 -100 0 -100 Q14 -100 13 -86 Q6 -93 -13 -86 Z" fill="${hair}"/>
+      ${o.bag?`<rect x="18" y="-44" width="16" height="12" rx="2.5" fill="${C.deep}"/><path d="M22 -44 v-3 h8 v3" stroke="${C.deep}" stroke-width="2" fill="none"/>`:''}
+    </g>`; }
+  const cloud = (x,y,s,d)=>`<g transform="translate(${x} ${y}) scale(${s})" opacity=".9"><g class="ar-drift" style="animation-duration:${d}s"><path d="M0 20 Q0 4 16 4 Q20 -8 34 -6 Q46 -14 56 0 Q72 0 72 20 Z" fill="${C.paper}"/></g></g>`;
+  const logo = (x,y,r)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${C.paper}"/><image href="${LOGO_DATA_URI}" x="${x-r*.68}" y="${y-r*.62}" width="${r*1.36}" height="${r*1.24}" preserveAspectRatio="xMidYMid meet"/>`;
+
+  // Slim, elegant figure for the arch scene (feet at 0,0)
+  function slim(o){ o=o||{}; const skin=o.skin||C.skin1, top=o.top||C.accent, hair=o.hair||C.deep, legs=o.legs||C.brown;
+    return `<g>
+      <path d="M-3.5 -26 L-4.5 0 M3.5 -26 L4.5 0" stroke="${legs}" stroke-width="4.2" stroke-linecap="round"/>
+      <path d="M-9 -27 Q-10 -50 0 -51 Q10 -50 9 -27 Z" fill="${top}"/>
+      ${o.wave?`<path d="M8 -46 Q15 -54 16 -64" stroke="${top}" stroke-width="3.6" stroke-linecap="round" fill="none"/>`:`<path d="M8.5 -46 Q12 -36 10 -28" stroke="${top}" stroke-width="3.6" stroke-linecap="round" fill="none"/>`}
+      <path d="M-8.5 -46 Q-12 -36 -10 -28" stroke="${top}" stroke-width="3.6" stroke-linecap="round" fill="none"/>
+      <circle cx="0" cy="-59" r="7.5" fill="${skin}"/>
+      <path d="M-7.6 -60 Q-8 -68.5 0 -68 Q8 -68.5 7.6 -60 Q3 -64.5 -7.6 -60 Z" fill="${hair}"/>
+      ${o.bag?`<rect x="9" y="-31" width="8" height="6.5" rx="1.5" fill="${C.deep}"/>`:''}
+    </g>`; }
+
+  // Hero: a landscape seen through an arch. A traveller walks towards a mentor waiting
+  // at the horizon; halfway, an angel wearing the Workar logo joins to guide the way.
+  const hero = ()=>`<svg class="ar ar-hero" viewBox="0 0 440 520" role="img" aria-label="${esc(T('ar_hero_alt'))}">
+    <defs>
+      <clipPath id="arArch"><path d="M20 520 V220 A200 200 0 0 1 420 220 V520 Z"/></clipPath>
+      <linearGradient id="arSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBF6EF"/><stop offset=".62" stop-color="#F6E7D3"/><stop offset="1" stop-color="#F1DCC0"/></linearGradient>
+      <radialGradient id="arSunGlow"><stop offset="0" stop-color="#F8E2BD"/><stop offset=".5" stop-color="#F6DDB5" stop-opacity=".6"/><stop offset="1" stop-color="#F6DDB5" stop-opacity="0"/></radialGradient>
+      <linearGradient id="arFar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E9D9C3"/><stop offset="1" stop-color="#E3CFB4"/></linearGradient>
+      <linearGradient id="arMid" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#DCC3A1"/><stop offset="1" stop-color="#D2B48E"/></linearGradient>
+      <linearGradient id="arNear" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CDAE86"/><stop offset="1" stop-color="#C19F75"/></linearGradient>
+      <linearGradient id="arRobe" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F4EADC"/></linearGradient>
+    </defs>
+    <g clip-path="url(#arArch)">
+      <rect width="440" height="520" fill="url(#arSky)"/>
+      <circle cx="232" cy="262" r="120" fill="url(#arSunGlow)"/>
+      <circle class="ar-sunpulse" cx="232" cy="262" r="34" fill="#F2D3A4"/>
+      <g class="ar-drift" style="animation-duration:70s"><path d="M70 150 q10 -12 26 -6 q8 -12 24 -6 q16 0 16 14 h-66z" fill="#FFFDF9" opacity=".9"/></g>
+      <g class="ar-drift" style="animation-duration:90s;animation-direction:alternate-reverse"><path d="M300 120 q8 -10 20 -5 q7 -9 19 -4 q12 0 12 11 h-51z" fill="#FFFDF9" opacity=".8"/></g>
+      <path class="ar-birds" d="M128 210 q5 -5 10 0 q5 -5 10 0 M156 196 q4 -4 8 0 q4 -4 8 0" stroke="#B49372" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <path d="M20 282 Q90 250 150 268 T260 262 T420 252 V520 H20Z" fill="url(#arFar)"/>
+      <g fill="#E6D4BC">${[[300,232,14,30],[316,222,12,40],[330,236,14,26],[346,228,10,34]].map(([x,y,w,h])=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1.5"/>`).join('')}</g>
+      <path d="M20 330 Q120 290 220 312 T420 300 V520 H20Z" fill="url(#arMid)"/>
+      ${[[96,312,.9],[352,300,1],[378,306,.75]].map(([x,y,k])=>`<g transform="translate(${x} ${y}) scale(${k})"><rect x="-1.6" y="-2" width="3.2" height="12" rx="1.6" fill="#A98A6A"/><ellipse cx="0" cy="-10" rx="8.5" ry="11" fill="#C3A47F"/></g>`).join('')}
+      <path d="M20 410 Q140 368 240 394 T420 380 V520 H20Z" fill="url(#arNear)"/>
+      <!-- road narrows with distance -->
+      <path id="arPath" d="M222 530 C 150 470, 300 440, 250 400 S 170 350, 214 318 S 246 286, 230 266" fill="none" stroke="none"/>
+      <path d="M222 530 C 150 470, 300 440, 250 400" fill="none" stroke="#FFF9F1" stroke-width="22" stroke-linecap="round"/>
+      <path d="M250 400 S 170 350, 214 318" fill="none" stroke="#FFF9F1" stroke-width="12" stroke-linecap="round"/>
+      <path d="M214 318 S 246 286, 230 266" fill="none" stroke="#FFF9F1" stroke-width="6" stroke-linecap="round"/>
+      <path d="M222 530 C 150 470, 300 440, 250 400 S 170 350, 214 318 S 246 286, 230 266" fill="none" stroke="${C.gold}" stroke-width="1.6" stroke-dasharray="1.5 7" stroke-linecap="round" opacity=".8"/>
+      <g transform="translate(234 266) scale(.6)"><ellipse cx="0" cy="1" rx="14" ry="3" fill="#8E6E4E" opacity=".25"/>${slim({top:C.gold,skin:C.skin2,hair:C.deep,wave:true})}</g>
+      <g class="ar-burst" opacity="0" transform="translate(232 232)">${[0,60,120,180,240,300].map((a,i)=>`<path transform="rotate(${a}) translate(0 -${i%2?10:14})" d="M0 -3 L1 -1 L3 0 L1 1 L0 3 L-1 1 L-3 0 L-1 -1Z" fill="${i%2?C.gold:'#E9C48C'}"/>`).join('')}</g>
+      <g class="ar-angel" opacity="0" transform="translate(380 150)">
+        <g class="ar-sparks">${[[-22,14,1.6],[-30,6,1.1],[-16,22,1],[-34,18,1.3]].map(([x,y,r],i)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${C.gold}" style="animation-delay:${i*.35}s"/>`).join('')}</g>
+        <g class="ar-angel-body" transform="scale(.42)">
+          <path class="ar-wing ar-wing-l" d="M-8 -60 C -44 -92, -82 -68, -74 -28 C -58 -40, -36 -40, -10 -40 Z" fill="#FFFFFF" stroke="#D9C2A3" stroke-width="2.4"/>
+          <path class="ar-wing ar-wing-r" d="M8 -60 C 44 -92, 82 -68, 74 -28 C 58 -40, 36 -40, 10 -40 Z" fill="#FFFFFF" stroke="#D9C2A3" stroke-width="2.4"/>
+          <path d="M-16 -52 Q0 -60 16 -52 L24 -2 Q0 6 -24 -2 Z" fill="url(#arRobe)" stroke="#D9C2A3" stroke-width="2.4"/>
+          <path d="M-24 -2 Q0 6 24 -2" stroke="${C.gold}" stroke-width="3" fill="none"/>
+          <circle cx="0" cy="-22" r="15" fill="#FFFDF9" stroke="${C.gold}" stroke-width="2"/>
+          <image href="${LOGO_DATA_URI}" x="-11.5" y="-33" width="23" height="21" preserveAspectRatio="xMidYMid meet"/>
+          <path d="M-13 -46 Q-32 -32 -42 -20" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" fill="none"/>
+          <circle cx="-43" cy="-19" r="4.6" fill="${C.skin1}"/>
+          <circle cx="0" cy="-70" r="12.5" fill="${C.skin1}"/>
+          <path d="M-12.5 -72 Q-13 -86 0 -85 Q13 -86 12.5 -72 Q4 -80 -12.5 -72 Z" fill="${C.gold}"/>
+          <ellipse class="ar-halo" cx="0" cy="-92" rx="13" ry="4" fill="none" stroke="${C.gold}" stroke-width="3"/>
+        </g>
+      </g>
+      <g class="ar-walker" transform="translate(222 520)"><g class="ar-walker-body"><ellipse cx="0" cy="1" rx="12" ry="2.6" fill="#8E6E4E" opacity=".25"/>${slim({top:C.accent,skin:C.skin1,hair:C.brown,bag:true})}</g></g>
+    </g>
+    <path d="M20 520 V220 A200 200 0 0 1 420 220 V520" fill="none" stroke="${C.gold}" stroke-width="1.4" opacity=".75"/>
+    <path d="M8 520 V220 A212 212 0 0 1 432 220 V520" fill="none" stroke="${C.sand}" stroke-width="1" opacity=".8"/>
+    <g class="ar-crest" transform="translate(220 30)"><circle r="27" fill="#FFFDF9" stroke="${C.gold}" stroke-width="1.6"/><circle r="22.5" fill="none" stroke="${C.sand}" stroke-width=".8"/><image href="${LOGO_DATA_URI}" x="-17" y="-15.5" width="34" height="31" preserveAspectRatio="xMidYMid meet"/></g>
+  </svg>`;
+
+  // Card scenes, 320 x 190
+  const frame = (inner, label)=>`<svg class="ar ar-card" viewBox="0 0 320 190" role="img" aria-label="${esc(label)}"><rect width="320" height="190" fill="${C.cream}"/>${inner}</svg>`;
+  const resume = ()=>frame(`
+    <circle cx="262" cy="46" r="26" fill="${C.beige}"/>
+    <g class="ar-float"><rect x="96" y="28" width="112" height="140" rx="10" fill="${C.paper}" stroke="${C.beige}" stroke-width="2"/>
+      <circle cx="122" cy="56" r="12" fill="${C.sand}"/><rect x="142" y="48" width="50" height="7" rx="3.5" fill="${C.accent}"/><rect x="142" y="60" width="34" height="5" rx="2.5" fill="${C.sand}"/>
+      ${[84,98,112,126,140].map((y,i)=>`<rect x="112" y="${y}" width="${i%2?62:80}" height="5" rx="2.5" fill="${C.beige}"/>`).join('')}</g>
+    <g class="ar-stamp"><circle cx="206" cy="140" r="24" fill="none" stroke="${C.gold}" stroke-width="3"/><path d="M195 140 l8 8 15 -16" stroke="${C.gold}" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+    <g class="ar-lens"><circle cx="86" cy="118" r="20" fill="rgba(255,255,255,.55)" stroke="${C.brown}" stroke-width="5"/><path d="M72 133 l-18 18" stroke="${C.brown}" stroke-width="7" stroke-linecap="round"/></g>`, T('rt1_alt'));
+  const interview = ()=>frame(`
+    <rect x="0" y="150" width="320" height="40" fill="${C.beige}"/>
+    <rect x="112" y="118" width="96" height="8" rx="4" fill="${C.brown}"/><rect x="156" y="126" width="8" height="30" fill="${C.brown}"/>
+    ${person(86,158,{s:.82,top:C.accent,skin:C.skin1,hair:C.deep})}
+    ${person(236,158,{s:.82,top:C.gold,skin:C.skin3,hair:C.deep})}
+    <g class="ar-bubble"><g transform="translate(26 26)"><rect x="40" y="18" width="78" height="34" rx="14" fill="${C.paper}"/><path d="M70 52 l6 10 6 -10z" fill="${C.paper}"/><rect x="54" y="30" width="44" height="5" rx="2.5" fill="${C.sand}"/><rect x="54" y="39" width="28" height="5" rx="2.5" fill="${C.sand}"/></g></g>
+    <g class="ar-bubble b2"><g transform="translate(-14 34)"><rect x="200" y="12" width="84" height="34" rx="14" fill="${C.accent}"/><path d="M236 46 l6 10 6 -10z" fill="${C.accent}"/><path d="M226 30 l6 6 12 -12" stroke="${C.paper}" stroke-width="4" fill="none" stroke-linecap="round"/></g></g>`, T('rt2_alt'));
+  const switchCareer = ()=>frame(`
+    <path d="M0 150 Q160 120 320 150 V190 H0Z" fill="${C.beige}"/>
+    <path d="M40 190 C 90 150, 130 150, 160 140" stroke="${C.paper}" stroke-width="14" fill="none" stroke-linecap="round"/>
+    <path d="M160 140 C 200 128, 230 110, 290 104" stroke="${C.paper}" stroke-width="14" fill="none" stroke-linecap="round"/>
+    <path d="M160 140 C 200 150, 240 162, 300 176" stroke="${C.paper}" stroke-width="14" fill="none" stroke-linecap="round" opacity=".6"/>
+    <rect x="156" y="52" width="8" height="92" rx="3" fill="${C.brown}"/>
+    <g class="ar-sign"><path d="M164 60 h70 l14 12 -14 12 h-70z" fill="${C.accent}"/><rect x="176" y="68" width="40" height="7" rx="3.5" fill="${C.cream}"/></g>
+    <path d="M156 94 h-60 l-12 10 12 10 h60z" fill="${C.sand}"/>
+    ${person(96,176,{s:.72,top:C.gold,skin:C.skin2,hair:C.deep,bag:true})}
+    <circle cx="282" cy="40" r="20" fill="${C.beige}"/>`, T('rt3_alt'));
+  const newCountry = ()=>frame(`
+    <circle cx="160" cy="98" r="62" fill="${C.beige}"/>
+    <path d="M110 78 q20 -16 40 -4 q12 12 30 2 q16 -6 26 10 M104 110 q24 10 44 0 q22 -10 42 6 q10 8 24 2" stroke="${C.sand}" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <path id="arFly" d="M40 150 Q160 -20 286 120" fill="none" stroke="${C.gold}" stroke-width="2.5" stroke-dasharray="3 9" stroke-linecap="round"/>
+    <g><g transform="rotate(0)"><path d="M-14 0 l28 -3 -6 3 6 3z M-4 -1 l-6 -9 h5 l9 9z M-4 1 l-6 9 h5 l9 -9z" fill="${C.accent}"/></g>
+      <animateMotion dur="7s" repeatCount="indefinite" rotate="auto" path="M40 150 Q160 -20 286 120"/></g>
+    <g class="ar-float"><rect x="224" y="128" width="54" height="44" rx="7" fill="${C.accent}"/><path d="M240 128 v-8 h22 v8" stroke="${C.brown}" stroke-width="4" fill="none"/><rect x="224" y="144" width="54" height="5" fill="${C.gold}"/></g>`, T('rt4_alt'));
+  // ---- Topic illustrations (240 x 180), soft blob backgrounds, no frames ----
+  const blob = (fill)=>`<path d="M40 96 C 30 46, 92 18, 140 26 C 196 34, 226 76, 214 118 C 202 160, 140 172, 96 164 C 58 158, 46 136, 40 96 Z" fill="${fill}"/>`;
+  const shadow = (x,y,rx)=>`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${rx*.22}" fill="#B9986F" opacity=".28"/>`;
+  const spark = (x,y,r,d)=>`<path class="ar-twinkle" style="animation-delay:${d}s" d="M${x} ${y-r} L${x+r*.28} ${y-r*.28} L${x+r} ${y} L${x+r*.28} ${y+r*.28} L${x} ${y+r} L${x-r*.28} ${y+r*.28} L${x-r} ${y} L${x-r*.28} ${y-r*.28}Z" fill="${C.gold}"/>`;
+  const spot = (inner,label)=>`<svg class="ar ar-spot" viewBox="0 0 240 180" role="img" aria-label="${esc(label)}">${inner}</svg>`;
+  const s1 = ()=>spot(`${blob('#F3E8DA')}${shadow(124,160,52)}
+    <g class="ar-float"><rect x="78" y="34" width="92" height="120" rx="10" fill="#FFFDF9" stroke="${C.beige}" stroke-width="2"/>
+      <rect x="78" y="34" width="92" height="30" rx="10" fill="${C.cream}"/><circle cx="98" cy="50" r="10" fill="${C.sand}"/><circle cx="98" cy="47" r="4" fill="${C.skin1}"/>
+      <rect x="114" y="43" width="42" height="6" rx="3" fill="${C.accent}"/><rect x="114" y="53" width="28" height="4" rx="2" fill="${C.sand}"/>
+      ${[76,88,100,112,124,136].map((y,i)=>`<rect x="90" y="${y}" width="${[66,52,60,44,62,38][i]}" height="4.5" rx="2.25" fill="${i===2||i===3?'#F1D6AC':C.beige}"/>`).join('')}</g>
+    <g class="ar-lens"><circle cx="70" cy="104" r="19" fill="rgba(255,255,255,.6)" stroke="${C.brown}" stroke-width="5"/><path d="M57 118 l-16 16" stroke="${C.brown}" stroke-width="7" stroke-linecap="round"/><path d="M62 98 a9 9 0 0 1 9 -6" stroke="#FFFDF9" stroke-width="3" fill="none" stroke-linecap="round"/></g>
+    <g class="ar-stamp"><circle cx="170" cy="134" r="19" fill="${C.accent}"/><path d="M161 134 l6 6 12 -13" stroke="#FFFDF9" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+    ${spark(190,44,7,0)}${spark(58,52,5,.7)}`, T('rt1_tag'));
+  const s2 = ()=>spot(`${blob('#F3E8DA')}${shadow(120,160,80)}
+    <rect x="86" y="112" width="68" height="7" rx="3.5" fill="${C.brown}"/><rect x="117" y="119" width="6" height="36" fill="${C.brown}"/><rect x="104" y="153" width="32" height="4" rx="2" fill="${C.brown}"/>
+    <path d="M104 112 l6 -16 h22 l-4 16z" fill="#4A3526"/><rect x="108" y="98" width="20" height="2" fill="#F1D6AC"/>
+    <rect x="44" y="122" width="34" height="6" rx="3" fill="${C.sand}"/><rect x="46" y="128" width="4" height="28" fill="${C.sand}"/><rect x="72" y="128" width="4" height="28" fill="${C.sand}"/>
+    <rect x="162" y="122" width="34" height="6" rx="3" fill="${C.sand}"/><rect x="164" y="128" width="4" height="28" fill="${C.sand}"/><rect x="190" y="128" width="4" height="28" fill="${C.sand}"/>
+    ${person(62,156,{s:.72,top:C.accent,skin:C.skin1,hair:C.deep})}
+    ${person(178,156,{s:.72,top:C.gold,skin:C.skin3,hair:'#2F2118'})}
+    <g class="ar-bubble"><rect x="22" y="30" width="62" height="30" rx="12" fill="#FFFDF9" stroke="${C.beige}" stroke-width="2"/><path d="M50 60 l6 9 5 -9z" fill="#FFFDF9"/><text x="53" y="51" text-anchor="middle" font-family="Vazirmatn, Roboto, Arial" font-size="17" font-weight="800" fill="${C.accent}">?</text></g>
+    <g class="ar-bubble b2"><rect x="156" y="24" width="62" height="30" rx="12" fill="${C.accent}"/><path d="M182 54 l6 9 5 -9z" fill="${C.accent}"/><path d="M176 39 l6 6 12 -12" stroke="#FFFDF9" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+    ${spark(120,40,6,.4)}`, T('rt2_tag'));
+  const s3 = ()=>spot(`${blob('#F3E8DA')}
+    <path d="M46 150 Q120 128 206 142 L206 158 Q120 150 46 162Z" fill="${C.beige}"/>
+    <g fill="#E3D2BC"><rect x="168" y="60" width="26" height="80" rx="3"/><rect x="194" y="82" width="16" height="58" rx="3"/></g>
+    <g fill="#FFFDF9">${[[173,68],[183,68],[173,80],[183,80],[173,92],[183,92],[173,104],[183,104],[198,90],[198,102]].map(([x,y])=>`<rect x="${x}" y="${y}" width="6" height="7" rx="1"/>`).join('')}</g>
+    <path d="M60 162 C 90 140, 116 136, 130 126 C 146 114, 160 110, 176 112" stroke="#FFFDF9" stroke-width="11" fill="none" stroke-linecap="round"/>
+    <path d="M60 162 C 90 140, 116 136, 130 126 C 146 114, 160 110, 176 112" stroke="${C.gold}" stroke-width="2" stroke-dasharray="2 8" fill="none" stroke-linecap="round"/>
+    ${shadow(112,150,20)}<rect x="109" y="56" width="7" height="94" rx="3" fill="${C.brown}"/>
+    <g class="ar-sign"><path d="M116 62 h52 l12 11 -12 11 h-52z" fill="${C.accent}"/><path d="M128 73 h26 m-6 -5 l6 5 -6 5" stroke="#FFFDF9" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+    <path d="M109 94 h-44 l-10 9 10 9 h44z" fill="${C.sand}"/>
+    ${shadow(72,160,14)}${person(72,158,{s:.66,top:C.gold,skin:C.skin2,hair:C.deep,bag:true})}
+    ${spark(150,40,7,.2)}`, T('rt3_tag'));
+  const s4 = ()=>spot(`${blob('#F3E8DA')}
+    <circle cx="112" cy="88" r="48" fill="#EADCC8"/>
+    <path d="M76 70 q16 -12 32 -3 q10 9 24 1 q12 -5 20 7 M70 98 q18 8 34 0 q18 -8 34 5 q8 6 18 2" stroke="#D3B996" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <path d="M34 128 Q110 -6 214 98" fill="none" stroke="${C.gold}" stroke-width="2.2" stroke-dasharray="3 8" stroke-linecap="round"/>
+    <g><path d="M-13 0 l26 -3 -5 3 5 3z M-4 -1 l-6 -9 h5 l9 9z M-4 1 l-6 9 h5 l9 -9z" fill="${C.accent}"/><animateMotion dur="11s" repeatCount="indefinite" rotate="auto" path="M34 128 Q110 -6 214 98"/></g>
+    <g class="ar-pin"><path d="M112 52 c -11 0 -18 8 -18 17 c 0 12 18 28 18 28 s 18 -16 18 -28 c 0 -9 -7 -17 -18 -17z" fill="${C.accent}"/><circle cx="112" cy="69" r="6" fill="#FFFDF9"/></g>
+    ${shadow(178,160,30)}
+    <g class="ar-float"><rect x="150" y="114" width="58" height="44" rx="8" fill="${C.accent}"/><path d="M166 114 v-8 h26 v8" stroke="${C.brown}" stroke-width="4" fill="none"/><rect x="150" y="130" width="58" height="5" fill="${C.gold}"/><circle cx="164" cy="146" r="5" fill="#F1D6AC"/><rect x="176" y="142" width="18" height="7" rx="3.5" fill="#FFFDF9" opacity=".85"/></g>
+    ${spark(54,46,6,.5)}`, T('rt4_tag'));
+  return { hero, cards:[resume, interview, switchCareer, newCountry], spots:[s1, s2, s3, s4] };
+})();
+
+const ROUTES = [
+  { tag:'rt1_tag', title:'rt1_title', line:'rt1_line', q:'rt1_q' },
+  { tag:'rt2_tag', title:'rt2_title', line:'rt2_line', q:'rt2_q' },
+  { tag:'rt3_tag', title:'rt3_title', line:'rt3_line', q:'rt3_q' },
+  { tag:'rt4_tag', title:'rt4_title', line:'rt4_line', q:'rt4_q' }
+];
 function homeView(){
   const mentors = Object.entries(cache.profiles).slice(0,3);
   return `
-  <div class="hero hero-solo">
+  <div class="hero hero-arch">
+    <div class="hero-copy">
     <h1>${esc(T('hero_h1a'))}<i>${esc(T('hero_h1em'))}</i>${esc(T('hero_h1b'))}</h1>
     <p>${esc(T('hero_sub'))}</p>
     <div class="hero-actions">
       <button class="btn btn-primary" data-nav="browse">${esc(T('cta_browse'))}</button>
       <button class="btn btn-outline" data-nav="onboard" data-role="mentor">${esc(T('cta_become'))}</button>
     </div>
+    <ul class="hero-trust">${['ht1','ht2','ht3'].map(k=>`<li><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><circle cx="8" cy="8" r="7.2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M4.8 8.3l2.2 2.1 4.2-4.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>${esc(T(k))}</span></li>`).join('')}</ul>
+    </div>
+    <div class="ar-hero-wrap">${ART.hero()}
+      <div class="ar-chip" aria-hidden="true"><span class="ar-chip-dot"></span><div><b>${esc(T('ar_chip_t'))}</b><small>${esc(T('ar_chip_s'))}</small></div></div>
+    </div>
   </div>
-  <!-- Photos: Pexels (free licence, no attribution required). Swap the IDs in PHOTOS to change them. -->
-  <div class="ph-mosaic reveal" aria-hidden="false">
-    <figure class="ph ph-a"><img src="${PHOTOS.a}" srcset="${PHOTOS.a} 1x, ${PHOTOS.a2} 2x" alt="${esc(T('ph_alt_a'))}" loading="eager" decoding="async" onerror="this.closest('figure').remove()"></figure>
-    <figure class="ph ph-b"><img src="${PHOTOS.b}" alt="${esc(T('ph_alt_b'))}" loading="lazy" decoding="async" onerror="this.closest('figure').remove()"></figure>
-    <figure class="ph ph-c"><img src="${PHOTOS.c}" alt="${esc(T('ph_alt_c'))}" loading="lazy" decoding="async" onerror="this.closest('figure').remove()"></figure>
-  </div>
+  <!-- What we help with: simple topic list in the site's own section style. -->
+  <section class="lp-section tp">
+    <h2 class="lp-title">${esc(T('rt_title_a'))}</h2>
+    <p class="lp-sub">${esc(T('rt_sub'))}</p>
+    <div class="lp-bar"></div>
+    <div class="tp-row">
+      ${ROUTES.map((r,i)=>`<div class="tp-item reveal" data-rk="tp${i}" style="--d:${i*0.12}s">
+        <div class="tp-art">${ART.spots[i]()}</div>
+        <h3>${esc(T(r.title))}</h3>
+        <p>${esc(T(r.line))}</p>
+      </div>`).join('')}
+    </div>
+    <div class="tp-cta"><button type="button" class="btn btn-primary" data-nav="browse">${esc(T('rt_cta'))}</button></div>
+  </section>
+
 
   ${landingSections()}
-  <section class="ph-split reveal">
-    <figure class="ph ph-tall"><img src="${PHOTOS.d}" alt="${esc(T('ph_alt_d'))}" loading="lazy" decoding="async" onerror="this.closest('figure').remove()"></figure>
-    <div class="ph-copy">
-      <span class="ph-kicker">${esc(T('ph_kicker'))}</span>
-      <h2>${esc(T('ph_title'))}</h2>
-      <p>${esc(T('ph_body'))}</p>
-      <ul class="ph-points">
-        <li><b>${esc(T('ph_p1t'))}</b><span>${esc(T('ph_p1'))}</span></li>
-        <li><b>${esc(T('ph_p2t'))}</b><span>${esc(T('ph_p2'))}</span></li>
-        <li><b>${esc(T('ph_p3t'))}</b><span>${esc(T('ph_p3'))}</span></li>
-      </ul>
-      <button class="btn btn-primary" data-nav="browse">${esc(T('cta_browse'))}</button>
-    </div>
+
+
+
+
+
+  <!-- Questions -->
+  <section class="fq reveal" data-rk="fq">
+    <div class="fq-head"><h2 class="lp-title">${esc(T('fq_title_a'))} ${esc(T('fq_title_b'))}</h2><p class="lp-sub">${esc(T('fq_sub'))}</p></div>
+    <div class="fq-list">${[1,2,3,4,5,6].map(n=>`<details class="fq-item"><summary>${esc(T('fq_q'+n))}</summary><p>${esc(T('fq_a'+n))}</p></details>`).join('')}</div>
   </section>
-  <section class="ph-cta reveal">
-    <img src="${PHOTOS.e}" alt="" loading="lazy" decoding="async" onerror="this.remove()">
-    <div class="ph-cta-in">
-      <h2>${esc(T('ph_cta_t'))}</h2>
-      <p>${esc(T('ph_cta_b'))}</p>
-      <button class="btn btn-primary" data-nav="onboard" data-role="mentor">${esc(T('cta_become'))}</button>
+
+  <section class="lp-section close">
+    <h2 class="lp-title">${esc(T('close_t'))}</h2>
+    <p class="lp-sub">${esc(T('close_s'))}</p>
+    <div class="hero-actions" style="justify-content:center;margin-top:22px;">
+      <button class="btn btn-primary" data-nav="browse">${esc(T('cta_browse'))}</button>
+      <button class="btn btn-outline" data-nav="onboard" data-role="mentor">${esc(T('cta_become'))}</button>
     </div>
   </section>
   `;
@@ -5621,6 +6183,61 @@ init();
     }
   });
 
+  /* ---------- Hero illustration: walker follows the path on a continuous clock,
+     so re-rendering the page never restarts the walk ---------- */
+  (function walk(){
+    const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const CYCLE = 18000, MID = 0.42, END = 0.955;
+    const ease = t=>t<.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2;
+    const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
+    const seg = (ms,a,b)=>clamp((ms-a)/(b-a),0,1);
+    const depth = y=>clamp(0.58 + (y-266)/(520-266)*0.42, 0.58, 1); // smaller towards the horizon
+    function frame(now){
+      const svg = document.querySelector('svg.ar-hero');
+      const w = svg && svg.querySelector('.ar-walker'), path = svg && svg.querySelector('#arPath');
+      if(w && path){
+        const len = path.getTotalLength();
+        const ms = reduce ? 9500 : now % CYCLE;
+        // walk alone, slow down and pause halfway, the angel arrives, then they continue together
+        const prog = ms < 5500 ? MID * ease(seg(ms,0,5500)) : ms < 7600 ? MID : MID + (END-MID) * ease(seg(ms,7600,15000));
+        const pt = path.getPointAtLength(prog * len * 0.985);
+        const k = depth(pt.y);
+        w.setAttribute('transform', `translate(${pt.x.toFixed(1)} ${pt.y.toFixed(1)}) scale(${k.toFixed(3)})`);
+        const fade = reduce ? 1 : (ms > CYCLE - 900 ? 0 : (ms < 400 ? ms/400 : 1));
+        w.style.opacity = fade;
+        const ang = svg.querySelector('.ar-angel');
+        if(ang){
+          const ahead = path.getPointAtLength(Math.min(len, prog * len + 26));
+          const ka = depth(ahead.y);
+          let x = ahead.x + 6*ka, y = ahead.y - 54*ka, op = 1, sc = ka;
+          if(!reduce){
+            if(ms < 5800){ op = 0; x = 380; y = 150; sc = .6; }
+            else if(ms < 7600){ const t = ease(seg(ms,5800,7600)); x = (1-t)*(1-t)*380 + 2*(1-t)*t*300 + t*t*x; y = (1-t)*(1-t)*150 + 2*(1-t)*t*170 + t*t*y; sc = .6 + (ka-.6)*t; op = t; }
+            y += Math.sin(now/520) * 2.4 * sc;
+            op = Math.min(op, fade);
+          }
+          ang.setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${sc.toFixed(3)})`);
+          ang.style.opacity = op;
+        }
+        const burst = svg.querySelector('.ar-burst');
+        if(burst){ const t = seg(ms,15000,16600); const on = !reduce && ms > 15000 && ms < 17000; burst.setAttribute('opacity', on ? (1 - Math.max(0,t-.5)*2).toFixed(2) : 0); burst.setAttribute('transform', `translate(232 232) scale(${(0.6 + t*0.8).toFixed(2)})`); }
+      }
+      if(!reduce) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  })();
+
+  /* ---------- Home: route cards and quick start run the AI matcher ---------- */
+  function runMatch(q){ if(!q) return; state.matchQuery = q; nav('browse'); setTimeout(()=>{ const b = document.getElementById('match-btn'); if(b) b.click(); window.scrollTo(0,0); }, 60); }
+  document.addEventListener('click', e=>{
+    const r = e.target.closest && e.target.closest('[data-route-q]');
+    if(r){ runMatch(r.getAttribute('data-route-q')); return; }
+    if(e.target.closest && e.target.closest('#qs-go')){
+      const g=document.getElementById('qs-goal'), f=document.getElementById('qs-field'), w=document.getElementById('qs-when');
+      runMatch(`${g.value} ${t('qs_field')}: ${f.value}. ${t('qs_when')}: ${w.value}.`);
+    }
+  });
+
   /* ---------- 5. Help desk ---------- */
   const hd = { open:false, messages:null, busy:false, error:'' };
   function mountHelp(){
@@ -5662,6 +6279,7 @@ init();
   /* ---------- hook called after every render ---------- */
   function afterRender(){
     ensureStyle();
+    if(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) document.querySelectorAll('svg.ar').forEach(v=>{ try{ v.pauseAnimations(); }catch(e){} });
     const box = document.getElementById('ob-ai');
     if(box){ mountOb(box); if(Object.keys(ob.draft).length) fillForm(true); }
     mountNoteHelper();
