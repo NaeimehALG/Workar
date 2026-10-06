@@ -1171,6 +1171,18 @@ html[dir="rtl"] .rt-tag,html[dir="rtl"] .rt-num{letter-spacing:0;}
 .tp-item.reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease var(--d,0s),transform .7s ease var(--d,0s);}
 .tp-item.reveal.in{opacity:1;transform:none;}
 @media (prefers-reduced-motion:reduce){.tp-art *{animation:none !important}.tp-item.reveal{opacity:1;transform:none}}
+
+/* Workar logo moments in the topic illustrations */
+.tp-art .ar-seal{transform-box:fill-box;transform-origin:center;animation:arSeal 5s ease-in-out infinite;}
+@keyframes arSeal{0%,8%{opacity:0;transform:translateY(-26px) scale(1.35) rotate(-14deg)}22%{opacity:1;transform:translateY(0) scale(.92) rotate(3deg)}30%,88%{opacity:1;transform:none}100%{opacity:0;transform:none}}
+.tp-art .ar-swap-a{animation:arSwapA 6s ease-in-out infinite;}
+.tp-art .ar-swap-b{animation:arSwapB 6s ease-in-out infinite;}
+@keyframes arSwapA{0%,40%{opacity:1}50%,90%{opacity:0}100%{opacity:1}}
+@keyframes arSwapB{0%,40%{opacity:0}50%,90%{opacity:1}100%{opacity:0}}
+.tp-art .ar-wflag-cloth{transform-box:fill-box;transform-origin:left center;animation:arFlag 2.8s ease-in-out infinite;}
+.tp-art .ar-pin{animation:arPinLand 6s ease-in-out infinite !important;transform-box:fill-box;transform-origin:center bottom;}
+@keyframes arPinLand{0%,70%{transform:none}78%{transform:translateY(-8px) scale(1.06)}86%{transform:translateY(0) scale(.97)}92%,100%{transform:none}}
+@media (prefers-reduced-motion:reduce){.tp-art .ar-swap-a{opacity:0}.tp-art .ar-swap-b{opacity:1}}
 /* illustration motion */
 .ar-hero-wrap{max-width:900px;margin:8px auto 64px;}
 .ar-hero-wrap svg{display:block;width:100%;height:auto;border-radius:28px;box-shadow:0 18px 50px rgba(74,53,38,.12);}
@@ -4363,7 +4375,7 @@ const ART = (()=>{
       <rect x="114" y="43" width="42" height="6" rx="3" fill="${C.accent}"/><rect x="114" y="53" width="28" height="4" rx="2" fill="${C.sand}"/>
       ${[76,88,100,112,124,136].map((y,i)=>`<rect x="90" y="${y}" width="${[66,52,60,44,62,38][i]}" height="4.5" rx="2.25" fill="${i===2||i===3?'#F1D6AC':C.beige}"/>`).join('')}</g>
     <g class="ar-lens"><circle cx="70" cy="104" r="19" fill="rgba(255,255,255,.6)" stroke="${C.brown}" stroke-width="5"/><path d="M57 118 l-16 16" stroke="${C.brown}" stroke-width="7" stroke-linecap="round"/><path d="M62 98 a9 9 0 0 1 9 -6" stroke="#FFFDF9" stroke-width="3" fill="none" stroke-linecap="round"/></g>
-    <g class="ar-stamp"><circle cx="170" cy="134" r="19" fill="${C.accent}"/><path d="M161 134 l6 6 12 -13" stroke="#FFFDF9" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+    <g class="ar-seal"><circle cx="170" cy="132" r="21" fill="#FFFDF9" stroke="${C.accent}" stroke-width="2.2"/><circle cx="170" cy="132" r="16.5" fill="none" stroke="${C.gold}" stroke-width="1" stroke-dasharray="2 2.5"/><image href="${LOGO_DATA_URI}" x="158" y="121" width="24" height="22" preserveAspectRatio="xMidYMid meet"/></g>
     ${spark(190,44,7,0)}${spark(58,52,5,.7)}`, T('rt1_tag'));
   const s2 = ()=>spot(`${blob('#F3E8DA')}${shadow(120,160,80)}
     <rect x="86" y="112" width="68" height="7" rx="3.5" fill="${C.brown}"/><rect x="117" y="119" width="6" height="36" fill="${C.brown}"/><rect x="104" y="153" width="32" height="4" rx="2" fill="${C.brown}"/>
@@ -4373,10 +4385,11 @@ const ART = (()=>{
     ${person(62,156,{s:.72,top:C.accent,skin:C.skin1,hair:C.deep})}
     ${person(178,156,{s:.72,top:C.gold,skin:C.skin3,hair:'#2F2118'})}
     <g class="ar-bubble"><rect x="22" y="30" width="62" height="30" rx="12" fill="#FFFDF9" stroke="${C.beige}" stroke-width="2"/><path d="M50 60 l6 9 5 -9z" fill="#FFFDF9"/><text x="53" y="51" text-anchor="middle" font-family="Vazirmatn, Roboto, Arial" font-size="17" font-weight="800" fill="${C.accent}">?</text></g>
-    <g class="ar-bubble b2"><rect x="156" y="24" width="62" height="30" rx="12" fill="${C.accent}"/><path d="M182 54 l6 9 5 -9z" fill="${C.accent}"/><path d="M176 39 l6 6 12 -12" stroke="#FFFDF9" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+    <g class="ar-bubble b2"><rect x="156" y="24" width="62" height="32" rx="12" fill="${C.accent}"/><path d="M182 56 l6 9 5 -9z" fill="${C.accent}"/><g class="ar-swap-a"><path d="M176 40 l6 6 12 -12" stroke="#FFFDF9" stroke-width="4" fill="none" stroke-linecap="round"/></g><g class="ar-swap-b"><rect x="171" y="27" width="32" height="26" rx="8" fill="#FFFDF9"/><image href="${LOGO_DATA_URI}" x="174" y="28.5" width="26" height="23" preserveAspectRatio="xMidYMid meet"/></g></g>
     ${spark(120,40,6,.4)}`, T('rt2_tag'));
   const s3 = ()=>spot(`${blob('#F3E8DA')}
     <path d="M46 150 Q120 128 206 142 L206 158 Q120 150 46 162Z" fill="${C.beige}"/>
+    <g class="ar-wflag"><path d="M181 60 V30" stroke="${C.brown}" stroke-width="2" stroke-linecap="round"/><g class="ar-wflag-cloth"><path d="M181 30 h28 l-6 9 6 9 h-28z" fill="#FFFDF9" stroke="${C.accent}" stroke-width="1.4"/><image href="${LOGO_DATA_URI}" x="183" y="31" width="17" height="16" preserveAspectRatio="xMidYMid meet"/></g></g>
     <g fill="#E3D2BC"><rect x="168" y="60" width="26" height="80" rx="3"/><rect x="194" y="82" width="16" height="58" rx="3"/></g>
     <g fill="#FFFDF9">${[[173,68],[183,68],[173,80],[183,80],[173,92],[183,92],[173,104],[183,104],[198,90],[198,102]].map(([x,y])=>`<rect x="${x}" y="${y}" width="6" height="7" rx="1"/>`).join('')}</g>
     <path d="M60 162 C 90 140, 116 136, 130 126 C 146 114, 160 110, 176 112" stroke="#FFFDF9" stroke-width="11" fill="none" stroke-linecap="round"/>
@@ -4389,9 +4402,9 @@ const ART = (()=>{
   const s4 = ()=>spot(`${blob('#F3E8DA')}
     <circle cx="112" cy="88" r="48" fill="#EADCC8"/>
     <path d="M76 70 q16 -12 32 -3 q10 9 24 1 q12 -5 20 7 M70 98 q18 8 34 0 q18 -8 34 5 q8 6 18 2" stroke="#D3B996" stroke-width="7" fill="none" stroke-linecap="round"/>
-    <path d="M34 128 Q110 -6 214 98" fill="none" stroke="${C.gold}" stroke-width="2.2" stroke-dasharray="3 8" stroke-linecap="round"/>
-    <g><path d="M-13 0 l26 -3 -5 3 5 3z M-4 -1 l-6 -9 h5 l9 9z M-4 1 l-6 9 h5 l9 -9z" fill="${C.accent}"/><animateMotion dur="11s" repeatCount="indefinite" rotate="auto" path="M34 128 Q110 -6 214 98"/></g>
-    <g class="ar-pin"><path d="M112 52 c -11 0 -18 8 -18 17 c 0 12 18 28 18 28 s 18 -16 18 -28 c 0 -9 -7 -17 -18 -17z" fill="${C.accent}"/><circle cx="112" cy="69" r="6" fill="#FFFDF9"/></g>
+    <path d="M30 132 Q34 40 104 36" fill="none" stroke="${C.gold}" stroke-width="2.2" stroke-dasharray="3 8" stroke-linecap="round"/>
+    <g><path d="M-13 0 l26 -3 -5 3 5 3z M-4 -1 l-6 -9 h5 l9 9z M-4 1 l-6 9 h5 l9 -9z" fill="${C.accent}"/><animateMotion dur="6s" repeatCount="indefinite" rotate="auto" keyPoints="0;1;1" keyTimes="0;.75;1" calcMode="linear" path="M30 132 Q34 40 104 36"/></g>
+    <g class="ar-pin"><path d="M122 40 c -15 0 -25 11 -25 24 c 0 17 25 38 25 38 s 25 -21 25 -38 c 0 -13 -10 -24 -25 -24z" fill="${C.accent}"/><circle cx="122" cy="64" r="15" fill="#FFFDF9"/><image href="${LOGO_DATA_URI}" x="110" y="53" width="24" height="22" preserveAspectRatio="xMidYMid meet"/></g>
     ${shadow(178,160,30)}
     <g class="ar-float"><rect x="150" y="114" width="58" height="44" rx="8" fill="${C.accent}"/><path d="M166 114 v-8 h26 v8" stroke="${C.brown}" stroke-width="4" fill="none"/><rect x="150" y="130" width="58" height="5" fill="${C.gold}"/><circle cx="164" cy="146" r="5" fill="#F1D6AC"/><rect x="176" y="142" width="18" height="7" rx="3.5" fill="#FFFDF9" opacity=".85"/></g>
     ${spark(54,46,6,.5)}`, T('rt4_tag'));
@@ -4415,10 +4428,8 @@ function homeView(){
       <button class="btn btn-primary" data-nav="browse">${esc(T('cta_browse'))}</button>
       <button class="btn btn-outline" data-nav="onboard" data-role="mentor">${esc(T('cta_become'))}</button>
     </div>
-    <ul class="hero-trust">${['ht1','ht2','ht3'].map(k=>`<li><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><circle cx="8" cy="8" r="7.2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M4.8 8.3l2.2 2.1 4.2-4.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>${esc(T(k))}</span></li>`).join('')}</ul>
     </div>
     <div class="ar-hero-wrap">${ART.hero()}
-      <div class="ar-chip" aria-hidden="true"><span class="ar-chip-dot"></span><div><b>${esc(T('ar_chip_t'))}</b><small>${esc(T('ar_chip_s'))}</small></div></div>
     </div>
   </div>
   <!-- What we help with: simple topic list in the site's own section style. -->
