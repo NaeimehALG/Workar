@@ -187,25 +187,118 @@ async function followupSend(req, res, b) {
 // =====================================================================
 // 3. Help desk
 // =====================================================================
+const TICKET_TOOL = {
+  name: 'create_support_ticket',
+  description: 'Pass the conversation to the Workar support team. Use it when the person needs a human: refunds or payment problems, payouts, a technical problem, a complaint about a mentor or client, account changes, or anything you cannot answer from the information you have. Before calling it, make sure you know what the problem is and, if they are not signed in, their email address. Ask for these politely if missing.',
+  input_schema: {
+    type: 'object', additionalProperties: false, required: ['category', 'summary'],
+    properties: {
+      category: { type: 'string', enum: ['refund_or_payment', 'payout', 'technical_problem', 'booking_or_session', 'complaint', 'account', 'mentor_application', 'other'] },
+      summary: { type: 'string', description: 'Two or three sentences in English for the support team: what happened, what the person wants, and any booking details they gave.' },
+      email: { type: 'string', description: 'Their email address if they are not signed in.' },
+      urgent: { type: 'boolean', description: 'True if a paid session is within the next 24 hours or money was taken by mistake.' }
+    }
+  }
+};
+const CAT_LABEL = { refund_or_payment: 'Refund or payment', payout: 'Mentor payout', technical_problem: 'Technical problem', booking_or_session: 'Booking or session', complaint: 'Complaint', account: 'Account', mentor_application: 'Mentor application', other: 'Other' };
+
+// What the help desk may know about a signed-in person: their own bookings only.
+async function accountContext(me) {
+  const prof = (await M.rows(`profiles?id=eq.${encodeURIComponent(me.id)}&select=id,name,role,timezone,aiCredits,approved`))[0] || {};
+  const field = prof.role === 'mentor' ? 'mentorId' : 'clientId';
+  const reqs = await M.rows(`requests?${field}=eq.${encodeURIComponent(me.id)}&select=*&order=createdAt.desc&limit=6`);
+  const ids = [...new Set(reqs.map(r => prof.role === 'mentor' ? r.clientId : r.mentorId))].filter(Boolean);
+  const names = {};
+  if (ids.length) (await M.rows(`profiles?id=in.(${ids.map(encodeURIComponent).join(',')})&select=id,name`)).forEach(p => { names[p.id] = p.name; });
+  const bookings = reqs.map(r => ({
+    with: names[prof.role === 'mentor' ? r.clientId : r.mentorId] || 'unknown',
+    package: r.packageKey, status: r.status, paid: !!r.paid,
+    time: r.startsAt ? M.when(r, prof.timezone) : 'not scheduled yet',
+    sessionsDone: r.sessionsDone || 0,
+    callLinkReady: !!r.meetingUrl,
+    awaiting: r.status === 'pending' ? 'the mentor to accept or decline' : (r.status === 'accepted' && !r.paid && r.amountCents > 0 ? 'the client to pay' : '')
+  }));
+  return { name: prof.name, role: prof.role, email: me.email, mentorApproved: prof.role === 'mentor' ? prof.approved !== false : undefined, aiCreditsLeft: prof.aiCredits, bookings };
+}
+
+async function createTicket(input, me, ctx, messages) {
+  const id = 'WK-' + Date.now().toString(36).toUpperCase().slice(-6);
+  const email = (me && me.email) || String(input.email || '').trim().slice(0, 200);
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { ok: false, note: 'No valid email address. Ask the person for their email before creating the ticket.' };
+  const ticket = {
+    id, email, userId: me ? me.id : null, name: (ctx && ctx.name) || null,
+    category: input.category || 'other', summary: String(input.summary || '').slice(0, 1500), urgent: !!input.urgent,
+    status: 'open', transcript: messages.filter(m => typeof m.content === 'string').slice(-12)
+  };
+  const ins = await fetch(`${process.env.SUPABASE_URL}/rest/v1/support_tickets`, {
+    method: 'POST',
+    headers: { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: 'Bearer ' + process.env.SUPABASE_SERVICE_ROLE_KEY, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+    body: JSON.stringify(ticket)
+  }).catch(() => null);
+  if (!ins || !ins.ok) console.error('ticket-save-failed', ins && ins.status); // the email below still reaches the team
+  const chat = ticket.transcript.map(m => `<b>${m.role === 'user' ? M.esc(ticket.name || 'Visitor') : 'Assistant'}:</b> ${M.esc(m.content).slice(0, 600)}`).join('<br>');
+  const adminEmail = process.env.ADMIN_EMAIL || 'naeimeh.alaghehband@gmail.com';
+  // To the team: reply straight from your inbox and it goes to the person.
+  await M.sendMail(adminEmail, `${ticket.urgent ? '[URGENT] ' : ''}Support ${id}: ${CAT_LABEL[ticket.category] || 'Other'}`, M.layout(`Support request ${id}`, [
+    `<b>From:</b> ${M.esc(ticket.name || 'Visitor')} &lt;${M.esc(email)}&gt;${ctx && ctx.role ? ' (' + M.esc(ctx.role) + ')' : ''}`,
+    `<b>Category:</b> ${M.esc(CAT_LABEL[ticket.category] || 'Other')}${ticket.urgent ? ' &nbsp;<b style="color:#A65A48">Urgent</b>' : ''}`,
+    `<b>Summary:</b> ${M.esc(ticket.summary)}`,
+    ctx && ctx.bookings && ctx.bookings.length ? `<b>Their bookings:</b>` + M.list(ctx.bookings.map(x => `${x.with}: ${x.status}${x.paid ? ', paid' : ''}, ${x.time}`)) : '',
+    `<b>Conversation</b><br>${chat}`,
+    `<span style="font-size:13px;color:#8a7461;">Reply to this email to answer ${M.esc(ticket.name || 'them')} directly.</span>`
+  ]), [], { replyTo: email });
+  // To the person: confirmation with their reference number.
+  await M.sendMail(email, `We received your request (${id})`, M.layout('Thank you for contacting Workar', [
+    `Dear ${M.esc((ticket.name || '').split(' ')[0] || 'Workar member')},`,
+    `Thank you for reaching out. Your request has been passed to our support team under reference <b>${id}</b>.`,
+    `<b>Summary:</b> ${M.esc(ticket.summary)}`,
+    `We aim to reply within one business day${ticket.urgent ? ', and sooner for urgent session or payment matters' : ''}. You can simply reply to this email to add any details.`,
+    'Kind regards,<br>The Workar team'
+  ]));
+  return { ok: true, id, email };
+}
+
 async function help(req, res, b) {
-  const messages = cleanTurns(b.messages, 12, 1500);
-  if (!messages.length || messages[messages.length - 1].role !== 'user') return res.status(400).json({ error: 'Ask a question first.' });
+  const messages = cleanTurns(b.messages, 16, 1500);
+  if (!messages.length || messages[messages.length - 1].role !== 'user') return res.status(400).json({ error: 'Please type a question first.' });
+  const me = await M.userFromToken(bearer(req)).catch(() => null);
+  let ctx = null;
+  if (me) { try { ctx = await accountContext(me); } catch (e) { console.error('help-ctx', e.message); } }
   let prices = '';
   try {
     const st = await M.rows('site_settings?id=eq.main&select=data');
     const pk = st[0] && st[0].data && Array.isArray(st[0].data.packages) ? st[0].data.packages : null;
     if (pk) prices = '\n\nCurrent package base prices (at the minimum session rate, USD): ' + pk.filter(p => !p.hidden).map(p => `${p.key}: $${p.price}${p.sessions ? ' for ' + p.sessions + ' session(s)' : ''}`).join('; ');
   } catch (e) {}
-  const data = await AI.callClaude({
-    system: `You are Workar's help desk assistant on workar.me. Answer questions from visitors, clients and mentors about how Workar works, booking, payments, calls, refunds and becoming a mentor.
-Answer only from the information below. If the answer isn't there, or the person needs something done on their account (a refund, a payout, a bug, a complaint about a person), politely explain that the support team can help with that and ask them to email support@workar.me with their booking details.
-Never promise a refund or make exceptions to policy. Don't give career advice here; point them to the AI coach or a mentor instead.
-Reply in the language the person writes in. Keep answers short: 2 to 5 sentences, plain text, no markdown.
+  const system = `You are Workar's support assistant on workar.me, a career mentorship platform. You help visitors, clients and mentors with how Workar works, their bookings, payments, calls, refunds and becoming a mentor.
 
-${KNOWLEDGE}${prices}`,
-    messages, maxTokens: 500, timeoutMs: 20000
-  });
-  return res.status(200).json({ reply: AI.textOf(data) });
+How you work:
+- Answer from the information below and, when available, from the person's own account details. Be specific: if they ask about "my session", use their bookings (who it is with, the time, whether it is paid, what it is waiting for).
+- If the person needs a human (refund or payment problems, payouts, technical problems, complaints, account changes, or anything you cannot answer), offer to pass it to the support team and use create_support_ticket. Confirm the problem first; if they are not signed in, politely ask for their email address. After the ticket is created, give them the reference number and say they will receive a confirmation email and a reply within one business day.
+- Never promise refunds, exceptions or outcomes; the support team decides. Never reveal anything about other people's accounts.
+- For career advice, kindly point them to a mentor or the AI coach.
+- Reply in the language the person writes in. Keep answers to 2 to 5 sentences, plain text, no markdown. When useful, mention where to click on the site (for example: My profile, then the booking card).
+
+${ctx ? 'The person is signed in. Their account (private, only for answering them):\n' + JSON.stringify(ctx) : 'The person is not signed in.'}
+
+${KNOWLEDGE}${prices}`;
+  let reply = '', ticket = null;
+  for (let round = 0; round < 3; round++) {
+    const data = await AI.callClaude({ system, messages, tools: [TICKET_TOOL], maxTokens: 600, timeoutMs: 20000 });
+    const uses = data.content.filter(x => x.type === 'tool_use');
+    const text = AI.textOf(data);
+    if (data.stop_reason !== 'tool_use' || !uses.length) { reply = text; break; }
+    messages.push({ role: 'assistant', content: data.content });
+    const results = [];
+    for (const u of uses) {
+      const out = ticket ? { ok: true, id: ticket.id, note: 'Already created in this conversation.' } : await createTicket(u.input || {}, me, ctx, messages);
+      if (out.ok) ticket = out;
+      results.push({ type: 'tool_result', tool_use_id: u.id, content: JSON.stringify(out) });
+    }
+    messages.push({ role: 'user', content: results });
+    if (text) reply = text;
+  }
+  return res.status(200).json({ reply: reply || 'Thank you. How else may I help you?', ticket: ticket ? { id: ticket.id } : null });
 }
 
 // =====================================================================

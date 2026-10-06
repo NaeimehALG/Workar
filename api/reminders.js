@@ -89,6 +89,7 @@ Return an array: [{"id": "...", "flag": true|false, "reason": "short reason, emp
 async function adminDigest() {
   const adminEmail = process.env.ADMIN_EMAIL || 'naeimeh.alaghehband@gmail.com';
   const now = Date.now(), site = M.SITE();
+  const tickets = await M.rows(`support_tickets?status=eq.open&select=id,email,name,category,summary,urgent,createdAt&order=createdAt.asc&limit=20`);
   const [apps, reviews, pending, unpaid, paid] = await Promise.all([
     M.rows(`profiles?role=eq.mentor&approved=eq.false&select=*`),
     M.rows(`reviews?select=*&order=createdAt.desc&limit=40`),
@@ -102,7 +103,7 @@ async function adminDigest() {
   const notMarkedDone = paid.filter(r => r.status === 'accepted' && r.startsAt && now - Date.parse(r.startsAt) > DAY && !(Number(r.sessionsDone) > 0));
   const payoutsDue = paid.filter(r => !r.payoutDone && Number(r.sessionsDone) > 0);
 
-  if (!apps.length && !newReviews.length && !stuckPending.length && !stuckUnpaid.length && !notMarkedDone.length && !payoutsDue.length) return { digest: 'nothing to report' };
+  if (!tickets.length && !apps.length && !newReviews.length && !stuckPending.length && !stuckUnpaid.length && !notMarkedDone.length && !payoutsDue.length) return { digest: 'nothing to report' };
 
   const [assess, revFlags] = await Promise.all([assessApplications(apps), checkReviews(newReviews)]);
   const ids = new Set([].concat(...[stuckPending, stuckUnpaid, notMarkedDone, newReviews].map(l => l.flatMap(r => [r.mentorId, r.clientId]))).filter(Boolean));
@@ -110,6 +111,11 @@ async function adminDigest() {
   if (ids.size) (await M.rows(`profiles?id=in.(${[...ids].map(encodeURIComponent).join(',')})&select=id,name`)).forEach(p => { names[p.id] = p.name; });
   const nm = id => M.esc(names[id] || 'Unknown');
   const paras = [];
+  if (tickets.length) {
+    paras.push(`<h3 style="margin:8px 0 6px;font-size:16px;color:#4A3526;">Open support requests (${tickets.length})</h3>`);
+    paras.push(M.list(tickets.map(t => `${t.urgent ? 'URGENT ' : ''}${t.id}, ${t.name || t.email}: ${String(t.summary || '').slice(0, 160)}`)));
+    paras.push(`<span style="font-size:13px;color:#8a7461;">Each request was also emailed to you when it arrived; reply to that email to answer. To close one, set its status to "closed" in Supabase (table support_tickets).</span>`);
+  }
   const verdictLabel = { approve: 'Looks ready to approve', ask: 'Ask a question first', decline: 'Probably decline' };
 
   if (apps.length) {
@@ -142,7 +148,7 @@ async function adminDigest() {
   }
   if (payoutsDue.length) paras.push(`<b>Payouts:</b> ${payoutsDue.length} completed paid booking${payoutsDue.length === 1 ? '' : 's'} not yet paid out to mentors.`);
 
-  const subjectBits = [apps.length ? `${apps.length} application${apps.length === 1 ? '' : 's'}` : '', newReviews.length ? `${newReviews.length} new review${newReviews.length === 1 ? '' : 's'}` : '',
+  const subjectBits = [tickets.length ? `${tickets.length} open support request${tickets.length === 1 ? '' : 's'}` : '', apps.length ? `${apps.length} application${apps.length === 1 ? '' : 's'}` : '', newReviews.length ? `${newReviews.length} new review${newReviews.length === 1 ? '' : 's'}` : '',
     (stuckPending.length + stuckUnpaid.length + notMarkedDone.length) ? `${stuckPending.length + stuckUnpaid.length + notMarkedDone.length} to follow up` : ''].filter(Boolean);
   await M.sendMail(adminEmail, `Workar daily digest: ${subjectBits.join(', ') || 'payouts due'}`,
     M.layout('Your Workar daily digest', paras.concat([`<span style="font-size:13px;color:#8a7461;">AI suggestions are a starting point. You make the final call.</span>`]), { text: 'Open the admin panel', url: site + '/?go=admin' }));

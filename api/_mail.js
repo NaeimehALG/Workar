@@ -54,14 +54,31 @@ function layout(title, paragraphs, cta) {
   <tr><td style="padding:26px 30px 8px;font-size:12px;letter-spacing:4px;font-weight:700;color:#A88660;">WORKAR</td></tr>
   <tr><td style="padding:6px 30px 26px;"><h1 style="margin:0 0 16px;font-size:21px;line-height:1.3;color:#4A3526;">${esc(title)}</h1>${p}${button}</td></tr>
   </table>
-  <p style="font-size:12px;color:#A88660;margin:16px 0 0;">Workar · career mentoring · <a href="${SITE()}" style="color:#A88660;">workar.me</a></p>
+  <p style="font-size:12px;color:#A88660;margin:16px 0 4px;">Questions? Simply reply to this email and our team will help.</p>
+  <p style="font-size:12px;color:#A88660;margin:0;">Workar · career mentoring · <a href="${SITE()}" style="color:#A88660;">workar.me</a></p>
   </td></tr></table></body></html>`;
 }
 
-async function sendMail(to, subject, html, attachments) {
+// Plain-text copy of an HTML email (better inbox placement, readable in any mail app).
+function htmlToText(html) {
+  return String(html || '')
+    .replace(/<a [^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi, (m, href, txt) => { const t = txt.replace(/<[^>]+>/g, '').trim(); return t && t !== href ? `${t} (${href})` : href; })
+    .replace(/<li[^>]*>/gi, '\n - ').replace(/<br\s*\/?>/gi, '\n').replace(/<\/(p|div|h1|h2|h3|tr|table|ul)>/gi, '\n\n')
+    .replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'")
+    .replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+}
+
+// Every Workar email: HTML + plain text, and replies go to a real person (the support inbox),
+// never to the no-reply sending address.
+const SUPPORT_REPLY_TO = () => process.env.SUPPORT_REPLY_TO || process.env.ADMIN_EMAIL || 'naeimeh.alaghehband@gmail.com';
+async function sendMail(to, subject, html, attachments, opts = {}) {
   const key = process.env.RESEND_API_KEY;
   if (!key || !to) return { skipped: true };
-  const payload = { from: process.env.MAIL_FROM || 'Workar <notifications@workar.me>', to: [to], subject, html };
+  const payload = {
+    from: process.env.MAIL_FROM || 'Workar <notifications@workar.me>',
+    to: Array.isArray(to) ? to : [to], subject, html, text: htmlToText(html),
+    reply_to: opts.replyTo || SUPPORT_REPLY_TO()
+  };
   if (attachments && attachments.length) payload.attachments = attachments; // [{ filename, content (base64) }]
   const r = await fetch('https://api.resend.com/emails', {
     method: 'POST',
@@ -75,4 +92,4 @@ async function sendMail(to, subject, html, attachments) {
 function link(url, text) { return `<a href="${esc(url)}" style="color:#8B6A4C;font-weight:700;">${esc(text)}</a>`; }
 function list(items) { const li = (items || []).filter(Boolean).map(x => `<li style="margin:0 0 6px;">${esc(x)}</li>`).join(''); return li ? `<ul style="margin:0;padding-left:20px;">${li}</ul>` : ''; }
 
-module.exports = { SITE, esc, userFromToken, emailOf, rows, patch, profile, fullProfile, when, layout, sendMail, link, list };
+module.exports = { htmlToText, SUPPORT_REPLY_TO, SITE, esc, userFromToken, emailOf, rows, patch, profile, fullProfile, when, layout, sendMail, link, list };
