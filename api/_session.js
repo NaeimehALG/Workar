@@ -42,7 +42,7 @@ async function sendConfirmation(r, opts = {}) {
     const title = `Workar session with ${p.other.name || 'your ' + (p.isMentor ? 'client' : 'mentor')}`;
     const description = p.isMentor
       ? `Mentoring session with ${p.other.name}.${r.message ? ' Their note: ' + String(r.message).slice(0, 300) : ''}`
-      : `Mentoring session with ${p.other.name}. Have your questions ready and test your camera and microphone a few minutes before.`;
+      : `Mentoring session with ${p.other.name}. We recommend preparing your questions and testing your camera and microphone a few minutes before you join.`;
     const ics = MT.buildIcs({ r, title, description, url });
     const gcal = MT.googleCalendarLink({ r, title, description, url });
     const whenTxt = M.when(r, p.me.timezone);

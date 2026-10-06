@@ -37,7 +37,7 @@ async function sessionReminders() {
         paras.push('<b>To get the most out of it:</b>');
         paras.push(M.list(brief.clientTips));
       }
-      paras.push(`Your call link: ${M.link(url, url)}. Test your camera and microphone a few minutes before.`);
+      paras.push(`Your call link: ${M.link(url, url)}. We recommend testing your camera and microphone a few minutes before you join.`);
       await M.sendMail(await M.emailOf(who.id), `Reminder: your Workar session with ${other.name}`,
         M.layout('Your session is coming up', paras, { text: 'Join the call', url }));
     }
@@ -170,7 +170,7 @@ async function reengage() {
     if (process.env.ANTHROPIC_API_KEY) {
       try {
         const data = await AI.callClaude({
-          system: `Write 2 short, warm sentences to a client of Workar, a career mentorship site, about a week or more after their mentoring session. Mention their goal if known and suggest one concrete next step a follow-up session with the same mentor could help with. No pressure, no discounts, no invented facts. Plain text, English.`,
+          system: `Write 2 short, courteous sentences to a client of Workar, a career mentorship site, about a week or more after their mentoring session. Mention their goal if known and suggest one concrete next step a follow-up session with the same mentor could help with. No pressure, no discounts, no invented facts. Plain text, English.`,
           messages: [{ role: 'user', content: JSON.stringify({ clientFirstName: String(client.name || '').split(' ')[0], goal: (r.prepBrief && r.prepBrief.goal) || client.profession || '', mentorName: mentor.name, mentorProfession: mentor.profession }) }],
           maxTokens: 200, timeoutMs: 12000
         });
@@ -179,7 +179,7 @@ async function reengage() {
     }
     if (!line) line = `It's been a little while since your session with ${mentor.name}. A follow-up session is a good way to check progress and plan your next step.`;
     await M.sendMail(await M.emailOf(r.clientId), `Ready for your next step with ${mentor.name}?`,
-      M.layout('How is it going?', [M.esc(line), `<span style="font-size:13px;color:#8a7461;">You'll only get this note once per booking.</span>`], { text: `Book ${mentor.name} again`, url: M.SITE() + '/?go=browse' }));
+      M.layout('We hope your session was helpful', [M.esc(line), `<span style="font-size:13px;color:#8a7461;">You'll only get this note once per booking.</span>`], { text: `Book ${mentor.name} again`, url: M.SITE() + '/?go=browse' }));
     sent++;
   }
   return { nudged: sent };

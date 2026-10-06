@@ -1,5 +1,11 @@
 // Shared helper for Workar's AI agents (not a route: files starting with "_" are not deployed as functions).
 // Uses ANTHROPIC_API_KEY (already set for api/ai.js). Optional: ANTHROPIC_MODEL.
+// One voice for every Workar agent.
+const TONE = `Voice and tone: courteous, warm and professional, like an experienced advisor at a respected career firm.
+Use polite phrasing naturally ("please", "thank you", "would you like"). Address people respectfully and never sound casual or salesy.
+No slang, no emojis, no exclamation marks, no filler praise. Be clear and concise.
+In Persian, always use the formal "شما" form and polite verb endings. In French, use "vous".`;
+
 const MODEL = () => process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-6';
 
 async function callClaude({ system, messages, tools, maxTokens = 1000, timeoutMs = 25000 }) {
@@ -8,7 +14,7 @@ async function callClaude({ system, messages, tools, maxTokens = 1000, timeoutMs
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), timeoutMs);
   try {
-    const body = { model: MODEL(), max_tokens: maxTokens, system, messages };
+    const body = { model: MODEL(), max_tokens: maxTokens, system: system + '\n\n' + TONE, messages };
     if (tools) body.tools = tools;
     const r = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -35,4 +41,4 @@ async function askJSON(system, userText, opts = {}) {
   return JSON.parse(raw.slice(start, end + 1));
 }
 
-module.exports = { MODEL, callClaude, textOf, askJSON };
+module.exports = { TONE, MODEL, callClaude, textOf, askJSON };
