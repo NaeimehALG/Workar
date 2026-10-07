@@ -1428,6 +1428,157 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .wkv-video{opacity:0;transition:opacity .6s ease;}
   .wkv-video.on{opacity:1;}
   @media (max-width:760px){.hero-arch .ar-hero-wrap{max-width:300px;}}
+
+  /* ===== Messages inbox ===== */
+  .nav-msg{position:relative;}
+  .nav-msg-badge{position:absolute;top:2px;inset-inline-end:2px;min-width:17px;height:17px;padding:0 5px;border-radius:999px;background:#B3412C;color:#fff;font-size:10.5px;font-weight:800;line-height:17px;text-align:center;}
+  .ib{display:grid;grid-template-columns:330px minmax(0,1fr);height:min(78vh,760px);min-height:520px;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);margin-bottom:24px;}
+  .ib-side{border-inline-end:1px solid var(--border);display:flex;flex-direction:column;min-width:0;background:var(--surface);}
+  .ib-side-head{padding:18px 18px 6px;} .ib-side-head h2{margin:0;font-size:19px;font-weight:800;}
+  .ib-search{display:flex;align-items:center;gap:8px;margin:8px 14px 10px;padding:9px 12px;border-radius:10px;background:var(--surface-2);color:var(--muted);border:1px solid transparent;}
+  .ib-search:focus-within{border-color:var(--accent-2);}
+  .ib-search input{border:0;background:transparent;outline:none;flex:1;min-width:0;font:inherit;font-size:14px;color:var(--text);}
+  .ib-list{overflow-y:auto;flex:1;}
+  .ib-item{display:flex;gap:12px;align-items:center;width:100%;padding:12px 16px;border:0;border-inline-start:3px solid transparent;background:none;text-align:start;cursor:pointer;font:inherit;color:var(--text);transition:background .15s;}
+  .ib-item:hover{background:var(--surface-2);}
+  .ib-item.on{background:var(--surface-2);border-inline-start-color:var(--accent);}
+  .ib-av{flex:none;width:44px;height:44px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#fff;background:linear-gradient(135deg,#B98D5E,#7E5E40);}
+  .ib-av.sm{width:30px;height:30px;font-size:11.5px;} .ib-av.lg{width:48px;height:48px;font-size:16px;}
+  .ib-meta{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;}
+  .ib-row{display:flex;justify-content:space-between;align-items:center;gap:8px;min-width:0;}
+  .ib-row b{font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .ib-row time{font-size:11.5px;color:var(--muted);flex:none;}
+  .ib-snip{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .ib-badge{flex:none;min-width:19px;height:19px;padding:0 6px;border-radius:999px;background:var(--accent);color:#fff;font-size:11px;font-style:normal;font-weight:800;line-height:19px;text-align:center;}
+  .ib-none,.ib-pick{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;color:var(--muted);padding:40px 24px;height:100%;}
+  .ib-none svg,.ib-pick svg{width:34px;height:34px;color:var(--accent-2);}
+  .ib-main{display:flex;flex-direction:column;min-width:0;min-height:0;background:linear-gradient(180deg,var(--surface) 0%,var(--surface-2) 140%);}
+  .ib-head{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface);}
+  .ib-who{flex:1;min-width:0;display:flex;flex-direction:column;}
+  .ib-who b{font-size:15.5px;} .ib-who span{font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .ib-tools{display:flex;align-items:center;gap:4px;}
+  .ib-ic{width:38px;height:38px;border-radius:50%;border:0;background:transparent;color:var(--accent);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s,color .15s;}
+  .ib-ic:hover{background:var(--surface-2);color:var(--text);}
+  .ib-ic.off{color:var(--muted);opacity:.55;}
+  .ib-back{display:none;}
+  .ib-more-wrap{position:relative;}
+  .ib-menu{position:absolute;top:42px;inset-inline-end:0;z-index:20;min-width:210px;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:6px;display:flex;flex-direction:column;}
+  .ib-menu button{border:0;background:none;text-align:start;padding:9px 12px;border-radius:8px;font:inherit;font-size:13.5px;color:var(--text);cursor:pointer;}
+  .ib-menu button:hover{background:var(--surface-2);} .ib-menu .danger{color:#B3412C;}
+  .ib-ctx{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:12px 16px 0;padding:12px 14px;border:1px solid var(--border);border-inline-start:3px solid var(--accent);border-radius:12px;background:var(--surface);}
+  .ib-ctx.soft{border-inline-start-color:var(--accent-2);}
+  .ib-ctx>div:first-child{display:flex;flex-direction:column;min-width:0;} .ib-ctx b{font-size:13.5px;} .ib-ctx span{font-size:12.5px;color:var(--muted);}
+  .ib-ctx-act{display:flex;gap:6px;flex-wrap:wrap;}
+  .ib-thread{flex:1;overflow-y:auto;padding:18px 18px 8px;display:flex;flex-direction:column;gap:6px;}
+  .ib-day{text-align:center;margin:12px 0 6px;} .ib-day span{font-size:11.5px;font-weight:700;color:var(--muted);background:var(--surface);border:1px solid var(--border);padding:3px 12px;border-radius:999px;}
+  .ib-msg{display:flex;align-items:flex-end;gap:8px;max-width:78%;}
+  .ib-msg.me{align-self:flex-end;flex-direction:row-reverse;}
+  .ib-bub{position:relative;padding:9px 13px 7px;border-radius:16px 16px 16px 4px;background:var(--surface);border:1px solid var(--border);font-size:14.5px;line-height:1.5;}
+  .ib-msg.me .ib-bub{background:var(--accent);border-color:var(--accent);color:#fff;border-radius:16px 16px 4px 16px;}
+  .ib-text{white-space:pre-wrap;word-wrap:break-word;}
+  .ib-bub time{display:block;font-size:10.5px;opacity:.65;margin-top:2px;text-align:end;}
+  .ib-del{position:absolute;top:-8px;inset-inline-start:-8px;width:24px;height:24px;border-radius:50%;border:1px solid var(--border);background:var(--surface);color:#B3412C;display:none;align-items:center;justify-content:center;cursor:pointer;}
+  .ib-msg.me:hover .ib-del,.ib-del:focus-visible{display:inline-flex;}
+  .ib-start{margin:auto;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;color:var(--muted);max-width:340px;}
+  .ib-start b{color:var(--text);font-size:16px;margin-top:6px;} .ib-start p{margin:10px 0 0;font-size:13.5px;}
+  .ib-compose{display:flex;align-items:flex-end;gap:10px;padding:12px 14px;border-top:1px solid var(--border);background:var(--surface);}
+  .ib-compose textarea{flex:1;resize:none;border:1px solid var(--border);border-radius:20px;padding:10px 16px;background:var(--surface-2);color:var(--text);font:inherit;font-size:14.5px;line-height:1.45;max-height:140px;outline:none;}
+  .ib-compose textarea:focus{border-color:var(--accent-2);background:var(--surface);}
+  .ib-send{flex:none;width:42px;height:42px;border-radius:50%;border:0;background:var(--accent);color:#fff;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .15s;}
+  .ib-send:hover{transform:scale(1.05);}
+  html[dir="rtl"] .ib-send svg,html[dir="rtl"] .ib-back svg{transform:scaleX(-1);}
+  @media (max-width:760px){
+    .ib{grid-template-columns:1fr;height:calc(100vh - 150px);min-height:480px;}
+    .ib.has-sel .ib-side{display:none;} .ib:not(.has-sel) .ib-main{display:none;}
+    .ib-back{display:inline-flex;} .ib-msg{max-width:88%;}
+  }
+
+  /* ===== Profile header, LinkedIn-style ===== */
+  .dash-hero{position:relative;display:block !important;padding:0 !important;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);margin-bottom:22px;}
+  .dh-cover{height:120px;background:linear-gradient(120deg,#6B4F3A 0%,#8B6A4C 45%,#C9A27A 100%);position:relative;}
+  .dh-cover::after{content:"";position:absolute;inset:0;background:radial-gradient(60% 120% at 85% 0%,rgba(255,240,215,.35),transparent 60%);}
+  .dh-body{padding:0 24px 20px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:end;}
+  .dh-av{position:relative;z-index:1;width:112px;height:112px;margin-top:-56px;border-radius:50%;border:4px solid var(--surface);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:800;color:#fff;background:linear-gradient(135deg,#C9A27A,#7E5E40);box-shadow:0 6px 18px rgba(74,53,38,.18);}
+  .dh-id h1{margin:10px 0 2px;font-size:24px;font-weight:800;letter-spacing:-.01em;}
+  .dh-head{font-size:15px;color:var(--text);opacity:.85;}
+  .dh-meta{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:8px;font-size:13px;color:var(--muted);}
+  .dh-meta span{display:inline-flex;align-items:center;gap:5px;}
+  .dh-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;}
+  .dh-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--border);}
+  .dh-stats div{padding:14px 18px;border-inline-start:1px solid var(--border);}
+  .dh-stats div:first-child{border-inline-start:0;}
+  .dh-stats b{display:block;font-size:20px;font-weight:800;} .dh-stats span{font-size:12px;color:var(--muted);}
+  @media (max-width:640px){.dh-body{grid-template-columns:1fr;}.dh-actions{justify-content:flex-start;}.dh-stats{grid-template-columns:repeat(2,1fr);}.dh-stats div:nth-child(3){border-inline-start:0;}.dh-stats div:nth-child(n+3){border-top:1px solid var(--border);}}
+  .mp-msg{margin-inline-start:8px;}
+  /* ===== Refined panel (hairline, light, calm) ===== */
+  .nav-msg-badge{position:static !important;display:inline-block;margin-inline-start:6px;vertical-align:1px;min-width:16px;height:16px;line-height:16px;font-size:10px;font-weight:700;padding:0 5px;background:#B3412C;}
+  .dl{display:grid;grid-template-columns:minmax(0,1fr) 296px;gap:22px;align-items:start;}
+  .dl-main{min-width:0;}
+  .dl-side{display:flex;flex-direction:column;gap:14px;position:sticky;top:18px;}
+  @media (max-width:980px){.dl{grid-template-columns:1fr;}.dl-side{position:static;}}
+  .sc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px;}
+  .sc-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;}
+  .sc h3{margin:0;font-size:15px;font-weight:600;letter-spacing:-.005em;}
+  .sc-pct{font-size:13px;font-weight:600;color:var(--accent);}
+  .sc-sub{font-size:12.5px;color:var(--muted);line-height:1.5;margin-top:2px;}
+  .sc-bar{height:5px;border-radius:99px;background:var(--surface-2);overflow:hidden;margin:12px 0 4px;}
+  .sc-bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#C9A27A,#8B6A4C);}
+  .sc-todo{list-style:none;margin:8px 0 0;padding:0;}
+  .sc-todo li{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid var(--border);font-size:13.5px;}
+  .sc-todo li:first-child{border-top:0;}
+  .sc-todo button{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--border);background:transparent;color:var(--accent);border-radius:999px;padding:3px 10px 3px 8px;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;}
+  .sc-todo button:hover{background:var(--surface-2);}
+  .sc-ok{font-size:13px;color:var(--accent);margin-top:6px;}
+  .sc-conv{display:flex;flex-direction:column;margin:8px -8px 0;}
+  .sc-conv button{display:flex;align-items:center;gap:10px;padding:8px;border:0;background:none;border-radius:8px;text-align:start;font:inherit;color:var(--text);cursor:pointer;}
+  .sc-conv button:hover{background:var(--surface-2);}
+  .ib-av.sc-av{width:34px;height:34px;font-size:12px;}
+  .sc-cm{flex:1;min-width:0;display:flex;flex-direction:column;}
+  .sc-cm b{font-size:13.5px;font-weight:600;} .sc-cm span{font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .sc-dot{flex:none;min-width:17px;height:17px;padding:0 5px;border-radius:99px;background:var(--accent);color:#fff;font-size:10.5px;font-style:normal;font-weight:700;line-height:17px;text-align:center;}
+  .sc-link{display:block;width:100%;margin-top:10px;padding-top:10px;border:0;border-top:1px solid var(--border);background:none;font:inherit;font-size:13px;font-weight:600;color:var(--accent);cursor:pointer;text-align:center;}
+  .sc-link:hover{color:var(--text);}
+  /* profile card */
+  .dash-hero{border-radius:12px !important;box-shadow:none !important;margin-bottom:16px !important;}
+  .dh-cover{height:104px;background:linear-gradient(115deg,#EFE5D8 0%,#DCC6AA 48%,#B99671 100%);}
+  .dh-cover::after{background:radial-gradient(70% 140% at 88% -10%,rgba(255,255,255,.45),transparent 60%),repeating-linear-gradient(115deg,rgba(255,255,255,.07) 0 1px,transparent 1px 14px);}
+  .dh-body{padding:0 22px 18px;}
+  .dh-av{width:104px;height:104px;margin-top:-52px;font-size:32px;font-weight:600;letter-spacing:.02em;border:3px solid var(--surface);box-shadow:0 2px 8px rgba(74,53,38,.12);background:linear-gradient(135deg,#B99671,#7E5E40);}
+  .dh-id h1{font-size:22px;font-weight:600;margin:10px 0 0;letter-spacing:-.01em;}
+  .dh-head{font-size:14.5px;opacity:1;color:var(--text);margin-top:1px;}
+  .dh-meta{font-size:12.5px;gap:4px 12px;margin-top:6px;}
+  .dh-meta span+span:not(.chip)::before{content:"";}
+  .dh-meta .chip{font-size:11.5px;padding:1px 9px;font-weight:600;}
+  .dh-actions .btn{font-weight:600;}
+  .dh-stats div{padding:12px 18px;}
+  .dh-stats b{font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;}
+  .dh-stats span{font-size:11.5px;}
+  /* other dashboard cards */
+  .dl-main .ag-card,.dl-main .dash-edit,.dl-main .earn-row,.dl-main .req,.dl-main .req-card{border-radius:12px;}
+  .dl-main .ag-card{box-shadow:none;margin-bottom:16px;}
+  .dl-main .dash-edit{margin-bottom:16px;}
+  .dl-main .section-head h2,.dl-main .earn-head h2{font-size:18px;font-weight:600;letter-spacing:-.005em;}
+  .dl-main .earn-row b{font-size:19px;font-weight:600;}
+  /* inbox */
+  .ib{border-radius:12px;box-shadow:none;}
+  .ib-side-head h2{font-size:17px;font-weight:600;}
+  .ib-search{border-radius:8px;padding:8px 11px;}
+  .ib-av{width:42px;height:42px;font-size:14px;font-weight:600;}
+  .ib-row b{font-weight:600;font-size:14px;}
+  .ib-item{padding:11px 16px;}
+  .ib-item.on{border-inline-start-width:2px;}
+  .ib-badge{font-weight:700;min-width:17px;height:17px;line-height:17px;font-size:10.5px;}
+  .ib-who b{font-weight:600;font-size:15px;}
+  .ib-ctx{border-radius:10px;border-inline-start-width:2px;}
+  .ib-ctx b{font-weight:600;}
+  .ib-bub{border-radius:14px 14px 14px 4px;font-size:14px;}
+  .ib-msg.me .ib-bub{background:#F1E6D8;border-color:#E8D8C4;color:#4A3526;border-radius:14px 14px 4px 14px;}
+  .ib-start b{font-weight:600;}
+  .ib-compose textarea{border-radius:10px;font-size:14px;}
+  .ib-send{width:40px;height:40px;}
+  @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .ib-msg.me .ib-bub{background:var(--surface-2);border-color:var(--border);color:var(--text);}}
+  :root[data-theme="dark"] .ib-msg.me .ib-bub{background:var(--surface-2);border-color:var(--border);color:var(--text);}
+
 </style>
 </head>
 <body>
@@ -1701,6 +1852,16 @@ const I18N = {
     ph_cta_t:'Share what you have learned', ph_cta_b:'Help people take the next step in a career you know well. Set your own rate and hours, and meet clients by private video call.',
     ar_hero_alt:"Illustration: a person walks a winding path past a resume, an interview and an offer, guided by an angel, towards a mentor waving at the top",
     rt_kicker:"Your career path",
+    sd_strength:'Profile strength', sd_strength_m:'Complete profiles get noticeably more bookings.', sd_strength_c:'A complete profile helps mentors prepare for you.', sd_done:'Your profile is complete.', sd_add:'Add', sd_i_title:'Job title', sd_i_bio:'About', sd_i_skills:'Skills', sd_i_edu:'Education', sd_i_lang:'Languages', sd_i_li:'LinkedIn', sd_i_avail:'Availability', sd_i_goals:'Goals', sd_i_cert:'Certifications', sd_msgs:'Messages', sd_all:'See all messages', sd_none:'No conversations yet.', sd_find:'Find a mentor',
+    nav_messages:'Messages', msg_btn:'Message', inbox_search:'Search messages', inbox_empty:'No conversations yet. Message a mentor or book a session to start one.',
+    inbox_pick:'Choose a conversation to read it here.', inbox_ph:'Write a message…', inbox_send:'Send', inbox_you:'You',
+    inbox_voice:'Voice call', inbox_video:'Video call', inbox_calls_locked:'Voice and video calls open once a session is booked and confirmed.',
+    inbox_profile:'View profile', inbox_mark_unread:'Mark as unread', inbox_delete_conv:'Delete conversation', inbox_deleted_conv:'Conversation removed from your inbox',
+    inbox_delete_msg:'Delete message', inbox_today:'Today', inbox_yesterday:'Yesterday', inbox_back:'Back', inbox_booking:'Booking',
+    inbox_no_booking:'No session booked yet', inbox_no_msgs:'Say hello to {n}. You can chat before booking, and every message stays here.',
+    ds_active:'Active bookings', ds_done:'Sessions completed', ds_rating:'Rating', ds_convs:'Conversations', ds_unread:'Unread messages',
+    lbl_title_m:'Job title', ph_title_m:'e.g. Senior Structural Engineer', lbl_company:'Company', ph_company:'e.g. Stantec', at_word:'at',
+    lbl_degree:'Degree', ph_degree:'e.g. B.Sc. Civil Engineering', lbl_university:'University', ph_university:'e.g. University of British Columbia',
     ai_k:"Powered by AI, guided by people", ai_t:"A team of AI assistants working for you around the clock",
     ai_s:"Your mentor brings the experience. Our assistants take care of everything around the session, so nothing falls through the cracks.",
     ag1_n:"AI matching", ag1_l:"Describe your situation and see the mentors who fit you best, in seconds.",
@@ -1719,7 +1880,7 @@ const I18N = {
     ap_foot:"Every step runs on its own. If anything needs a person, our team is told the same day.",
     ft_platform:"Platform", ft_company:"Legal", ft_contact:"Contact", ft_reply:"We reply within one business day.", ft_secure:"Payments are processed securely by Stripe.",
     ar_hero_alt:"Illustration: two people walk a winding road together towards the sun and become the Workar logo",
-    disclaimer:"Mentors on Workar are independent professionals, not Workar employees. You choose your mentor yourself, based on their profile and the reviews of other clients. Advice given in a session is the mentor's own, and Workar does not guarantee any job, visa or career outcome.",
+    disclaimer:"Workar is an independent marketplace connecting clients with career consultants. Consultants are self-employed professionals, not employees or agents of Workar, and each client selects a consultant at their own discretion based on public profiles and client reviews. Guidance shared in sessions reflects the consultant\'s own professional opinion and does not constitute legal, immigration or financial advice. Workar makes no guarantee of employment, visa or career outcomes.",
     disclaimer_short:"Mentors are independent professionals. You choose based on their profile and real client reviews.",
     rt_title_a:"How a mentor can help",
     rt_title_b:"",
@@ -2084,6 +2245,16 @@ const I18N = {
     ph_cta_t:'تجربهٔ خود را به اشتراک بگذارید', ph_cta_b:'به دیگران کمک کنید در مسیری که به خوبی می‌شناسید گام بعدی را بردارند. نرخ و ساعات کاری را خودتان تعیین می‌کنید و با مراجعان از طریق تماس تصویری خصوصی دیدار می‌کنید.',
     ar_hero_alt:"تصویر: فردی با راهنمایی یک فرشته در مسیری پرپیچ‌وخم از رزومه، مصاحبه و پیشنهاد شغلی می‌گذرد و به سوی منتوری می‌رود که در بالای مسیر دست تکان می‌دهد",
     rt_kicker:"مسیر شغلی شما",
+    sd_strength:'قدرت پروفایل', sd_strength_m:'پروفایل کامل رزرو بیشتری می‌گیرد.', sd_strength_c:'پروفایل کامل به منتور کمک می‌کند بهتر آماده شود.', sd_done:'پروفایل شما کامل است.', sd_add:'افزودن', sd_i_title:'عنوان شغلی', sd_i_bio:'درباره من', sd_i_skills:'مهارت‌ها', sd_i_edu:'تحصیلات', sd_i_lang:'زبان‌ها', sd_i_li:'لینکدین', sd_i_avail:'زمان‌های آزاد', sd_i_goals:'اهداف', sd_i_cert:'گواهینامه‌ها', sd_msgs:'پیام‌ها', sd_all:'همه پیام‌ها', sd_none:'هنوز گفتگویی نداری.', sd_find:'پیدا کردن منتور',
+    nav_messages:'پیام‌ها', msg_btn:'پیام', inbox_search:'جستجو در پیام‌ها', inbox_empty:'هنوز گفتگویی نداری. به یک منتور پیام بده یا جلسه رزرو کن.',
+    inbox_pick:'یک گفتگو را انتخاب کن تا اینجا ببینی.', inbox_ph:'پیامت را بنویس…', inbox_send:'ارسال', inbox_you:'تو',
+    inbox_voice:'تماس صوتی', inbox_video:'تماس تصویری', inbox_calls_locked:'تماس صوتی و تصویری بعد از رزرو و تأیید جلسه فعال می‌شود.',
+    inbox_profile:'دیدن پروفایل', inbox_mark_unread:'علامت نخوانده', inbox_delete_conv:'حذف گفتگو', inbox_deleted_conv:'گفتگو از صندوق پیامت حذف شد',
+    inbox_delete_msg:'حذف پیام', inbox_today:'امروز', inbox_yesterday:'دیروز', inbox_back:'بازگشت', inbox_booking:'رزرو',
+    inbox_no_booking:'هنوز جلسه‌ای رزرو نشده', inbox_no_msgs:'به {n} سلام کن. قبل از رزرو هم می‌توانی گفتگو کنی و همهٔ پیام‌ها اینجا می‌ماند.',
+    ds_active:'رزروهای فعال', ds_done:'جلسه‌های انجام‌شده', ds_rating:'امتیاز', ds_convs:'گفتگوها', ds_unread:'پیام‌های نخوانده',
+    lbl_title_m:'عنوان شغلی', ph_title_m:'مثلاً مهندس سازهٔ ارشد', lbl_company:'شرکت', ph_company:'مثلاً استنتک', at_word:'در',
+    lbl_degree:'مدرک تحصیلی', ph_degree:'مثلاً کارشناسی مهندسی عمران', lbl_university:'دانشگاه', ph_university:'مثلاً دانشگاه تهران',
     ai_k:"با هوش مصنوعی، به راهنمایی انسان", ai_t:"تیمی از دستیارهای هوش مصنوعی که شبانه‌روز برای تو کار می‌کنند",
     ai_s:"تجربه را منتورت می‌آورد. دستیارهای ما بقیهٔ کارها را انجام می‌دهند تا هیچ چیز از قلم نیفتد.",
     ag1_n:"پیشنهاد منتور با هوش مصنوعی", ag1_l:"وضعیتت را بنویس و در چند ثانیه مناسب‌ترین منتورها را ببین.",
@@ -2102,7 +2273,7 @@ const I18N = {
     ap_foot:"همهٔ مراحل خودکار انجام می‌شود. اگر جایی به انسان نیاز باشد، همان روز به تیم ما خبر داده می‌شود.",
     ft_platform:"پلتفرم", ft_company:"قوانین", ft_contact:"تماس", ft_reply:"در کمتر از یک روز کاری پاسخ می‌دهیم.", ft_secure:"پرداخت‌ها به‌صورت امن توسط Stripe انجام می‌شود.",
     ar_hero_alt:"تصویر: دو نفر با هم جاده‌ای پیچ‌درپیچ را به سمت خورشید طی می‌کنند و به لوگوی Workar تبدیل می‌شوند",
-    disclaimer:"منتورهای Workar متخصصان مستقل هستند و کارمند Workar نیستند. انتخاب منتور با خود شماست و بر اساس پروفایل و نظرات مراجعان دیگر انجام می‌شود. توصیه‌های ارائه‌شده در جلسه نظر شخصی منتور است و Workar هیچ نتیجه‌ای در زمینهٔ شغل، ویزا یا مسیر حرفه‌ای را تضمین نمی‌کند.",
+    disclaimer:"Workar یک بستر مستقل برای ارتباط مراجعان با مشاوران شغلی است. مشاوران متخصصان مستقل هستند و کارمند یا نماینده Workar محسوب نمی‌شوند؛ انتخاب مشاور با صلاحدید خود مراجع و بر اساس پروفایل عمومی و نظرات مراجعان انجام می‌شود. راهنمایی‌های ارائه‌شده در جلسات نظر حرفه‌ای خود مشاور است و مشاوره حقوقی، مهاجرتی یا مالی محسوب نمی‌شود. Workar هیچ تضمینی درباره استخدام، ویزا یا نتیجه شغلی نمی‌دهد.",
     disclaimer_short:"منتورها متخصصان مستقل هستند. انتخاب با شماست، بر اساس پروفایل و نظرات واقعی مراجعان.",
     rt_title_a:"منتور چگونه می‌تواند کمک کند",
     rt_title_b:"",
@@ -2803,6 +2974,7 @@ function render(){
       case 'browse': body = browseView(); break;
       case 'mentor': body = mentorView(); break;
       case 'dashboard': body = dashboardView(); break;
+      case 'messages': body = myProfile ? messagesView() : onboardView(); break;
       case 'coach': body = coachView(); break;
       case 'prep': body = prepVisible() ? prepView() : homeView(); break;
       case 'prepAdmin': body = isAdmin() ? prepAdminView() : homeView(); break;
@@ -2815,6 +2987,7 @@ function render(){
   if(state.langPrompt) app.appendChild(el(langPromptHtml()));
   app.appendChild(el(`<footer>Workar · ${esc(T('footer_tag'))}<br><span class="foot-links"><a data-nav="privacy">${esc(T('ft_privacy'))}</a> · <a data-nav="terms">${esc(T('ft_terms'))}</a> · <a data-nav="refunds">${esc(T('ft_refunds'))}</a> · <a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a></span><br><a class="ig-link" href="${INSTAGRAM_URL}" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg> @workarmentoring</a><p class="foot-disc">${esc(T('disclaimer'))}</p></footer>`));
   wire();
+  if(state.view==='messages') wireInbox();
   if(window.WorkarAgents) WorkarAgents.afterRender();
   wireRateWidgets();
   setupReveal();
@@ -2834,6 +3007,7 @@ function navHtml(){
     <div class="brand" data-nav="home"><img class="logo-mark" src="${LOGO_DATA_URI}" alt="Workar"><span class="tag">${esc(T('tag'))}</span></div>
     <div class="navlinks">
       ${items.map(([v,l])=>`<div class="navlink ${state.view===v?'active':''}" data-nav="${v}">${esc(l)}</div>`).join('')}
+      ${uid && myProfile ? (()=>{ const n = inboxUnreadTotal(); return `<div class="navlink nav-msg ${state.view==='messages'?'active':''}" data-nav="messages">${esc(T('nav_messages'))}<span class="nav-msg-badge" style="${n?'':'display:none'}">${n}</span></div>`; })() : ''}
       ${isAdmin() ? `<div class="navlink ${state.view==='admin'?'active':''}" data-nav="admin">${esc(T('adm_nav'))}</div>` : ''}
       ${uid ? `<div class="navlink" id="signout-btn" title="${esc(T('signed_in_as'))} ${esc(userEmail||'')}">${esc(T('nav_signout'))}</div>` : `<div class="navlink" data-nav="dashboard">${esc(T('nav_login'))}</div>`}
       <div class="lang-wrap notranslate" translate="no"><div class="lang-switch" id="lang-toggle"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-inline-end:5px;"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>${esc(langName(currentUiLang()))}</div>${state.langMenu ? langMenuHtml() : ''}</div>
@@ -4921,18 +5095,19 @@ function onboardView(){
       ${preset==='mentor' ? `
         ${obSection(1,'ob_s_about')}
         <div class="field"><label>${esc(T('lbl_name'))}</label><input name="name" required autocomplete="name" placeholder="${esc(T('ph_name'))}"></div>
-        <div class="field"><label>${esc(T('lbl_headline'))}</label><input name="headline" required placeholder="${esc(T('ph_headline'))}"></div>
         <div class="field-row">
-          <div class="field"><label>${esc(T('lbl_profession_m'))}</label><input name="profession" required placeholder="${esc(T('ph_profession_m'))}"></div>
-          <div class="field"><label>${esc(T('lbl_experience'))}</label><input name="experience" type="number" min="0" placeholder="${esc(T('ph_experience'))}"></div>
+          <div class="field"><label>${esc(T('lbl_title_m'))}</label><input name="profession" required placeholder="${esc(T('ph_title_m'))}"></div>
+          <div class="field"><label>${esc(T('lbl_company'))} <span class="hint" style="display:inline;">${esc(T('opt_label'))}</span></label><input name="company" placeholder="${esc(T('ph_company'))}"></div>
         </div>
+        <div class="field"><label>${esc(T('lbl_experience'))}</label><input name="experience" type="number" min="0" placeholder="${esc(T('ph_experience'))}"></div>
         <div class="field"><label>${esc(T('lbl_bio_m'))}</label><textarea name="bio" required placeholder="${esc(T('ph_bio_m'))}"></textarea></div>
         <div class="field"><label>${esc(T('lbl_languages'))}</label><input name="languages" placeholder="${esc(T('ph_languages'))}"></div>
         ${obSection(2,'sec_background')}
         <div class="field-row">
-          <div class="field"><label>${esc(T('lbl_education'))}</label><input name="education" placeholder="${esc(T('ph_education'))}"></div>
-          <div class="field"><label>${esc(T('lbl_certifications'))}</label><input name="certifications" placeholder="${esc(T('ph_certifications'))}"></div>
+          <div class="field"><label>${esc(T('lbl_degree'))}</label><input name="degree" placeholder="${esc(T('ph_degree'))}"></div>
+          <div class="field"><label>${esc(T('lbl_university'))}</label><input name="university" placeholder="${esc(T('ph_university'))}"></div>
         </div>
+        <div class="field"><label>${esc(T('lbl_certifications'))}</label><input name="certifications" placeholder="${esc(T('ph_certifications'))}"></div>
         ${obSection(3,'sec_mentoring')}
         <div class="field"><label>${esc(T('lbl_skills'))}</label><input name="skills" placeholder="${esc(T('ph_skills'))}"></div>
         <div class="field"><label>${esc(T('lbl_formats_m'))}</label>${optPills('formats', FORMAT_KEYS, 'fmt_', ['video','voice'])}</div>
@@ -4957,9 +5132,10 @@ function onboardView(){
         <div class="field"><label>${esc(T('lbl_goal_c'))}</label><textarea name="bio" placeholder="${esc(T('ph_goal_c'))}"></textarea></div>
         ${obSection(3,'sec_background')}
         <div class="field-row">
-          <div class="field"><label>${esc(T('lbl_education'))} <span class="hint" style="display:inline;">${esc(T('opt_label'))}</span></label><input name="education" placeholder="${esc(T('ph_education'))}"></div>
-          <div class="field"><label>${esc(T('lbl_certifications'))} <span class="hint" style="display:inline;">${esc(T('opt_label'))}</span></label><input name="certifications" placeholder="${esc(T('ph_certifications'))}"></div>
+          <div class="field"><label>${esc(T('lbl_degree'))} <span class="hint" style="display:inline;">${esc(T('opt_label'))}</span></label><input name="degree" placeholder="${esc(T('ph_degree'))}"></div>
+          <div class="field"><label>${esc(T('lbl_university'))} <span class="hint" style="display:inline;">${esc(T('opt_label'))}</span></label><input name="university" placeholder="${esc(T('ph_university'))}"></div>
         </div>
+        <div class="field"><label>${esc(T('lbl_certifications'))} <span class="hint" style="display:inline;">${esc(T('opt_label'))}</span></label><input name="certifications" placeholder="${esc(T('ph_certifications'))}"></div>
         <div class="field"><label>${esc(T('lbl_linkedin_opt'))} <span class="hint" style="display:inline;">${esc(T('opt_label'))}</span></label><input name="linkedin" type="text" placeholder="${esc(T('ph_linkedin'))}"></div>
       `}
       <div id="onboard-err" class="form-err" style="display:none;"></div>
@@ -4976,7 +5152,7 @@ function wireMentorPreview(){
     const name = (fd.get('name')||'').trim();
     document.getElementById('pv-name').textContent = name || T('ob_pv_name');
     document.getElementById('pv-av').textContent = name ? initials(name) : '?';
-    document.getElementById('pv-head').textContent = (fd.get('headline')||'').trim() || T('ob_pv_head');
+    document.getElementById('pv-head').textContent = [(fd.get('profession')||'').trim(), (fd.get('company')||'').trim()].filter(Boolean).join(' '+T('at_word')+' ') || T('ob_pv_head');
     document.getElementById('pv-bio').textContent = (fd.get('bio')||'').trim() || T('ob_pv_bio');
     const yrs = (fd.get('experience')||'').trim(), langs = splitList(fd.get('languages')).map(normLang);
     document.getElementById('pv-meta').textContent = [yrs ? yrs+' '+T('yrs_exp') : '', langs.join(', ')].filter(Boolean).join('  ·  ');
@@ -5113,7 +5289,7 @@ function mentorView(){
         <button class="btn btn-ghost btn-sm" id="book-cancel">${esc(T('cancel'))}</button>
       </div>
     </div>`;
-    })() : `<button class="btn btn-primary mp-book" id="request-btn">${esc(T('book_session'))}</button>`));
+    })() : `<button class="btn btn-primary mp-book" id="request-btn">${esc(T('book_session'))}</button><button class="btn btn-outline mp-msg" data-dm="${id}">${esc(T('msg_btn'))}</button>`));
   return `
   <a class="mp-back" data-nav="browse">${esc(T('mp_back'))}</a>
   <div class="mp-hero">
@@ -5275,7 +5451,7 @@ async function loadMsgs(){
   (data||[]).forEach(m=>{ (by[m.requestId] = by[m.requestId] || []).push(m); });
   cache.msgs = by;
   if(state.chatOpen) markChatSeen(state.chatOpen);
-  if(state.view==='dashboard') render();
+  if(state.view==='dashboard' || state.view==='messages') render();
 }
 let __msgChannel = null, __msgPoll = null;
 function watchMsgs(){
@@ -5291,6 +5467,187 @@ async function sendMsg(reqId, text){
   if(error){ cache.msgs[reqId] = cache.msgs[reqId].filter(m=>m!==row); state.chatDraft = text; render(); toast(T('chat_err'), 5000); console.error(error); }
   else notify('message', reqId);
 }
+
+// ---------- Messages inbox (LinkedIn-style): one conversation per person ----------
+// A conversation joins the chat of every booking between two people with their direct-message
+// thread ('dm_<idA>_<idB>'), so people can talk before, during and after a booking.
+cache.dms = cache.dms || {};
+function dmId(a, b){ return 'dm_' + [a, b].sort().join('_'); }
+function personOf(id){ return cache.people[id] || cache.profiles[id] || {}; }
+function convSeenKey(o){ return 'workar_seen_conv_' + uid + '_' + o; }
+function hiddenConvs(){ try{ return JSON.parse(localStorage.getItem('workar_hidconv_'+uid)||'{}'); }catch(e){ return {}; } }
+function setHiddenConv(o, on){ const h = hiddenConvs(); if(on) h[o] = Date.now(); else delete h[o]; try{ localStorage.setItem('workar_hidconv_'+uid, JSON.stringify(h)); }catch(e){} }
+function convMessages(o){
+  const reqs = (cache.requests||[]).filter(r=>(r.mentorId===uid && r.clientId===o) || (r.clientId===uid && r.mentorId===o));
+  const all = [].concat(...reqs.map(r=>cache.msgs[r.id]||[]), cache.dms[dmId(uid,o)]||[]);
+  return all.slice().sort((a,b)=>new Date(a.createdAt)-new Date(b.createdAt));
+}
+function conversations(){
+  const people = new Set();
+  (cache.requests||[]).forEach(r=>{ const o = r.mentorId===uid ? r.clientId : r.mentorId; if(o && o!==uid) people.add(o); });
+  Object.keys(cache.dms).forEach(t=>{ const o = t.slice(3).split('_').find(x=>x!==uid); if(o) people.add(o); });
+  if(state.inboxWith && state.inboxWith!==uid) people.add(state.inboxWith);
+  const hid = hiddenConvs();
+  return [...people].map(o=>{
+    const msgs = convMessages(o), last = msgs[msgs.length-1];
+    const reqs = (cache.requests||[]).filter(r=>(r.mentorId===uid && r.clientId===o) || (r.clientId===uid && r.mentorId===o));
+    const lastT = Math.max(last ? new Date(last.createdAt).getTime() : 0, ...reqs.map(r=>Number(r.createdAt)||0));
+    let seen = 0; try{ seen = Number(localStorage.getItem(convSeenKey(o)))||0; }catch(e){}
+    const unread = msgs.filter(m=>m.senderId!==uid && new Date(m.createdAt).getTime() > seen).length;
+    return { o, last, lastT, unread, reqs };
+  }).filter(c=>!hid[c.o] || c.lastT > hid[c.o] || c.o===state.inboxWith)
+    .sort((a,b)=>b.lastT-a.lastT);
+}
+function inboxUnreadTotal(){ try{ return conversations().reduce((n,c)=>n+c.unread,0); }catch(e){ return 0; } }
+function markConvSeen(o){ try{ localStorage.setItem(convSeenKey(o), String(Date.now())); }catch(e){} }
+async function loadDms(){
+  if(!sb || !uid) return;
+  const { data, error } = await sb.from('messages').select('*').like('requestId', 'dm_%').order('createdAt', { ascending:true });
+  if(error) return;
+  const by = {}; (data||[]).forEach(m=>{ (by[m.requestId] = by[m.requestId] || []).push(m); });
+  cache.dms = by;
+  await resolveNames(Object.keys(by).map(t=>t.slice(3).split('_').find(x=>x!==uid)));
+  if(state.view==='messages'){ if(state.inboxWith) markConvSeen(state.inboxWith); render(); }
+  else if(uid) { const n = document.querySelector('.nav-msg-badge'); const c = inboxUnreadTotal(); if(n) { n.textContent = c; n.style.display = c ? '' : 'none'; } }
+}
+let __dmWatch = null;
+function watchDms(){
+  if(!sb || __dmWatch) return;
+  __dmWatch = sb.channel('dms-'+uid).on('postgres_changes', { event:'*', schema:'public', table:'messages' }, ()=>{ loadDms(); if(typeof loadMsgs==='function') loadMsgs(); }).subscribe();
+  setInterval(()=>{ if(document.visibilityState==='visible' && uid) loadDms(); }, 15000);
+}
+async function sendDm(o, text){
+  text = (text||'').trim(); if(!text || !o) return;
+  const t = dmId(uid, o);
+  const row = { id:'m_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7), requestId:t, senderId:uid, text:text.slice(0,2000), createdAt:new Date().toISOString() };
+  (cache.dms[t] = cache.dms[t] || []).push(row); state.inboxDraft = ''; setHiddenConv(o, false); markConvSeen(o); render();
+  const { error } = await sb.from('messages').insert(row);
+  if(error){ cache.dms[t] = cache.dms[t].filter(m=>m!==row); state.inboxDraft = text; render(); toast(T('chat_err'), 5000); console.error(error); }
+}
+async function deleteMyMsg(id){
+  const { error } = await sb.from('messages').delete().eq('id', id).eq('senderId', uid);
+  if(error){ toast(T('toast_update_fail')); return; }
+  Object.values(cache.dms).forEach(l=>{ const i = l.findIndex(m=>m.id===id); if(i>=0) l.splice(i,1); });
+  Object.values(cache.msgs).forEach(l=>{ const i = l.findIndex(m=>m.id===id); if(i>=0) l.splice(i,1); });
+  render();
+}
+function inboxDayLabel(d){
+  const x = new Date(d), now = new Date(), y = new Date(); y.setDate(now.getDate()-1);
+  if(x.toDateString()===now.toDateString()) return T('inbox_today');
+  if(x.toDateString()===y.toDateString()) return T('inbox_yesterday');
+  return x.toLocaleDateString(state.lang==='fa'?'fa-IR':'en-CA', { weekday:'short', month:'short', day:'numeric' });
+}
+function inboxTime(d){ return new Date(d).toLocaleTimeString(state.lang==='fa'?'fa-IR':'en-CA', { hour:'numeric', minute:'2-digit' }); }
+function inboxShortTime(ts){ if(!ts) return ''; const x = new Date(ts), now = new Date();
+  return x.toDateString()===now.toDateString() ? inboxTime(x) : x.toLocaleDateString(state.lang==='fa'?'fa-IR':'en-CA', { month:'short', day:'numeric' }); }
+const IB_IC = {
+  voice:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>',
+  video:'<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10l6-3v10l-6-3z"/></svg>',
+  more:'<svg viewBox="0 0 20 20" width="18" height="18"><circle cx="4" cy="10" r="1.7" fill="currentColor"/><circle cx="10" cy="10" r="1.7" fill="currentColor"/><circle cx="16" cy="10" r="1.7" fill="currentColor"/></svg>',
+  send:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg>',
+  back:'<svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4l-6 6 6 6"/></svg>',
+  search:'<svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg>',
+  trash:'<svg viewBox="0 0 20 20" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h12M8 6V4h4v2M6 6l1 10h6l1-10"/></svg>',
+  chat:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.6A8 8 0 1 1 21 12z"/></svg>'
+};
+function messagesView(){
+  if(!uid || !myProfile) return `<div class="empty">${esc(T('set_profile_first'))}</div>`;
+  const q = (state.inboxQuery||'').toLowerCase();
+  const convs = conversations().filter(c=>!q || nameOf(c.o).toLowerCase().includes(q) || String(personOf(c.o).profession||'').toLowerCase().includes(q));
+  const sel = state.inboxWith || (window.innerWidth > 760 && convs[0] ? convs[0].o : null);
+  if(sel) markConvSeen(sel);
+  const list = convs.length ? convs.map(c=>{ const p = personOf(c.o), last = c.last;
+      return `<button type="button" class="ib-item ${c.o===sel?'on':''}" data-inbox="${esc(c.o)}">
+        <span class="ib-av">${initials(nameOf(c.o))}</span>
+        <span class="ib-meta"><span class="ib-row"><b>${esc(nameOf(c.o))}</b><time>${esc(inboxShortTime(c.lastT))}</time></span>
+          <span class="ib-row"><span class="ib-snip">${last ? (last.senderId===uid ? esc(T('inbox_you'))+': ' : '') + esc(last.text) : esc(p.headline||p.profession||'')}</span>${c.unread && c.o!==sel ? `<i class="ib-badge">${c.unread}</i>` : ''}</span></span>
+      </button>`; }).join('')
+    : `<div class="ib-none">${IB_IC.chat}<p>${esc(T('inbox_empty'))}</p><button class="btn btn-primary btn-sm" data-nav="browse">${esc(T('find_mentor_title'))}</button></div>`;
+  return `<div class="ib ${sel?'has-sel':''}">
+    <aside class="ib-side">
+      <div class="ib-side-head"><h2>${esc(T('nav_messages'))}</h2></div>
+      <label class="ib-search">${IB_IC.search}<input id="ib-search" type="search" placeholder="${esc(T('inbox_search'))}" value="${esc(state.inboxQuery||'')}"></label>
+      <div class="ib-list">${list}</div>
+    </aside>
+    <section class="ib-main">${sel ? inboxThread(sel) : `<div class="ib-pick">${IB_IC.chat}<p>${esc(T('inbox_pick'))}</p></div>`}</section>
+  </div>`;
+}
+function inboxThread(o){
+  const p = personOf(o), name = nameOf(o);
+  const reqs = (cache.requests||[]).filter(r=>(r.mentorId===uid && r.clientId===o) || (r.clientId===uid && r.mentorId===o))
+    .sort((a,b)=>(Number(b.createdAt)||0)-(Number(a.createdAt)||0));
+  const live = reqs.find(r=>reqStage(r)===2);                      // a confirmed, paid session: calls are open
+  const cur = live || reqs.find(r=>reqStage(r)>=0 && reqStage(r)<3) || null;
+  const iAmMentorHere = cur ? cur.mentorId===uid : false;
+  const msgs = convMessages(o);
+  let lastDay = '';
+  const bubbles = msgs.map(m=>{ const day = inboxDayLabel(m.createdAt), mine = m.senderId===uid;
+      const sep = day!==lastDay ? `<div class="ib-day"><span>${esc(day)}</span></div>` : ''; lastDay = day;
+      return `${sep}<div class="ib-msg ${mine?'me':''}">
+        ${mine ? '' : `<span class="ib-av sm">${initials(name)}</span>`}
+        <div class="ib-bub"><div class="ib-text">${esc(m.text)}</div><time>${esc(inboxTime(m.createdAt))}</time>
+          ${mine ? `<button type="button" class="ib-del" data-del-msg="${esc(m.id)}" title="${esc(T('inbox_delete_msg'))}" aria-label="${esc(T('inbox_delete_msg'))}">${IB_IC.trash}</button>` : ''}</div>
+      </div>`; }).join('');
+  const callBtns = live
+    ? `<button class="ib-ic" data-call="${live.id}" data-url="${esc(live.meetingUrl||'')}" data-mode="voice" title="${esc(T('inbox_voice'))}" aria-label="${esc(T('inbox_voice'))}">${IB_IC.voice}</button>
+       <button class="ib-ic" data-call="${live.id}" data-url="${esc(live.meetingUrl||'')}" data-mode="video" title="${esc(T('inbox_video'))}" aria-label="${esc(T('inbox_video'))}">${IB_IC.video}</button>`
+    : `<button class="ib-ic off" data-call-locked="1" title="${esc(T('inbox_calls_locked'))}" aria-label="${esc(T('inbox_voice'))}">${IB_IC.voice}</button>
+       <button class="ib-ic off" data-call-locked="1" title="${esc(T('inbox_calls_locked'))}" aria-label="${esc(T('inbox_video'))}">${IB_IC.video}</button>`;
+  const ctx = cur ? `<div class="ib-ctx">
+      <div><b>${esc(cur.packageKey ? T('pk_'+cur.packageKey+'_name') : T('inbox_booking'))}${cur.amountCents?` · $${(cur.amountCents/100).toFixed(0)}`:''}</b>
+        <span>${esc(reqNextText(cur, iAmMentorHere, name))}</span></div>
+      <div class="ib-ctx-act">
+        ${iAmMentorHere && cur.status==='pending' ? `<button class="btn btn-sm btn-primary" data-req="${cur.id}" data-status="accepted">${esc(T('accept'))}</button><button class="btn btn-sm btn-ghost" data-req="${cur.id}" data-status="declined">${esc(T('decline'))}</button>` : ''}
+        ${!iAmMentorHere && reqStage(cur)===1 ? `<button class="btn btn-sm btn-primary" data-pay="${cur.id}" data-amount="${cur.amountCents}" data-mentor="${cur.mentorId}">${esc(T('pay_to_confirm').replace('${amount}', (cur.amountCents/100).toFixed(2)))}</button>` : ''}
+        ${reqStage(cur)===2 ? `<button class="btn btn-sm btn-primary" data-call="${cur.id}" data-url="${esc(cur.meetingUrl||'')}" data-mode="video">${esc(T('join_video'))}</button>` : ''}
+      </div></div>`
+    : (p.role!=='client' && o!==uid ? `<div class="ib-ctx soft"><div><b>${esc(T('inbox_no_booking'))}</b><span>${esc(T('inbox_calls_locked'))}</span></div><div class="ib-ctx-act"><button class="btn btn-sm btn-primary" data-nav="mentor" data-mentor="${esc(o)}">${esc(T('book_session'))}</button></div></div>` : '');
+  return `<div class="ib-head">
+      <button class="ib-back ib-ic" data-inbox-back="1" aria-label="${esc(T('inbox_back'))}">${IB_IC.back}</button>
+      <span class="ib-av lg">${initials(name)}</span>
+      <div class="ib-who"><b>${esc(name)}</b><span>${esc(p.headline||p.profession||'')}</span></div>
+      <div class="ib-tools">${callBtns}
+        <span class="ib-more-wrap"><button class="ib-ic" data-inbox-menu="1" aria-label="${esc(T('mg_more'))}">${IB_IC.more}</button>
+        ${state.inboxMenu ? `<div class="ib-menu">
+          ${p.role!=='client' ? `<button data-nav="mentor" data-mentor="${esc(o)}">${esc(T('inbox_profile'))}</button>` : ''}
+          <button data-inbox-unread="${esc(o)}">${esc(T('inbox_mark_unread'))}</button>
+          <button class="danger" data-inbox-hide="${esc(o)}">${esc(T('inbox_delete_conv'))}</button>
+        </div>` : ''}</span>
+      </div>
+    </div>
+    ${ctx}
+    <div class="ib-thread" id="ib-thread">${bubbles || `<div class="ib-start"><span class="ib-av lg">${initials(name)}</span><b>${esc(name)}</b><span>${esc(p.headline||p.profession||'')}</span><p>${esc(T('inbox_no_msgs').replace('{n}', name))}</p></div>`}</div>
+    <form class="ib-compose" id="ib-compose" data-to="${esc(o)}">
+      <textarea id="ib-input" rows="1" placeholder="${esc(T('inbox_ph'))}">${esc(state.inboxDraft||'')}</textarea>
+      <button class="ib-send" type="submit" aria-label="${esc(T('inbox_send'))}">${IB_IC.send}</button>
+    </form>`;
+}
+function wireInbox(){
+  const th = document.getElementById('ib-thread'); if(th) th.scrollTop = th.scrollHeight;
+  const s = document.getElementById('ib-search');
+  if(s) s.addEventListener('input', ()=>{ state.inboxQuery = s.value; const pos = s.selectionStart; render(); const s2 = document.getElementById('ib-search'); if(s2){ s2.focus(); try{ s2.setSelectionRange(pos,pos); }catch(e){} } });
+  const f = document.getElementById('ib-compose'), inp = document.getElementById('ib-input');
+  if(inp){
+    const fit = ()=>{ inp.style.height = 'auto'; inp.style.height = Math.min(140, inp.scrollHeight) + 'px'; }; fit();
+    inp.addEventListener('input', ()=>{ state.inboxDraft = inp.value; fit(); });
+    inp.addEventListener('keydown', e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); f.requestSubmit ? f.requestSubmit() : f.dispatchEvent(new Event('submit',{cancelable:true})); } });
+    if(state.inboxFocus){ inp.focus(); state.inboxFocus = false; }
+  }
+  if(f) f.addEventListener('submit', e=>{ e.preventDefault(); state.inboxFocus = true; sendDm(f.getAttribute('data-to'), inp.value); });
+}
+// one delegated listener for everything in the inbox, the nav badge and the "Message" buttons
+document.addEventListener('click', e=>{
+  const t = e.target.closest ? e.target : null; if(!t) return;
+  const it = t.closest('[data-inbox]'); if(it){ state.inboxWith = it.getAttribute('data-inbox'); state.inboxMenu = false; state.inboxDraft = ''; state.inboxFocus = true; render(); return; }
+  const dm = t.closest('[data-dm]'); if(dm){ e.preventDefault(); if(!uid || !myProfile){ nav('dashboard'); return; } nav('messages', { inboxWith: dm.getAttribute('data-dm'), inboxMenu:false, inboxFocus:true }); return; }
+  if(t.closest('[data-inbox-back]')){ state.inboxWith = null; state.inboxMenu = false; render(); return; }
+  if(t.closest('[data-inbox-menu]')){ e.stopPropagation(); state.inboxMenu = !state.inboxMenu; render(); return; }
+  const hd = t.closest('[data-inbox-hide]'); if(hd){ setHiddenConv(hd.getAttribute('data-inbox-hide'), true); state.inboxWith = null; state.inboxMenu = false; toast(T('inbox_deleted_conv')); render(); return; }
+  const ur = t.closest('[data-inbox-unread]'); if(ur){ try{ localStorage.setItem(convSeenKey(ur.getAttribute('data-inbox-unread')), '0'); }catch(err){} state.inboxWith = null; state.inboxMenu = false; render(); return; }
+  const dl = t.closest('[data-del-msg]'); if(dl){ deleteMyMsg(dl.getAttribute('data-del-msg')); return; }
+  if(t.closest('[data-call-locked]')){ toast(T('inbox_calls_locked'), 4200); return; }
+  if(state.inboxMenu && !t.closest('.ib-menu')){ state.inboxMenu = false; render(); }
+});
 
 function hiddenReqs(){ try{ return JSON.parse(localStorage.getItem('workar_hidden_'+uid)||'[]'); }catch(e){ return []; } }
 function hideReq(id){ const h = hiddenReqs(); if(!h.includes(id)) h.push(id); try{ localStorage.setItem('workar_hidden_'+uid, JSON.stringify(h)); }catch(e){} }
@@ -5332,27 +5689,80 @@ async function updateReq(id, patch){
 }
 async function postNote(reqId, text){ try{ await sb.from('messages').insert({ id:'m_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6), requestId:reqId, senderId:uid, text, createdAt:new Date().toISOString() }); loadMsgs(); }catch(e){} }
 
+function dashSide(isMentor){
+  const P = myProfile||{}, has = v => Array.isArray(v) ? v.length>0 : !!String(v||'').trim();
+  const items = isMentor
+    ? [['sd_i_title', has(P.profession)||has(P.headline)], ['sd_i_bio', has(P.bio)], ['sd_i_skills', has(P.skills)], ['sd_i_edu', has(P.degree)||has(P.education)], ['sd_i_lang', has(P.languages)], ['sd_i_avail', has(P.availability)], ['sd_i_li', has(P.linkedin)]]
+    : [['sd_i_title', has(P.profession)], ['sd_i_bio', has(P.bio)], ['sd_i_goals', has(P.goals)], ['sd_i_edu', has(P.degree)||has(P.education)], ['sd_i_cert', has(P.certifications)], ['sd_i_li', has(P.linkedin)]];
+  const done = items.filter(x=>x[1]).length, pct = Math.round(done*100/items.length), todo = items.filter(x=>!x[1]);
+  let convs = []; try{ convs = conversations().slice(0,4); }catch(e){}
+  const plus = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
+  return `<aside class="dl-side">
+    <section class="sc">
+      <div class="sc-top"><h3>${esc(T('sd_strength'))}</h3><span class="sc-pct">${pct}%</span></div>
+      <div class="sc-sub">${esc(T(isMentor?'sd_strength_m':'sd_strength_c'))}</div>
+      <div class="sc-bar"><i style="width:${pct}%"></i></div>
+      ${todo.length ? `<ul class="sc-todo">${todo.map(([k])=>`<li><span>${esc(T(k))}</span><button type="button" data-open-edit="1">${plus}${esc(T('sd_add'))}</button></li>`).join('')}</ul>` : `<div class="sc-ok">${esc(T('sd_done'))}</div>`}
+    </section>
+    <section class="sc">
+      <div class="sc-top"><h3>${esc(T('sd_msgs'))}</h3></div>
+      ${convs.length ? `<div class="sc-conv">${convs.map(c=>{ const last=c.last; return `<button type="button" data-dm="${esc(c.o)}">
+          <span class="ib-av sc-av">${initials(nameOf(c.o))}</span>
+          <span class="sc-cm"><b>${esc(nameOf(c.o))}</b><span>${last ? (last.senderId===uid ? esc(T('inbox_you'))+': ' : '') + esc(last.text) : esc(personOf(c.o).headline||personOf(c.o).profession||'')}</span></span>
+          ${c.unread ? `<i class="sc-dot">${c.unread}</i>` : ''}</button>`; }).join('')}</div>
+        <button type="button" class="sc-link" data-nav="messages">${esc(T('sd_all'))}</button>`
+      : `<div class="sc-sub" style="margin-top:6px">${esc(T('sd_none'))}</div>${isMentor ? '' : `<button type="button" class="sc-link" data-nav="browse">${esc(T('sd_find'))}</button>`}`}
+    </section>
+  </aside>`;
+}
+document.addEventListener('click', e=>{ const b = e.target.closest && e.target.closest('[data-open-edit]'); if(!b) return;
+  state.dashEditOpen = true; const d = document.querySelector('.dash-edit'); if(d){ d.open = true; d.scrollIntoView({behavior:'smooth', block:'start'}); } });
 function dashboardView(){
   const isMentor = myProfile.role==='mentor';
   const myReqs = cache.requests.filter(r=> isMentor ? r.mentorId===uid : r.clientId===uid);
-  return `
-  <div class="dash-hero">
-    <div class="avatar avatar-lg">${initials(myProfile.name||'')}</div>
-    <div class="dash-id">
-      <h1>${esc(myProfile.name||'')}</h1>
-      <div class="muted">${esc(isMentor ? (myProfile.headline||myProfile.profession||'') : (myProfile.profession ? T('dash_aiming').replace('{p}', myProfile.profession) : ''))}</div>
+  return `<div class="dl"><div class="dl-main">
+  ${(()=>{ const mine = cache.requests.filter(r=>r.mentorId===uid || r.clientId===uid);
+      const done = mine.reduce((n,r)=>n + (reqStage(r)===3 ? Math.max(1, Number(r.sessionsDone)||0) : (Number(r.sessionsDone)||0)), 0);
+      const active = mine.filter(r=>reqStage(r)>=0 && reqStage(r)<3).length;
+      const avg = isMentor ? avgRating(uid) : null, nRev = isMentor ? (cache.reviews[uid]||[]).length : 0;
+      const langs = (myProfile.languages||[]).join(', ');
+      const edu = [myProfile.degree, myProfile.university].filter(Boolean).join(' · ') || myProfile.education || '';
+      return `<div class="dash-hero">
+    <div class="dh-cover"></div>
+    <div class="dh-body">
+      <div class="dh-id">
+        <div class="dh-av">${initials(myProfile.name||'')}</div>
+        <h1>${esc(myProfile.name||'')}</h1>
+        <div class="dh-head">${esc(isMentor ? (myProfile.headline||myProfile.profession||'') : (myProfile.profession ? T('dash_aiming').replace('{p}', myProfile.profession) : ''))}</div>
+        <div class="dh-meta">
+          <span class="chip dash-role" style="margin:0">${isMentor?esc(T('mentor_badge')):esc(T('client_badge'))}</span>
+          ${myProfile.timezone ? `<span>${esc(tzCity(myProfile.timezone))}</span>` : ''}
+          ${edu ? `<span>${esc(edu)}</span>` : ''}
+          ${langs ? `<span>${esc(langs)}</span>` : ''}
+          ${isMentor && myProfile.experience ? `<span>${esc(myProfile.experience)} ${esc(T('yrs_exp'))}</span>` : ''}
+        </div>
+      </div>
+      <div class="dh-actions">
+        <button class="btn btn-primary btn-sm" data-nav="messages">${esc(T('nav_messages'))}</button>
+        ${isMentor ? `<button class="btn btn-outline btn-sm" data-nav="mentor" data-mentor="${uid}">${esc(T('dash_view_public'))}</button>` : `<button class="btn btn-outline btn-sm" data-nav="browse">${esc(T('find_mentor_title'))}</button>`}
+      </div>
     </div>
-    <span class="chip dash-role">${isMentor?esc(T('mentor_badge')):esc(T('client_badge'))}</span>
-    ${isMentor ? `<button class="btn btn-outline btn-sm" data-nav="mentor" data-mentor="${uid}">${esc(T('dash_view_public'))}</button>` : `<button class="btn btn-outline btn-sm" data-nav="browse">${esc(T('find_mentor_title'))}</button>`}
-  </div>
+    <div class="dh-stats">
+      <div><b>${active}</b><span>${esc(T('ds_active'))}</span></div>
+      <div><b>${done}</b><span>${esc(T('ds_done'))}</span></div>
+      <div><b>${isMentor ? (avg ? avg.toFixed(1)+' ★' : '–') : conversations().length}</b><span>${esc(T(isMentor ? 'ds_rating' : 'ds_convs'))}${isMentor && nRev ? ' · '+nRev : ''}</span></div>
+      <div><b>${inboxUnreadTotal()}</b><span>${esc(T('ds_unread'))}</span></div>
+    </div>
+  </div>`; })()}
   ${isMentor && myProfile.approved===false ? `<div class="banner pending-banner">${esc(T('pending_review'))}</div>` : ''}
   <details class="dash-edit" ${state.dashEditOpen?'open':''}>
   <summary><span>${esc(T('dash_edit'))}</span><span class="muted">${esc(T('dash_edit_sub'))}</span></summary>
   <div class="panel wide dash-form" style="margin-bottom:32px;">
     <div class="field"><label>${esc(T('lbl_name'))}</label><input id="edit-name" value="${esc(myProfile.name||'')}"></div>
-    ${isMentor ? `<div class="field"><label>${esc(T('lbl_headline'))}</label><input id="edit-headline" value="${esc(myProfile.headline||'')}"></div>` : ''}
+
     ${isMentor ? '' : currentJobField('#edit-current-job', myProfile.currentProfession||'')}
-    <div class="field"><label>${esc(T(isMentor?'lbl_profession_m':'lbl_target_job'))}</label><input id="edit-profession" value="${esc(myProfile.profession||'')}"></div>
+    <div class="field"><label>${esc(T(isMentor?'lbl_title_m':'lbl_target_job'))}</label><input id="edit-profession" value="${esc(myProfile.profession||'')}"></div>
+    ${isMentor ? `<div class="field"><label>${esc(T('lbl_company'))}</label><input id="edit-company" value="${esc(myProfile.company||'')}" placeholder="${esc(T('ph_company'))}"></div>` : ''}
     ${!isMentor ? `
     <div class="field"><label>${esc(T('lbl_stage_c'))}</label>${stageSelect('id="edit-stage"', myProfile.careerStage||'')}</div>
     <div class="field"><label>${esc(T('lbl_field_c'))}</label><input id="edit-target-field" value="${esc(myProfile.targetField||'')}" placeholder="${esc(T('ph_field_c'))}"></div>
@@ -5360,7 +5770,10 @@ function dashboardView(){
     <div class="field"><label>${esc(T(isMentor?'lbl_bio_m':'lbl_goal_c'))}</label><textarea id="edit-bio">${esc(myProfile.bio||'')}</textarea></div>
     ${isMentor ? `<div class="field"><label>${esc(T('lbl_skills'))}</label><input id="edit-skills" value="${esc((myProfile.skills||[]).join(', '))}"></div>` : ''}
     <div class="field" id="edit-formats-wrap"><label>${esc(T(isMentor?'lbl_formats_m':'lbl_formats_c'))}</label>${optPills('formats', FORMAT_KEYS, 'fmt_', myProfile.formats||[])}</div>
-    <div class="field"><label>${esc(T('lbl_education'))}</label><input id="edit-education" value="${esc(myProfile.education||'')}" placeholder="${esc(T('ph_education'))}"></div>
+    <div class="field-row">
+      <div class="field"><label>${esc(T('lbl_degree'))}</label><input id="edit-degree" value="${esc(myProfile.degree || (!myProfile.university ? (myProfile.education||'') : ''))}" placeholder="${esc(T('ph_degree'))}"></div>
+      <div class="field"><label>${esc(T('lbl_university'))}</label><input id="edit-university" value="${esc(myProfile.university||'')}" placeholder="${esc(T('ph_university'))}"></div>
+    </div>
     <div class="field"><label>${esc(T('lbl_certifications'))}</label><input id="edit-certifications" value="${esc((myProfile.certifications||[]).join(', '))}" placeholder="${esc(T('ph_certifications'))}"></div>
     ${isMentor ? `
     <div class="field"><label>${esc(T('lbl_experience'))}</label><input id="edit-experience" type="number" min="0" value="${esc(myProfile.experience||'')}"></div>
@@ -5407,7 +5820,9 @@ function dashboardView(){
 
   <div class="section-head"><h2>${isMentor?esc(T('requests_from_clients')):esc(T('your_requests'))}</h2></div>
   ${reqListHtml(myReqs, isMentor)}
-  `;
+  ${isMentor ? (()=>{ const booked = cache.requests.filter(r=>r.clientId===uid && r.mentorId!==uid);
+      return booked.length ? `<div class="section-head" style="margin-top:40px;"><h2>${esc(T('your_requests'))}</h2></div>${reqListHtml(booked, false)}` : ''; })() : ''}
+  </div>${dashSide(isMentor)}</div>`;
 }
 
 function coachView(){
@@ -5488,7 +5903,8 @@ function wire(){
     if(linkedinVal && !/^https?:\/\//i.test(linkedinVal)) linkedinVal = 'https://'+linkedinVal;
     const doc = { role: state.role, name: fd.get('name')||'', profession: fd.get('profession')||'', bio: fd.get('bio')||'', linkedin: linkedinVal, aiCredits: 5, timezone: MY_TZ };
     doc.skills = (fd.get('skills')||'').split(',').map(s=>s.trim()).filter(Boolean);
-    doc.education = (fd.get('education')||'').trim();
+    doc.degree = (fd.get('degree')||'').trim(); doc.university = (fd.get('university')||'').trim();
+    doc.education = [doc.degree, doc.university].filter(Boolean).join(', ');
     doc.certifications = splitList(fd.get('certifications'));
     doc.formats = checkedVals(form, 'formats');
     if(state.role==='client'){
@@ -5498,7 +5914,8 @@ function wire(){
       doc.targetField = (fd.get('targetField')||'').trim();
     }
     if(state.role==='mentor'){
-      doc.headline = fd.get('headline')||'';
+      doc.company = (fd.get('company')||'').trim();
+      doc.headline = doc.company ? `${doc.profession} ${T('at_word')} ${doc.company}` : doc.profession;
       doc.experience = fd.get('experience')||'';
       doc.languages = (fd.get('languages')||'').split(',').map(s=>s.trim()).filter(Boolean);
       doc.sessionRate = Math.max(minRate(), Number(fd.get('sessionRate'))||minRate());
@@ -5658,10 +6075,10 @@ function wire(){
     if(tzEl) patch.timezone = tzEl.value;
     const skillsEl = document.getElementById('edit-skills');
     if(skillsEl) patch.skills = skillsEl.value.split(',').map(s=>s.trim()).filter(Boolean);
-    const headlineEl = document.getElementById('edit-headline');
-    if(headlineEl) patch.headline = headlineEl.value;
-    const eduEl = document.getElementById('edit-education');
-    if(eduEl) patch.education = eduEl.value.trim();
+    const companyEl = document.getElementById('edit-company');
+    if(companyEl){ patch.company = companyEl.value.trim(); patch.headline = patch.company ? `${patch.profession} ${T('at_word')} ${patch.company}` : patch.profession; }
+    const degEl = document.getElementById('edit-degree'), uniEl = document.getElementById('edit-university');
+    if(degEl && uniEl){ patch.degree = degEl.value.trim(); patch.university = uniEl.value.trim(); patch.education = [patch.degree, patch.university].filter(Boolean).join(', '); }
     const certEl = document.getElementById('edit-certifications');
     if(certEl) patch.certifications = splitList(certEl.value);
     const fmtWrap = document.getElementById('edit-formats-wrap');
@@ -5884,7 +6301,8 @@ function wire(){
   if(log) log.scrollTop = log.scrollHeight;
 
   if(state.view==='mentor' && state.mentorId) loadReviews(state.mentorId);
-  if(state.view==='dashboard') loadRequests();
+  if(state.view==='dashboard' || state.view==='messages') loadRequests();
+  if(state.view==='messages' && state.inboxWith && !cache.people[state.inboxWith] && !cache.profiles[state.inboxWith]) resolveNames([state.inboxWith]).then(()=>{ if(cache.people[state.inboxWith]) render(); });
 }
 
 async function pushAndRespond(userText){
@@ -6107,12 +6525,19 @@ function loadReviews(mentorId){
 function loadRequests(){
   if(!window.__db || !myProfile || __subscribed.requests) return;
   __subscribed.requests = true;
-  const field = myProfile.role==='mentor' ? 'mentorId' : 'clientId';
-  window.__db.collection('requests').where(field,'==',uid).onSnapshot(async list=>{
-    cache.requests = (list||[]).map(d=>Object.assign({id:d.id}, d.data));
-    await resolveNames(cache.requests.flatMap(r=>[r.mentorId, r.clientId]));
-    watchMsgs(); loadMsgs();
-    if(state.view==='dashboard') render();
+  loadDms(); watchDms();
+  // Mentors can also book other mentors, so they follow both sides: requests they receive and requests they send.
+  const parts = { mentorId: [], clientId: [] };
+  const fields = myProfile.role==='mentor' ? ['mentorId','clientId'] : ['clientId'];
+  fields.forEach(field=>{
+    window.__db.collection('requests').where(field,'==',uid).onSnapshot(async list=>{
+      parts[field] = (list||[]).map(d=>Object.assign({id:d.id}, d.data));
+      const seen = new Set();
+      cache.requests = parts.mentorId.concat(parts.clientId).filter(r=>{ if(seen.has(r.id)) return false; seen.add(r.id); return true; });
+      await resolveNames(cache.requests.flatMap(r=>[r.mentorId, r.clientId]));
+      watchMsgs(); loadMsgs();
+      if(state.view==='dashboard' || state.view==='messages') render();
+    });
   });
 }
 
@@ -6229,7 +6654,7 @@ init();
 
   /* ---------- 1. Mentor onboarding assistant ---------- */
   const ob = { messages:null, draft:{}, missing:['headline','profession','yearsExperience','bio','languages','skills','helpsWith'], busy:false, error:'' };
-  const FORM_MAP = { headline:'headline', profession:'profession', yearsExperience:'experience', bio:'bio', languages:'languages', education:'education', certifications:'certifications', skills:'skills' };
+  const FORM_MAP = { company:'company', profession:'profession', yearsExperience:'experience', bio:'bio', languages:'languages', education:'degree', certifications:'certifications', skills:'skills' };
   function fillForm(onlyEmpty){
     const form = document.getElementById('onboard-form'); if(!form) return;
     Object.entries(FORM_MAP).forEach(([k,name])=>{
@@ -6320,7 +6745,7 @@ init();
       pc.busy=false; mountProfileCoach();
     });
     box.querySelectorAll('[data-ag-use]').forEach(b=>b.addEventListener('click', ()=>{
-      const k = b.getAttribute('data-ag-use'); const inp = document.getElementById(k==='headline'?'edit-headline':'edit-bio');
+      const k = b.getAttribute('data-ag-use'); const inp = document.getElementById(k==='headline'?'edit-profession':'edit-bio');
       const ed = document.querySelector('.dash-edit'); if(ed && !ed.open){ ed.open = true; ed.dispatchEvent(new Event('toggle')); }
       if(inp){ inp.value = pc.result[k]; inp.dispatchEvent(new Event('input', { bubbles:true })); inp.scrollIntoView({ block:'center', behavior:'smooth' }); inp.focus(); if(typeof toast==='function') toast(t('ag_pc_applied')); }
     }));
