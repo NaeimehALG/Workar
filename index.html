@@ -56,7 +56,7 @@
   body{
     background:var(--bg); color:var(--text);
     font-family:'Inter','Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    line-height:1.6; -webkit-font-smoothing:antialiased; font-feature-settings:'cv11','ss01';
+    line-height:1.6; -webkit-font-smoothing:antialiased;
   }
   h1,h2,.brand .mark{font-family:'Fraunces','Vazirmatn', Georgia, serif;font-optical-sizing:auto;}
   h1,h2{font-weight:600 !important;letter-spacing:-.02em !important;}
@@ -921,46 +921,7 @@
   .req-past summary{cursor:pointer;font-weight:700;color:var(--muted);font-size:14.5px;padding:6px 0;}
   .req-past .req-list{margin-top:10px;}
   .rc-send textarea{overflow-y:hidden;}
-  /* ===== booking cards v2 ===== */
-  .req{border:1px solid color-mix(in srgb, var(--border) 80%, transparent);border-radius:18px;padding:22px 24px;background:var(--surface);box-shadow:0 1px 2px rgba(60,40,25,.04),0 8px 24px -16px rgba(60,40,25,.18);transition:box-shadow .2s,border-color .2s;}
-  .req:hover{box-shadow:0 1px 2px rgba(60,40,25,.05),0 14px 32px -18px rgba(60,40,25,.28);}
-  .req-off{opacity:1;}
-  .req-who b{font-size:16.5px;font-weight:700;color:var(--text);}
-  .req-who .muted{font-size:13.5px;color:var(--muted);margin-top:2px;}
-  .req .avatar{width:48px;height:48px;font-size:16px;}
-  .req-when{flex-direction:row;align-items:center;gap:12px;text-align:start;}
-  .dchip{display:flex;flex-direction:column;align-items:center;justify-content:center;width:52px;height:56px;border-radius:12px;border:1px solid var(--border);background:var(--surface);overflow:hidden;line-height:1;flex:none;}
-  .dchip small{width:100%;text-align:center;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:var(--accent);padding:4px 0;}
-  .dchip b{font-size:20px;font-weight:800;padding:6px 0 4px;color:var(--text);}
-  .dtime{display:flex;flex-direction:column;line-height:1.3;}
-  .dtime b{font-size:14px;} .dtime span{font-size:12.5px;color:var(--muted);}
-  .req-msg{background:var(--surface-2);border:0;border-inline-start:3px solid var(--accent-2);border-radius:8px;font-style:italic;}
-  .req-next{color:var(--text);opacity:.8;}
-  .req-dots{width:36px;height:36px;}
-  /* past bookings: compact rows */
-  .past{margin-top:28px;}
-  .past-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;}
-  .past-head h3{margin:0;font-size:15px;font-weight:700;color:var(--text);font-family:inherit;letter-spacing:0;}
-  .past-clear{border:0;background:none;font:inherit;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;padding:6px 10px;border-radius:8px;}
-  .past-clear:hover{background:var(--surface-2);color:var(--danger);}
-  .past-list{border:1px solid var(--border);border-radius:16px;background:var(--surface);overflow:hidden;}
-  .past-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-top:1px solid var(--border);transition:background .15s;}
-  .past-row:first-child{border-top:0;}
-  .past-row:hover{background:color-mix(in srgb, var(--surface-2) 60%, transparent);}
-  .past-main{flex:1;min-width:0;display:flex;flex-direction:column;}
-  .past-main b{font-size:14.5px;font-weight:600;}
-  .past-main span{font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;white-space:nowrap;}
-  .pill::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;}
-  .pill-cancelled,.pill-declined{background:color-mix(in srgb, var(--danger) 10%, transparent);color:var(--danger);}
-  .pill-done{background:color-mix(in srgb, #4E8A5B 12%, transparent);color:#3E7A4B;}
-  .past-acts{display:flex;gap:2px;opacity:.55;transition:opacity .15s;}
-  .past-row:hover .past-acts,.past-acts:focus-within{opacity:1;}
-  @media (hover:none){ .past-acts{opacity:1;} }
-  .icon-btn{width:34px;height:34px;border-radius:50%;border:0;background:none;color:var(--muted);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;}
-  .icon-btn:hover{background:var(--surface-2);color:var(--text);}
-  .icon-btn.danger:hover{color:var(--danger);background:color-mix(in srgb, var(--danger) 10%, transparent);}
-  @media (max-width:600px){ .past-row{padding:12px;gap:10px;} .pill{font-size:11px;padding:3px 8px;} .pill::before{display:none;} .past-acts{gap:0;} .req-when{width:100%;} }
+
 
   @media (max-width:600px){.req-edit{grid-template-columns:1fr;}.req-right{margin-inline-start:0;}}
 
@@ -1702,6 +1663,120 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .ib-msg.me .ib-bub{background:var(--surface-2);border-color:var(--border);color:var(--text);}}
   :root[data-theme="dark"] .ib-msg.me .ib-bub{background:var(--surface-2);border-color:var(--border);color:var(--text);}
 
+
+  /* ===== profile header + earnings v2 ===== */
+  .dash-hero{border:1px solid color-mix(in srgb, var(--border) 85%, transparent);border-radius:20px;overflow:hidden;background:var(--surface);box-shadow:0 1px 2px rgba(60,40,25,.04),0 12px 32px -20px rgba(60,40,25,.22);}
+  .dh-cover{height:140px;background:
+      url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%201200%20240%22%20preserveAspectRatio%3D%22xMidYMid%20slice%22%3E%3Cpath%20d%3D%22M0%2C30.0%2040%2C44.4%2080%2C55.2%20120%2C60.1%20160%2C58.9%20200%2C53.5%20240%2C47.0%20280%2C42.4%20320%2C41.7%20360%2C44.7%20400%2C49.4%20440%2C52.7%20480%2C51.7%20520%2C45.0%20560%2C33.2%20600%2C18.8%20640%2C5.4%20680%2C-3.4%20720%2C-5.8%20760%2C-2.0%20800%2C5.8%20840%2C14.4%20880%2C20.6%20920%2C22.6%20960%2C20.9%201000%2C17.6%201040%2C15.7%201080%2C17.9%201120%2C25.5%201160%2C37.5%201200%2C51.0%201240%2C62.4%22%20fill%3D%22none%22%20stroke%3D%22%23A9825B%22%20stroke-opacity%3D%220.10%22%20stroke-width%3D%221.1%22/%3E%3Cpath%20d%3D%22M0%2C64.1%2040%2C72.7%2080%2C75.0%20120%2C71.9%20160%2C65.7%20200%2C59.7%20240%2C56.7%20280%2C57.7%20320%2C61.8%20360%2C66.4%20400%2C68.3%20440%2C65.0%20480%2C56.0%20520%2C42.6%20560%2C28.2%20600%2C16.3%20640%2C10.0%20680%2C10.3%20720%2C16.0%20760%2C24.5%20800%2C32.3%20840%2C36.8%20880%2C37.0%20920%2C34.2%20960%2C31.1%201000%2C30.7%201040%2C35.1%201080%2C44.8%201120%2C57.8%201160%2C71.0%201200%2C80.6%201240%2C84.1%22%20fill%3D%22none%22%20stroke%3D%22%23A9825B%22%20stroke-opacity%3D%220.13%22%20stroke-width%3D%221.1%22/%3E%3Cpath%20d%3D%22M0%2C89.2%2040%2C89.1%2080%2C84.3%20120%2C77.9%20160%2C73.0%20200%2C71.7%20240%2C74.3%20280%2C79.1%20320%2C83.0%20360%2C82.9%20400%2C77.2%20440%2C66.1%20480%2C51.9%20520%2C38.0%20560%2C28.1%20600%2C24.5%20640%2C27.2%20680%2C34.4%20720%2C43.0%20760%2C49.5%20800%2C52.1%20840%2C50.8%20880%2C47.5%20920%2C45.1%20960%2C46.5%201000%2C53.2%201040%2C64.7%201080%2C78.2%201120%2C90.4%201160%2C97.7%201200%2C98.4%201240%2C92.7%22%20fill%3D%22none%22%20stroke%3D%22%23A9825B%22%20stroke-opacity%3D%220.16%22%20stroke-width%3D%221.1%22/%3E%3Cpath%20d%3D%22M0%2C102.3%2040%2C96.5%2080%2C90.4%20120%2C87.0%20160%2C87.5%20200%2C91.4%20240%2C96.2%20280%2C98.9%20320%2C96.6%20360%2C88.5%20400%2C75.7%20440%2C61.1%20480%2C48.5%20520%2C41.0%20560%2C40.1%20600%2C44.9%20640%2C53.0%20680%2C61.0%20720%2C66.0%20760%2C66.8%20800%2C64.2%20840%2C60.8%20880%2C59.7%20920%2C63.3%20960%2C72.2%201000%2C85.0%201040%2C98.5%201080%2C109.0%201120%2C113.8%201160%2C111.7%201200%2C104.0%201240%2C93.6%22%20fill%3D%22none%22%20stroke%3D%22%23A9825B%22%20stroke-opacity%3D%220.19%22%20stroke-width%3D%221.1%22/%3E%3Cpath%20d%3D%22M0%2C108.7%2040%2C103.5%2080%2C101.8%20120%2C104.0%20160%2C108.7%20200%2C113.1%20240%2C113.9%20280%2C109.3%20320%2C99.0%20360%2C85.0%20400%2C70.7%20440%2C59.9%20480%2C55.0%20520%2C56.6%20560%2C63.2%20600%2C71.5%20640%2C78.4%20680%2C81.6%20720%2C80.7%20760%2C77.4%20800%2C74.6%20840%2C75.2%20880%2C81.1%20920%2C91.9%20960%2C105.4%201000%2C118.2%201040%2C126.7%201080%2C128.6%201120%2C124.1%201160%2C114.9%201200%2C104.5%201240%2C96.1%22%20fill%3D%22none%22%20stroke%3D%22%23A9825B%22%20stroke-opacity%3D%220.23%22%20stroke-width%3D%221.1%22/%3E%3Cpath%20d%3D%22M0%2C117.3%2040%2C117.3%2080%2C120.9%20120%2C126.0%20160%2C129.3%20200%2C128.1%20240%2C120.9%20280%2C108.7%20320%2C94.2%20360%2C80.9%20400%2C72.3%20440%2C70.1%20480%2C74.0%20520%2C81.6%20560%2C89.7%20600%2C95.1%20640%2C96.5%20680%2C94.2%20720%2C90.7%20760%2C88.9%20800%2C91.6%20840%2C99.7%20880%2C112.1%20920%2C125.8%20960%2C137.2%201000%2C143.2%201040%2C142.4%201080%2C135.7%201120%2C125.6%201160%2C115.7%201200%2C109.0%201240%2C106.8%22%20fill%3D%22none%22%20stroke%3D%22%23A9825B%22%20stroke-opacity%3D%220.26%22%20stroke-width%3D%221.1%22/%3E%3Cpath%20d%3D%22M0%2C133.6%2040%2C138.2%2080%2C143.0%20120%2C144.8%20160%2C141.1%20200%2C131.7%20240%2C118.1%20280%2C103.6%20320%2C91.9%20360%2C85.8%20400%2C86.3%20440%2C92.0%20480%2C100.1%20520%2C107.3%20560%2C111.0%20600%2C110.6%20640%2C107.4%20680%2C104.2%20720%2C104.1%20760%2C109.0%20800%2C119.2%20840%2C132.6%20880%2C145.8%20920%2C155.3%20960%2C158.6%201000%2C155.2%201040%2C146.7%201080%2C136.4%201120%2C127.7%201160%2C122.8%201200%2C122.4%201240%2C124.7%22%20fill%3D%22none%22%20stroke%3D%22%23A9825B%22%20stroke-opacity%3D%220.29%22%20stroke-width%3D%221.1%22/%3E%3Cpath%20d%3D%22M0%2C155.6%2040%2C159.6%2080%2C159.3%20120%2C153.2%20160%2C141.7%20200%2C127.2%20240%2C113.4%20280%2C103.8%20320%2C100.4%20360%2C103.3%20400%2C110.3%20440%2C118.4%20480%2C124.3%20520%2C126.1%20560%2C124.2%20600%2C120.6%20640%2C118.3%20680%2C120.1%20720%2C127.4%20760%2C139.2%20800%2C153.1%20840%2C165.2%20880%2C172.4%20920%2C172.9%20960%2C167.1%201000%2C157.5%201040%2C147.6%201080%2C140.3%201120%2C137.4%201160%2C138.5%201200%2C141.3%201240%2C142.7%22%20fill%3D%22none%22%20stroke%3D%22%23A9825B%22%20stroke-opacity%3D%220.32%22%20stroke-width%3D%221.1%22/%3E%3Cpath%20d%3D%22M0%2C175.4%2040%2C172.8%2080%2C164.3%20120%2C151.2%20160%2C136.5%20200%2C124.0%20240%2C116.8%20280%2C116.1%20320%2C121.0%20360%2C128.8%20400%2C136.2%20440%2C140.4%20480%2C140.5%20520%2C137.5%20560%2C134.0%20600%2C133.1%20640%2C137.1%20680%2C146.5%20720%2C159.7%20760%2C173.3%20800%2C183.8%20840%2C188.3%20880%2C186.1%20920%2C178.4%20960%2C168.3%201000%2C159.3%201040%2C153.8%201080%2C152.8%201120%2C154.9%201160%2C157.5%201200%2C157.6%201240%2C153.0%22%20fill%3D%22none%22%20stroke%3D%22%23A9825B%22%20stroke-opacity%3D%220.29%22%20stroke-width%3D%221.1%22/%3E%3Cpath%20d%3D%22M0%2C185.3%2040%2C174.6%2080%2C160.4%20120%2C146.2%20160%2C135.5%20200%2C130.9%20240%2C132.7%20280%2C139.1%20320%2C147.1%20360%2C153.3%20400%2C155.8%20440%2C154.3%20480%2C150.6%20520%2C147.8%20560%2C148.8%20600%2C155.1%20640%2C166.4%20680%2C180.2%20720%2C193.0%20760%2C201.3%20800%2C203.1%20840%2C198.4%20880%2C189.4%20920%2C179.4%20960%2C171.7%201000%2C168.2%201040%2C168.8%201080%2C171.5%201120%2C173.4%201160%2C171.6%201200%2C164.9%201240%2C153.9%22%20fill%3D%22none%22%20stroke%3D%22%23A9825B%22%20stroke-opacity%3D%220.26%22%20stroke-width%3D%221.1%22/%3E%3Cpath%20d%3D%22M0%2C184.3%2040%2C169.6%2080%2C156.4%20120%2C148.1%20160%2C146.1%20200%2C150.1%20240%2C157.5%20280%2C165.0%20320%2C169.7%20360%2C170.4%20400%2C167.6%20440%2C163.8%20480%2C162.3%20520%2C165.4%20560%2C174.0%20600%2C186.7%20640%2C200.6%20680%2C212.0%20720%2C217.8%20760%2C216.8%20800%2C210.0%20840%2C200.2%20880%2C190.9%20920%2C184.9%20960%2C183.3%201000%2C185.1%201040%2C187.9%201080%2C188.5%201120%2C184.7%201160%2C176.0%201200%2C163.9%201240%2C151.6%22%20fill%3D%22none%22%20stroke%3D%22%23A9825B%22%20stroke-opacity%3D%220.23%22%20stroke-width%3D%221.1%22/%3E%3Cpath%20d%3D%22M0%2C179.0%2040%2C167.5%2080%2C161.7%20120%2C162.4%20160%2C168.0%20200%2C175.8%20240%2C182.4%20280%2C185.3%20320%2C184.3%20360%2C180.7%20400%2C177.4%20440%2C177.6%20480%2C183.0%20520%2C193.6%20560%2C207.3%20600%2C220.6%20640%2C230.0%20680%2C233.0%20720%2C229.5%20760%2C221.1%20800%2C211.2%20840%2C203.1%20880%2C199.0%20920%2C199.1%20960%2C201.7%201000%2C203.9%201040%2C202.9%201080%2C196.9%201120%2C186.4%201160%2C173.8%201200%2C162.5%201240%2C155.9%22%20fill%3D%22none%22%20stroke%3D%22%23A9825B%22%20stroke-opacity%3D%220.19%22%20stroke-width%3D%221.1%22/%3E%3Cpath%20d%3D%22M0%2C179.5%2040%2C176.4%2080%2C179.4%20120%2C186.3%20160%2C193.8%20200%2C199.0%20240%2C200.2%20280%2C197.7%20320%2C193.8%20360%2C191.6%20400%2C193.8%20440%2C201.5%20480%2C213.8%20520%2C227.9%20560%2C240.0%20600%2C246.9%20640%2C247.2%20680%2C241.4%20720%2C232.1%20760%2C222.6%20800%2C216.0%20840%2C213.8%20880%2C215.3%20920%2C218.2%20960%2C219.4%201000%2C216.4%201040%2C208.3%201080%2C196.5%201120%2C183.9%201160%2C174.1%201200%2C170.1%201240%2C173.0%22%20fill%3D%22none%22%20stroke%3D%22%23A9825B%22%20stroke-opacity%3D%220.16%22%20stroke-width%3D%221.1%22/%3E%3Cpath%20d%3D%22M0%2C192.2%2040%2C197.1%2080%2C204.6%20120%2C211.4%20160%2C214.9%20200%2C214.3%20240%2C210.8%20280%2C207.2%20320%2C206.5%20360%2C211.0%20400%2C220.9%20440%2C234.4%20480%2C248.1%20520%2C258.4%20560%2C262.8%20600%2C260.4%20640%2C252.8%20680%2C243.0%20720%2C234.6%20760%2C229.8%20800%2C229.4%20840%2C231.9%20880%2C234.4%20920%2C234.1%20960%2C228.9%201000%2C219.0%201040%2C206.3%201080%2C194.4%201120%2C186.7%201160%2C185.5%201200%2C191.0%201240%2C201.2%22%20fill%3D%22none%22%20stroke%3D%22%23A9825B%22%20stroke-opacity%3D%220.13%22%20stroke-width%3D%221.1%22/%3E%3C/svg%3E") center/cover no-repeat,
+      radial-gradient(70% 160% at 85% 0%, rgba(214,183,146,.35), transparent 60%),
+      radial-gradient(60% 140% at 10% 100%, rgba(233,214,190,.45), transparent 65%),
+      linear-gradient(180deg,#FDFAF6 0%,#F7EFE5 100%);}
+  .dh-cover::after{display:none;}
+  .dh-body{padding:0 28px 22px;align-items:end;}
+  .dh-av{width:116px;height:116px;margin-top:-58px;font-size:38px;font-weight:600;border:4px solid var(--surface);box-shadow:0 6px 18px -6px rgba(74,53,38,.35);}
+  .dh-id h1{font-family:'Fraunces','Vazirmatn',Georgia,serif;font-size:28px;font-weight:600;margin:14px 0 2px;letter-spacing:-.02em;}
+  html[dir="rtl"] .dh-id h1{font-weight:800;letter-spacing:0;}
+  .dh-head{font-size:15.5px;color:var(--text);font-weight:500;}
+  .dh-meta{gap:8px 18px;margin-top:12px;font-size:13px;align-items:center;}
+  .dh-meta span{color:var(--muted);}
+  .dh-meta svg{flex:none;opacity:.8;}
+  .dh-meta .chip.dash-role{display:inline-flex;align-items:center;gap:6px;background:color-mix(in srgb, var(--accent) 10%, transparent);border:0;color:var(--accent);font-size:12px;font-weight:700;padding:4px 11px;letter-spacing:.02em;}
+  .dh-meta .chip.dash-role::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;}
+  .dh-actions{align-self:end;gap:10px;}
+  .dh-actions .btn{padding:10px 18px;}
+  .dh-stats{border-top:1px solid var(--border);background:color-mix(in srgb, var(--surface-2) 45%, var(--surface));}
+  .dh-stats div{padding:16px 24px;display:flex;flex-direction:column;justify-content:space-between;gap:8px;}
+  .dh-stats span{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);}
+  html[dir="rtl"] .dh-stats span{letter-spacing:0;text-transform:none;font-size:12.5px;}
+  .dh-stats b{font-family:'Fraunces','Vazirmatn',Georgia,serif;font-size:26px;font-weight:600;line-height:1;color:var(--text);font-variant-numeric:lining-nums tabular-nums;}
+  .dh-star{font-style:normal;color:#C99A3B;font-size:.7em;vertical-align:.15em;}
+  .dh-na{font-style:normal;color:var(--border);}
+  @media (max-width:640px){ .dh-body{grid-template-columns:1fr;padding:0 18px 18px;} .dh-actions{justify-content:flex-start;} .dh-stats{grid-template-columns:repeat(2,minmax(0,1fr));} .dh-stats div:nth-child(3){border-inline-start:0;} .dh-stats div:nth-child(n+3){border-top:1px solid var(--border);} .dh-av{width:96px;height:96px;margin-top:-48px;font-size:32px;} }
+  .earn-row{border:1px solid color-mix(in srgb, var(--border) 85%, transparent);border-radius:16px;background:var(--surface);box-shadow:0 1px 2px rgba(60,40,25,.04);}
+  .earn-row>div{padding:18px 22px;gap:10px;justify-content:space-between;}
+  .earn-row span{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
+  html[dir="rtl"] .earn-row span{letter-spacing:0;text-transform:none;font-size:12.5px;}
+  .earn-row b{font-family:'Fraunces','Vazirmatn',Georgia,serif;font-size:28px;font-weight:600;line-height:1;font-variant-numeric:lining-nums tabular-nums;}
+
+  /* ===== booking cards v2 ===== */
+  .req{border:1px solid color-mix(in srgb, var(--border) 80%, transparent);border-radius:18px;padding:22px 24px;background:var(--surface);box-shadow:0 1px 2px rgba(60,40,25,.04),0 8px 24px -16px rgba(60,40,25,.18);transition:box-shadow .2s,border-color .2s;}
+  .req:hover{box-shadow:0 1px 2px rgba(60,40,25,.05),0 14px 32px -18px rgba(60,40,25,.28);}
+  .req-off{opacity:1;}
+  .req-who b{font-size:16.5px;font-weight:700;color:var(--text);}
+  .req-who .muted{font-size:13.5px;color:var(--muted);margin-top:2px;}
+  .req .avatar{width:48px;height:48px;font-size:16px;}
+  .req-when{flex-direction:row;align-items:center;gap:12px;text-align:start;}
+  .dchip{display:flex;flex-direction:column;align-items:center;justify-content:center;width:52px;height:56px;border-radius:12px;border:1px solid var(--border);background:var(--surface);overflow:hidden;line-height:1;flex:none;}
+  .dchip small{width:100%;text-align:center;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:var(--accent);padding:4px 0;}
+  .dchip b{font-size:20px;font-weight:800;padding:6px 0 4px;color:var(--text);}
+  .dtime{display:flex;flex-direction:column;line-height:1.3;}
+  .dtime b{font-size:14px;} .dtime span{font-size:12.5px;color:var(--muted);}
+  .req-msg{background:var(--surface-2);border:0;border-inline-start:3px solid var(--accent-2);border-radius:8px;font-style:italic;}
+  .req-next{color:var(--text);opacity:.8;}
+  .req-dots{width:36px;height:36px;}
+  /* past bookings: compact rows */
+  .past{margin-top:28px;}
+  .past-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;}
+  .past-head h3{margin:0;font-size:15px;font-weight:700;color:var(--text);font-family:inherit;letter-spacing:0;}
+  .past-clear{border:0;background:none;font:inherit;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;padding:6px 10px;border-radius:8px;}
+  .past-clear:hover{background:var(--surface-2);color:var(--danger);}
+  .past-list{border:1px solid var(--border);border-radius:16px;background:var(--surface);overflow:hidden;}
+  .past-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-top:1px solid var(--border);transition:background .15s;}
+  .past-row:first-child{border-top:0;}
+  .past-row:hover{background:color-mix(in srgb, var(--surface-2) 60%, transparent);}
+  .past-main{flex:1;min-width:0;display:flex;flex-direction:column;}
+  .past-main b{font-size:14.5px;font-weight:600;}
+  .past-main span{font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;white-space:nowrap;}
+  .pill::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;}
+  .pill-cancelled,.pill-declined{background:color-mix(in srgb, var(--danger) 10%, transparent);color:var(--danger);}
+  .pill-done{background:color-mix(in srgb, #4E8A5B 12%, transparent);color:#3E7A4B;}
+  .past-acts{display:flex;gap:2px;opacity:.55;transition:opacity .15s;}
+  .past-row:hover .past-acts,.past-acts:focus-within{opacity:1;}
+  @media (hover:none){ .past-acts{opacity:1;} }
+  .icon-btn{width:34px;height:34px;border-radius:50%;border:0;background:none;color:var(--muted);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;}
+  .icon-btn:hover{background:var(--surface-2);color:var(--text);}
+  .icon-btn.danger:hover{color:var(--danger);background:color-mix(in srgb, var(--danger) 10%, transparent);}
+  @media (max-width:600px){ .past-row{padding:12px;gap:10px;} .pill{font-size:11px;padding:3px 8px;} .pill::before{display:none;} .past-acts{gap:0;} .req-when{width:100%;} }
+
+  /* no cover: clean header */
+  .dh-cover{display:none !important;}
+  .dh-body{padding:28px 28px 24px !important;align-items:center !important;}
+  .dh-id{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:22px;align-items:center;}
+  .dh-av{grid-row:1 / span 3;margin-top:0 !important;width:96px !important;height:96px !important;font-size:34px !important;border:0 !important;box-shadow:0 0 0 4px var(--surface), 0 0 0 5px var(--border) !important;}
+  .dh-id h1{margin:0 0 2px !important;}
+  .dh-meta{margin-top:10px !important;}
+  @media (max-width:640px){ .dh-id{grid-template-columns:1fr;} .dh-av{grid-row:auto;width:80px !important;height:80px !important;font-size:28px !important;margin-bottom:14px;} .dh-body{padding:22px 18px 18px !important;} }
+  .dh-body{grid-template-columns:1fr !important;gap:18px !important;}
+  .dh-actions{justify-content:flex-start !important;padding-inline-start:118px;}
+  .dh-meta{gap:8px 20px !important;}
+  @media (max-width:640px){ .dh-actions{padding-inline-start:0;} }
+  .av-img{width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block;}
+  .avatar,.ib-av,.dh-av{overflow:hidden;}
+  .ib-av.online{overflow:visible;} .ib-av.online .av-img{border-radius:50%;}
+  .dh-av-up{position:relative;cursor:pointer;overflow:visible !important;}
+  .dh-av-up .av-img{border-radius:50%;}
+  .dh-av-cam{position:absolute;bottom:2px;inset-inline-end:2px;width:30px;height:30px;border-radius:50%;background:var(--surface);color:var(--accent);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(60,40,25,.25);border:1px solid var(--border);transition:transform .15s;}
+  .dh-av-up:hover .dh-av-cam{transform:scale(1.08);}
+  /* earnings v3 */
+  .earn-head h2{font-size:20px;}
+  .ew{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.3fr);border:1px solid color-mix(in srgb, var(--border) 85%, transparent);border-radius:20px;background:var(--surface);overflow:hidden;box-shadow:0 1px 2px rgba(60,40,25,.04),0 12px 32px -22px rgba(60,40,25,.22);}
+  .ew-hero{padding:26px 28px;display:flex;flex-direction:column;gap:6px;background:radial-gradient(120% 120% at 0% 0%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 60%), var(--surface);border-inline-end:1px solid var(--border);}
+  .ew-k{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);}
+  .ew-big{font-family:'Fraunces','Vazirmatn',Georgia,serif;font-size:48px;font-weight:600;line-height:1.05;letter-spacing:-.02em;color:var(--text);font-variant-numeric:lining-nums tabular-nums;}
+  .ew-sub{font-size:13px;color:var(--muted);line-height:1.45;max-width:30ch;}
+  .ew-break{padding:24px 28px;display:flex;flex-direction:column;gap:18px;justify-content:center;}
+  .ew-bar{display:flex;height:10px;border-radius:999px;overflow:hidden;background:var(--surface-2);gap:2px;}
+  .ew-bar i{display:block;height:100%;transition:width .4s ease;}
+  .b-paid{background:#5E8F69;} .b-owed{background:var(--accent);} .b-wait{background:#D9C3A6;}
+  .ew-rows{display:flex;flex-direction:column;}
+  .ew-rows div{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--border);}
+  .ew-rows div:first-child{border-top:0;padding-top:0;}
+  .ew-rows span{display:inline-flex;align-items:center;gap:10px;font-size:14px;color:var(--text);}
+  .ew-rows span i{width:10px;height:10px;border-radius:3px;display:inline-block;}
+  .ew-rows b{font-size:15px;font-weight:700;font-variant-numeric:lining-nums tabular-nums;}
+  html[dir="rtl"] .ew-k{letter-spacing:0;text-transform:none;font-size:12.5px;}
+  @media (max-width:640px){ .ew{grid-template-columns:1fr;} .ew-hero{border-inline-end:0;border-bottom:1px solid var(--border);padding:22px;} .ew-break{padding:20px 22px;} .ew-big{font-size:40px;} }
 </style>
 </head>
 <body>
@@ -1899,7 +1974,7 @@ const I18N = {
     mg_save_time:'Save new time', mg_time_note:'{n} gets a message in your chat with the new time.', mg_time_saved:'Time updated', mg_time_msg:'I changed our session to {d} at {t}. Let me know if that works.',
     mg_cancel_confirm:'Cancel this booking? The other person will be told in your chat.', mg_cancelled:'Booking cancelled', mg_cancel_msg:'I cancelled this booking. Message me here if you\'d like to find another time.',
     mg_perm:'the database did not allow this change — run the latest Workar SQL', toast_accepted:'Accepted — the client can now pay to confirm', toast_declined:'Request declined',
-    past_clear:'Clear all', past_clear_q:'Remove all past bookings from your list? This only clears your view.', past_removed:'Removed from your list', grp_count:'{n} active requests', no_active_requests:'Nothing waiting right now.', past_title:'Past bookings ({n})',
+    sd_i_photo:'Profile photo', ph_change:'Change photo', ph_type:'Please choose a JPG, PNG or WebP image.', ph_uploading:'Uploading your photo…', ph_done:'Your photo has been updated.', ph_fail:'The photo could not be uploaded. Please try again.', ew_sessions:'From {n} paid bookings', ew_empty:'Your earnings will appear here after your first paid session.', past_clear:'Clear all', past_clear_q:'Remove all past bookings from your list? This only clears your view.', past_removed:'Removed from your list', grp_count:'{n} active requests', no_active_requests:'Nothing waiting right now.', past_title:'Past bookings ({n})',
     ib_online:'Active now', ib_seen:'Seen', cal_prev:'Previous weeks', cal_next:'Next weeks', cal_day_full:'Fully booked', cal_day_free:'{n} times available', cal_n_free:'{n} available', cal_n_booked:'{n} booked',
     bk_step3:'Add a note and send your request', bk_video_voice:'video or voice call',
     pj_kicker_video:'Video session', pj_kicker_voice:'Voice session', pj_ready:'Ready to join?', pj_anytime:'Your session room is open', pj_live:'Happening now', pj_in_min:'Starts in {n} min', pj_at:'Scheduled for {d} at {t}', pj_ended:'Was scheduled for {d} at {t}',
@@ -2298,7 +2373,7 @@ const I18N = {
     mg_save_time:'ذخیره‌ی زمان جدید', mg_time_note:'زمان جدید توی گفتگو برای {n} فرستاده می‌شه.', mg_time_saved:'زمان به‌روز شد', mg_time_msg:'زمان جلسه رو به {d} ساعت {t} تغییر دادم. بگو مناسبه یا نه.',
     mg_cancel_confirm:'این رزرو لغو بشه؟ توی گفتگو به طرف مقابل اطلاع داده می‌شه.', mg_cancelled:'رزرو لغو شد', mg_cancel_msg:'این رزرو رو لغو کردم. اگه خواستی زمان دیگه‌ای پیدا کنیم، همین‌جا پیام بده.',
     mg_perm:'دیتابیس اجازه‌ی این تغییر رو نداد — SQL جدید Workar رو اجرا کن', toast_accepted:'تأیید شد — حالا مراجعه‌کننده می‌تونه پرداخت کنه', toast_declined:'درخواست رد شد',
-    past_clear:'پاک کردن همه', past_clear_q:'همه‌ی رزروهای قبلی از فهرست شما حذف شوند؟ این کار فقط فهرست شما را پاک می‌کند.', past_removed:'از فهرست شما حذف شد', grp_count:'{n} درخواست فعال', no_active_requests:'فعلاً چیزی در انتظار نیست.', past_title:'رزروهای قبلی ({n})',
+    sd_i_photo:'عکس پروفایل', ph_change:'تغییر عکس', ph_type:'لطفاً یک عکس JPG، PNG یا WebP انتخاب کنید.', ph_uploading:'در حال بارگذاری عکس…', ph_done:'عکس شما به‌روز شد.', ph_fail:'بارگذاری عکس ممکن نشد. لطفاً دوباره تلاش کنید.', ew_sessions:'از {n} رزرو پرداخت‌شده', ew_empty:'درآمد شما پس از اولین جلسه‌ی پرداخت‌شده اینجا نمایش داده می‌شود.', past_clear:'پاک کردن همه', past_clear_q:'همه‌ی رزروهای قبلی از فهرست شما حذف شوند؟ این کار فقط فهرست شما را پاک می‌کند.', past_removed:'از فهرست شما حذف شد', grp_count:'{n} درخواست فعال', no_active_requests:'فعلاً چیزی در انتظار نیست.', past_title:'رزروهای قبلی ({n})',
     ib_online:'آنلاین', ib_seen:'دیده شد', cal_prev:'هفته‌های قبل', cal_next:'هفته‌های بعد', cal_day_full:'کاملاً رزرو شده', cal_day_free:'{n} زمان آزاد', cal_n_free:'{n} زمان آزاد', cal_n_booked:'{n} رزرو شده',
     bk_step3:'یک یادداشت بنویسید و درخواست را ارسال کنید', bk_video_voice:'تماس تصویری یا صوتی',
     pj_kicker_video:'جلسه‌ی تصویری', pj_kicker_voice:'جلسه‌ی صوتی', pj_ready:'آماده‌ی ورود هستید؟', pj_anytime:'اتاق جلسه‌ی شما باز است', pj_live:'هم‌اکنون در حال برگزاری', pj_in_min:'{n} دقیقه‌ی دیگر شروع می‌شود', pj_at:'زمان جلسه: {d} ساعت {t}', pj_ended:'زمان جلسه {d} ساعت {t} بود',
@@ -2567,7 +2642,7 @@ async function resolveNames(ids){
   if(!sb) return;
   const need = [...new Set((ids||[]).filter(id=>id && id!==uid && !(cache.profiles[id] && cache.profiles[id].name) && !cache.people[id]))];
   if(!need.length) return;
-  const { data } = await sb.from('profiles').select('id,name,profession,role').in('id', need);
+  const { data } = await sb.from('profiles').select('id,name,profession,role,avatarUrl,headline').in('id', need);
   (data||[]).forEach(p=>{ cache.people[p.id] = p; if(p.name) cache.names[p.id] = p.name; });
 }
 function nameOf(id){
@@ -2575,6 +2650,8 @@ function nameOf(id){
   if(cache.profiles[id] && cache.profiles[id].name) return cache.profiles[id].name;
   return cache.names[id] || 'Someone';
 }
+function photoOf(id){ const p = (id && id===uid && myProfile) ? myProfile : (cache.profiles[id] || cache.people[id] || {}); return p && p.avatarUrl ? p.avatarUrl : ''; }
+function av(id, fallbackName){ const u = photoOf(id); return u ? `<img class="av-img" src="${esc(u)}" alt="" loading="lazy" decoding="async">` : initials(fallbackName || nameOf(id)); }
 function initials(name){ return (name||'?').split(' ').filter(Boolean).slice(0,2).map(w=>w[0].toUpperCase()).join(''); }
 function starsStr(n){ n=Math.round(n||0); return '★'.repeat(n)+'☆'.repeat(5-n); }
 function avgRating(mentorId){ const rs=(cache.reviews[mentorId]||[]); if(!rs.length) return null; return rs.reduce((a,r)=>a+r.rating,0)/rs.length; }
@@ -3384,7 +3461,7 @@ function adminView(){
     <p class="muted" style="font-size:13px;margin:0 0 14px;">${esc(T('apps_hint'))}</p>
     ${state.apps==null ? `<div class="muted">${esc(T('pay_loading'))}</div>` : state.apps==='error' ? `<div class="muted">${esc(T('apps_error'))}</div>` : !state.apps.length ? `<div class="empty">${esc(T('apps_none'))}</div>` :
       `<div class="apps">${state.apps.map(a=>`<div class="app-row">
-        <div class="avatar">${initials(a.name||'?')}</div>
+        <div class="avatar">${av(a.id, a.name||'?')}</div>
         <div class="app-info"><b>${esc(a.name||'')}</b><span class="muted">${esc([a.headline||a.profession, a.experience ? a.experience+' '+T('yrs_exp') : '', (a.languages||[]).join(', ')].filter(Boolean).join(' · '))}</span>
           ${a.bio ? `<p>${esc(String(a.bio).slice(0,260))}</p>` : ''}${a.linkedin ? `<a href="${esc(a.linkedin)}" target="_blank" rel="noopener">${esc(T('linkedin_link'))}</a>` : ''}</div>
         <div class="app-btns"><button class="btn btn-sm btn-primary" data-approve="${esc(a.id)}">${esc(T('apps_approve'))}</button><button class="btn btn-sm btn-ghost" data-nav="mentor" data-mentor="${esc(a.id)}">${esc(T('apps_view'))}</button></div>
@@ -5347,7 +5424,7 @@ function browseView(){
           const p = cache.profiles[r.id]; if(!p) return '';
           return `<div class="card" data-nav="mentor" data-mentor="${r.id}">
             <div class="card-top">
-              <div class="avatar">${initials(nameOf(r.id))}</div>
+              <div class="avatar">${av(r.id)}</div>
               <div><h3>${esc(nameOf(r.id))}</h3><div class="prof">${esc(p.headline||p.profession||'')}</div></div>
               <span class="chip" style="margin-inline-start:auto;background:var(--accent);color:var(--accent-ink);border:none;">${esc(T('ai_match_badge'))}</span>
             </div>
@@ -5383,7 +5460,7 @@ function browseView(){
       const avg = avgRating(id);
       return `<div class="card" data-nav="mentor" data-mentor="${id}">
         <div class="card-top">
-          <div class="avatar">${initials(nameOf(id))}</div>
+          <div class="avatar">${av(id)}</div>
           <div><h3>${esc(nameOf(id))}</h3><div class="prof">${esc(p.headline||p.profession||'')}</div></div>
         </div>
         <div class="card-meta">${[p.experience ? esc(p.experience)+' '+esc(T('yrs_exp')) : '', esc(mentorLangs(p).join(', '))].filter(Boolean).join('<i></i>')}</div>
@@ -5453,7 +5530,7 @@ function mentorView(){
   return `
   <a class="mp-back" data-nav="browse">${esc(T('mp_back'))}</a>
   <div class="mp-hero">
-    <div class="avatar avatar-xl">${initials(nameOf(id))}</div>
+    <div class="avatar avatar-xl">${av(id)}</div>
     <div class="mp-id">
       <h1>${esc(nameOf(id))}</h1>
       <div class="mp-headline">${esc(p.headline||p.profession||'')}</div>
@@ -5533,7 +5610,7 @@ function reqCard(r, isMentor, grouped){
   return `<div class="req ${act?'req-act':''} ${st<0?'req-off':''} ${grouped?'req-in':''}">
     ${act ? `<div class="req-flag">${esc(T(isMentor?'flag_new':'flag_action'))}</div>` : ''}
     <div class="req-top">
-      ${grouped ? '' : `<div class="avatar">${initials(other)}</div>`}
+      ${grouped ? '' : `<div class="avatar">${av(otherId)}</div>`}
       <div class="req-who">
         ${grouped ? '' : `<b>${esc(other)}</b>`}
         <div class="muted">${[isMentor && !grouped && person.profession ? T('dash_aiming').replace('{p}', person.profession) : '', r.packageKey ? T('pk_'+r.packageKey+'_name') + (r.amountCents?` · $${(r.amountCents/100).toFixed(0)}`:'') : ''].filter(Boolean).map(esc).join(' · ')}</div>
@@ -5722,7 +5799,7 @@ function messagesView(){
   if(sel){ markConvSeen(sel); markReadDb(sel); }
   const list = convs.length ? convs.map(c=>{ const p = personOf(c.o), last = c.last;
       return `<button type="button" class="ib-item ${c.o===sel?'on':''}" data-inbox="${esc(c.o)}">
-        <span class="ib-av ${onlineSet.has(c.o)?'online':''}" data-presence="${esc(c.o)}">${initials(nameOf(c.o))}</span>
+        <span class="ib-av ${onlineSet.has(c.o)?'online':''}" data-presence="${esc(c.o)}">${av(c.o)}</span>
         <span class="ib-meta"><span class="ib-row"><b>${esc(nameOf(c.o))}</b><time>${esc(inboxShortTime(c.lastT))}</time></span>
           <span class="ib-row"><span class="ib-snip">${last ? (last.senderId===uid ? esc(T('inbox_you'))+': ' : '') + esc(last.text) : esc(p.headline||p.profession||'')}</span>${c.unread && c.o!==sel ? `<i class="ib-badge">${c.unread}</i>` : ''}</span></span>
       </button>`; }).join('')
@@ -5802,12 +5879,12 @@ function inboxThread(o){
       const cont = !sep && prev && prev.senderId===m.senderId && (new Date(m.createdAt) - new Date(prev.createdAt)) < 5*60000;
       lastDay = day; prev = m;
       return `${sep}<div class="ib-msg ${mine?'me':''} ${cont?'cont':''}">
-        ${mine ? '' : `<span class="ib-av sm">${initials(name)}</span>`}
+        ${mine ? '' : `<span class="ib-av sm">${av(o)}</span>`}
         <div class="ib-bub"><div class="ib-text">${linkify(m.text)}</div><time>${esc(inboxTime(m.createdAt))}${mine?(m.readAt?`<span class="ib-tick read" aria-label="${esc(T('ib_seen'))}">✓✓</span>`:'<span class="ib-tick" aria-label="sent">✓</span>'):''}</time>
           ${mine ? `<button type="button" class="ib-del" data-del-msg="${esc(m.id)}" title="${esc(T('inbox_delete_msg'))}" aria-label="${esc(T('inbox_delete_msg'))}">${IB_IC.trash}</button>` : ''}</div>
       </div>`; }).join('') + (()=>{ const last = msgs[msgs.length-1];
         return last && last.senderId===uid && last.readAt ? `<div class="ib-seen">${esc(T('ib_seen'))} · ${esc(inboxTime(last.readAt))}</div>` : ''; })()
-      + `<div class="ib-msg ib-typing ${__typing.showing?'on':''}" id="ib-typing" aria-live="polite"><span class="ib-av sm">${initials(name)}</span><div class="ib-bub"><i></i><i></i><i></i></div></div>`;
+      + `<div class="ib-msg ib-typing ${__typing.showing?'on':''}" id="ib-typing" aria-live="polite"><span class="ib-av sm">${av(o)}</span><div class="ib-bub"><i></i><i></i><i></i></div></div>`;
   const callBtns = live
     ? `<button class="ib-ic" data-call="${live.id}" data-url="${esc(live.meetingUrl||'')}" data-mode="voice" title="${esc(T('inbox_voice'))}" aria-label="${esc(T('inbox_voice'))}">${IB_IC.voice}</button>
        <button class="ib-ic" data-call="${live.id}" data-url="${esc(live.meetingUrl||'')}" data-mode="video" title="${esc(T('inbox_video'))}" aria-label="${esc(T('inbox_video'))}">${IB_IC.video}</button>`
@@ -5824,7 +5901,7 @@ function inboxThread(o){
     : (p.role!=='client' && o!==uid ? `<div class="ib-ctx soft"><div><b>${esc(T('inbox_no_booking'))}</b><span>${esc(T('inbox_calls_locked'))}</span></div><div class="ib-ctx-act"><button class="btn btn-sm btn-primary" data-nav="mentor" data-mentor="${esc(o)}">${esc(T('book_session'))}</button></div></div>` : '');
   return `<div class="ib-head">
       <button class="ib-back ib-ic" data-inbox-back="1" aria-label="${esc(T('inbox_back'))}">${IB_IC.back}</button>
-      <span class="ib-av lg ${onlineSet.has(o)?'online':''}" data-presence="${esc(o)}">${initials(name)}</span>
+      <span class="ib-av lg ${onlineSet.has(o)?'online':''}" data-presence="${esc(o)}">${av(o)}</span>
       <div class="ib-who"><b>${esc(name)}</b><span id="ib-status" data-o="${esc(o)}" data-headline="${esc(p.headline||p.profession||'')}" class="${onlineSet.has(o)?'on':''}">${esc(onlineSet.has(o) ? T('ib_online') : (p.headline||p.profession||''))}</span></div>
       <div class="ib-tools">${callBtns}
         <span class="ib-more-wrap"><button class="ib-ic" data-inbox-menu="1" aria-label="${esc(T('mg_more'))}">${IB_IC.more}</button>
@@ -5836,7 +5913,7 @@ function inboxThread(o){
       </div>
     </div>
     ${ctx}
-    <div class="ib-thread" id="ib-thread">${bubbles || `<div class="ib-start"><span class="ib-av lg">${initials(name)}</span><b>${esc(name)}</b><span>${esc(p.headline||p.profession||'')}</span><p>${esc(T('inbox_no_msgs').replace('{n}', name))}</p></div>`}</div>
+    <div class="ib-thread" id="ib-thread">${bubbles || `<div class="ib-start"><span class="ib-av lg">${av(o)}</span><b>${esc(name)}</b><span>${esc(p.headline||p.profession||'')}</span><p>${esc(T('inbox_no_msgs').replace('{n}', name))}</p></div>`}</div>
     <form class="ib-compose" id="ib-compose" data-to="${esc(o)}">
       <button type="button" class="ib-ic ib-ai" data-ib-ai="${esc(o)}" title="${esc(T('ib_ai'))}" aria-label="${esc(T('ib_ai'))}"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 2.5l1.9 5.2a3 3 0 0 0 1.8 1.8L21 11.4l-5.3 1.9a3 3 0 0 0-1.8 1.8L12 20.4l-1.9-5.3a3 3 0 0 0-1.8-1.8L3 11.4l5.3-1.9a3 3 0 0 0 1.8-1.8L12 2.5z"/></svg></button>
       <textarea id="ib-input" rows="1" placeholder="${esc(T('inbox_ph'))}">${esc(state.inboxDraft||'')}</textarea>
@@ -5935,7 +6012,7 @@ async function openPrejoin(reqId, url, mode){
   el.innerHTML = `<div class="pj">
     <div class="pj-stage">
       <video id="pj-video" autoplay muted playsinline></video>
-      <div class="pj-off" id="pj-off"><span class="ib-av">${initials(myName||'?')}</span><span id="pj-off-txt">${esc(T('pj_cam_is_off'))}</span></div>
+      <div class="pj-off" id="pj-off"><span class="ib-av">${av(uid, myName||'?')}</span><span id="pj-off-txt">${esc(T('pj_cam_is_off'))}</span></div>
       <div class="pj-meter" aria-hidden="true">${'<i></i>'.repeat(5)}</div>
       <div class="pj-ctrls">
         <button type="button" class="pj-btn" id="pj-mic"></button>
@@ -5945,7 +6022,7 @@ async function openPrejoin(reqId, url, mode){
     <div class="pj-side">
       <span class="pj-kicker">${esc(T(mode==='voice' ? 'pj_kicker_voice' : 'pj_kicker_video'))}</span>
       <h3>${esc(T('pj_ready'))}</h3>
-      <div class="pj-with"><span class="ib-av">${initials(oname)}</span><div><b>${esc(oname)}</b><span>${esc(r.packageKey ? T('pk_'+r.packageKey+'_name') : T('inbox_booking'))} · 45 min</span></div></div>
+      <div class="pj-with"><span class="ib-av">${av(other, oname)}</span><div><b>${esc(oname)}</b><span>${esc(r.packageKey ? T('pk_'+r.packageKey+'_name') : T('inbox_booking'))} · 45 min</span></div></div>
       <div class="pj-when ${w.cls}" id="pj-when">${esc(w.text)}</div>
       <p class="pj-msg" id="pj-msg">${esc(T('pj_checking'))}</p>
       <div class="pj-actions">
@@ -6005,6 +6082,31 @@ document.addEventListener('click', e=>{
   openPrejoin(b.getAttribute('data-call'), b.getAttribute('data-url'), b.getAttribute('data-mode')==='voice' ? 'voice' : 'video');
 }, true);
 
+// ---------- profile photo upload ----------
+async function uploadPhoto(file){
+  if(!file || !sb || !uid) return;
+  if(!/^image\/(jpeg|png|webp)$/.test(file.type)){ toast(T('ph_type')); return; }
+  toast(T('ph_uploading'));
+  try{
+    const img = await new Promise((ok, bad)=>{ const i = new Image(); i.onload = ()=>ok(i); i.onerror = bad; i.src = URL.createObjectURL(file); });
+    const side = Math.min(img.width, img.height), S = 480;              // centre-crop to a square, 480px
+    const c = document.createElement('canvas'); c.width = S; c.height = S;
+    c.getContext('2d').drawImage(img, (img.width-side)/2, (img.height-side)/2, side, side, 0, 0, S, S);
+    const blob = await new Promise(r=>c.toBlob(r, 'image/jpeg', 0.86));
+    const path = uid + '/' + Date.now() + '.jpg';
+    const { error } = await sb.storage.from('avatars').upload(path, blob, { contentType:'image/jpeg', cacheControl:'31536000' });
+    if(error) throw error;
+    const url = sb.storage.from('avatars').getPublicUrl(path).data.publicUrl;
+    const old = myProfile.avatarUrl;
+    await saveProfileSafe({ avatarUrl: url }, 'update');
+    myProfile.avatarUrl = url; if(cache.profiles[uid]) cache.profiles[uid].avatarUrl = url;
+    if(old){ const m = old.split('/avatars/')[1]; if(m) sb.storage.from('avatars').remove([m]).catch(()=>{}); }
+    toast(T('ph_done')); render();
+  }catch(e){ console.error('photo', e); toast(T('ph_fail')); }
+}
+document.addEventListener('click', e=>{ if(e.target.closest && e.target.closest('[data-pick-photo]')){ const f = document.getElementById('photo-input'); if(f) f.click(); } });
+document.addEventListener('change', e=>{ if(e.target && e.target.id==='photo-input'){ uploadPhoto(e.target.files && e.target.files[0]); e.target.value=''; } });
+
 function hiddenReqs(){ let h = []; try{ h = JSON.parse(localStorage.getItem('workar_hidden_'+uid)||'[]'); }catch(e){}
   (cache.requests||[]).forEach(r=>{ if(Array.isArray(r.hiddenBy) && r.hiddenBy.includes(uid) && !h.includes(r.id)) h.push(r.id); }); return h; }
 async function removeReqs(ids){
@@ -6021,7 +6123,7 @@ function reqRowClosed(r, isMentor){
   const when = i ? fmtLocalDay(i) + ' · ' + fmtLocalTime(i) : (r.date ? fmtReqDate(r.date) : '');
   const pk = r.packageKey ? T('pk_'+r.packageKey+'_name') + (r.amountCents ? ' · $' + (r.amountCents/100).toFixed(0) : '') : '';
   return `<div class="past-row">
-    <span class="ib-av sm">${initials(name)}</span>
+    <span class="ib-av sm">${av(o)}</span>
     <div class="past-main"><b>${esc(name)}</b><span>${esc([pk, when].filter(Boolean).join(' · '))}</span></div>
     <span class="pill pill-${kind}">${esc(label)}</span>
     <div class="past-acts">
@@ -6045,7 +6147,7 @@ function reqListHtml(myReqs, isMentor){
     if(list.length===1) return reqCard(list[0], isMentor);
     const person = cache.people[o] || cache.profiles[o] || {};
     return `<div class="req-group">
-      <div class="req-group-head"><div class="avatar">${initials(nameOf(o))}</div>
+      <div class="req-group-head"><div class="avatar">${av(o)}</div>
         <div><b>${esc(nameOf(o))}</b><span class="muted">${esc(T('grp_count').replace('{n}', list.length))}${isMentor && person.profession ? ' · ' + esc(T('dash_aiming').replace('{p}', person.profession)) : ''}</span></div></div>
       ${list.map(r=>reqCard(r, isMentor, true)).join('')}
     </div>`;
@@ -6075,8 +6177,8 @@ async function postNote(reqId, text){ try{ await sb.from('messages').insert({ id
 function dashSide(isMentor){
   const P = myProfile||{}, has = v => Array.isArray(v) ? v.length>0 : !!String(v||'').trim();
   const items = isMentor
-    ? [['sd_i_title', has(P.profession)||has(P.headline)], ['sd_i_bio', has(P.bio)], ['sd_i_skills', has(P.skills)], ['sd_i_edu', has(P.degree)||has(P.education)], ['sd_i_lang', has(P.languages)], ['sd_i_avail', has(P.availability)], ['sd_i_li', has(P.linkedin)]]
-    : [['sd_i_title', has(P.profession)], ['sd_i_bio', has(P.bio)], ['sd_i_goals', has(P.goals)], ['sd_i_edu', has(P.degree)||has(P.education)], ['sd_i_cert', has(P.certifications)], ['sd_i_li', has(P.linkedin)]];
+    ? [['sd_i_photo', has(P.avatarUrl)], ['sd_i_title', has(P.profession)||has(P.headline)], ['sd_i_bio', has(P.bio)], ['sd_i_skills', has(P.skills)], ['sd_i_edu', has(P.degree)||has(P.education)], ['sd_i_lang', has(P.languages)], ['sd_i_avail', has(P.availability)], ['sd_i_li', has(P.linkedin)]]
+    : [['sd_i_photo', has(P.avatarUrl)], ['sd_i_title', has(P.profession)], ['sd_i_bio', has(P.bio)], ['sd_i_goals', has(P.goals)], ['sd_i_edu', has(P.degree)||has(P.education)], ['sd_i_cert', has(P.certifications)], ['sd_i_li', has(P.linkedin)]];
   const done = items.filter(x=>x[1]).length, pct = Math.round(done*100/items.length), todo = items.filter(x=>!x[1]);
   let convs = []; try{ convs = conversations().slice(0,4); }catch(e){}
   const plus = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
@@ -6085,12 +6187,12 @@ function dashSide(isMentor){
       <div class="sc-top"><h3>${esc(T('sd_strength'))}</h3><span class="sc-pct">${pct}%</span></div>
       <div class="sc-sub">${esc(T(isMentor?'sd_strength_m':'sd_strength_c'))}</div>
       <div class="sc-bar"><i style="width:${pct}%"></i></div>
-      ${todo.length ? `<ul class="sc-todo">${todo.map(([k])=>`<li><span>${esc(T(k))}</span><button type="button" data-open-edit="1">${plus}${esc(T('sd_add'))}</button></li>`).join('')}</ul>` : `<div class="sc-ok">${esc(T('sd_done'))}</div>`}
+      ${todo.length ? `<ul class="sc-todo">${todo.map(([k])=>`<li><span>${esc(T(k))}</span><button type="button" ${k==='sd_i_photo'?'data-pick-photo="1"':'data-open-edit="1"'}>${plus}${esc(T('sd_add'))}</button></li>`).join('')}</ul>` : `<div class="sc-ok">${esc(T('sd_done'))}</div>`}
     </section>
     <section class="sc">
       <div class="sc-top"><h3>${esc(T('sd_msgs'))}</h3></div>
       ${convs.length ? `<div class="sc-conv">${convs.map(c=>{ const last=c.last; return `<button type="button" data-dm="${esc(c.o)}">
-          <span class="ib-av sc-av">${initials(nameOf(c.o))}</span>
+          <span class="ib-av sc-av">${av(c.o)}</span>
           <span class="sc-cm"><b>${esc(nameOf(c.o))}</b><span>${last ? (last.senderId===uid ? esc(T('inbox_you'))+': ' : '') + esc(last.text) : esc(personOf(c.o).headline||personOf(c.o).profession||'')}</span></span>
           ${c.unread ? `<i class="sc-dot">${c.unread}</i>` : ''}</button>`; }).join('')}</div>
         <button type="button" class="sc-link" data-nav="messages">${esc(T('sd_all'))}</button>`
@@ -6114,15 +6216,18 @@ function dashboardView(){
     <div class="dh-cover"></div>
     <div class="dh-body">
       <div class="dh-id">
-        <div class="dh-av">${initials(myProfile.name||'')}</div>
+        <label class="dh-av dh-av-up" title="${esc(T('ph_change'))}">${av(uid, myProfile.name||'')}
+          <input type="file" id="photo-input" accept="image/jpeg,image/png,image/webp" hidden>
+          <span class="dh-av-cam" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/></svg></span>
+        </label>
         <h1>${esc(myProfile.name||'')}</h1>
         <div class="dh-head">${esc(isMentor ? (myProfile.headline||myProfile.profession||'') : (myProfile.profession ? T('dash_aiming').replace('{p}', myProfile.profession) : ''))}</div>
         <div class="dh-meta">
           <span class="chip dash-role" style="margin:0">${isMentor?esc(T('mentor_badge')):esc(T('client_badge'))}</span>
-          ${myProfile.timezone ? `<span>${esc(tzCity(myProfile.timezone))}</span>` : ''}
-          ${edu ? `<span>${esc(edu)}</span>` : ''}
-          ${langs ? `<span>${esc(langs)}</span>` : ''}
-          ${isMentor && myProfile.experience ? `<span>${esc(myProfile.experience)} ${esc(T('yrs_exp'))}</span>` : ''}
+          ${myProfile.timezone ? `<span><svg viewBox="0 0 20 20" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M10 18s6-5.2 6-10a6 6 0 10-12 0c0 4.8 6 10 6 10z"/><circle cx="10" cy="8" r="2.2"/></svg>${esc(tzCity(myProfile.timezone))}</span>` : ''}
+          ${edu ? `<span><svg viewBox="0 0 20 20" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M1.5 7.5L10 3.5l8.5 4L10 11.5z"/><path d="M5 9.3V13c0 1.3 2.2 2.5 5 2.5s5-1.2 5-2.5V9.3"/></svg>${esc(edu)}</span>` : ''}
+          ${langs ? `<span><svg viewBox="0 0 20 20" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="7.5"/><path d="M2.5 10h15M10 2.5c2.2 2.3 2.2 12.7 0 15M10 2.5c-2.2 2.3-2.2 12.7 0 15"/></svg>${esc(langs)}</span>` : ''}
+          ${isMentor && myProfile.experience ? `<span><svg viewBox="0 0 20 20" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="2.5" y="6" width="15" height="10.5" rx="2"/><path d="M7 6V4.5h6V6M2.5 10.5h15"/></svg>${esc(myProfile.experience)} ${esc(T('yrs_exp'))}</span>` : ''}
         </div>
       </div>
       <div class="dh-actions">
@@ -6131,10 +6236,10 @@ function dashboardView(){
       </div>
     </div>
     <div class="dh-stats">
-      <div><b>${active}</b><span>${esc(T('ds_active'))}</span></div>
-      <div><b>${done}</b><span>${esc(T('ds_done'))}</span></div>
-      <div><b>${isMentor ? (avg ? avg.toFixed(1)+' ★' : '–') : conversations().length}</b><span>${esc(T(isMentor ? 'ds_rating' : 'ds_convs'))}${isMentor && nRev ? ' · '+nRev : ''}</span></div>
-      <div><b>${inboxUnreadTotal()}</b><span>${esc(T('ds_unread'))}</span></div>
+      <div><span>${esc(T('ds_active'))}</span><b>${active}</b></div>
+      <div><span>${esc(T('ds_done'))}</span><b>${done}</b></div>
+      <div><span>${esc(T(isMentor ? 'ds_rating' : 'ds_convs'))}${isMentor && nRev ? ' · '+nRev : ''}</span><b>${isMentor ? (avg ? avg.toFixed(1)+' <i class="dh-star">★</i>' : '<i class="dh-na">—</i>') : conversations().length}</b></div>
+      <div><span>${esc(T('ds_unread'))}</span><b>${inboxUnreadTotal()}</b></div>
     </div>
   </div>`; })()}
   ${isMentor && myProfile.approved===false ? `<div class="banner pending-banner">${esc(T('pending_review'))}</div>` : ''}
@@ -6194,12 +6299,25 @@ function dashboardView(){
       const out = paidR.filter(r=>r.payoutDone).reduce((a,r)=>a+reqMentorCents(r),0);
       return `<div class="earn">
         <div class="earn-head"><h2>${esc(T('earn_title'))}</h2><span class="muted">${esc(T('earn_note').replace('{p}', mentorSharePct()))}</span></div>
-        <div class="earn-row">
-          <div><span>${esc(T('earn_total'))}</span><b>${fmtMoney(earned)}</b></div>
-          <div><span>${esc(T('earn_paid'))}</span><b>${fmtMoney(out)}</b></div>
-          <div class="due"><span>${esc(T('earn_owed'))}</span><b>${fmtMoney(earned-out)}</b></div>
-          <div><span>${esc(T('earn_wait'))}</span><b>${fmtMoney(myReqs.filter(r=>!r.paid && r.amountCents>0 && reqStage(r)>=1 && reqStage(r)<3).reduce((a,r)=>a+reqMentorCents(r),0))}</b></div>
-        </div>
+        ${(()=>{ const wait = myReqs.filter(r=>!r.paid && r.amountCents>0 && reqStage(r)>=1 && reqStage(r)<3).reduce((a,r)=>a+reqMentorCents(r),0);
+          const owed = earned-out, tot = out + owed + wait, pc = v => tot ? Math.max(v ? 2 : 0, Math.round(v/tot*100)) : 0;
+          return `<div class="ew">
+          <div class="ew-hero">
+            <span class="ew-k">${esc(T('earn_total'))}</span>
+            <b class="ew-big">${fmtMoney(earned)}</b>
+            <span class="ew-sub">${esc(earned ? T('ew_sessions').replace('{n}', paidR.length) : T('ew_empty'))}</span>
+          </div>
+          <div class="ew-break">
+            <div class="ew-bar ${tot?'':'empty'}" role="img" aria-label="${esc(T('earn_title'))}">
+              <i class="b-paid" style="width:${pc(out)}%"></i><i class="b-owed" style="width:${pc(owed)}%"></i><i class="b-wait" style="width:${pc(wait)}%"></i>
+            </div>
+            <div class="ew-rows">
+              <div><span><i class="b-paid"></i>${esc(T('earn_paid'))}</span><b>${fmtMoney(out)}</b></div>
+              <div><span><i class="b-owed"></i>${esc(T('earn_owed'))}</span><b>${fmtMoney(owed)}</b></div>
+              <div><span><i class="b-wait"></i>${esc(T('earn_wait'))}</span><b>${fmtMoney(wait)}</b></div>
+            </div>
+          </div>
+        </div>`; })()}
         ${paidR.length ? `<div class="earn-tx"><div><span>${esc(T('earn_tx_client'))}</span><span>${esc(T('earn_tx_date'))}</span><span>${esc(T('earn_tx_paid'))}</span><span>${esc(T('earn_tx_share'))}</span><span></span></div>
           ${paidR.slice().sort((a,b)=>(Number(b.createdAt)||0)-(Number(a.createdAt)||0)).map(r=>`<div><span>${esc(nameOf(r.clientId))}</span><span>${esc(r.startsAt ? new Date(r.startsAt).toLocaleDateString() : (r.createdAt ? new Date(Number(r.createdAt)).toLocaleDateString() : ''))}</span><span>${fmtMoney(r.amountCents)}</span><span>${fmtMoney(reqMentorCents(r))}</span><span class="st ${r.payoutDone?'ok':''}">${esc(T(r.payoutDone?'earn_tx_out':'earn_tx_due'))}</span></div>`).join('')}</div>` : ''}
       </div>`; })() : ''}
