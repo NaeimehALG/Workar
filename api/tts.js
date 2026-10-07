@@ -14,8 +14,10 @@ export default async function handler(req, res) {
     return res.status(401).json({ error: "sign in required", detail: "no token sent" });
   }
 
-  const { SUPABASE_URL, SUPABASE_ANON_KEY, OPENAI_API_KEY } = process.env;
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !OPENAI_API_KEY) {
+  const { SUPABASE_URL, OPENAI_API_KEY } = process.env;
+  // the publishable key is public (it is in index.html), so it is a safe fallback
+  const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || "sb_publishable_QB6yw8JdxxI7ODorT3X3aw_rJa2UXbq";
+  if (!SUPABASE_URL || !OPENAI_API_KEY) {
     return res.status(500).json({ error: "server env vars missing" });
   }
 
@@ -26,25 +28,22 @@ export default async function handler(req, res) {
     return res.status(401).json({ error: "sign in required", detail: "token rejected" });
   }
 
-  // 2) Turn the text into speech
-  const { text, voice = "alloy" } = req.body || {};
+  // 2) Turn the text into speech: a warm, natural voice (gpt-4o-mini-tts), falling back to tts-1
+  const { text, lang } = req.body || {};
   if (!text || typeof text !== "string") {
     return res.status(400).json({ error: "text is required" });
   }
-
-  const ttsRes = await fetch("https://api.openai.com/v1/audio/speech", {
+  const input = text.slice(0, 4000);
+  const instructions = lang === "fa"
+    ? "Speak natural, fluent Persian (Farsi) like a friendly, experienced career coach in a real conversation: warm, calm and encouraging, relaxed pace, natural pauses, never robotic."
+    : "Speak like a friendly, experienced career coach in a real video call: warm, calm, confident and encouraging. Natural conversational rhythm with small pauses, relaxed pace, never robotic or overly cheerful.";
+  const call = (body) => fetch("https://api.openai.com/v1/audio/speech", {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${OPENAI_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: "tts-1",
-      voice,
-      input: text.slice(0, 4000),
-      response_format: "mp3",
-    }),
+    headers: { Authorization: `Bearer ${OPENAI_API_KEY}`, "Content-Type": "application/json" },
+    body: JSON.stringify(body),
   });
+  let ttsRes = await call({ model: "gpt-4o-mini-tts", voice: "coral", input, instructions, response_format: "mp3" });
+  if (!ttsRes.ok) ttsRes = await call({ model: "tts-1-hd", voice: "nova", input, response_format: "mp3" });
 
   if (!ttsRes.ok) {
     const err = await ttsRes.text();
