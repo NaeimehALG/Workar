@@ -33,6 +33,8 @@ function verifyStripeSignature(rawBody, sigHeader, secret) {
     parts[k] = v;
   });
   if (!parts.t || !parts.v1) return false;
+  // reject replays of old events (Stripe's recommended 5-minute tolerance)
+  if (Math.abs(Date.now() / 1000 - Number(parts.t)) > 300) return false;
   const expected = crypto.createHmac('sha256', secret).update(`${parts.t}.${rawBody}`).digest('hex');
   try {
     return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(parts.v1));
@@ -77,6 +79,10 @@ async function handler(req, res) {
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
     const md = session.metadata || {};
+    // only act on money that actually arrived (e.g. ignore delayed bank payments still pending)
+    if (session.payment_status && session.payment_status !== 'paid' && session.payment_status !== 'no_payment_required') {
+      res.status(200).json({ received: true, skipped: 'unpaid' }); return;
+    }
     try {
       if (md.kind === 'exam' && md.userId && md.examId) {
         // stripeSessionId is unique, so a repeated webhook delivery is ignored

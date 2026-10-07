@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
   if (!key) { res.status(500).json({ error: 'ANTHROPIC_API_KEY is not set on the server' }); return; }
 
   const me = await M.userFromToken((req.headers.authorization || '').replace(/^Bearer\s+/i, ''));
-  if (!me) { res.status(401).json({ error: 'sign-in-required' }); return; }
+  if (!me || me.is_anonymous) { res.status(401).json({ error: 'sign-in-required' }); return; }
 
   const adminEmail = (process.env.ADMIN_EMAIL || 'naeimeh.alaghehband@gmail.com').toLowerCase();
   const isAdmin = (me.email || '').toLowerCase() === adminEmail;

@@ -27,13 +27,37 @@ export default async function handler(req, res) {
   if (!userRes.ok) {
     return res.status(401).json({ error: "sign in required", detail: "token rejected" });
   }
+  const me = await userRes.json().catch(() => ({}));
+  // Guest (anonymous) visitors use the free browser voice; the paid voice is for real accounts only.
+  if (!me || !me.id || me.is_anonymous) {
+    return res.status(401).json({ error: "account required" });
+  }
+
+  // Daily cap per user so the OpenAI credit can't be drained (admin is unlimited).
+  const ADMIN = (process.env.ADMIN_EMAIL || "naeimeh.alaghehband@gmail.com").toLowerCase();
+  const DAILY_LIMIT = Number(process.env.TTS_DAILY_LIMIT) || 60;
+  const SERVICE = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if ((me.email || "").toLowerCase() !== ADMIN && SERVICE) {
+    const sh = { apikey: SERVICE, Authorization: `Bearer ${SERVICE}`, "Content-Type": "application/json" };
+    const since = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
+    try {
+      const c = await fetch(`${SUPABASE_URL}/rest/v1/agent_events?kind=eq.tts&ref=eq.${encodeURIComponent(me.id)}&createdAt=gte.${encodeURIComponent(since)}&select=id`,
+        { method: "HEAD", headers: Object.assign({ Prefer: "count=exact" }, sh) });
+      const used = Number(((c.headers.get("content-range") || "").split("/")[1]) || 0);
+      if (used >= DAILY_LIMIT) return res.status(429).json({ error: "daily voice limit reached" });
+      await fetch(`${SUPABASE_URL}/rest/v1/agent_events`, {
+        method: "POST", headers: Object.assign({ Prefer: "return=minimal" }, sh),
+        body: JSON.stringify({ id: `tts_${me.id}_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`, kind: "tts", ref: me.id }),
+      });
+    } catch (e) { /* never block the voice because of the counter */ }
+  }
 
   // 2) Turn the text into speech: a warm, natural voice (gpt-4o-mini-tts), falling back to tts-1
   const { text, lang } = req.body || {};
   if (!text || typeof text !== "string") {
     return res.status(400).json({ error: "text is required" });
   }
-  const input = text.slice(0, 4000);
+  const input = text.slice(0, 1500);
   const instructions = lang === "fa"
     ? "Speak natural, fluent Persian (Farsi) like a friendly, experienced career coach in a real conversation: warm, calm and encouraging, relaxed pace, natural pauses, never robotic."
     : "Speak like a friendly, experienced career coach in a real video call: warm, calm, confident and encouraging. Natural conversational rhythm with small pauses, relaxed pace, never robotic or overly cheerful.";

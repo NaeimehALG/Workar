@@ -395,6 +395,24 @@ Write in the same language as the conversation (English if unclear). Plain text 
   return res.status(200).json({ reply: AI.textOf(data).trim() });
 }
 
+// Public AI tasks (usable without an account) get a per-visitor hourly limit so nobody can run up the AI bill.
+async function overPublicLimit(req, task) {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY, url = process.env.SUPABASE_URL;
+  if (!key || !url) return false;
+  const ip = String(req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || 'unknown').split(',')[0].trim();
+  const h = { apikey: key, Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' };
+  const since = new Date(Date.now() - 3600 * 1000).toISOString();
+  try {
+    const c = await fetch(`${url}/rest/v1/agent_events?kind=eq.pub_ai&ref=eq.${encodeURIComponent(ip)}&createdAt=gte.${encodeURIComponent(since)}&select=id`,
+      { method: 'HEAD', headers: Object.assign({ Prefer: 'count=exact' }, h) });
+    const used = Number(((c.headers.get('content-range') || '').split('/')[1]) || 0);
+    if (used >= (Number(process.env.PUBLIC_AI_HOURLY_LIMIT) || 40)) return true;
+    await fetch(`${url}/rest/v1/agent_events`, { method: 'POST', headers: Object.assign({ Prefer: 'return=minimal' }, h),
+      body: JSON.stringify({ id: `pub_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`, kind: 'pub_ai', ref: ip }) });
+  } catch (e) { /* never block real visitors because of the counter */ }
+  return false;
+}
+
 module.exports = async (req, res) => {
   if (req.method === 'GET') {
     const ok = !!(process.env.ANTHROPIC_API_KEY && process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
@@ -402,6 +420,9 @@ module.exports = async (req, res) => {
   }
   if (req.method !== 'POST') return res.status(405).json({ error: 'Use POST' });
   const b = body(req);
+  if ((b.task === 'help' || b.task === 'match') && await overPublicLimit(req, b.task)) {
+    return res.status(429).json({ error: 'You have sent a lot of messages in a short time. Please try again in a little while.' });
+  }
   try {
     switch (b.task) {
       case 'onboard': return await onboard(req, res, b);
