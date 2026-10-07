@@ -64,7 +64,7 @@
   #app{max-width:1040px;margin:0 auto;padding:0 20px 80px;}
   a{color:inherit;}
 
-  .nav{display:flex;align-items:center;justify-content:space-between;padding:22px 0;border-bottom:1px solid var(--border);margin-bottom:32px;flex-wrap:wrap;gap:12px;}
+  .nav{position:relative;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:22px 0;border-bottom:1px solid var(--border);margin-bottom:32px;flex-wrap:wrap;gap:12px;}
   .brand{display:flex;align-items:flex-end;gap:8px;cursor:pointer;padding-bottom:2px;}
   .brand img.logo-mark{height:52px;width:auto;display:block;}
   .brand .mark{font-weight:800;font-size:24px;letter-spacing:-.01em;}
@@ -1370,8 +1370,11 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
 
   /* sticky header with a soft shadow after scrolling */
   @media (min-width:761px){
-  .nav{position:sticky;top:0;z-index:40;background:var(--bg);box-shadow:0 0 0 100vmax var(--bg);clip-path:inset(0 -100vmax);transition:padding .3s ease, box-shadow .3s ease;}
-  html.pro-scrolled .nav{padding:12px 0;border-bottom-color:transparent;box-shadow:0 0 0 100vmax var(--bg), 0 10px 24px -18px rgba(74,53,38,.35);clip-path:inset(0 -100vmax -40px);}
+  .nav{position:sticky;top:0;background:var(--bg);isolation:isolate;transition:padding .3s ease;}
+  /* Clip only the full-width backdrop, so the language menu remains visible and clickable. */
+  .nav::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:var(--bg);box-shadow:0 0 0 100vmax var(--bg);clip-path:inset(0 -100vmax);transition:box-shadow .3s ease;}
+  html.pro-scrolled .nav{padding:12px 0;border-bottom-color:transparent;}
+  html.pro-scrolled .nav::before{box-shadow:0 0 0 100vmax var(--bg), 0 10px 24px -18px rgba(74,53,38,.35);clip-path:inset(0 -100vmax -40px);}
   }
   .navlink{position:relative;transition:color .2s ease, background .2s ease;}
 
@@ -1382,7 +1385,7 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
 
   /* hero: entrance sequence + trust row */
   .hero.hero-arch h1{letter-spacing:-.02em;line-height:1.15;}
-  .hero-copy>*{animation:proUp .9s cubic-bezier(.2,.8,.2,1) both;}
+  .hero-copy>*{animation:proUp .4s cubic-bezier(.2,.8,.2,1) both;}
   .hero-copy>*:nth-child(2){animation-delay:.12s}.hero-copy>*:nth-child(3){animation-delay:.24s}.hero-copy>*:nth-child(4){animation-delay:.36s}
   .hero-arch .ar-hero-wrap{animation:proArch 1.3s cubic-bezier(.2,.8,.2,1) .1s both;}
   .pro-trust{list-style:none;margin:28px 0 0;padding:0;display:flex;flex-direction:column;gap:10px;}
@@ -2622,6 +2625,11 @@ function el(html){ const t=document.createElement('template'); t.innerHTML=html.
 function esc(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function toast(msg, ms){ const d=document.createElement('div'); d.className='toast'; d.textContent=msg; document.body.appendChild(d); setTimeout(()=>d.remove(), ms||2600); }
 function nav(view, params, fromHistory){
+  // Start a fresh auth entry after leaving the form; keep in-form tab changes intact.
+  if(!uid && view!==state.view && (view==='dashboard' || view==='onboard')){
+    state.authMode = view==='onboard' ? 'signup' : 'login';
+    state.authError = ''; state.authInfo = ''; state.authCheckEmail = false;
+  }
   if(typeof prep!=='undefined'){
     const s = prep.session;
     if(s && !s.finished && prep.screen==='run' && s.mode==='exam' && s.deadline){ s.pausedLeft = Math.max(0, s.deadline-Date.now()); savePrepSession(); }
@@ -3107,9 +3115,10 @@ function fallbackCoachReply(mode){
 }
 async function sampleChat(turns){
   try{
-    const text = await callAI({ turns });
+    const text = await callAI({ turns, mode: state.coachMode, interviewRole: state.interviewRole });
     return { text };
   }catch(e){
+    if(e && e.signIn) return { text: null, signIn: true };
     if(e && e.noCredits) return { text: null, noCredits: true };
     return { text: fallbackCoachReply(state.coachMode) };
   }
@@ -3429,12 +3438,13 @@ function setupReveal(){
     if(c){ if(animate && !reduce) countUp(c); else c.textContent = c.getAttribute('data-count'); }
     revealedKeys.add(key);
   };
-  if(!('IntersectionObserver' in window)){ items.forEach(n=>show(n,false)); return; }
+  if(reduce || !('IntersectionObserver' in window)){ items.forEach(n=>show(n,false)); return; }
   const io = new IntersectionObserver(entries=>{
     entries.forEach(e=>{ if(e.isIntersecting){ show(e.target, true); io.unobserve(e.target); } });
   }, { threshold: 0.2, rootMargin: '0px 0px -40px 0px' });
   items.forEach(n=>{
-    if(revealedKeys.has(n.getAttribute('data-rk'))) show(n, false);
+    const rect = n.getBoundingClientRect();
+    if(revealedKeys.has(n.getAttribute('data-rk')) || (rect.top < window.innerHeight && rect.bottom > 0)) show(n, false);
     else io.observe(n);
   });
 }
@@ -4980,7 +4990,7 @@ const PRO_ICONS = {
 const proIcon = k=>`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${PRO_ICONS[k]}</svg>`;
 function heroTrustHtml(){
   const ck = '<svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><circle cx="10" cy="10" r="9" fill="var(--surface-2)" stroke="var(--border)"/><path d="M6 10.2l2.6 2.6L14 7.5" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-  return '';
+  return `<ul class="pro-trust"><li>${ck}${esc(T('hero_trust1'))}</li><li>${ck}${esc(T('hero_trust2'))}</li></ul>`;
 }
 function aiTeamHtml(){
   const agents = [['match','browse'],['coach','coach'],['note','browse'],['auto',''],['plan',''],['help','']];
@@ -5063,6 +5073,7 @@ function homeView(){
         <div class="tp-art">${ART.spots[i]()}</div>
         <h3>${esc(T(r.title))}</h3>
         <p>${esc(T(r.line))}</p>
+        <button type="button" class="btn btn-ghost btn-sm" data-route-q="${esc(T(r.q))}" style="margin-top:12px;">${esc(T('find_mentor_title'))} →</button>
       </div>`).join('')}
     </div>
     <div class="tp-cta"><button type="button" class="btn btn-primary" data-nav="browse">${esc(T('rt_cta'))}</button></div>
@@ -5417,6 +5428,7 @@ function browseView(){
 
   <div class="panel wide" style="margin-bottom:28px;">
     <div class="section-head" style="margin-bottom:12px;"><h2 style="font-size:17px;">${esc(T('ai_match_title'))}</h2></div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">${ROUTES.map(r=>`<button type="button" class="btn btn-outline btn-sm" data-route-q="${esc(T(r.q))}">${esc(T(r.title))}</button>`).join('')}</div>
     <div class="field"><textarea id="match-input" placeholder="${esc(T('ph_match'))}" style="min-height:70px;">${esc(state.matchQuery||'')}</textarea></div>
     <button class="btn btn-primary btn-sm" id="match-btn" ${state.matching?'disabled':''}>${state.matching?esc(T('finding')):esc(T('find_matches'))}</button>
     ${state.matchResults ? (state.matchResults.length ? `
@@ -5469,7 +5481,7 @@ function browseView(){
         <div class="card-chips">${(p.skills||[]).slice(0,3).map(s=>`<span class="chip">${esc(s)}</span>`).join('')}</div>
         <div class="card-foot">
           <span>${avg ? `<span class="stars">★</span> <b>${avg.toFixed(1)}</b>` : `<span class="muted">${esc(T('new_mentor'))}</span>`}</span>
-          <span class="card-price"><b>$${mentorRate(p)}</b> <span class="muted">${esc(T('mp_per_short'))}</span></span>
+          <span class="card-price"><b>$${mentorRate(p)} <small>USD</small></b> <span class="muted">${esc(T('mp_per_short'))}</span></span>
         </div>
         ${id!==uid ? `<button class="btn btn-primary btn-sm card-book" data-book="${id}" style="width:100%;margin-top:12px;">${esc(T('book_session'))}</button>` : ''}
       </div>`;
@@ -5583,7 +5595,7 @@ function mentorView(){
     </div>
     <aside class="mp-side">
       <div class="mp-card">
-        <div class="mp-price"><b>$${mentorRate(p)}</b><span>${esc(T('mp_per'))}</span></div>
+        <div class="mp-price"><b>$${mentorRate(p)}</b><span>USD · ${esc(T('mp_per'))}</span></div>
         <div class="mp-tier">${esc(T(rateTierKey(p)))} ${esc(T('mp_tier_suffix'))}</div>
         <div class="mp-tzline">${esc(T('mp_tz').replace('{z}', tzCity(mentorTz(id)) + ' (' + tzAbbr(mentorTz(id)) + ')'))}</div>
         <ul class="mp-formats">${formats.map(f=>`<li>${FMT_ICONS[f]||''}<span>${esc(T('fmt_'+f))}</span></li>`).join('')}</ul>
@@ -6803,16 +6815,13 @@ function wire(){
 async function pushAndRespond(userText){
   state.chatMsgs.push({role:'user', content:userText});
   state.sending = true; state.outOfCredits = false; render();
-  const sysHints = {
-    resume: 'You are a direct, encouraging career coach reviewing a resume. Reply in the same language the person writes in. Give specific, actionable feedback: what to cut, what to strengthen, and one concrete rewrite example. Keep it concise.',
-    career: 'You are a warm, practical career coach. Reply in the same language the person writes in. Give specific, actionable advice for the career question, grounded in the details given. Keep it concise.',
-    interview: `You are conducting a mock interview for the role of "${state.interviewRole||'the target role'}". Reply in the same language the candidate uses. Ask one question at a time. Talk exactly like a friendly, experienced human interviewer in a real conversation: natural, warm, spoken sentences. Never use markdown, asterisks, headings, bullet points, dividers, numbering or labels such as "Quick note", "Feedback" or "Question 3". After each answer, react in one or two natural sentences (what worked, or what was missing, for example: "Thanks, that gives me a good sense of your responsibilities. I'd love to hear a specific example, though."), then ask the next question in the same flowing reply. If the candidate writes "feedback" or "done", stop asking questions and instead give a structured summary: strengths, areas to improve, and one example of a stronger answer.`
-  };
-  const sysHint = sysHints[state.coachMode];
   try{
-    const turns = state.chatMsgs.map((m,i)=>({ role: m.role==='user' ? 'user' : 'assistant', content: (i===0 && m.role==='user') ? sysHint + '\n\n' + m.content : m.content }));
+    const turns = state.chatMsgs.map(m=>({ role: m.role==='user' ? 'user' : 'assistant', content: m.content }));
     const res = await sampleChat(turns);
-    if(res.noCredits){
+    if(res.signIn){
+      state.chatMsgs.pop(); // A sign-in redirect is not a coaching failure or an AI reply.
+      if(state.coachMode==='interview') state.interviewStarted = false;
+    } else if(res.noCredits){
       state.chatMsgs.pop(); // don't leave the un-answered user message hanging in the log
       state.outOfCredits = true;
     } else {
