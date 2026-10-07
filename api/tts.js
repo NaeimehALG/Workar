@@ -1,3 +1,4 @@
+process.env.SUPABASE_URL = String(process.env.SUPABASE_URL || 'https://jgbjhzhbdsdhssyakpgq.supabase.co').trim().replace(/\/+$/, '').replace(/\/rest\/v1$/, '').replace(/\/+$/, ''); // tolerate a URL saved with /rest/v1
 // api/tts.js — Workar natural voice (OpenAI TTS), only for signed-in users
 // Needs these in Vercel → Settings → Environment Variables:
 //   SUPABASE_URL, SUPABASE_ANON_KEY, OPENAI_API_KEY

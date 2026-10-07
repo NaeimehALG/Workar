@@ -1,3 +1,4 @@
+process.env.SUPABASE_URL = String(process.env.SUPABASE_URL || 'https://jgbjhzhbdsdhssyakpgq.supabase.co').trim().replace(/\/+$/, '').replace(/\/rest\/v1$/, '').replace(/\/+$/, ''); // tolerate a URL saved with /rest/v1
 // Vercel Serverless Function: the AI coach (resume, career, mock interview).
 // Keeps the Anthropic key server-side, requires a signed-in Workar account,
 // and uses one AI credit per message (the admin is unlimited).

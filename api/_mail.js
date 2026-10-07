@@ -1,3 +1,4 @@
+process.env.SUPABASE_URL = String(process.env.SUPABASE_URL || 'https://jgbjhzhbdsdhssyakpgq.supabase.co').trim().replace(/\/+$/, '').replace(/\/rest\/v1$/, '').replace(/\/+$/, ''); // tolerate a URL saved with /rest/v1
 // Shared helpers for Workar emails (not a route: files starting with "_" are not deployed as functions).
 // Environment Variables in Vercel:
 //   RESEND_API_KEY            — from resend.com (free plan is enough to start)

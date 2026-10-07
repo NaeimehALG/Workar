@@ -1,3 +1,4 @@
+process.env.SUPABASE_URL = String(process.env.SUPABASE_URL || 'https://jgbjhzhbdsdhssyakpgq.supabase.co').trim().replace(/\/+$/, '').replace(/\/rest\/v1$/, '').replace(/\/+$/, ''); // tolerate a URL saved with /rest/v1
 // Vercel Serverless Function: Stripe webhook. When a Checkout Session completes, this records the
 // result in Supabase using the SERVICE ROLE key — which must only ever live here, as a Vercel
 // Environment Variable, never in index.html or any client-side code.

@@ -1,3 +1,4 @@
+process.env.SUPABASE_URL = String(process.env.SUPABASE_URL || 'https://jgbjhzhbdsdhssyakpgq.supabase.co').trim().replace(/\/+$/, '').replace(/\/rest\/v1$/, '').replace(/\/+$/, ''); // tolerate a URL saved with /rest/v1
 // Session automation: meeting link + calendar invite when a booking is paid,
 // and the AI prep brief used in the day-before reminder.
 const M = require('./_mail');

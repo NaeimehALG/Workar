@@ -1,3 +1,4 @@
+process.env.SUPABASE_URL = String(process.env.SUPABASE_URL || 'https://jgbjhzhbdsdhssyakpgq.supabase.co').trim().replace(/\/+$/, '').replace(/\/rest\/v1$/, '').replace(/\/+$/, ''); // tolerate a URL saved with /rest/v1
 // Video meeting + calendar helpers. Swap the video provider here (Daily, Whereby, JaaS...)
 // and every email, reminder and dashboard button follows automatically.
 const crypto = require('crypto');

@@ -1,3 +1,4 @@
+process.env.SUPABASE_URL = String(process.env.SUPABASE_URL || 'https://jgbjhzhbdsdhssyakpgq.supabase.co').trim().replace(/\/+$/, '').replace(/\/rest\/v1$/, '').replace(/\/+$/, ''); // tolerate a URL saved with /rest/v1
 // Vercel Cron (see vercel.json): runs once a day.
 //  1. Session reminders for the next ~30 hours, with the call link, an AI prep brief for the mentor
 //     and AI prep tips for the client.

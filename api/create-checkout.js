@@ -1,3 +1,4 @@
+process.env.SUPABASE_URL = String(process.env.SUPABASE_URL || 'https://jgbjhzhbdsdhssyakpgq.supabase.co').trim().replace(/\/+$/, '').replace(/\/rest\/v1$/, '').replace(/\/+$/, ''); // tolerate a URL saved with /rest/v1
 // Vercel Serverless Function: creates a Stripe Checkout Session. Handles three kinds of purchase:
 //   kind: "booking"    — a client paying to confirm an accepted mentorship request (default)
 //   kind: "ai_credits" — a user buying a pack of AI coaching credits

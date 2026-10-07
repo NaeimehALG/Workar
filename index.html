@@ -1510,6 +1510,9 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .dh-stats b{display:block;font-size:20px;font-weight:800;} .dh-stats span{font-size:12px;color:var(--muted);}
   @media (max-width:640px){.dh-body{grid-template-columns:1fr;}.dh-actions{justify-content:flex-start;}.dh-stats{grid-template-columns:repeat(2,1fr);}.dh-stats div:nth-child(3){border-inline-start:0;}.dh-stats div:nth-child(n+3){border-top:1px solid var(--border);}}
   .mp-msg{margin-inline-start:8px;}
+  .ib-ai{flex:none;align-self:center;} .ib-ai.busy svg{animation:ibspin 1s linear infinite;} @keyframes ibspin{to{transform:rotate(360deg)}}
+  .earn-tx{margin-top:10px;border:1px solid var(--border);border-radius:12px;overflow:hidden;} .earn-tx div{display:grid;grid-template-columns:1.4fr 1fr .8fr .8fr auto;gap:10px;padding:10px 16px;font-size:13px;align-items:center;border-top:1px solid var(--border);} .earn-tx div:first-child{border-top:0;color:var(--muted);font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;} .earn-tx .st{font-size:11.5px;padding:2px 9px;border-radius:99px;background:var(--surface-2);} .earn-tx .st.ok{color:#3c6e47;background:#e9f2ea;}
+  @media (max-width:640px){.earn-tx div{grid-template-columns:1fr 1fr;}}
   /* ===== Refined panel (hairline, light, calm) ===== */
   .nav-msg-badge{position:static !important;display:inline-block;margin-inline-start:6px;vertical-align:1px;min-width:16px;height:16px;line-height:16px;font-size:10px;font-weight:700;padding:0 5px;background:#B3412C;}
   .dl{display:grid;grid-template-columns:minmax(0,1fr) 296px;gap:22px;align-items:start;}
@@ -1853,6 +1856,7 @@ const I18N = {
     ar_hero_alt:"Illustration: a person walks a winding path past a resume, an interview and an offer, guided by an angel, towards a mentor waving at the top",
     rt_kicker:"Your career path",
     sd_strength:'Profile strength', sd_strength_m:'Complete profiles get noticeably more bookings.', sd_strength_c:'A complete profile helps mentors prepare for you.', sd_done:'Your profile is complete.', sd_add:'Add', sd_i_title:'Job title', sd_i_bio:'About', sd_i_skills:'Skills', sd_i_edu:'Education', sd_i_lang:'Languages', sd_i_li:'LinkedIn', sd_i_avail:'Availability', sd_i_goals:'Goals', sd_i_cert:'Certifications', sd_msgs:'Messages', sd_all:'See all messages', sd_none:'No conversations yet.', sd_find:'Find a mentor',
+    ib_ai:'Suggest a reply', earn_wait:'Awaiting payment', earn_tx_client:'Client', earn_tx_date:'Date', earn_tx_paid:'Paid', earn_tx_share:'Your share', earn_tx_out:'Paid out', earn_tx_due:'Due',
     nav_messages:'Messages', msg_btn:'Message', inbox_search:'Search messages', inbox_empty:'No conversations yet. Message a mentor or book a session to start one.',
     inbox_pick:'Choose a conversation to read it here.', inbox_ph:'Write a message…', inbox_send:'Send', inbox_you:'You',
     inbox_voice:'Voice call', inbox_video:'Video call', inbox_calls_locked:'Voice and video calls open once a session is booked and confirmed.',
@@ -2246,6 +2250,7 @@ const I18N = {
     ar_hero_alt:"تصویر: فردی با راهنمایی یک فرشته در مسیری پرپیچ‌وخم از رزومه، مصاحبه و پیشنهاد شغلی می‌گذرد و به سوی منتوری می‌رود که در بالای مسیر دست تکان می‌دهد",
     rt_kicker:"مسیر شغلی شما",
     sd_strength:'قدرت پروفایل', sd_strength_m:'پروفایل کامل رزرو بیشتری می‌گیرد.', sd_strength_c:'پروفایل کامل به منتور کمک می‌کند بهتر آماده شود.', sd_done:'پروفایل شما کامل است.', sd_add:'افزودن', sd_i_title:'عنوان شغلی', sd_i_bio:'درباره من', sd_i_skills:'مهارت‌ها', sd_i_edu:'تحصیلات', sd_i_lang:'زبان‌ها', sd_i_li:'لینکدین', sd_i_avail:'زمان‌های آزاد', sd_i_goals:'اهداف', sd_i_cert:'گواهینامه‌ها', sd_msgs:'پیام‌ها', sd_all:'همه پیام‌ها', sd_none:'هنوز گفتگویی نداری.', sd_find:'پیدا کردن منتور',
+    ib_ai:'پیشنهاد پاسخ', earn_wait:'در انتظار پرداخت', earn_tx_client:'مراجع', earn_tx_date:'تاریخ', earn_tx_paid:'پرداختی', earn_tx_share:'سهم شما', earn_tx_out:'واریز شد', earn_tx_due:'در انتظار واریز',
     nav_messages:'پیام‌ها', msg_btn:'پیام', inbox_search:'جستجو در پیام‌ها', inbox_empty:'هنوز گفتگویی نداری. به یک منتور پیام بده یا جلسه رزرو کن.',
     inbox_pick:'یک گفتگو را انتخاب کن تا اینجا ببینی.', inbox_ph:'پیامت را بنویس…', inbox_send:'ارسال', inbox_you:'تو',
     inbox_voice:'تماس صوتی', inbox_video:'تماس تصویری', inbox_calls_locked:'تماس صوتی و تصویری بعد از رزرو و تأیید جلسه فعال می‌شود.',
@@ -4647,7 +4652,7 @@ const ART = (()=>{
 
   // Hero: the Workar film inside the arch. The <video> element lives outside the app's render
   // cycle (see the film script below) so re-renders never restart it.
-  const hero = ()=>`<div class="wkv" role="img" aria-label="${esc(T('ar_hero_alt'))}"><div class="wkv-slot"><img class="wkv-poster" src="/hero-v2-poster.jpg" alt=""></div></div>`;
+  const hero = ()=>`<div class="wkv" role="img" aria-label="${esc(T('ar_hero_alt'))}"><div class="wkv-slot"><img class="wkv-poster" src="/hero-v3-poster.jpg" alt=""></div></div>`;
 
   // Card scenes, 320 x 190
   const frame = (inner, label)=>`<svg class="ar ar-card" viewBox="0 0 320 190" role="img" aria-label="${esc(label)}"><rect width="320" height="190" fill="${C.cream}"/>${inner}</svg>`;
@@ -5618,9 +5623,23 @@ function inboxThread(o){
     ${ctx}
     <div class="ib-thread" id="ib-thread">${bubbles || `<div class="ib-start"><span class="ib-av lg">${initials(name)}</span><b>${esc(name)}</b><span>${esc(p.headline||p.profession||'')}</span><p>${esc(T('inbox_no_msgs').replace('{n}', name))}</p></div>`}</div>
     <form class="ib-compose" id="ib-compose" data-to="${esc(o)}">
+      <button type="button" class="ib-ic ib-ai" data-ib-ai="${esc(o)}" title="${esc(T('ib_ai'))}" aria-label="${esc(T('ib_ai'))}"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 2.5l1.9 5.2a3 3 0 0 0 1.8 1.8L21 11.4l-5.3 1.9a3 3 0 0 0-1.8 1.8L12 20.4l-1.9-5.3a3 3 0 0 0-1.8-1.8L3 11.4l5.3-1.9a3 3 0 0 0 1.8-1.8L12 2.5z"/></svg></button>
       <textarea id="ib-input" rows="1" placeholder="${esc(T('inbox_ph'))}">${esc(state.inboxDraft||'')}</textarea>
       <button class="ib-send" type="submit" aria-label="${esc(T('inbox_send'))}">${IB_IC.send}</button>
     </form>`;
+}
+async function ibSuggest(o, btn){
+  const inp = document.getElementById('ib-input'); if(!inp || btn.disabled) return;
+  btn.disabled = true; btn.classList.add('busy');
+  try{
+    const { data } = await sb.auth.getSession(); const tok = data && data.session && data.session.access_token;
+    const msgs = convMessages(o).slice(-14).map(m=>({ from: m.senderId===uid ? 'me' : 'them', text: String(m.text||'').slice(0,800) }));
+    const r = await fetch('/api/agents', { method:'POST', headers:{ 'Content-Type':'application/json', Authorization:'Bearer '+(tok||'') }, body: JSON.stringify({ task:'reply_draft', otherId:o, messages:msgs, draft: inp.value }) });
+    const d = await r.json().catch(()=>({}));
+    if(!r.ok) throw new Error(d.error || ('Error '+r.status));
+    if(d.reply){ inp.value = d.reply; state.inboxDraft = d.reply; inp.dispatchEvent(new Event('input')); inp.focus(); }
+  }catch(e){ toast(e.message || 'Error'); }
+  btn.disabled = false; btn.classList.remove('busy');
 }
 function wireInbox(){
   const th = document.getElementById('ib-thread'); if(th) th.scrollTop = th.scrollHeight;
@@ -5645,6 +5664,7 @@ document.addEventListener('click', e=>{
   const hd = t.closest('[data-inbox-hide]'); if(hd){ setHiddenConv(hd.getAttribute('data-inbox-hide'), true); state.inboxWith = null; state.inboxMenu = false; toast(T('inbox_deleted_conv')); render(); return; }
   const ur = t.closest('[data-inbox-unread]'); if(ur){ try{ localStorage.setItem(convSeenKey(ur.getAttribute('data-inbox-unread')), '0'); }catch(err){} state.inboxWith = null; state.inboxMenu = false; render(); return; }
   const dl = t.closest('[data-del-msg]'); if(dl){ deleteMyMsg(dl.getAttribute('data-del-msg')); return; }
+  const ai = t.closest('[data-ib-ai]'); if(ai){ ibSuggest(ai.getAttribute('data-ib-ai'), ai); return; }
   if(t.closest('[data-call-locked]')){ toast(T('inbox_calls_locked'), 4200); return; }
   if(state.inboxMenu && !t.closest('.ib-menu')){ state.inboxMenu = false; render(); }
 });
@@ -5815,7 +5835,10 @@ function dashboardView(){
           <div><span>${esc(T('earn_total'))}</span><b>${fmtMoney(earned)}</b></div>
           <div><span>${esc(T('earn_paid'))}</span><b>${fmtMoney(out)}</b></div>
           <div class="due"><span>${esc(T('earn_owed'))}</span><b>${fmtMoney(earned-out)}</b></div>
+          <div><span>${esc(T('earn_wait'))}</span><b>${fmtMoney(myReqs.filter(r=>!r.paid && r.amountCents>0 && reqStage(r)>=1 && reqStage(r)<3).reduce((a,r)=>a+reqMentorCents(r),0))}</b></div>
         </div>
+        ${paidR.length ? `<div class="earn-tx"><div><span>${esc(T('earn_tx_client'))}</span><span>${esc(T('earn_tx_date'))}</span><span>${esc(T('earn_tx_paid'))}</span><span>${esc(T('earn_tx_share'))}</span><span></span></div>
+          ${paidR.slice().sort((a,b)=>(Number(b.createdAt)||0)-(Number(a.createdAt)||0)).map(r=>`<div><span>${esc(nameOf(r.clientId))}</span><span>${esc(r.startsAt ? new Date(r.startsAt).toLocaleDateString() : (r.createdAt ? new Date(Number(r.createdAt)).toLocaleDateString() : ''))}</span><span>${fmtMoney(r.amountCents)}</span><span>${fmtMoney(reqMentorCents(r))}</span><span class="st ${r.payoutDone?'ok':''}">${esc(T(r.payoutDone?'earn_tx_out':'earn_tx_due'))}</span></div>`).join('')}</div>` : ''}
       </div>`; })() : ''}
 
   <div class="section-head"><h2>${isMentor?esc(T('requests_from_clients')):esc(T('your_requests'))}</h2></div>
@@ -6834,8 +6857,8 @@ init();
     const v = document.createElement('video');
     v.className = 'wkv-video'; v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true;
     v.setAttribute('muted',''); v.setAttribute('playsinline',''); v.setAttribute('preload','auto'); v.setAttribute('aria-hidden','true');
-    v.poster = '/hero-v2-poster.jpg';
-    v.innerHTML = '<source src="/hero-v2.webm" type="video/webm"><source src="/hero-v2.mp4" type="video/mp4">';
+    v.poster = '/hero-v3-poster.jpg';
+    v.innerHTML = '<source src="/hero-v3.webm" type="video/webm"><source src="/hero-v3.mp4" type="video/mp4">';
     v.addEventListener('playing', ()=>v.classList.add('on'));
     function mount(){
       const slot = document.querySelector('.wkv-slot');

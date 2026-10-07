@@ -1,3 +1,4 @@
+process.env.SUPABASE_URL = String(process.env.SUPABASE_URL || 'https://jgbjhzhbdsdhssyakpgq.supabase.co').trim().replace(/\/+$/, '').replace(/\/rest\/v1$/, '').replace(/\/+$/, ''); // tolerate a URL saved with /rest/v1
 // Workar AI agents, one route for all of them (keeps the number of Vercel functions low):
 //   POST /api/agents { task: "onboard" }        mentor onboarding assistant (fills the mentor form)
 //   POST /api/agents { task: "followup_draft" } drafts an after-session action plan from the mentor's notes
@@ -372,6 +373,28 @@ Write in the same language as their bio.`,
   });
 }
 
+
+// =====================================================================
+// 7. Reply helper (inbox): drafts a courteous reply the user edits and sends
+// =====================================================================
+async function replyDraft(req, res, b) {
+  const me = await M.userFromToken(bearer(req));
+  if (!me) return res.status(401).json({ error: 'Please sign in again.' });
+  const [mine, other] = await Promise.all([M.fullProfile(me.id), b.otherId ? M.fullProfile(String(b.otherId)) : Promise.resolve({})]);
+  const msgs = (Array.isArray(b.messages) ? b.messages : []).slice(-14).map(m => ({ from: m.from === 'me' ? 'me' : 'them', text: String(m.text || '').slice(0, 800) }));
+  const data = await AI.callClaude({
+    system: `You help a user of Workar, a career mentorship platform, write a reply in a direct-message chat.
+The user is a ${mine.role === 'mentor' ? 'mentor' : 'client looking for career guidance'}; the other person is a ${other.role === 'mentor' ? 'mentor' : 'client'} named ${String(other.name || 'them').split(' ')[0]}.
+Write one short, warm, professional reply (1 to 4 sentences) in the user's voice that answers the latest message from "them".
+If the chat is empty, write a friendly opening message that fits the two profiles. If the user has started a draft, improve and complete it, keeping its meaning.
+Never promise outcomes, never invent facts, times or prices, and never ask for payment or contact details outside Workar.
+Write in the same language as the conversation (English if unclear). Plain text only. Return only the message.`,
+    messages: [{ role: 'user', content: JSON.stringify({ me: { name: mine.name, role: mine.role, headline: mine.headline || mine.profession }, them: { name: other.name, role: other.role, headline: other.headline || other.profession }, conversation: msgs, myDraft: String(b.draft || '').slice(0, 1000) }) }],
+    maxTokens: 350, timeoutMs: 15000
+  });
+  return res.status(200).json({ reply: AI.textOf(data).trim() });
+}
+
 module.exports = async (req, res) => {
   if (req.method === 'GET') {
     const ok = !!(process.env.ANTHROPIC_API_KEY && process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
@@ -388,6 +411,7 @@ module.exports = async (req, res) => {
       case 'match': return await match(req, res, b);
       case 'request_note': return await requestNote(req, res, b);
       case 'profile_review': return await profileReview(req, res, b);
+      case 'reply_draft': return await replyDraft(req, res, b);
       default: return res.status(400).json({ error: 'Unknown task' });
     }
   } catch (e) {

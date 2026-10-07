@@ -1,3 +1,4 @@
+process.env.SUPABASE_URL = String(process.env.SUPABASE_URL || 'https://jgbjhzhbdsdhssyakpgq.supabase.co').trim().replace(/\/+$/, '').replace(/\/rest\/v1$/, '').replace(/\/+$/, ''); // tolerate a URL saved with /rest/v1
 // Shared helper for Workar's AI agents (not a route: files starting with "_" are not deployed as functions).
 // Uses ANTHROPIC_API_KEY (already set for api/ai.js). Optional: ANTHROPIC_MODEL.
 // One voice for every Workar agent.

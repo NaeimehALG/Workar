@@ -1,3 +1,4 @@
+process.env.SUPABASE_URL = String(process.env.SUPABASE_URL || 'https://jgbjhzhbdsdhssyakpgq.supabase.co').trim().replace(/\/+$/, '').replace(/\/rest\/v1$/, '').replace(/\/+$/, ''); // tolerate a URL saved with /rest/v1
 // Vercel Serverless Function: sends Workar email notifications.
 // The browser only says WHAT happened (event + request id); who gets the email and what it says
 // is decided here, from the database, so nobody can use this to send arbitrary emails.

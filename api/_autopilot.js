@@ -1,3 +1,4 @@
+process.env.SUPABASE_URL = String(process.env.SUPABASE_URL || 'https://jgbjhzhbdsdhssyakpgq.supabase.co').trim().replace(/\/+$/, '').replace(/\/rest\/v1$/, '').replace(/\/+$/, ''); // tolerate a URL saved with /rest/v1
 // Workar autopilot (not a route: files starting with "_" are not deployed as functions).
 // Runs from the daily cron in api/reminders.js. It handles the routine work on its own,
 // and the daily digest tells the admin what it did and the few things that still need a human.
