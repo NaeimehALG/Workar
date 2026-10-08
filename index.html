@@ -1480,23 +1480,6 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   @media (prefers-reduced-motion:reduce){.ar-line .ar-ring{animation:none}}
   /* original footer, plus the disclaimer in small type */
   .foot-disc{max-width:720px;margin:18px auto 0;font-size:11.5px;line-height:1.6;color:var(--muted);opacity:.85;}
-  /* professional footer */
-  footer.pro-foot{text-align:start;padding:0;margin-top:72px;border-top:1px solid var(--border);background:var(--surface-2);color:var(--muted);font-size:13.5px;}
-  .pro-foot-in{max-width:1080px;margin:0 auto;padding:52px 24px 26px;}
-  .pro-foot-top{display:grid;grid-template-columns:1.6fr 1fr 1fr 1.2fr;gap:36px;}
-  .pro-foot-brand p{margin:14px 0 16px;max-width:260px;line-height:1.6;color:var(--text);font-family:'Fraunces','Vazirmatn',Georgia,serif;font-size:15.5px;}
-  .pro-foot-logo{display:block;width:96px;height:auto;fill:var(--accent);}
-  .pro-foot h4{margin:2px 0 14px;font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text);}
-  html[dir="rtl"] .pro-foot h4{letter-spacing:0;text-transform:none;font-size:13px;}
-  .pro-foot-col{display:flex;flex-direction:column;align-items:flex-start;gap:10px;}
-  .pro-foot-col a,.pro-foot a.ig-link{color:var(--muted);text-decoration:none;cursor:pointer;transition:color .15s;margin:0;}
-  .pro-foot-col a:hover,.pro-foot a.ig-link:hover{color:var(--accent);}
-  .pro-foot a.ig-link{display:inline-flex;align-items:center;gap:7px;}
-  .pro-foot-note{font-size:12px;opacity:.85;}
-  .pro-foot .pro-disclaimer{margin:40px 0 0;padding-top:22px;border-top:1px solid var(--border);font-size:12px;line-height:1.7;color:var(--muted);max-width:none;text-align:start;}
-  .pro-foot-bot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:14px;font-size:12px;opacity:.9;}
-  @media (max-width:820px){.pro-foot-top{grid-template-columns:1fr 1fr;gap:30px 24px}.pro-foot-brand{grid-column:1/-1}}
-  @media (max-width:420px){.pro-foot-in{padding:40px 16px 22px}.pro-foot-top>div:last-child{grid-column:1/-1}}
 
   @keyframes proUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
   @keyframes proArch{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:none}}
@@ -1957,7 +1940,6 @@ const I18N = {
     ph_chat_resume:'Paste your resume text here…', ph_chat_career:'Type your question…', ph_chat_interview:'Type your answer…',
     send:'Send', thinking:'Thinking…',
     footer_tag:'a place for every career to find its guide',
-    ft_rights:'All rights reserved.',
     toast_profile_created:'Profile created', toast_save_fail:'Could not save — try again', toast_saved:'Saved',
     toast_request_sent:'Request sent', toast_request_fail:'Could not send request', toast_request_rls:'Booking is blocked by a database permission — run the latest Workar SQL', toast_pick_datetime:'Pick a date and time',
     toast_review_posted:'Review posted', toast_review_fail:'Could not post review', toast_update_fail:'Could not update',
@@ -2357,7 +2339,6 @@ const I18N = {
     ph_chat_resume:'متن رزومه‌تو اینجا بذار…', ph_chat_career:'سؤالتو بنویس…', ph_chat_interview:'جوابتو بنویس…',
     send:'ارسال', thinking:'در حال فکر کردن…',
     footer_tag:'جایی که هر مسیر شغلی، راهنماشو پیدا می‌کنه',
-    ft_rights:'همه‌ی حقوق محفوظ است.',
     toast_profile_created:'پروفایل ساخته شد', toast_save_fail:'ذخیره نشد — دوباره امتحان کن', toast_saved:'ذخیره شد',
     toast_request_sent:'درخواست ارسال شد', toast_request_fail:'درخواست ارسال نشد', toast_request_rls:'دسترسی دیتابیس اجازه‌ی رزرو نمی‌ده — SQL جدید Workar رو اجرا کن', toast_pick_datetime:'یه تاریخ و ساعت انتخاب کن',
     toast_review_posted:'ریویو ثبت شد', toast_review_fail:'ریویو ثبت نشد', toast_update_fail:'به‌روزرسانی نشد',
@@ -3246,7 +3227,7 @@ function render(){
   }
   app.appendChild(el(body));
   if(state.langPrompt) app.appendChild(el(langPromptHtml()));
-  app.appendChild(el(proFooterHtml()));
+  app.appendChild(el(`<footer>Workar · ${esc(T('footer_tag'))}<br><span class="foot-links"><a data-nav="privacy">${esc(T('ft_privacy'))}</a> · <a data-nav="terms">${esc(T('ft_terms'))}</a> · <a data-nav="refunds">${esc(T('ft_refunds'))}</a> · <a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a></span><br><a class="ig-link" href="${INSTAGRAM_URL}" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg> @workarmentoring</a><p class="foot-disc">${esc(T('disclaimer'))}</p></footer>`));
   wire();
   if(state.view==='messages') wireInbox();
   if(window.WorkarAgents) WorkarAgents.afterRender();
@@ -5046,17 +5027,17 @@ function aiTeamHtml(){
   </section>`;
 }
 function proFooterHtml(){
-  return `<footer class="pro-foot"><div class="pro-foot-in">
+  return `<footer class="pro-foot">
     <div class="pro-foot-top">
       <div class="pro-foot-brand"><svg class="pro-foot-logo" viewBox="0 0 556 410" role="img" aria-label="Workar"><use href="#wkMark" x="125" y="0" width="306" height="294"/><use href="#wkWord" x="0" y="312" width="556" height="94"/></svg><p>${esc(T('footer_tag'))}</p>
         <a class="ig-link" href="${INSTAGRAM_URL}" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>@workarmentoring</a></div>
-      <div class="pro-foot-col"><h4>${esc(T('ft_platform'))}</h4><a data-nav="browse">${esc(T('nav_browse'))}</a><a data-nav="coach">${esc(T('nav_coach'))}</a><a data-nav="onboard" data-role="mentor">${esc(T('cta_become'))}</a></div>
-      <div class="pro-foot-col"><h4>${esc(T('ft_company'))}</h4><a data-nav="privacy">${esc(T('ft_privacy'))}</a><a data-nav="terms">${esc(T('ft_terms'))}</a><a data-nav="refunds">${esc(T('ft_refunds'))}</a></div>
-      <div class="pro-foot-col"><h4>${esc(T('ft_contact'))}</h4><a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a><span class="pro-foot-note">${esc(T('ft_reply'))}</span></div>
+      <div><h4>${esc(T('ft_platform'))}</h4><a data-nav="browse">${esc(T('nav_browse'))}</a><a data-nav="coach">${esc(T('nav_coach'))}</a><a data-nav="onboard" data-role="mentor">${esc(T('cta_become'))}</a></div>
+      <div><h4>${esc(T('ft_company'))}</h4><a data-nav="privacy">${esc(T('ft_privacy'))}</a><a data-nav="terms">${esc(T('ft_terms'))}</a><a data-nav="refunds">${esc(T('ft_refunds'))}</a></div>
+      <div><h4>${esc(T('ft_contact'))}</h4><a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a><span class="muted">${esc(T('ft_reply'))}</span></div>
     </div>
     <p class="pro-disclaimer">${esc(T('disclaimer'))}</p>
-    <div class="pro-foot-bot"><span>© ${new Date().getFullYear()} Workar. ${esc(T('ft_rights'))}</span><span>${esc(T('ft_secure'))}</span></div>
-  </div></footer>`;
+    <div class="pro-foot-bot"><span>© ${new Date().getFullYear()} Workar</span><span>${esc(T('ft_secure'))}</span></div>
+  </footer>`;
 }
 // header gains a soft shadow once the page scrolls
 (function(){
