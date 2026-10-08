@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 Disallow: /api/
-Sitemap: https://workar.me/sitemap.xml
+Sitemap: https://www.workar.me/sitemap.xml

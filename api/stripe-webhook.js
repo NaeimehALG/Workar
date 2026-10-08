@@ -98,13 +98,11 @@ async function handler(req, res) {
           body: JSON.stringify({ userId: md.userId, examId: md.examId, stripeSessionId: session.id })
         });
       } else if (md.kind === 'ai_credits' && md.userId) {
-        const r = await checkedFetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${encodeURIComponent(md.userId)}&select=aiCredits`, { headers: h });
-        const rows = await r.json();
-        const current = (Array.isArray(rows) && rows[0] && Number(rows[0].aiCredits)) || 0;
-        await checkedFetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${encodeURIComponent(md.userId)}`, {
-          method: 'PATCH',
-          headers: Object.assign({ Prefer: 'return=minimal' }, h),
-          body: JSON.stringify({ aiCredits: current + (Number(md.credits) || 20) })
+        // Atomic + idempotent: the purchase ledger keyed by Stripe session id means a re-sent webhook never grants twice.
+        await checkedFetch(`${supabaseUrl}/rest/v1/rpc/grant_ai_credit_purchase`, {
+          method: 'POST',
+          headers: Object.assign({ 'Content-Type': 'application/json' }, h),
+          body: JSON.stringify({ p_session_id: session.id, p_user_id: String(md.userId), p_credits: Number(md.credits) || 20 })
         });
       } else {
         const requestId = md.requestId || session.client_reference_id;
