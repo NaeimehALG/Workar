@@ -59,14 +59,14 @@ export default async function handler(req, res) {
   }
   const input = text.slice(0, 1500);
   const instructions = lang === "fa"
-    ? "Speak natural, fluent Persian (Farsi) like a sweet, warm young career coach who genuinely enjoys the conversation: bright, gentle and charming, with a soft smile you can hear in the voice. Light, lively rhythm with natural pauses, kind and encouraging, never robotic, never flat."
-    : "Speak like a sweet, warm and charming career coach on a friendly video call: bright, gentle and lively, with a soft smile you can hear in the voice. Light, natural rhythm with small pauses, kind and encouraging, never robotic, never flat, and not over-the-top cheerful.";
+    ? "Speak natural, fluent Persian (Farsi) in a soft, delicate and graceful young woman's voice, like a kind career coach talking gently with one person: light and airy tone, a soft smile in the voice, calm unhurried pace, natural pauses. Gentle and elegant, never loud, never robotic, never flat."
+    : "Speak in a soft, delicate and graceful young woman's voice, like a kind career coach talking gently with one person on a video call: light and airy tone, a soft smile in the voice, calm unhurried pace, small natural pauses. Gentle and elegant, never loud, never robotic, never flat, not over-the-top cheerful.";
   const call = (body) => fetch("https://api.openai.com/v1/audio/speech", {
     method: "POST",
     headers: { Authorization: `Bearer ${OPENAI_API_KEY}`, "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
-  let ttsRes = await call({ model: "gpt-4o-mini-tts", voice: "shimmer", input, instructions, response_format: "mp3" });
+  let ttsRes = await call({ model: "gpt-4o-mini-tts", voice: "nova", input, instructions, response_format: "mp3" });
   if (!ttsRes.ok) ttsRes = await call({ model: "tts-1-hd", voice: "nova", input, response_format: "mp3" });
 
   if (!ttsRes.ok) {
