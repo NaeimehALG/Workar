@@ -13,11 +13,11 @@
 <link rel="canonical" href="https://www.workar.me/">
 <meta property="og:image" content="https://www.workar.me/og-image.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Workar · One-to-one career mentoring">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://www.workar.me/og-image.jpg">
-<link rel="preload" href="/fonts/inter-latin.v2.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/fonts/fraunces-latin.v2.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/inter-latin.v3.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fraunces-latin.v3.woff2" as="font" type="font/woff2" crossorigin>
 <style>
-  @font-face{font-family:'Inter';src:url(/fonts/inter-latin.v2.woff2) format('woff2');font-weight:100 900;font-style:normal;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
-  @font-face{font-family:'Fraunces';src:url(/fonts/fraunces-latin.v2.woff2) format('woff2');font-weight:100 900;font-style:normal;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+  @font-face{font-family:'Inter';src:url(/fonts/inter-latin.v3.woff2) format('woff2');font-weight:100 900;font-style:normal;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+  @font-face{font-family:'Fraunces';src:url(/fonts/fraunces-latin.v3.woff2) format('woff2');font-weight:100 900;font-style:normal;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
   @font-face{font-family:'Vazirmatn';src:url(/fonts/vazirmatn-400.v2.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
   @font-face{font-family:'Vazirmatn';src:url(/fonts/vazirmatn-500.v2.woff2) format('woff2');font-weight:500;font-style:normal;font-display:swap;}
   @font-face{font-family:'Vazirmatn';src:url(/fonts/vazirmatn-600.v2.woff2) format('woff2');font-weight:600;font-style:normal;font-display:swap;}
@@ -58,10 +58,11 @@
   body{
     background:var(--bg); color:var(--text);
     font-family:'Inter','Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    line-height:1.6; -webkit-font-smoothing:antialiased;
+    line-height:1.6; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    font-optical-sizing:auto; text-rendering:optimizeLegibility; font-kerning:normal;
   }
   h1,h2,.brand .mark{font-family:'Fraunces','Vazirmatn', Georgia, serif;font-optical-sizing:auto;}
-  h1,h2{font-weight:600 !important;letter-spacing:-.02em !important;}
+  h1,h2{font-weight:500 !important;letter-spacing:-.015em !important;}
   html[lang="fa"] h1, html[lang="fa"] h2, html[dir="rtl"] h1, html[dir="rtl"] h2{font-weight:800 !important;letter-spacing:0 !important;}
   #app{max-width:1040px;margin:0 auto;padding:0 20px 80px;}
   a{color:inherit;}
@@ -77,7 +78,7 @@
   .navlink:hover{color:var(--text);}
   .lang-switch{padding:7px 13px;border-radius:999px;font-size:13px;font-weight:700;cursor:pointer;color:var(--accent);border:1px solid var(--border);background:var(--surface-2);}
 
-  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border-radius:999px;font-weight:700;font-size:14.5px;border:1px solid transparent;cursor:pointer;font-family:inherit;transition:transform .12s ease, box-shadow .12s ease;}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border-radius:999px;font-weight:600;letter-spacing:.005em;font-size:14.5px;border:1px solid transparent;cursor:pointer;font-family:inherit;transition:transform .12s ease, box-shadow .12s ease;}
   .btn:active{transform:scale(.97);}
   .btn-primary{background:var(--accent);color:var(--accent-ink);}
   .btn-primary:hover{box-shadow:0 6px 16px rgba(139,106,76,.3);}
@@ -1403,11 +1404,13 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
 
   /* sticky header with a soft shadow after scrolling */
   @media (min-width:761px){
-  .nav{position:sticky;top:0;background:var(--bg);isolation:isolate;transition:padding .3s ease;}
-  /* Clip only the full-width backdrop, so the language menu remains visible and clickable. */
-  .nav::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:var(--bg);box-shadow:0 0 0 100vmax var(--bg);clip-path:inset(0 -100vmax);transition:box-shadow .3s ease;}
-  html.pro-scrolled .nav{padding:12px 0;border-bottom-color:transparent;}
-  html.pro-scrolled .nav::before{box-shadow:0 0 0 100vmax var(--bg), 0 10px 24px -18px rgba(74,53,38,.35);clip-path:inset(0 -100vmax -40px);}
+  .nav{position:sticky;top:0;background:var(--bg);isolation:isolate;}
+  /* Full-width backdrop; static, so scrolling never repaints it. */
+  .nav::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:var(--bg);box-shadow:0 0 0 100vmax var(--bg);clip-path:inset(0 -100vmax);}
+  /* Soft shadow fades in with opacity only (GPU), and the header height never changes. */
+  .nav::after{content:'';position:absolute;left:0;right:0;top:100%;height:14px;z-index:-1;pointer-events:none;border-image:linear-gradient(rgba(74,53,38,.10),rgba(74,53,38,0)) fill 0 / 0 / 0 100vmax;opacity:0;transition:opacity .25s ease;}
+  html.pro-scrolled .nav{border-bottom-color:transparent;}
+  html.pro-scrolled .nav::after{opacity:1;}
   }
   .navlink{position:relative;transition:color .2s ease, background .2s ease;}
 
@@ -5075,7 +5078,7 @@ function proFooterHtml(){
 // header gains a soft shadow once the page scrolls
 (function(){
   let on = false;
-  window.addEventListener('scroll', ()=>{ const s = window.scrollY > 8; if(s!==on){ on = s; document.documentElement.classList.toggle('pro-scrolled', s); } }, { passive:true });
+  window.addEventListener('scroll', ()=>{ const y = window.scrollY, s = on ? y > 2 : y > 24; if(s!==on){ on = s; document.documentElement.classList.toggle('pro-scrolled', s); } }, { passive:true });
   document.addEventListener('keydown', e=>{ if((e.key==='Enter'||e.key===' ') && e.target.classList && e.target.classList.contains('pro-agent') && e.target.getAttribute('data-nav')){ e.preventDefault(); e.target.click(); } });
 })();
 
