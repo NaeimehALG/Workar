@@ -4890,7 +4890,7 @@ const ART = (()=>{
 
   // Hero: the Workar film inside the arch. The <video> element lives outside the app's render
   // cycle (see the film script below) so re-renders never restart it.
-  const hero = ()=>`<div class="wkv" role="img" aria-label="${esc(T('ar_hero_alt'))}"><div class="wkv-slot"><img class="wkv-poster" src="/hero-v3-poster.jpg" alt=""></div></div>`;
+  const hero = ()=>`<div class="wkv" role="img" aria-label="${esc(T('ar_hero_alt'))}"><div class="wkv-slot"><img class="wkv-poster" src="/hero-v4-poster.jpg" alt=""></div></div>`;
 
   // Card scenes, 320 x 190
   const frame = (inner, label)=>`<svg class="ar ar-card" viewBox="0 0 320 190" role="img" aria-label="${esc(label)}"><rect width="320" height="190" fill="${C.cream}"/>${inner}</svg>`;
@@ -7338,8 +7338,8 @@ init();
     const v = document.createElement('video');
     v.className = 'wkv-video'; v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true;
     v.setAttribute('muted',''); v.setAttribute('playsinline',''); v.setAttribute('preload','auto'); v.setAttribute('aria-hidden','true');
-    v.poster = '/hero-v3-poster.jpg';
-    v.innerHTML = '<source src="/hero-v3.webm" type="video/webm"><source src="/hero-v3.mp4" type="video/mp4">';
+    v.poster = '/hero-v4-poster.jpg';
+    v.innerHTML = '<source src="/hero-v4.webm" type="video/webm"><source src="/hero-v4.mp4" type="video/mp4">';
     v.addEventListener('playing', ()=>v.classList.add('on'));
     function mount(){
       const slot = document.querySelector('.wkv-slot');
