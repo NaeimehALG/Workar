@@ -1,5 +1,6 @@
 {
   "functions": {
+    "api/ai.js": { "maxDuration": 60 },
     "api/tts.js": { "maxDuration": 60 },
     "api/reminders.js": { "maxDuration": 60 },
     "api/agents.js": { "maxDuration": 30 },
