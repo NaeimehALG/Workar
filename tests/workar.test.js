@@ -37,10 +37,11 @@ function apiHarness({ signedIn = true, credits = 2, text = 'Useful response', fa
   const mail = {
     userFromToken: async token => signedIn && token === 'test-token' ? { id: 'test-user', email: 'client@example.test' } : null,
     rows: async () => [{ aiCredits: credits }],
-    patch: async (target, value) => { patches.push({ target, value }); }
+    patch: async () => { throw new Error('Balances must never be overwritten'); }
   };
   const ai = { callClaude: async input => { calls.push(input); if (failure) throw new Error('temporary-failure'); return { text }; }, textOf: data => data.text };
-  const context = { module: { exports: {} }, process: { env: { ANTHROPIC_API_KEY: 'test-only-key', SUPABASE_URL: 'https://example.test' } }, require: name => name === './_mail' ? mail : ai, AbortController, setTimeout, clearTimeout };
+  const store = { consume: async userId => { patches.push({userId, value: {aiCredits: credits - 1}}); return credits - 1; } };
+  const context = { module: { exports: {} }, process: { env: { ANTHROPIC_API_KEY: 'test-only-key', SUPABASE_URL: 'https://example.test' } }, require: name => name === './_mail' ? mail : name === './_credits' ? store : ai, AbortController, setTimeout, clearTimeout };
   vm.createContext(context); vm.runInContext(fs.readFileSync(path.join(root, 'api/ai.js'), 'utf8'), context);
   const response = { statusCode: null, body: null, status(code) { this.statusCode = code; return this; }, json(body) { this.body = body; return this; } };
   return { calls, patches, response, request: async body => { await context.module.exports({ method: 'POST', headers: { authorization: 'Bearer test-token' }, body }, response); return response; } };
@@ -81,3 +82,4 @@ test('all inline scripts parse', () => {
     if (match[1].trim()) new vm.Script(match[1]);
   }
 });
+
