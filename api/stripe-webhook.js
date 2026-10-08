@@ -13,6 +13,7 @@ process.env.SUPABASE_URL = String(process.env.SUPABASE_URL || 'https://jgbjhzhbd
 //   STRIPE_WEBHOOK_SECRET, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 
 const crypto = require('crypto');
+const credits = require('./_credits');
 
 async function checkedFetch(url, options) {
   const response = await fetch(url, options);
@@ -82,11 +83,11 @@ async function handler(req, res) {
     'Content-Type': 'application/json'
   };
 
-  if (event.type === 'checkout.session.completed') {
+  if (event.type === 'checkout.session.completed' || event.type === 'checkout.session.async_payment_succeeded') {
     const session = event.data.object;
     const md = session.metadata || {};
     // only act on money that actually arrived (e.g. ignore delayed bank payments still pending)
-    if (session.payment_status && session.payment_status !== 'paid' && session.payment_status !== 'no_payment_required') {
+    if (session.payment_status !== 'paid' && session.payment_status !== 'no_payment_required') {
       res.status(200).json({ received: true, skipped: 'unpaid' }); return;
     }
     try {
@@ -97,15 +98,15 @@ async function handler(req, res) {
           headers: Object.assign({ Prefer: 'resolution=ignore-duplicates,return=minimal' }, h),
           body: JSON.stringify({ userId: md.userId, examId: md.examId, stripeSessionId: session.id })
         });
-      } else if (md.kind === 'ai_credits' && md.userId) {
-        const r = await checkedFetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${encodeURIComponent(md.userId)}&select=aiCredits`, { headers: h });
-        const rows = await r.json();
-        const current = (Array.isArray(rows) && rows[0] && Number(rows[0].aiCredits)) || 0;
-        await checkedFetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${encodeURIComponent(md.userId)}`, {
-          method: 'PATCH',
-          headers: Object.assign({ Prefer: 'return=minimal' }, h),
-          body: JSON.stringify({ aiCredits: current + (Number(md.credits) || 20) })
-        });
+      } else if (md.kind === 'ai_credits') {
+        // One database transaction records this Checkout Session and adds its credits.
+        // Session ID deduplicates both retries and different events for the same purchase.
+        const amount = Number(md.credits);
+        if (!session.id || !md.userId || !/^\d+$/.test(String(md.credits)) ||
+            !Number.isSafeInteger(amount) || amount <= 0 || amount > 10000) {
+          throw new Error('invalid-credit-purchase');
+        }
+        await credits.grantPurchase(session.id, md.userId, amount);
       } else {
         const requestId = md.requestId || session.client_reference_id;
         if (requestId) {
@@ -134,3 +135,4 @@ async function handler(req, res) {
 module.exports = handler;
 // Must be set AFTER module.exports is assigned, or Vercel ignores it
 module.exports.config = { api: { bodyParser: false } };
+

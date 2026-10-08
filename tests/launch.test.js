@@ -112,9 +112,10 @@ test('payment webhook returns a retryable error when database rejects payment wr
   const source=fs.readFileSync(path.join(root,'api/stripe-webhook.js'),'utf8');
   const payload=JSON.stringify({type:'checkout.session.completed',data:{object:{id:'cs_test',payment_status:'paid',metadata:{kind:'booking',requestId:'booking'}}}});
   const t=Math.floor(Date.now()/1000),sig=crypto.createHmac('sha256','test-secret').update(t+'.'+payload).digest('hex');
-  const ctx={module:{exports:{}},require:name=>{if(name==='crypto')return crypto;throw new Error('Confirmation must not run after failed payment write');},process:{env:{STRIPE_WEBHOOK_SECRET:'test-secret',SUPABASE_URL:'https://example.test',SUPABASE_SERVICE_ROLE_KEY:'test'}},console:{error(){}},Buffer,Date,fetch:async()=>({ok:false})};
+  const ctx={module:{exports:{}},require:name=>{if(name==='crypto')return crypto;if(name==='./_credits')return {};throw new Error('Confirmation must not run after failed payment write');},process:{env:{STRIPE_WEBHOOK_SECRET:'test-secret',SUPABASE_URL:'https://example.test',SUPABASE_SERVICE_ROLE_KEY:'test'}},console:{error(){}},Buffer,Date,fetch:async()=>({ok:false})};
   vm.createContext(ctx);vm.runInContext(source,ctx);
   const req={method:'POST',headers:{'stripe-signature':`t=${t},v1=${sig}`},on(event,cb){if(event==='data')cb(payload);if(event==='end')cb();}};
   const res={status(code){this.code=code;return this},json(body){this.body=body;return this}};
   await ctx.module.exports(req,res);assert.equal(res.code,500);assert.equal(res.body.error,'update-failed');
 });
+

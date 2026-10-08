@@ -5,6 +5,7 @@ process.env.SUPABASE_URL = String(process.env.SUPABASE_URL || 'https://jgbjhzhbd
 // Env: ANTHROPIC_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 const M = require('./_mail');
 const AI = require('./_ai');
+const creditStore = require('./_credits');
 
 function coachingSystem(mode, role) {
   const common = 'You are Workar\'s career coach. Reply in the person\'s language. Give concise, specific advice grounded only in details they provide. Never invent achievements, credentials, employers, or guarantee hiring outcomes. Ask a focused follow-up question when important context is missing.';
@@ -50,11 +51,14 @@ module.exports = async (req, res) => {
 
     let remaining = null;
     if (!isAdmin && prof) {
-      remaining = Math.max(0, credits - 1);
-      await M.patch(`profiles?id=eq.${encodeURIComponent(me.id)}`, { aiCredits: remaining });
+      remaining = await creditStore.consume(me.id);
+      if (remaining === null) {
+        res.status(402).json({ error: 'no-credits', aiCreditsRemaining: 0 }); return;
+      }
     }
     res.status(200).json({ text, aiCreditsRemaining: remaining });
   } catch (e) {
     res.status(500).json({ error: String(e) });
   }
 };
+
