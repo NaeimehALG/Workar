@@ -17,23 +17,27 @@ function meetingUrlFor(r) {
 }
 
 function icsStamp(d) { return new Date(d).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, ''); }
-function icsText(s) { return String(s || '').replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/,/g, '\\,').replace(/;/g, '\\;'); }
-function fold(line) { // calendar lines must be at most 75 characters
-  const out = []; let s = line;
-  while (s.length > 74) { out.push(s.slice(0, 74)); s = ' ' + s.slice(74); }
-  out.push(s); return out.join('\r\n');
+function icsText(s) { return String(s || '').replace(/\\/g, '\\\\').replace(/\r\n|\r|\n/g, '\\n').replace(/,/g, '\\,').replace(/;/g, '\\;'); }
+function fold(line) { // RFC 5545: 75 UTF-8 octets, without splitting a code point
+  const lines = []; let current = '', bytes = 0;
+  for (const char of line) {
+    const size = Buffer.byteLength(char, 'utf8');
+    if (bytes + size > 75) { lines.push(current); current = ' '; bytes = 1; }
+    current += char; bytes += size;
+  }
+  lines.push(current); return lines.join('\r\n');
 }
 
 // .ics calendar file with alerts 1 hour and 15 minutes before the session.
 function buildIcs({ r, title, description, url, cancelled = false }) {
-  if (!r.startsAt) return null;
+  if (!r.startsAt || !Number.isFinite(new Date(r.startsAt).getTime())) return null;
   const start = new Date(r.startsAt);
   const end = new Date(start.getTime() + SESSION_MINUTES() * 60000);
   const lines = [
     'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Workar//Sessions//EN', 'CALSCALE:GREGORIAN',
     'METHOD:' + (cancelled ? 'CANCEL' : 'PUBLISH'),
     'BEGIN:VEVENT',
-    'UID:' + r.id + '@workar.me',
+    'UID:' + icsText(r.id) + '@workar.me',
     'SEQUENCE:' + Math.floor(Date.now() / 1000),
     'DTSTAMP:' + icsStamp(Date.now()),
     'DTSTART:' + icsStamp(start),
@@ -41,7 +45,7 @@ function buildIcs({ r, title, description, url, cancelled = false }) {
     'SUMMARY:' + icsText(title),
     'DESCRIPTION:' + icsText(description + (url ? '\n\nJoin: ' + url : '')),
     url ? 'LOCATION:' + icsText(url) : null,
-    url ? 'URL:' + url : null,
+    url ? 'URL:' + String(url).replace(/[\r\n]/g, '') : null,
     'STATUS:' + (cancelled ? 'CANCELLED' : 'CONFIRMED')
   ].filter(Boolean);
   if (!cancelled) {
@@ -58,7 +62,7 @@ function icsAttachment(ics) {
 }
 
 function googleCalendarLink({ r, title, description, url }) {
-  if (!r.startsAt) return null;
+  if (!r.startsAt || !Number.isFinite(new Date(r.startsAt).getTime())) return null;
   const start = new Date(r.startsAt), end = new Date(start.getTime() + SESSION_MINUTES() * 60000);
   const p = new URLSearchParams({ action: 'TEMPLATE', text: title, dates: icsStamp(start) + '/' + icsStamp(end), details: description + (url ? '\n\nJoin: ' + url : ''), location: url || '' });
   return 'https://calendar.google.com/calendar/render?' + p.toString();

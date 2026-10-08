@@ -47,8 +47,9 @@ NEW — Video / voice calls
 ==========================
 Mentors and clients get a "Join video/voice call" button once a request is accepted (and paid,
 if the mentor charges — see below). It opens a free Jitsi Meet room (https://meet.jit.si) named
-after the request, in a new tab. No signup, no API key, no extra setup needed — video, audio-only
-(mute the camera inside Jitsi), and screen share all work out of the box. Anyone with the exact
+after the request, in a new tab. The first participant may need to sign in to Jitsi to start the room.
+Video, voice-only and screen share are provided by Jitsi; enable the lobby and
+approve the expected participant. Verify with two accounts/devices before launch. Anyone with the exact
 link can join, so treat it like a private meeting link.
 
 

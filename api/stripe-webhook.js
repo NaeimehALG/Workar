@@ -14,6 +14,12 @@ process.env.SUPABASE_URL = String(process.env.SUPABASE_URL || 'https://jgbjhzhbd
 
 const crypto = require('crypto');
 
+async function checkedFetch(url, options) {
+  const response = await fetch(url, options);
+  if (!response.ok) throw new Error('database-write-failed');
+  return response;
+}
+
 function readRawBody(req) {
   return new Promise((resolve, reject) => {
     let data = '';
@@ -86,16 +92,16 @@ async function handler(req, res) {
     try {
       if (md.kind === 'exam' && md.userId && md.examId) {
         // stripeSessionId is unique, so a repeated webhook delivery is ignored
-        await fetch(`${supabaseUrl}/rest/v1/exam_purchases?on_conflict=stripeSessionId`, {
+        await checkedFetch(`${supabaseUrl}/rest/v1/exam_purchases?on_conflict=stripeSessionId`, {
           method: 'POST',
           headers: Object.assign({ Prefer: 'resolution=ignore-duplicates,return=minimal' }, h),
           body: JSON.stringify({ userId: md.userId, examId: md.examId, stripeSessionId: session.id })
         });
       } else if (md.kind === 'ai_credits' && md.userId) {
-        const r = await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${encodeURIComponent(md.userId)}&select=aiCredits`, { headers: h });
+        const r = await checkedFetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${encodeURIComponent(md.userId)}&select=aiCredits`, { headers: h });
         const rows = await r.json();
         const current = (Array.isArray(rows) && rows[0] && Number(rows[0].aiCredits)) || 0;
-        await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${encodeURIComponent(md.userId)}`, {
+        await checkedFetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${encodeURIComponent(md.userId)}`, {
           method: 'PATCH',
           headers: Object.assign({ Prefer: 'return=minimal' }, h),
           body: JSON.stringify({ aiCredits: current + (Number(md.credits) || 20) })
@@ -103,7 +109,7 @@ async function handler(req, res) {
       } else {
         const requestId = md.requestId || session.client_reference_id;
         if (requestId) {
-          await fetch(`${supabaseUrl}/rest/v1/requests?id=eq.${encodeURIComponent(requestId)}`, {
+          await checkedFetch(`${supabaseUrl}/rest/v1/requests?id=eq.${encodeURIComponent(requestId)}`, {
             method: 'PATCH',
             headers: Object.assign({ Prefer: 'return=minimal' }, h),
             body: JSON.stringify({ paid: true, stripeSessionId: session.id })

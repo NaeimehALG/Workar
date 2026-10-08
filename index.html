@@ -1982,8 +1982,8 @@ const I18N = {
     ib_online:'Active now', ib_seen:'Seen', cal_prev:'Previous weeks', cal_next:'Next weeks', cal_day_full:'Fully booked', cal_day_free:'{n} times available', cal_n_free:'{n} available', cal_n_booked:'{n} booked',
     bk_step3:'Add a note and send your request', bk_video_voice:'video or voice call',
     pj_kicker_video:'Video session', pj_kicker_voice:'Voice session', pj_ready:'Ready to join?', pj_anytime:'Your session room is open', pj_live:'Happening now', pj_in_min:'Starts in {n} min', pj_at:'Scheduled for {d} at {t}', pj_ended:'Was scheduled for {d} at {t}',
-    pj_checking:'Checking your camera and microphone…', pj_devices_ok:'Your camera and microphone are working. Use the buttons on the preview to turn them on or off before you join.', pj_devices_blocked:'We could not access your camera or microphone. You can still join and allow access inside the session room.',
-    pj_cam_is_off:'Your camera is off', pj_mute:'Mute microphone', pj_unmute:'Unmute microphone', pj_cam_off:'Turn camera off', pj_cam_on:'Turn camera on', pj_join:'Join now', pj_note:'The private session room opens in a new tab. Only the two of you have the link.',
+    calendar_google:'Google Calendar', calendar_download:'Apple / Outlook calendar', pj_audio_ok:'Your microphone is ready. Your camera is off.', pj_checking:'Checking your camera and microphone…', pj_devices_ok:'Your camera and microphone are working. Use the buttons on the preview to turn them on or off before you join.', pj_devices_blocked:'We could not access your camera or microphone. You can still join and allow access inside the session room.',
+    pj_cam_is_off:'Your camera is off', pj_mute:'Mute microphone', pj_unmute:'Unmute microphone', pj_cam_off:'Turn camera off', pj_cam_on:'Turn camera on', pj_join:'Join now', pj_note:'Your Jitsi session opens in a new tab. Keep the link confidential and enable the lobby to admit only your mentor or client. The first participant may need to sign in to Jitsi.',
     cal_free:'Free', cal_booked:'Booked', cal_na:'Not available', cal_off:'No times on this day. Pick a highlighted date.', cal_picked:'Selected: {d} at {t}', cal_busy_on:'Already booked that day: {t}', cal_none_busy:'Nothing booked that day yet.', cal_clash:'That time is already booked — please pick another.', cal_taken:'Someone just booked that time. Please pick another.',
     ft_privacy:'Privacy', ft_terms:'Terms', ft_refunds:'Refunds', legal_back:'← Back to Workar', legal_updated:'Last updated: {d}',
     auth_agree:'I agree to the {t} and {p}.', lbl_timezone:'Your time zone', tz_hint:'Your weekly availability is in this time zone. Clients see times converted to their own zone.',
@@ -2188,7 +2188,7 @@ const I18N = {
     fq_q3:"How are mentors selected?",
     fq_a3:"Every mentor profile is reviewed by Workar before it is published, and clients can only leave a review after a real session.",
     fq_q4:"Is my video call private?",
-    fq_a4:"Yes. Each paid booking receives its own private link, and only you and your mentor can see your booking details and messages.",
+    fq_a4:"Each paid booking receives a unique Jitsi meeting link. Anyone with that link can attempt to join, so keep it confidential and enable the lobby to approve participants. The first participant may need to sign in to Jitsi.",
     fq_q5:"Can I use Workar in Persian or another language?",
     fq_a5:"Yes. The site is available in English and Persian, and you can filter mentors by the languages they speak.",
     fq_q6:"How do I become a mentor?",
@@ -2381,8 +2381,8 @@ const I18N = {
     ib_online:'آنلاین', ib_seen:'دیده شد', cal_prev:'هفته‌های قبل', cal_next:'هفته‌های بعد', cal_day_full:'کاملاً رزرو شده', cal_day_free:'{n} زمان آزاد', cal_n_free:'{n} زمان آزاد', cal_n_booked:'{n} رزرو شده',
     bk_step3:'یک یادداشت بنویسید و درخواست را ارسال کنید', bk_video_voice:'تماس تصویری یا صوتی',
     pj_kicker_video:'جلسه‌ی تصویری', pj_kicker_voice:'جلسه‌ی صوتی', pj_ready:'آماده‌ی ورود هستید؟', pj_anytime:'اتاق جلسه‌ی شما باز است', pj_live:'هم‌اکنون در حال برگزاری', pj_in_min:'{n} دقیقه‌ی دیگر شروع می‌شود', pj_at:'زمان جلسه: {d} ساعت {t}', pj_ended:'زمان جلسه {d} ساعت {t} بود',
-    pj_checking:'در حال بررسی دوربین و میکروفون…', pj_devices_ok:'دوربین و میکروفون شما کار می‌کنند. پیش از ورود می‌توانید با دکمه‌های روی تصویر آن‌ها را روشن یا خاموش کنید.', pj_devices_blocked:'دسترسی به دوربین یا میکروفون ممکن نشد. همچنان می‌توانید وارد شوید و در اتاق جلسه اجازه‌ی دسترسی بدهید.',
-    pj_cam_is_off:'دوربین شما خاموش است', pj_mute:'قطع میکروفون', pj_unmute:'وصل میکروفون', pj_cam_off:'خاموش کردن دوربین', pj_cam_on:'روشن کردن دوربین', pj_join:'ورود به جلسه', pj_note:'اتاق خصوصی جلسه در یک زبانه‌ی جدید باز می‌شود. فقط شما دو نفر لینک آن را دارید.',
+    calendar_google:'تقویم گوگل', calendar_download:'تقویم اپل / اوت‌لوک', pj_audio_ok:'میکروفون آماده است. دوربین خاموش است.', pj_checking:'در حال بررسی دوربین و میکروفون…', pj_devices_ok:'دوربین و میکروفون شما کار می‌کنند. پیش از ورود می‌توانید با دکمه‌های روی تصویر آن‌ها را روشن یا خاموش کنید.', pj_devices_blocked:'دسترسی به دوربین یا میکروفون ممکن نشد. همچنان می‌توانید وارد شوید و در اتاق جلسه اجازه‌ی دسترسی بدهید.',
+    pj_cam_is_off:'دوربین شما خاموش است', pj_mute:'قطع میکروفون', pj_unmute:'وصل میکروفون', pj_cam_off:'خاموش کردن دوربین', pj_cam_on:'روشن کردن دوربین', pj_join:'ورود به جلسه', pj_note:'جلسه در زبانه‌ی جدید Jitsi باز می‌شود. لینک را محرمانه نگه دارید و لابی را برای تأیید ورود فعال کنید. نفر اول ممکن است نیاز به ورود به Jitsi داشته باشد.',
     cal_free:'آزاد', cal_booked:'رزرو شده', cal_na:'در دسترس نیست', cal_off:'در این روز زمان آزادی وجود ندارد. یکی از تاریخ‌های رنگی را انتخاب کنید.', cal_picked:'انتخاب شد: {d} ساعت {t}', cal_busy_on:'در این روز رزرو شده: {t}', cal_none_busy:'هنوز رزروی برای این روز نیست.', cal_clash:'این زمان قبلاً رزرو شده — زمان دیگه‌ای انتخاب کن.', cal_taken:'همین الان کسی این زمان رو رزرو کرد. زمان دیگه‌ای انتخاب کن.',
     ft_privacy:'حریم خصوصی', ft_terms:'شرایط استفاده', ft_refunds:'بازپرداخت', legal_back:'→ بازگشت به Workar', legal_updated:'آخرین به‌روزرسانی: {d}',
     auth_agree:'{t} و {p} را می‌پذیرم.', lbl_timezone:'منطقه‌ی زمانی شما', tz_hint:'زمان‌های آزاد هفتگی شما در این منطقه‌ی زمانی است. مراجعه‌کننده‌ها زمان را به وقت خودشان می‌بینند.',
@@ -2587,7 +2587,7 @@ const I18N = {
     fq_q3:"منتورها چگونه انتخاب می‌شوند؟",
     fq_a3:"پروفایل هر منتور پیش از انتشار توسط Workar بررسی می‌شود و مراجعان تنها پس از برگزاری جلسهٔ واقعی می‌توانند نظر ثبت کنند.",
     fq_q4:"آیا تماس تصویری من خصوصی است؟",
-    fq_a4:"بله. هر رزرو پرداخت‌شده لینک خصوصی خود را دارد و جزئیات رزرو و پیام‌ها فقط برای شما و منتورتان قابل مشاهده است.",
+    fq_a4:"هر رزرو پرداخت‌شده لینک اختصاصی Jitsi دارد. هر فردی که لینک را داشته باشد می‌تواند برای ورود اقدام کند؛ لینک را محرمانه نگه دارید و لابی را فعال کنید. نفر اول ممکن است نیاز به ورود به Jitsi داشته باشد.",
     fq_q5:"آیا می‌توانم از Workar به فارسی یا زبان دیگری استفاده کنم؟",
     fq_a5:"بله. سایت به زبان‌های انگلیسی و فارسی در دسترس است و می‌توانید منتورها را بر اساس زبان‌هایی که صحبت می‌کنند فیلتر کنید.",
     fq_q6:"چگونه منتور شوم؟",
@@ -3704,12 +3704,19 @@ async function finishPrep(){
   }
 }
 
+async function checkoutHeaders(){
+  const { data } = await sb.auth.getSession();
+  const token = data && data.session && data.session.access_token;
+  if(!token) throw new Error('sign-in-required');
+  return { 'Content-Type':'application/json', Authorization:'Bearer '+token };
+}
+
 async function buyPrep(examId){
   if(!uid){ toast(T('prep_login_to_buy')); nav('dashboard'); return; }
   prep.busy = true; render();
   try{
     const clean = location.origin + location.pathname;
-    const res = await fetch('/api/create-checkout', { method:'POST', headers:{'Content-Type':'application/json'},
+    const res = await fetch('/api/create-checkout', { method:'POST', headers:await checkoutHeaders(),
       body: JSON.stringify({ kind:'exam', examId, userId:uid, successUrl: clean+'?prepPaid='+encodeURIComponent(examId), cancelUrl: clean+'?payment=cancelled' }) });
     const data = await res.json();
     if(!res.ok || !data.url) throw new Error(data.error||'checkout-failed');
@@ -5606,6 +5613,35 @@ function mentorView(){
   </div>`;
 }
 
+function bookingCalendarData(r){
+  if(!uid || !r || (r.mentorId!==uid && r.clientId!==uid) || r.status!=='accepted' || reqStage(r)!==2) return null;
+  const start = reqInstant(r);
+  if(!start || !Number.isFinite(start.getTime())) return null;
+  const stamp = d=>d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
+  const title = 'Workar session with '+nameOf(r.mentorId===uid ? r.clientId : r.mentorId);
+  const url = r.meetingUrl || ('https://meet.jit.si/Workar-Session-'+encodeURIComponent(r.id));
+  const dates = stamp(start)+'/'+stamp(new Date(start.getTime()+SESSION_MIN*60000));
+  return { title, url, dates, google:'https://calendar.google.com/calendar/render?'+new URLSearchParams({action:'TEMPLATE',text:title,dates,details:'Join your Workar session: '+url,location:url}) };
+}
+function bookingCalendarActions(r){
+  const event = bookingCalendarData(r); if(!event) return '';
+  return `<a class="btn btn-sm btn-outline" href="${esc(event.google)}" target="_blank" rel="noopener">${esc(T('calendar_google'))}</a><button class="btn btn-sm btn-ghost" data-calendar-download="${esc(r.id)}">${esc(T('calendar_download'))}</button>`;
+}
+function bookingCalendarIcs(r, event){
+  const text = s=>String(s||'').replace(/\\/g,'\\\\').replace(/\r\n|\r|\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;');
+  const fold = line=>{ const out=[]; let value='',size=0; const encoder=new TextEncoder(); for(const ch of line){ const n=encoder.encode(ch).length; if(size+n>75){out.push(value);value=' ';size=1;} value+=ch;size+=n; } out.push(value);return out.join('\r\n'); };
+  const [start,end]=event.dates.split('/');
+  const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Workar//Sessions//EN','CALSCALE:GREGORIAN','METHOD:PUBLISH','BEGIN:VEVENT','UID:'+text(r.id)+'@workar.me','DTSTAMP:'+new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,''),'DTSTART:'+start,'DTEND:'+end,'SUMMARY:'+text(event.title),'DESCRIPTION:'+text('Join your Workar session: '+event.url),'LOCATION:'+text(event.url),'STATUS:CONFIRMED'];
+  for(const minutes of [60,15]) lines.push('BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:'+text(event.title),'TRIGGER:-PT'+minutes+'M','END:VALARM');
+  lines.push('END:VEVENT','END:VCALENDAR');return lines.map(fold).join('\r\n')+'\r\n';
+}
+document.addEventListener('click', e=>{
+  const button=e.target.closest && e.target.closest('[data-calendar-download]'); if(!button) return;
+  const r=(cache.requests||[]).find(x=>x.id===button.getAttribute('data-calendar-download')), event=bookingCalendarData(r); if(!event) return;
+  const url=URL.createObjectURL(new Blob([bookingCalendarIcs(r,event)],{type:'text/calendar;charset=utf-8'}));
+  const a=document.createElement('a'); a.href=url; a.download='workar-session.ics'; document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
+
 function reqNeedsAction(r, isMentor){ return (isMentor && r.status==='pending') || (!isMentor && r.status==='accepted' && r.amountCents>0 && !r.paid) ? 1 : 0; }
 function reqStage(r){ if(r.status==='declined' || r.status==='cancelled') return -1; if(r.status==='pending') return 0; if(r.amountCents>0 && !r.paid) return 1; const done = (Number(r.sessionsDone)||0) >= reqSessionsTotal(r); return done ? 3 : 2; }
 function reqNextText(r, isMentor, other){
@@ -5647,6 +5683,7 @@ function reqCard(r, isMentor, grouped){
       ${st===2 ? `
         <button class="btn btn-sm btn-primary" data-call="${r.id}" data-url="${esc(r.meetingUrl||'')}" data-mode="video" title="${esc(T('call_tip'))}">${esc(T('join_video'))}</button>
         <button class="btn btn-sm btn-outline" data-call="${r.id}" data-url="${esc(r.meetingUrl||'')}" data-mode="voice" title="${esc(T('call_tip'))}">${esc(T('join_voice'))}</button>
+        ${bookingCalendarActions(r)}
         ${isMentor ? `<button class="btn btn-sm btn-ghost" data-sess="${r.id}" data-next="${(Number(r.sessionsDone)||0)+1}">${esc(T(reqSessionsTotal(r)>1 ? 'sess_mark' : 'sess_mark_one'))}</button>` : ''}` : ''}
       ${st===3 ? `<span class="status-pill done">${esc(T('sess_completed'))}</span>` : ''}
       ${isMentor && (st===3 || (st===2 && (Number(r.sessionsDone)>0 || (reqInstant(r) && reqInstant(r) < new Date())))) ? `<button class="btn btn-sm btn-outline" data-followup="${r.id}" data-fu-sent="${r.followupSentAt?1:0}" data-fu-who="${esc(other)}">${esc(T(r.followupSentAt ? 'ag_fu_again' : 'ag_fu_btn'))}</button>` : ''}
@@ -5909,7 +5946,7 @@ function inboxThread(o){
       <div class="ib-ctx-act">
         ${iAmMentorHere && cur.status==='pending' ? `<button class="btn btn-sm btn-primary" data-req="${cur.id}" data-status="accepted">${esc(T('accept'))}</button><button class="btn btn-sm btn-ghost" data-req="${cur.id}" data-status="declined">${esc(T('decline'))}</button>` : ''}
         ${!iAmMentorHere && reqStage(cur)===1 ? `<button class="btn btn-sm btn-primary" data-pay="${cur.id}" data-amount="${cur.amountCents}" data-mentor="${cur.mentorId}">${esc(T('pay_to_confirm').replace('${amount}', (cur.amountCents/100).toFixed(2)))}</button>` : ''}
-        ${reqStage(cur)===2 ? `<button class="btn btn-sm btn-primary" data-call="${cur.id}" data-url="${esc(cur.meetingUrl||'')}" data-mode="video">${esc(T('join_video'))}</button>` : ''}
+        ${reqStage(cur)===2 ? `<button class="btn btn-sm btn-primary" data-call="${cur.id}" data-url="${esc(cur.meetingUrl||'')}" data-mode="video">${esc(T('join_video'))}</button>${bookingCalendarActions(cur)}` : ''}
       </div></div>`
     : (p.role!=='client' && o!==uid ? `<div class="ib-ctx soft"><div><b>${esc(T('inbox_no_booking'))}</b><span>${esc(T('inbox_calls_locked'))}</span></div><div class="ib-ctx-act"><button class="btn btn-sm btn-primary" data-nav="mentor" data-mentor="${esc(o)}">${esc(T('book_session'))}</button></div></div>` : '');
   return `<div class="ib-head">
@@ -5983,15 +6020,23 @@ const PJ_IC = {
   cam:'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="6" width="13" height="12" rx="2.5"/><path d="M16 10.5l5-3v9l-5-3z"/></svg>',
   camOff:'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 10.5l5-3v9l-3.5-2.1M14 18H5.5A2.5 2.5 0 0 1 3 15.5v-7A2.5 2.5 0 0 1 5.5 6H6M10 6h3.5A2.5 2.5 0 0 1 16 8.5V12M3 3l18 18"/></svg>'
 };
-const pj = { stream:null, audioCtx:null, raf:0, mic:true, cam:true, reqId:null, url:'', timer:0 };
+const pj = { stream:null, audioCtx:null, raf:0, mic:true, cam:true, reqId:null, url:'', timer:0, generation:0, focus:null };
 function pjStop(){
   try{ if(pj.stream) pj.stream.getTracks().forEach(t=>t.stop()); }catch(e){}
   try{ if(pj.audioCtx) pj.audioCtx.close(); }catch(e){}
   cancelAnimationFrame(pj.raf); clearInterval(pj.timer);
   pj.stream = null; pj.audioCtx = null;
 }
-function pjClose(){ pjStop(); const el = document.getElementById('pj-back'); if(el) el.remove(); document.removeEventListener('keydown', pjKey); }
-function pjKey(e){ if(e.key==='Escape') pjClose(); }
+function pjClose(){ pj.generation++; pjStop(); const el = document.getElementById('pj-back'); if(el) el.remove(); document.removeEventListener('keydown', pjKey); if(pj.focus && pj.focus.isConnected) pj.focus.focus(); pj.focus=null; }
+function pjKey(e){
+  if(e.key==='Escape') pjClose();
+  if(e.key==='Tab'){
+    const buttons = Array.from(document.querySelectorAll('#pj-back button')).filter(b=>!b.disabled);
+    const first=buttons[0], last=buttons[buttons.length-1];
+    if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+  }
+}
 function pjWhen(r){
   const i = r && typeof reqInstant==='function' ? reqInstant(r) : null;
   if(!i) return { cls:'', text: T('pj_anytime') };
@@ -6013,15 +6058,19 @@ function pjRender(){
 }
 async function openPrejoin(reqId, url, mode){
   pjClose();
-  const r = (cache.requests||[]).find(x=>x.id===reqId) || {};
+  const r = (cache.requests||[]).find(x=>x.id===reqId);
+  if(!uid || !r || (r.mentorId!==uid && r.clientId!==uid) || r.status!=='accepted' || reqStage(r)!==2) return;
+  const generation = pj.generation;
+  const current = ()=>generation===pj.generation;
+  pj.focus = document.activeElement;
   const other = r.mentorId===uid ? r.clientId : r.mentorId;
   const oname = other ? nameOf(other) : 'Workar';
-  pj.reqId = reqId; pj.url = url || ('https://meet.jit.si/Workar-Session-' + encodeURIComponent(reqId));
+  pj.reqId = reqId; pj.url = r.meetingUrl || ('https://meet.jit.si/Workar-Session-' + encodeURIComponent(reqId));
   pj.mic = true; pj.cam = mode!=='voice';
   const myName = (myProfile && myProfile.name) || '';
   const w = pjWhen(r);
   const el = document.createElement('div');
-  el.id = 'pj-back'; el.className = 'pj-back'; el.setAttribute('role','dialog'); el.setAttribute('aria-modal','true');
+  el.id = 'pj-back'; el.className = 'pj-back'; el.setAttribute('role','dialog'); el.setAttribute('aria-modal','true'); el.setAttribute('aria-labelledby','pj-title');
   el.innerHTML = `<div class="pj">
     <div class="pj-stage">
       <video id="pj-video" autoplay muted playsinline></video>
@@ -6034,7 +6083,7 @@ async function openPrejoin(reqId, url, mode){
     </div>
     <div class="pj-side">
       <span class="pj-kicker">${esc(T(mode==='voice' ? 'pj_kicker_voice' : 'pj_kicker_video'))}</span>
-      <h3>${esc(T('pj_ready'))}</h3>
+      <h3 id="pj-title">${esc(T('pj_ready'))}</h3>
       <div class="pj-with"><span class="ib-av">${av(other, oname)}</span><div><b>${esc(oname)}</b><span>${esc(r.packageKey ? T('pk_'+r.packageKey+'_name') : T('inbox_booking'))} · 45 min</span></div></div>
       <div class="pj-when ${w.cls}" id="pj-when">${esc(w.text)}</div>
       <p class="pj-msg" id="pj-msg">${esc(T('pj_checking'))}</p>
@@ -6046,13 +6095,14 @@ async function openPrejoin(reqId, url, mode){
     </div>
   </div>`;
   document.body.appendChild(el);
+  document.getElementById('pj-join').focus();
   document.addEventListener('keydown', pjKey);
   el.addEventListener('click', e=>{ if(e.target===el) pjClose(); });
   document.getElementById('pj-cancel').onclick = pjClose;
   document.getElementById('pj-mic').onclick = ()=>{ pj.mic = !pj.mic; pjRender(); };
   document.getElementById('pj-cam').onclick = async ()=>{ pj.cam = !pj.cam;
     if(pj.cam && pj.stream && !pj.stream.getVideoTracks().length){
-      try{ const vs = await navigator.mediaDevices.getUserMedia({ video:true }); vs.getVideoTracks().forEach(t=>pj.stream.addTrack(t)); document.getElementById('pj-video').srcObject = pj.stream; }catch(e){ pj.cam = false; }
+      try{ const stream = pj.stream; const vs = await navigator.mediaDevices.getUserMedia({ video:true }); if(!current() || pj.stream!==stream){ vs.getTracks().forEach(t=>t.stop()); return; } vs.getVideoTracks().forEach(t=>stream.addTrack(t)); document.getElementById('pj-video').srcObject = stream; }catch(e){ if(!current()) return; pj.cam = false; }
     }
     pjRender(); };
   document.getElementById('pj-join').onclick = ()=>{
@@ -6069,10 +6119,11 @@ async function openPrejoin(reqId, url, mode){
   const msg = document.getElementById('pj-msg');
   try{
     if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error('unsupported');
-    pj.stream = await navigator.mediaDevices.getUserMedia({ audio:true, video: pj.cam });
-    if(!document.getElementById('pj-back')){ pjStop(); return; }
+    const stream = await navigator.mediaDevices.getUserMedia({ audio:true, video: pj.cam });
+    if(!current()){ stream.getTracks().forEach(t=>t.stop()); return; }
+    pj.stream = stream;
     document.getElementById('pj-video').srcObject = pj.stream;
-    msg.textContent = T('pj_devices_ok'); msg.className = 'pj-msg';
+    msg.textContent = T(pj.cam ? 'pj_devices_ok' : 'pj_audio_ok'); msg.className = 'pj-msg';
     try{
       const AC = window.AudioContext || window.webkitAudioContext; pj.audioCtx = new AC();
       const an = pj.audioCtx.createAnalyser(); an.fftSize = 256; pj.audioCtx.createMediaStreamSource(pj.stream).connect(an);
@@ -6084,6 +6135,7 @@ async function openPrejoin(reqId, url, mode){
       loop();
     }catch(e){}
   }catch(e){
+    if(!current()) return;
     pj.cam = false;
     msg.textContent = T('pj_devices_blocked'); msg.className = 'pj-msg warn';
   }
@@ -6716,7 +6768,7 @@ function wire(){
       try{
         const res = await fetch('/api/create-checkout', {
           method:'POST',
-          headers:{ 'Content-Type':'application/json' },
+          headers:await checkoutHeaders(),
           body: JSON.stringify({
             requestId: reqId,
             amountCents,
@@ -6751,7 +6803,7 @@ function wire(){
     try{
       const res = await fetch('/api/create-checkout', {
         method:'POST',
-        headers:{ 'Content-Type':'application/json' },
+        headers:await checkoutHeaders(),
         body: JSON.stringify({
           kind: 'ai_credits',
           userId: uid,
