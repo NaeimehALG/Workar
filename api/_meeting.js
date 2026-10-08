@@ -13,7 +13,8 @@ function createMeeting() {
 
 // Older bookings (paid before this update) used a room named after the request id.
 function meetingUrlFor(r) {
-  return r.meetingUrl || ('https://meet.jit.si/Workar-Session-' + encodeURIComponent(r.id));
+  // English call screen by default (Jitsi otherwise follows the browser's language)
+  return (r.meetingUrl || ('https://meet.jit.si/Workar-Session-' + encodeURIComponent(r.id))) + '#config.defaultLanguage=%22en%22';
 }
 
 function icsStamp(d) { return new Date(d).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, ''); }

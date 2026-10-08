@@ -5650,7 +5650,7 @@ function bookingCalendarData(r){
   if(!start || !Number.isFinite(start.getTime())) return null;
   const stamp = d=>d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
   const title = 'Workar session with '+nameOf(r.mentorId===uid ? r.clientId : r.mentorId);
-  const url = r.meetingUrl || ('https://meet.jit.si/Workar-Session-'+encodeURIComponent(r.id));
+  const url = (r.meetingUrl || ('https://meet.jit.si/Workar-Session-'+encodeURIComponent(r.id))) + '#config.defaultLanguage=%22en%22';
   const dates = stamp(start)+'/'+stamp(new Date(start.getTime()+SESSION_MIN*60000));
   return { title, url, dates, google:'https://calendar.google.com/calendar/render?'+new URLSearchParams({action:'TEMPLATE',text:title,dates,details:'Join your Workar session: '+url,location:url}) };
 }
@@ -6138,6 +6138,7 @@ async function openPrejoin(reqId, url, mode){
     pjRender(); };
   document.getElementById('pj-join').onclick = ()=>{
     let cfg = '#config.prejoinPageEnabled=false&config.disableDeepLinking=true'
+      + '&config.defaultLanguage=' + encodeURIComponent('"'+(state.lang==='fa'?'fa':'en')+'"')
       + '&config.subject=' + encodeURIComponent('"Workar · '+oname+'"')
       + '&userInfo.displayName=' + encodeURIComponent('"'+(myName||'Workar user')+'"')
       + '&config.startWithAudioMuted=' + (!pj.mic) + '&config.startWithVideoMuted=' + (!pj.cam);
