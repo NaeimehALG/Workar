@@ -2016,7 +2016,7 @@ const I18N = {
     auth_error_generic:'Something went wrong. Check your email/password and try again.',
     nav_signout:'Sign out', signed_in_as:'Signed in as',
     btn_delete_profile:'Delete my profile', confirm_delete_profile:'Delete your profile permanently? This cannot be undone.',
-    toast_profile_deleted:'Profile deleted', toast_delete_fail:'Could not delete — try again',
+    toast_profile_deleted:'Profile deleted', toast_delete_admin:'This is the Workar admin account, so it can’t be deleted here.', toast_delete_fail:'Could not delete — try again',
     admin_tools:'Admin tools', btn_delete_this_profile:'Delete this profile', confirm_delete_other:'Delete this profile permanently? This cannot be undone.',
     btn_save_admin_edit:'Save changes (admin)',
     sec_about:'About you', sec_background:'Education & credentials', sec_mentoring:'Mentoring preferences', sec_links:'Links & pricing',
@@ -2415,7 +2415,7 @@ const I18N = {
     auth_error_generic:'یه مشکلی پیش اومد. ایمیل/رمز رو چک کن و دوباره امتحان کن.',
     nav_signout:'خروج', signed_in_as:'وارد شدی با',
     btn_delete_profile:'حذف پروفایلم', confirm_delete_profile:'پروفایلت برای همیشه حذف بشه؟ این کار برگشت‌ناپذیره.',
-    toast_profile_deleted:'پروفایل حذف شد', toast_delete_fail:'حذف نشد — دوباره امتحان کن',
+    toast_profile_deleted:'پروفایل حذف شد', toast_delete_admin:'این حساب ادمین Workar است و از اینجا حذف نمی‌شود.', toast_delete_fail:'حذف نشد — دوباره امتحان کن',
     admin_tools:'ابزار ادمین', btn_delete_this_profile:'حذف این پروفایل', confirm_delete_other:'این پروفایل برای همیشه حذف بشه؟ این کار برگشت‌ناپذیره.',
     btn_save_admin_edit:'ذخیره تغییرات (ادمین)',
     sec_about:'درباره شما', sec_background:'تحصیلات و مدارک', sec_mentoring:'ترجیحات منتورینگ', sec_links:'لینک‌ها و قیمت',
@@ -6682,13 +6682,21 @@ function wire(){
   const deleteMyBtn = document.getElementById('delete-my-profile');
   if(deleteMyBtn) deleteMyBtn.addEventListener('click', async ()=>{
     if(!confirm(T('confirm_delete_profile'))) return;
+    deleteMyBtn.disabled = true;
     try{
-      await window.__db.doc('profiles/'+uid).delete();
+      const { data } = await sb.auth.getSession(); const tok = data && data.session && data.session.access_token;
+      const r = await fetch('/api/agents', { method:'POST', headers:{ 'Content-Type':'application/json', Authorization:'Bearer '+(tok||'') }, body: JSON.stringify({ task:'delete_account' }) });
+      const j = await r.json().catch(()=>({}));
+      if(r.status===403 && j.error==='admin'){ toast(T('toast_delete_admin'), 7000); deleteMyBtn.disabled = false; return; }
+      if(!r.ok) throw new Error(j.detail || j.error || ('HTTP '+r.status));
       toast(T('toast_profile_deleted'));
-      state.view = 'home';
+      try{ await sb.auth.signOut(); }catch(e){}
+      uid = null; userEmail = null; myProfile = null;
+      state.view = 'home'; render();
     }catch(err){
       console.error('profile delete failed:', err);
       toast(T('toast_delete_fail'));
+      deleteMyBtn.disabled = false;
     }
   });
 

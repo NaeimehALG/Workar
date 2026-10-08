@@ -397,6 +397,21 @@ Write in the same language as the conversation (English if unclear). Plain text 
   return res.status(200).json({ reply: AI.textOf(data).trim() });
 }
 
+// Account deletion: removes the profile and the sign-in account, so the person can't log back in to an empty account.
+async function deleteAccount(req, res) {
+  const me = await M.userFromToken(bearer(req));
+  if (!me) return res.status(401).json({ error: 'Please sign in again.' });
+  const url = process.env.SUPABASE_URL, key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const h = { apikey: key, Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' };
+  const prof = (await M.rows(`profiles?id=eq.${encodeURIComponent(me.id)}&select=isAdmin`))[0];
+  if (prof && prof.isAdmin) return res.status(403).json({ error: 'admin', message: 'This is the Workar admin account, so it cannot be deleted from the site.' });
+  const d = await fetch(`${url}/rest/v1/profiles?id=eq.${encodeURIComponent(me.id)}`, { method: 'DELETE', headers: Object.assign({ Prefer: 'return=minimal' }, h) });
+  if (!d.ok) throw new Error('profile delete ' + d.status + ' ' + await d.text());
+  const u = await fetch(`${url}/auth/v1/admin/users/${encodeURIComponent(me.id)}`, { method: 'DELETE', headers: h });
+  if (!u.ok) throw new Error('auth delete ' + u.status + ' ' + await u.text());
+  return res.status(200).json({ ok: true });
+}
+
 // Public AI tasks (usable without an account) get a per-visitor hourly limit so nobody can run up the AI bill.
 async function overPublicLimit(req, task) {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY, url = process.env.SUPABASE_URL;
@@ -435,6 +450,7 @@ module.exports = async (req, res) => {
       case 'request_note': return await requestNote(req, res, b);
       case 'profile_review': return await profileReview(req, res, b);
       case 'reply_draft': return await replyDraft(req, res, b);
+      case 'delete_account': return await deleteAccount(req, res);
       default: return res.status(400).json({ error: 'Unknown task' });
     }
   } catch (e) {
