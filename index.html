@@ -7339,7 +7339,7 @@ init();
     v.className = 'wkv-video'; v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true;
     v.setAttribute('muted',''); v.setAttribute('playsinline',''); v.setAttribute('preload','auto'); v.setAttribute('aria-hidden','true');
     v.poster = '/hero-v5-poster.jpg';
-    v.innerHTML = '<source src="/hero-v5.webm" type="video/webm"><source src="/hero-v5.mp4" type="video/mp4">';
+    v.innerHTML = '<source src="/hero-v5.webm?v=clean-cuts-1" type="video/webm"><source src="/hero-v5.mp4?v=clean-cuts-1" type="video/mp4">';
     v.addEventListener('playing', ()=>v.classList.add('on'));
     function mount(){
       const slot = document.querySelector('.wkv-slot');
