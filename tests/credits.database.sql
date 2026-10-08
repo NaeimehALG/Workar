@@ -7,7 +7,8 @@ create role service_role;
 create table public.profiles (id text primary key, "aiCredits" integer);
 \ir ../supabase/migrations/202610080001_atomic_ai_credits.sql
 begin;
-insert into public.profiles values ('credit-test', 5), ('null-test', null);
+select set_config('request.jwt.claims','{"role":"service_role"}',true);
+insert into public.profiles (id, "aiCredits") values ('credit-test', 5), ('null-test', null);
 do $$
 declare result jsonb; balance integer;
 begin
@@ -38,7 +39,7 @@ begin
   if exists(select 1 from public.ai_credit_purchases where stripe_session_id='cs_missing') then
     raise exception 'failed purchase left receipt behind';
   end if;
-  insert into public.profiles values ('missing-user', 5);
+  insert into public.profiles (id, "aiCredits") values ('missing-user', 5);
   result := public.grant_ai_credit_purchase('cs_missing', 'missing-user', 20);
   if result->>'applied' <> 'true' then raise exception 'retry blocked after rollback'; end if;
 

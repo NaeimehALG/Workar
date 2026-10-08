@@ -31,8 +31,14 @@ that arrive while a reply is being generated.
 Validation completed: node --test tests/*.test.js, 30 passing tests.
 Webhook tests use a database contract model; they do not execute PostgreSQL.
 tests/credits.database.sql exercises the real migration in a disposable database.
-SQL execution, production schema inspection, historical reconciliation and live
-Stripe replay verification remain pending until Supabase access is connected.
+Supabase connected on 2026-10-08 UTC: production schema inspected and the migration
+applied. Real SQL assertions passed using service-role JWT claims, including duplicate
+receipts, rollback/retry, missing profiles, balance debits and client permissions.
+Six concurrent database calls for one test session produced one grant (5 to 25),
+one receipt and five duplicate acknowledgments. Test fixtures were removed.
+Historical Stripe reconciliation and end-to-end Stripe replay verification remain
+pending Stripe connection; the API branch is still a draft and is not deployed.
 
-This change does not audit existing profile-update policies. Preventing clients
-from editing their own credit balance is a separate required database privacy check.
+The live protect_profile_approval trigger already preserves credit balances on
+non-admin/non-service updates and caps starter credits. Broader RLS policy auditing
+is outside this change.
