@@ -4,8 +4,8 @@ process.env.SUPABASE_URL = String(process.env.SUPABASE_URL || 'https://jgbjhzhbd
 // Environment Variable, never in index.html or any client-side code.
 //
 // Handles three kinds of purchase (set in metadata[kind] by /api/create-checkout):
-//   booking    — marks the mentoring request as paid, creates the private call link,
-//                and emails mentor + client the link with a calendar invite
+//   booking    — marks the mentoring request as paid, records the mentor's share for the automatic
+//                payout, creates the private call link, and emails mentor + client the link with a calendar invite
 //   ai_credits — adds AI coaching messages to the buyer's profile
 //   exam       — unlocks a PMP Prep mock exam (or the all-access pass) for the buyer
 //
@@ -112,6 +112,10 @@ async function handler(req, res) {
             headers: Object.assign({ Prefer: 'return=minimal' }, h),
             body: JSON.stringify({ paid: true, stripeSessionId: session.id })
           });
+          // lock in the mentor's share and remember the Stripe charge for the automatic payout later
+          try {
+            await require('./_payouts').recordPayment(requestId, session);
+          } catch (e) { console.error('payout-record-failed', e); } // the daily payout run can recover the charge
           // private meeting link + confirmation email with calendar invite to BOTH people.
           // Runs once per booking (safe if Stripe re-sends the webhook) and never blocks the payment update.
           try {

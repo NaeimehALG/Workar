@@ -289,9 +289,7 @@ async function digest(rep, ctx, extra) {
   const mentorsLive = Object.values(ctx.profiles || {}).filter(p => p.role === 'mentor').length - waiting;
   const today = reqs.filter(r => r.status === 'accepted' && (r.paid || !(Number(r.amountCents) > 0)) && r.startsAt && Date.parse(r.startsAt) > now && Date.parse(r.startsAt) - now < DAY)
     .sort((a, b) => Date.parse(a.startsAt) - Date.parse(b.startsAt));
-  const share = Number(process.env.MENTOR_SHARE_PCT || 0) || null;
-  const payoutsDue = reqs.filter(r => r.paid && Number(r.sessionsDone) > 0 && !r.payoutDone);
-  const payoutTotal = payoutsDue.reduce((a, r) => a + (Number(r.amountCents) || 0), 0);
+  // Mentor payouts are automatic (api/_payouts.js); only held or failed ones reach this digest, via the cron's problem list.
   const tickets = await M.rows(`support_tickets?status=eq.open&select=id,email,name,summary,urgent,createdAt&order=createdAt.asc&limit=20`);
 
   const h3 = t => `<h3 style="margin:18px 0 8px;font-size:16px;color:#4A3526;">${t}</h3>`;
@@ -310,7 +308,6 @@ async function digest(rep, ctx, extra) {
 
   const needs = rep.needs.slice();
   tickets.forEach(t => needs.unshift({ kind: 'ticket', text: `${t.urgent ? '<b>Urgent</b> ' : ''}Support request from ${M.esc(t.name || t.email)}: ${M.esc(String(t.summary || '').slice(0, 180))} (reply to the email you received when it arrived)` }));
-  if (payoutsDue.length) needs.push({ kind: 'payout', text: `Payouts: ${payoutsDue.length} completed paid booking${payoutsDue.length === 1 ? '' : 's'} (${'$' + (payoutTotal / 100).toFixed(2)} paid by clients${share ? `, mentors' ${share}% share` : ''}). Pay the mentors, then press “Mark paid out” in the admin panel.` });
   if (memoryOk === false) needs.unshift({ kind: 'setup', text: '<b>Setup needed:</b> the agent_events table is missing, so the automatic emails are paused (to avoid sending anything twice). Run the SQL in AUTOPILOT-SETUP.txt once in Supabase.' });
   rep.errors.forEach(e => needs.push({ kind: 'error', text: M.esc(e) }));
   (extra || []).forEach(e => needs.push({ kind: 'error', text: M.esc(e) }));

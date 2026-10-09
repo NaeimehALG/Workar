@@ -1797,6 +1797,14 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .dh-av-up:hover .dh-av-cam{transform:scale(1.08);}
   /* earnings v3 */
   .earn-head h2{font-size:20px;}
+  .po{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin:0 0 14px;padding:16px 20px;border:1px solid var(--border);border-radius:16px;background:var(--surface);}
+  .po.attn{border-color:color-mix(in srgb, var(--accent) 45%, var(--border));background:color-mix(in srgb, var(--accent) 6%, var(--surface));}
+  .po-txt{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1 1 260px;}
+  .po-txt b{font-size:15px;color:var(--text);}
+  .po-txt span{font-size:13px;color:var(--muted);line-height:1.45;}
+  .po-act{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+  .po-act select{padding:8px 10px;border:1px solid var(--border);border-radius:10px;background:var(--surface-2);color:var(--text);font:inherit;font-size:13px;max-width:200px;}
+  .po-ok{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:color-mix(in srgb, #3E8E5A 16%, transparent);color:#3E8E5A;font-size:13px;font-weight:700;margin-inline-end:8px;flex:none;}
   .ew{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.3fr);border:1px solid color-mix(in srgb, var(--border) 85%, transparent);border-radius:20px;background:var(--surface);overflow:hidden;box-shadow:0 1px 2px rgba(60,40,25,.04),0 12px 32px -22px rgba(60,40,25,.22);}
   .ew-hero{padding:26px 28px;display:flex;flex-direction:column;gap:6px;background:radial-gradient(120% 120% at 0% 0%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 60%), var(--surface);border-inline-end:1px solid var(--border);}
   .ew-k{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);}
@@ -1992,10 +2000,11 @@ const I18N = {
     offline_notice:'General tips (not personalized AI feedback):',
     lbl_price_usd:'Price to charge via card (USD)', price_usd_hint:'e.g. 40 — leave blank for free sessions',
     pay_to_confirm:'Pay ${amount} to confirm', waiting_for_payment:'Waiting for client payment…',
-    earn_title:'Your earnings', earn_note:'You keep {p}% of every paid booking. Workar sends payouts to you directly.', earn_total:'Earned', earn_paid:'Paid to you', earn_owed:'Owed to you',
+    earn_title:'Your earnings', earn_note:'You keep {p}% of every paid booking. It is sent to your bank automatically 2 days after the session.', earn_total:'Earned', earn_paid:'Paid to you', earn_owed:'Owed to you',
     sess_progress_m:'{d} of {t} sessions done', sess_progress_c:'{l} of {t} sessions left', sess_all_done:'All sessions done', sess_mark:'Mark a session done', sess_mark_one:'Mark session done', sess_completed:'Completed', sess_saved:'Session recorded', sess_fail:'Could not save — check that the payouts SQL has been run',
-    adm_share:'Mentor share (%)', adm_share_hint:'The part of each booking that goes to the mentor. Workar keeps the rest.',
-    pay_title:'Mentor payouts', pay_hint:'Every paid booking, grouped by mentor. After you send a mentor their money (e-Transfer, PayPal…), mark it as paid here.', pay_loading:'Loading payouts…', pay_error:'Could not load payouts — check that the payouts SQL has been run.', pay_none:'No paid bookings yet.', pay_tot_owed:'Owed to mentors', pay_tot_keep:'Workar keeps',
+    po_waiting:'You have {a} waiting', po_waiting_sub:'Add your bank details once and Workar sends your share automatically. It takes about 5 minutes.', po_later:'Get paid automatically', po_later_sub:'Before your first payout, add your bank details once. It takes about 5 minutes.', po_country:'Country of your bank account', po_btn_start:'Add bank details', po_btn_continue:'Finish bank setup', po_needs_info:'Finish your bank setup', po_needs_info_sub:'Stripe needs a few more details before it can pay you.', po_on:'Payouts are on', po_on_sub:'Your share is sent to your bank automatically 2 days after each session.', po_btn_dash:'Payout details', po_secure:'Bank details are handled securely by Stripe, our payment partner. Workar never sees them.', po_done_toast:'Your bank details are saved. Payouts are on.', po_pending_toast:'Almost there. Stripe still needs a few details.', po_err:'Bank setup is not available right now. Please try again later.', po_err_country:'Payouts to this country are not supported yet. Please contact support.', po_opening:'Opening Stripe…',
+    adm_share:'Mentor share (%)', adm_share_hint:'The part of each booking that goes to the mentor. Workar keeps the rest. A change applies to new bookings only.',
+    pay_title:'Mentor payouts', pay_hint:'Mentors are paid automatically through Stripe 2 days after each session, once they have added their bank details. Use “Mark as paid” only if you paid someone yourself outside Stripe.', pay_c_bank:'Bank', pay_bank_on:'Automatic', pay_bank_off:'Not set up', pay_held:'On hold', pay_loading:'Loading payouts…', pay_error:'Could not load payouts — check that the payouts SQL has been run.', pay_none:'No paid bookings yet.', pay_tot_owed:'Owed to mentors', pay_tot_keep:'Workar keeps',
     pay_c_mentor:'Mentor', pay_c_n:'Paid bookings', pay_c_collected:'Collected', pay_c_share:'Mentor share', pay_c_owed:'Owed now', pay_mark:'Mark as paid', pay_settled:'Settled', pay_confirm:'Record that you paid {a} to {n}?', pay_done:'Payout recorded', pay_fail:'Could not record the payout — check that the payouts SQL has been run',
     auth_side_h:'Every step of your career, with someone who knows the way.', auth_side_p:'From a stronger resume to a confident interview to the offer, your mentor walks each step with you.', map_you:'You', map_1:'Resume', map_2:'Interview', map_3:'Offer', map_goal:'Next role', auth_f1_t:'Experienced professionals', auth_f1_s:'Real experience in the roles you are targeting.', auth_f2_t:'Structured sessions', auth_f2_s:'45-minute video or voice sessions, arranged by message.', auth_f3_t:'Secure payment', auth_f3_s:'Charged only after your mentor confirms.', auth_pt1:'Book a 45-minute video or voice session in a few clicks', auth_pt2:'Chat with your mentor before you meet', auth_pt3:'Pay only after your mentor says yes', auth_tab_signup:'Sign up', auth_h_login:'Welcome back', auth_h_signup:'Create your account', auth_sub_login:'Log in to manage your sessions and messages.', auth_sub_signup:'Create your account with an email and password. You will set up your profile next.', auth_forgot_h:'Reset your password', auth_fine_login:'New to Workar? Choose Sign up above.', auth_fine_signup:'Free to join — no card needed.', pw_show:'Show password', pw_hide:'Hide password',
     ob_sub:'Tell us who you are. It takes about two minutes and you can change everything later.', ob_s_about:'About you', ob_preview:'How clients will see you', ob_preview_note:'This card appears in Find a mentor. A clear headline and a bio written to a mentee get the most bookings.', ob_pv_name:'Your name', ob_pv_head:'Your title and company', ob_pv_bio:'Your bio will appear here.', ob_next:'What happens next', ob_next1_t:'Finish your profile', ob_next1_s:'So your mentor knows where you are and where you want to go.', ob_next2_t:'Pick a mentor and a time', ob_next2_s:'Choose a package and a slot that suits you.', ob_next3_t:'Meet on Workar', ob_next3_s:'Once the mentor accepts, join by video or voice right here.', ob_submit_book:'Save and pick a time',
@@ -2391,10 +2400,11 @@ const I18N = {
     offline_notice:'نکات کلی (نه فیدبک اختصاصی هوش مصنوعی):',
     lbl_price_usd:'مبلغ پرداخت با کارت (دلار)', price_usd_hint:'مثلاً ۴۰؛ برای جلسه‌ی رایگان خالی بگذارید',
     pay_to_confirm:'پرداخت ${amount} دلار برای تأیید', waiting_for_payment:'منتظر پرداخت مراجع…',
-    earn_title:'درآمد شما', earn_note:'{p}٪ از هر رزرو پرداخت‌شده سهم شماست و Workar آن را مستقیم به شما پرداخت می‌کند.', earn_total:'کل درآمد', earn_paid:'پرداخت‌شده به شما', earn_owed:'طلب شما',
+    earn_title:'درآمد شما', earn_note:'{p}٪ از هر رزرو پرداخت‌شده سهم شماست و ۲ روز بعد از جلسه خودکار به حساب بانکی‌تان واریز می‌شود.', earn_total:'کل درآمد', earn_paid:'پرداخت‌شده به شما', earn_owed:'طلب شما',
     sess_progress_m:'{d} از {t} جلسه برگزار شد', sess_progress_c:'{l} از {t} جلسه باقی مانده', sess_all_done:'همه‌ی جلسات برگزار شد', sess_mark:'ثبت برگزاری یک جلسه', sess_mark_one:'ثبت برگزاری جلسه', sess_completed:'تمام‌شده', sess_saved:'جلسه ثبت شد', sess_fail:'ذخیره نشد؛ مطمئن شوید SQL پرداخت منتورها اجرا شده است',
-    adm_share:'سهم منتور (٪)', adm_share_hint:'سهمی از هر رزرو که به منتور می‌رسد. بقیه سهم Workar است.',
-    pay_title:'پرداخت به منتورها', pay_hint:'همه‌ی رزروهای پرداخت‌شده به تفکیک منتور. بعد از اینکه پول منتور را فرستادید (ای‌ترانسفر، PayPal و…)، اینجا ثبتش کنید.', pay_loading:'در حال بارگذاری…', pay_error:'بارگذاری نشد؛ مطمئن شوید SQL پرداخت منتورها اجرا شده است.', pay_none:'هنوز رزرو پرداخت‌شده‌ای نیست.', pay_tot_owed:'بدهی به منتورها', pay_tot_keep:'سهم Workar',
+    po_waiting:'{a} منتظر واریز به شماست', po_waiting_sub:'یک بار اطلاعات بانکی‌تان را وارد کنید تا Workar سهمتان را خودکار بفرستد. حدود ۵ دقیقه طول می‌کشد.', po_later:'دریافت خودکار درآمد', po_later_sub:'قبل از اولین واریز، یک بار اطلاعات بانکی‌تان را وارد کنید. حدود ۵ دقیقه طول می‌کشد.', po_country:'کشور حساب بانکی', po_btn_start:'افزودن حساب بانکی', po_btn_continue:'تکمیل اطلاعات بانکی', po_needs_info:'اطلاعات بانکی‌تان را کامل کنید', po_needs_info_sub:'Stripe قبل از واریز به چند اطلاعات دیگر نیاز دارد.', po_on:'واریز خودکار فعال است', po_on_sub:'سهم شما ۲ روز بعد از هر جلسه خودکار به حساب بانکی‌تان واریز می‌شود.', po_btn_dash:'جزئیات واریزها', po_secure:'اطلاعات بانکی به‌صورت امن نزد Stripe، شریک پرداخت ما، نگهداری می‌شود و Workar آن را نمی‌بیند.', po_done_toast:'اطلاعات بانکی‌تان ثبت شد. واریز خودکار فعال است.', po_pending_toast:'تقریباً تمام است. Stripe هنوز به چند اطلاعات دیگر نیاز دارد.', po_err:'الان امکان ثبت حساب بانکی نیست. لطفاً بعداً دوباره امتحان کنید.', po_err_country:'واریز به این کشور هنوز پشتیبانی نمی‌شود. لطفاً با پشتیبانی تماس بگیرید.', po_opening:'در حال باز کردن Stripe…',
+    adm_share:'سهم منتور (٪)', adm_share_hint:'سهمی از هر رزرو که به منتور می‌رسد. بقیه سهم Workar است. تغییر فقط روی رزروهای جدید اعمال می‌شود.',
+    pay_title:'پرداخت به منتورها', pay_hint:'سهم منتورها ۲ روز بعد از هر جلسه خودکار از طریق Stripe واریز می‌شود، به شرطی که اطلاعات بانکی‌شان را وارد کرده باشند. «ثبت پرداخت» را فقط وقتی بزنید که خودتان بیرون از Stripe به کسی پول داده‌اید.', pay_c_bank:'حساب بانکی', pay_bank_on:'خودکار', pay_bank_off:'ثبت نشده', pay_held:'متوقف', pay_loading:'در حال بارگذاری…', pay_error:'بارگذاری نشد؛ مطمئن شوید SQL پرداخت منتورها اجرا شده است.', pay_none:'هنوز رزرو پرداخت‌شده‌ای نیست.', pay_tot_owed:'بدهی به منتورها', pay_tot_keep:'سهم Workar',
     pay_c_mentor:'منتور', pay_c_n:'رزروهای پرداخت‌شده', pay_c_collected:'دریافتی', pay_c_share:'سهم منتور', pay_c_owed:'بدهی فعلی', pay_mark:'ثبت پرداخت', pay_settled:'تسویه‌شده', pay_confirm:'ثبت شود که {a} به {n} پرداخت کرده‌اید؟', pay_done:'پرداخت ثبت شد', pay_fail:'ثبت نشد؛ مطمئن شوید SQL پرداخت منتورها اجرا شده است',
     auth_side_h:'هر قدم مسیر شغلی‌تان، کنار کسی که راه را می‌شناسد.', auth_side_p:'از رزومه‌ای قوی‌تر تا مصاحبه‌ای مطمئن و پیشنهاد کاری، منتورتان در هر قدم کنار شماست.', map_you:'شما', map_1:'رزومه', map_2:'مصاحبه', map_3:'پیشنهاد کاری', map_goal:'شغل بعدی', auth_f1_t:'متخصصان باتجربه', auth_f1_s:'تجربه‌ی واقعی در نقش‌هایی که هدف شماست.', auth_f2_t:'جلسات ساختارمند', auth_f2_s:'جلسه‌های ۴۵ دقیقه‌ای تصویری یا صوتی، با هماهنگی از طریق پیام.', auth_f3_t:'پرداخت امن', auth_f3_s:'پرداخت فقط بعد از تأیید منتور.', auth_pt1:'با چند کلیک یک جلسه‌ی ۴۵ دقیقه‌ای تصویری یا صوتی رزرو کنید', auth_pt2:'قبل از جلسه به منتورتان پیام بدهید', auth_pt3:'فقط بعد از تأیید منتور پرداخت می‌کنید', auth_tab_signup:'ثبت‌نام', auth_h_login:'خوشحالیم که برگشتید', auth_h_signup:'حسابتان را بسازید', auth_sub_login:'برای مدیریت جلسه‌ها و پیام‌هایتان وارد شوید.', auth_sub_signup:'با ایمیل و رمز عبور حساب بسازید. در قدم بعد پروفایلتان را کامل می‌کنید.', auth_forgot_h:'بازیابی رمز عبور', auth_fine_login:'تازه وارد هستید؟ بالای صفحه «ثبت‌نام» را بزنید.', auth_fine_signup:'عضویت رایگان است و کارت بانکی لازم نیست.', pw_show:'نمایش رمز', pw_hide:'پنهان کردن رمز',
     ob_sub:'خودتان را معرفی کنید. حدود دو دقیقه طول می‌کشد و بعداً می‌توانید همه‌چیز را تغییر دهید.', ob_s_about:'درباره‌ی شما', ob_preview:'مراجعان شما را این‌طور می‌بینند', ob_preview_note:'این کارت در صفحه‌ی پیدا کردن منتور نمایش داده می‌شود. عنوانی واضح و معرفی‌ای که خطاب به مراجع نوشته شده باشد، بیشترین رزرو را می‌گیرد.', ob_pv_name:'نام شما', ob_pv_head:'عنوان شغلی و شرکت', ob_pv_bio:'معرفی شما اینجا نمایش داده می‌شود.', ob_next:'قدم‌های بعدی', ob_next1_t:'پروفایلتان را کامل کنید', ob_next1_s:'تا منتور بداند الان کجا هستید و می‌خواهید به کجا برسید.', ob_next2_t:'منتور و زمان را انتخاب کنید', ob_next2_s:'پکیج و زمانی را که برایتان مناسب است انتخاب کنید.', ob_next3_t:'جلسه را در Workar برگزار کنید', ob_next3_s:'بعد از تأیید منتور، همین‌جا با تماس تصویری یا صوتی وصل شوید.', ob_submit_book:'ذخیره و انتخاب زمان',
@@ -3063,6 +3073,8 @@ function onSignedIn(session){
     history.replaceState({}, '', location.origin + location.pathname);
   } else if(params.get('payment')==='cancelled'){
     history.replaceState({}, '', location.origin + location.pathname);
+  } else if(['done','refresh'].includes(params.get('payouts')) && uid){
+    handlePayoutReturn(params.get('payouts'));
   }
 }
 
@@ -3347,7 +3359,7 @@ async function insertSafe(table, row){
     throw error;
   }
 }
-function mentorSharePct(){ const v = Number(siteSettings && siteSettings.mentorShare); return (v>0 && v<=100) ? v : 75; }
+function mentorSharePct(){ const v = Number(siteSettings && siteSettings.mentorShare); return (v>0 && v<=100) ? v : 70; }
 function reqSessionsTotal(r){ const pk = getPackages().find(x=>x.key===r.packageKey) || DEFAULT_PACKAGES.find(x=>x.key===r.packageKey); return Math.max(1, Number(r.sessions) || (pk ? pk.sessions : 1)); }
 function reqIsActive(r){ return r.status==='accepted' && (!r.amountCents || r.paid); }
 function reqMentorCents(r){ return Math.round((Number(r.amountCents)||0) * mentorSharePct() / 100); }
@@ -3553,7 +3565,8 @@ function adminView(){
         const share = list.reduce((a,r)=>a+reqMentorCents(r),0);
         const dueList = list.filter(r=>!r.payoutDone);
         const owed = dueList.reduce((a,r)=>a+reqMentorCents(r),0);
-        return { id, name:nameOf(id), n:list.length, collected, share, owed, ids: dueList.map(r=>r.id) }; }).sort((a,b)=>b.owed-a.owed);
+        const held = dueList.filter(r=>r.payoutError).map(r=>r.payoutError);
+        return { id, name:nameOf(id), n:list.length, collected, share, owed, ids: dueList.map(r=>r.id), bank: !!(state.payoutBanks||{})[id], held }; }).sort((a,b)=>b.owed-a.owed);
       if(!rows.length) return `<div class="empty">${esc(T('pay_none'))}</div>`;
       const totOwed = rows.reduce((a,r)=>a+r.owed,0), totKeep = rows.reduce((a,r)=>a+r.collected-r.share,0);
       return `<div class="earn-row" style="margin-bottom:16px;">
@@ -3561,10 +3574,11 @@ function adminView(){
           <div><span>${esc(T('pay_tot_keep'))}</span><b>${fmtMoney(totKeep)}</b></div>
         </div>
         <div style="overflow-x:auto;"><table class="pay-t">
-        <thead><tr><th>${esc(T('pay_c_mentor'))}</th><th>${esc(T('pay_c_n'))}</th><th>${esc(T('pay_c_collected'))}</th><th>${esc(T('pay_c_share'))}</th><th>${esc(T('pay_c_owed'))}</th><th></th></tr></thead>
+        <thead><tr><th>${esc(T('pay_c_mentor'))}</th><th>${esc(T('pay_c_n'))}</th><th>${esc(T('pay_c_collected'))}</th><th>${esc(T('pay_c_share'))}</th><th>${esc(T('pay_c_owed'))}</th><th>${esc(T('pay_c_bank'))}</th><th></th></tr></thead>
         <tbody>${rows.map(r=>`<tr>
           <td><b>${esc(r.name)}</b></td><td>${r.n}</td><td>${fmtMoney(r.collected)}</td><td>${fmtMoney(r.share)}</td>
-          <td class="${r.owed?'owe':''}">${fmtMoney(r.owed)}</td>
+          <td class="${r.owed?'owe':''}">${fmtMoney(r.owed)}${r.held.length ? `<div class="muted" style="font-size:11.5px;" title="${esc(r.held.join(' · '))}">${esc(T('pay_held'))}: ${esc(r.held[0])}</div>` : ''}</td>
+          <td><span class="muted" style="font-size:12.5px;">${esc(T(r.bank?'pay_bank_on':'pay_bank_off'))}</span></td>
           <td>${r.owed ? `<button class="btn btn-sm btn-outline" data-payout="${esc(r.ids.join(','))}" data-name="${esc(r.name)}" data-amt="${fmtMoney(r.owed)}">${esc(T('pay_mark'))}</button>` : `<span class="muted" style="font-size:12.5px;">${esc(T('pay_settled'))}</span>`}</td>
         </tr>`).join('')}</tbody></table></div>`; })()}
   </div>
@@ -3592,6 +3606,7 @@ async function loadPayouts(){
   if(!sb) { state.payouts = 'error'; return; }
   const { data, error } = await sb.from('requests').select('*').eq('paid', true);
   state.payouts = error ? 'error' : (data||[]).filter(r=>Number(r.amountCents)>0);
+  try{ const acc = await sb.from('mentor_payout_accounts').select('mentorId,payoutsEnabled'); state.payoutBanks = {}; (acc.data||[]).forEach(a=>{ state.payoutBanks[a.mentorId] = !!a.payoutsEnabled; }); }catch(e){ state.payoutBanks = {}; }
   if(state.view==='admin') render();
 }
 async function loadApps(){
@@ -3639,7 +3654,7 @@ function wireAdmin(){
       });
     });
     const shEl = document.getElementById('adm-share');
-    const mentorShare = shEl ? Math.min(100, Math.max(1, Math.round(Number(shEl.value)||75))) : mentorSharePct();
+    const mentorShare = shEl ? Math.min(100, Math.max(1, Math.round(Number(shEl.value)||70))) : mentorSharePct();
     return { packages, text, mentorShare };
   };
   const persist = async (data, msg)=>{
@@ -6409,6 +6424,7 @@ function dashboardView(){
       const out = paidR.filter(r=>r.payoutDone).reduce((a,r)=>a+reqMentorCents(r),0);
       return `<div class="earn">
         <div class="earn-head"><h2>${esc(T('earn_title'))}</h2><span class="muted">${esc(T('earn_note').replace('{p}', mentorSharePct()))}</span></div>
+        ${payoutCardHtml(earned - out)}
         ${(()=>{ const wait = myReqs.filter(r=>!r.paid && r.amountCents>0 && reqStage(r)>=1 && reqStage(r)<3).reduce((a,r)=>a+reqMentorCents(r),0);
           const owed = earned-out, tot = out + owed + wait, pc = v => tot ? Math.max(v ? 2 : 0, Math.round(v/tot*100)) : 0;
           return `<div class="ew">
@@ -6479,7 +6495,74 @@ function coachView(){
   </div>${state.coachMode==='interview' ? `<button class="btn btn-ghost btn-sm" id="end-interview" style="margin-top:12px;">${esc(T('restart_interview'))}</button>` : ''}`}`;
 }
 
+/* ---------- mentor payouts (Stripe Connect) ---------- */
+const PAYOUT_COUNTRIES = [['CA','Canada'],['US','United States'],['GB','United Kingdom'],['AU','Australia'],['NZ','New Zealand'],['IE','Ireland'],['DE','Germany'],['FR','France'],['NL','Netherlands'],['BE','Belgium'],['AT','Austria'],['CH','Switzerland'],['ES','Spain'],['IT','Italy'],['PT','Portugal'],['SE','Sweden'],['DK','Denmark'],['NO','Norway'],['FI','Finland'],['AE','United Arab Emirates'],['SG','Singapore']];
+async function loadPayoutAcct(){
+  if(!sb || !uid) return;
+  try{
+    const { data, error } = await sb.from('mentor_payout_accounts').select('*').eq('mentorId', uid).maybeSingle();
+    state.payoutAcct = error ? null : (data || null); state.payoutAcctFor = uid;
+  }catch(e){ state.payoutAcct = null; }
+  state.payoutAcctFor = uid;
+  if(state.view==='dashboard') render();
+}
+async function payoutsApi(action, extra){
+  const res = await fetch('/api/payouts', { method:'POST', headers: await checkoutHeaders(), body: JSON.stringify(Object.assign({ action }, extra||{})) });
+  let data = {}; try{ data = await res.json(); }catch(e){}
+  if(!res.ok) throw Object.assign(new Error(data.error || 'payouts-failed'), { code: data.error });
+  return data;
+}
+function payoutCardHtml(owedCents){
+  const a = state.payoutAcctFor===uid ? state.payoutAcct : undefined;
+  if(a === undefined) return '';
+  if(a && a.payoutsEnabled) return `<div class="po"><div class="po-txt"><b><span class="po-ok" aria-hidden="true">✓</span>${esc(T('po_on'))}</b><span>${esc(T('po_on_sub'))}</span></div>
+    <div class="po-act"><button class="btn btn-sm btn-outline" id="po-dash">${esc(T('po_btn_dash'))}</button></div></div>`;
+  if(a) return `<div class="po attn"><div class="po-txt"><b>${esc(T('po_needs_info'))}</b><span>${esc(T('po_needs_info_sub'))}</span></div>
+    <div class="po-act"><button class="btn btn-sm btn-primary" id="po-start">${esc(T('po_btn_continue'))}</button></div></div>`;
+  const tzGuess = (()=>{ const z = (myProfile && myProfile.timezone) || ''; return /^America\/(New_York|Chicago|Denver|Los_Angeles|Phoenix|Anchorage)/.test(z) ? 'US' : /^Europe\/London/.test(z) ? 'GB' : /^Australia\//.test(z) ? 'AU' : 'CA'; })();
+  return `<div class="po ${owedCents>0?'attn':''}"><div class="po-txt"><b>${esc(owedCents>0 ? T('po_waiting').replace('{a}', fmtMoney(owedCents)) : T('po_later'))}</b><span>${esc(owedCents>0 ? T('po_waiting_sub') : T('po_later_sub'))} ${esc(T('po_secure'))}</span></div>
+    <div class="po-act"><select id="po-country" aria-label="${esc(T('po_country'))}">${PAYOUT_COUNTRIES.map(([c,n])=>`<option value="${c}" ${c===tzGuess?'selected':''}>${esc(n)}</option>`).join('')}</select>
+    <button class="btn btn-sm ${owedCents>0?'btn-primary':'btn-outline'}" id="po-start">${esc(T('po_btn_start'))}</button></div></div>`;
+}
+function payoutErrText(e){ return (e && e.code)==='country-not-supported' ? T('po_err_country') : T('po_err'); }
+async function startPayoutSetup(country){
+  toast(T('po_opening'));
+  const { url } = await payoutsApi('start', country ? { country } : {});
+  if(url) location.href = url;
+}
+function wirePayouts(){
+  if((state.payoutAcct === undefined || state.payoutAcctFor !== uid) && uid && !state.payoutAcctLoading && myProfile && myProfile.role==='mentor'){
+    state.payoutAcctLoading = true; loadPayoutAcct().finally(()=>{ state.payoutAcctLoading = false; });
+  }
+  const start = document.getElementById('po-start');
+  if(start) start.addEventListener('click', async ()=>{
+    start.disabled = true;
+    const c = document.getElementById('po-country');
+    try{ await startPayoutSetup(c ? c.value : null); }
+    catch(e){ start.disabled = false; toast(payoutErrText(e), 6000); }
+  });
+  const dash = document.getElementById('po-dash');
+  if(dash) dash.addEventListener('click', async ()=>{
+    dash.disabled = true;
+    try{ const { url } = await payoutsApi('dashboard'); if(url) window.open(url, '_blank', 'noopener'); }
+    catch(e){ toast(T('po_err'), 6000); }
+    dash.disabled = false;
+  });
+}
+// Coming back from Stripe's bank-setup page
+async function handlePayoutReturn(kind){
+  history.replaceState({}, '', location.origin + location.pathname);
+  state.view = 'dashboard';
+  if(kind === 'refresh'){ try{ await startPayoutSetup(); }catch(e){ toast(payoutErrText(e), 6000); } return; }
+  try{
+    const st = await payoutsApi('status');
+    toast(st.enabled ? T('po_done_toast') : T('po_pending_toast'), 5000);
+  }catch(e){ toast(T('po_err'), 6000); }
+  state.payoutAcct = undefined; render();
+}
+
 function wire(){
+  wirePayouts();
   document.querySelectorAll('[data-nav]').forEach(node=>{
     node.addEventListener('click', ()=>{
       const view = node.getAttribute('data-nav');

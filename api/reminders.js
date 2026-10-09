@@ -3,7 +3,8 @@ process.env.SUPABASE_URL = String(process.env.SUPABASE_URL || 'https://jgbjhzhbd
 //  1. Session reminders for the next ~30 hours, with the call link, an AI prep brief for the mentor
 //     and AI prep tips for the client.
 //  2. Re-engagement: one friendly nudge to book again, 7-30 days after a finished booking.
-//  3. Autopilot (api/_autopilot.js): handles applications, stuck bookings, reviews and sign-ups by itself,
+//  3. Mentor payouts: sends each mentor their share 2 days after the session (api/_payouts.js).
+//  4. Autopilot (api/_autopilot.js): handles applications, stuck bookings, reviews and sign-ups by itself,
 //     then emails the admin a daily digest of what it did and what still needs her.
 // Protected with CRON_SECRET (Vercel sends it automatically when the env variable is set).
 const M = require('./_mail');
@@ -89,12 +90,39 @@ async function reengage() {
   return { nudged: sent };
 }
 
+// ---------- Mentor payouts (Stripe Connect) ----------
+const P = require('./_payouts');
+const usd = c => '$' + (Number(c || 0) / 100).toFixed(2);
+async function payoutMail(kind, r, cents) {
+  const client = await M.profile(r.clientId);
+  const to = await M.emailOf(r.mentorId);
+  if (!to) return;
+  if (kind === 'paid') {
+    await M.sendMail(to, `You've been paid ${usd(cents)} for your Workar session`,
+      M.layout('Your payout is on its way', [
+        `Your share for the session with <b>${M.esc(client.name)}</b> (<b>${usd(cents)}</b>) has been sent to your bank account.`,
+        `It usually arrives within a few business days. You can see every payout in your Workar earnings.`
+      ], { text: 'See your earnings', url: M.SITE() + '/?go=dashboard' }));
+  } else {
+    await M.sendMail(to, `You have ${usd(cents)} waiting on Workar`,
+      M.layout('Add your bank details to get paid', [
+        `Your share for the session with <b>${M.esc(client.name)}</b> (<b>${usd(cents)}</b>) is ready to be paid.`,
+        `Add your bank details once, through Stripe, our payment partner. It takes about 5 minutes, and after that every payout is sent to you automatically.`
+      ], { text: 'Add my bank details', url: M.SITE() + '/?go=dashboard' }));
+  }
+}
+
 module.exports = async (req, res) => {
   const secret = process.env.CRON_SECRET;
   if (secret && req.headers.authorization !== 'Bearer ' + secret) { res.status(401).end(); return; }
   const out = {}, problems = [];
   try { Object.assign(out, await sessionReminders()); } catch (e) { console.error('reminders-failed', e); problems.push('Session reminders failed: ' + (e.message || e)); }
   try { Object.assign(out, await reengage()); } catch (e) { console.error('reengage-failed', e); problems.push('Re-engagement emails failed: ' + (e.message || e)); }
+  try {
+    const p = await P.releaseDue({ sendMail: payoutMail });
+    out.payoutsSent = p.paidOut; out.payoutsSentCents = p.paidOutCents; out.payoutsWaitingForBank = p.waitingForBank.length;
+    problems.push(...p.problems);
+  } catch (e) { console.error('payouts-failed', e); problems.push('Mentor payouts failed: ' + (e.message || e)); }
   // Autopilot agents + the daily digest to the admin (always sent, even on a quiet day)
   try { Object.assign(out, await require('./_autopilot').run(problems)); } catch (e) { console.error('autopilot-failed', e); out.autopilotError = String(e.message || e); }
   res.status(200).json(out);
