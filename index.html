@@ -2036,6 +2036,7 @@ const I18N = {
     apps_title:'Mentor applications', apps_hint:'New mentor profiles stay hidden until you approve them. The mentor gets an email when approved.', apps_none:'No applications waiting.', apps_error:'Could not load applications — run the latest Workar SQL.', apps_approve:'Approve', apps_view:'View profile', apps_done:'Mentor approved', apps_fail:'Could not approve — run the latest Workar SQL.',
     voice_test:'🔊 Test voice', voice_testing:'Testing the voice…', voice_test_line:'Hi! I\'m your Workar interviewer. Can you hear me clearly?', voice_tap_replay:'Tap Replay to hear the answer.', ve_natural:'Natural voice ✓', ve_device:'Device voice', ve_credit:'Natural voice: your OpenAI account has no credit. Add it at platform.openai.com → Billing.', ve_nokey:'Device voice — OpenAI key missing', ve_nofile:'Device voice — api/tts.js not found', ve_signin:'Device voice — please sign in', ve_error:'Device voice — natural voice error', ve_blocked:'Phone blocked audio — tap Replay', join_call:'Join video/voice call', paid_badge:'Paid',
     toast_payment_fail:'Could not start payment — try again',
+    pay_fail_activate_admin:'Stripe is not taking real payments yet: finish activating your Stripe account, then try again.', pay_fail_not_open:'Payments are not open yet. Please try again a little later.', pay_fail_not_accepted:'The mentor has not accepted this request yet.', pay_fail_already:'This booking is already paid.', pay_fail_signin:'Please sign in again, then pay.',
     toast_payment_success:'Payment received — booking confirmed!',
     lbl_availability:'Weekly availability', availability_hint:'Check the times you\'re usually free — clients will only be able to request these slots.',
     day_sat:'Sat', day_sun:'Sun', day_mon:'Mon', day_tue:'Tue', day_wed:'Wed', day_thu:'Thu', day_fri:'Fri',
@@ -2104,7 +2105,7 @@ const I18N = {
     rt_kicker:"Your career path",
     sd_strength:'Profile strength', sd_strength_m:'Complete profiles get noticeably more bookings.', sd_strength_c:'A complete profile helps mentors prepare for you.', sd_done:'Your profile is complete.', sd_add:'Add', sd_i_title:'Job title', sd_i_bio:'About', sd_i_skills:'Skills', sd_i_edu:'Education', sd_i_lang:'Languages', sd_i_li:'LinkedIn', sd_i_avail:'Availability', sd_i_goals:'Goals', sd_i_cert:'Certifications', sd_msgs:'Messages', sd_all:'See all messages', sd_none:'No conversations yet.', sd_find:'Find a mentor',
     ib_ai:'Suggest a reply', earn_wait:'Awaiting payment', earn_tx_client:'Client', earn_tx_date:'Date', earn_tx_paid:'Paid', earn_tx_share:'Your share', earn_tx_out:'Paid out', earn_tx_due:'Due',
-    nav_messages:'Messages', msg_btn:'Message', inbox_search:'Search messages', inbox_empty:'No conversations yet. Message a mentor or book a session to start one.',
+    nav_requests:'Requests', nav_messages:'Messages', msg_btn:'Message', inbox_search:'Search messages', inbox_empty:'No conversations yet. Message a mentor or book a session to start one.',
     inbox_pick:'Choose a conversation to read it here.', inbox_ph:'Write a message…', inbox_send:'Send', inbox_you:'You',
     inbox_voice:'Voice call', inbox_video:'Video call', inbox_calls_locked:'Voice and video calls open once a session is booked and confirmed.',
     inbox_profile:'View profile', inbox_mark_unread:'Mark as unread', inbox_delete_conv:'Delete conversation', inbox_deleted_conv:'Conversation removed from your inbox',
@@ -2436,6 +2437,7 @@ const I18N = {
     apps_title:'درخواست‌های منتوری', apps_hint:'پروفایل منتورهای جدید تا تأیید شما پنهان می‌ماند. بعد از تأیید، به منتور ایمیل فرستاده می‌شود.', apps_none:'درخواستی در انتظار نیست.', apps_error:'بارگذاری نشد؛ SQL جدید Workar را اجرا کنید.', apps_approve:'تأیید', apps_view:'دیدن پروفایل', apps_done:'منتور تأیید شد', apps_fail:'تأیید نشد؛ SQL جدید Workar را اجرا کنید.',
     voice_test:'🔊 تست صدا', voice_testing:'در حال تست صدا…', voice_test_line:'سلام! من مصاحبه‌گر Workar هستم. صدای من را واضح می‌شنوید؟', voice_tap_replay:'برای شنیدن جواب، دکمه‌ی «پخش دوباره» را بزنید.', ve_natural:'صدای طبیعی ✓', ve_device:'صدای دستگاه', ve_credit:'صدای طبیعی: حساب OpenAI اعتبار ندارد. از platform.openai.com → Billing شارژ کنید.', ve_nokey:'صدای دستگاه — کلید OpenAI تنظیم نشده', ve_nofile:'صدای دستگاه — فایل api/tts.js پیدا نشد', ve_signin:'صدای دستگاه — وارد حساب شوید', ve_error:'صدای دستگاه — خطای صدای طبیعی', ve_blocked:'گوشی صدا را مسدود کرد؛ «پخش دوباره» را بزنید', join_call:'ورود به تماس تصویری/صوتی', paid_badge:'پرداخت‌شده',
     toast_payment_fail:'پرداخت شروع نشد؛ دوباره امتحان کنید',
+    pay_fail_activate_admin:'Stripe هنوز پرداخت واقعی نمی‌گیرد: فعال‌سازی حساب Stripe را کامل کنید و دوباره امتحان کنید.', pay_fail_not_open:'پرداخت هنوز باز نشده است. لطفاً کمی بعد دوباره امتحان کنید.', pay_fail_not_accepted:'منتور هنوز این درخواست را نپذیرفته است.', pay_fail_already:'این رزرو قبلاً پرداخت شده است.', pay_fail_signin:'لطفاً دوباره وارد شوید و بعد پرداخت کنید.',
     toast_payment_success:'پرداخت انجام شد — رزرو تأیید شد!',
     lbl_availability:'زمان‌های آزاد هفتگی', availability_hint:'ساعت‌هایی را که معمولاً آزاد هستید انتخاب کنید؛ مراجعان فقط همین ساعت‌ها را می‌بینند.',
     day_sat:'شنبه', day_sun:'یکشنبه', day_mon:'دوشنبه', day_tue:'سه‌شنبه', day_wed:'چهارشنبه', day_thu:'پنجشنبه', day_fri:'جمعه',
@@ -2504,7 +2506,7 @@ const I18N = {
     rt_kicker:"مسیر شغلی شما",
     sd_strength:'قدرت پروفایل', sd_strength_m:'پروفایل کامل رزرو بیشتری می‌گیرد.', sd_strength_c:'پروفایل کامل به منتور کمک می‌کند بهتر آماده شود.', sd_done:'پروفایل شما کامل است.', sd_add:'افزودن', sd_i_title:'عنوان شغلی', sd_i_bio:'درباره‌ی من', sd_i_skills:'مهارت‌ها', sd_i_edu:'تحصیلات', sd_i_lang:'زبان‌ها', sd_i_li:'لینکدین', sd_i_avail:'زمان‌های آزاد', sd_i_goals:'اهداف', sd_i_cert:'گواهینامه‌ها', sd_msgs:'پیام‌ها', sd_all:'همه‌ی پیام‌ها', sd_none:'هنوز گفتگویی ندارید.', sd_find:'پیدا کردن منتور',
     ib_ai:'پیشنهاد پاسخ', earn_wait:'در انتظار پرداخت', earn_tx_client:'مراجع', earn_tx_date:'تاریخ', earn_tx_paid:'پرداختی', earn_tx_share:'سهم شما', earn_tx_out:'واریز شد', earn_tx_due:'در انتظار واریز',
-    nav_messages:'پیام‌ها', msg_btn:'پیام', inbox_search:'جستجو در پیام‌ها', inbox_empty:'هنوز گفتگویی ندارید. به یک منتور پیام بدهید یا جلسه رزرو کنید.',
+    nav_requests:'درخواست‌ها', nav_messages:'پیام‌ها', msg_btn:'پیام', inbox_search:'جستجو در پیام‌ها', inbox_empty:'هنوز گفتگویی ندارید. به یک منتور پیام بدهید یا جلسه رزرو کنید.',
     inbox_pick:'یک گفتگو را انتخاب کنید تا اینجا نمایش داده شود.', inbox_ph:'پیامتان را بنویسید…', inbox_send:'ارسال', inbox_you:'شما',
     inbox_voice:'تماس صوتی', inbox_video:'تماس تصویری', inbox_calls_locked:'تماس صوتی و تصویری بعد از رزرو و تأیید جلسه فعال می‌شود.',
     inbox_profile:'دیدن پروفایل', inbox_mark_unread:'علامت نخوانده', inbox_delete_conv:'حذف گفتگو', inbox_deleted_conv:'گفتگو از صندوق پیام شما حذف شد',
@@ -2662,7 +2664,7 @@ let state = { view:'home', mentorId:null, coachMode:'resume', chatMsgs:[], sendi
   matchQuery:'', matchResults:null, matching:false, interviewRole:'', interviewStarted:false, bookingOpen:false, selectedSlot:null,
   authMode:'login', authError:'', authCheckEmail:false, authBusy:false,
   lang:'en', query:'', role:null, voiceMode:false, listening:false, outOfCredits:false };
-try{ const __go = new URLSearchParams(location.search).get('go'); if(__go && ['dashboard','admin','privacy','terms','refunds','browse','coach','prep'].includes(__go)){ state.view = __go; history.replaceState(null, '', location.pathname + location.hash); } }catch(e){}
+try{ const __go = new URLSearchParams(location.search).get('go'); if(__go && ['dashboard','admin','privacy','terms','refunds','browse','coach','prep','requests','messages'].includes(__go)){ state.view = __go; history.replaceState(null, '', location.pathname + location.hash); } }catch(e){}
 let cache = { profiles:{}, reviews:{}, requests:[], names:{}, people:{}, msgs:{}, busy:{}, busyLoaded:{} };
 
 function el(html){ const t=document.createElement('template'); t.innerHTML=html.trim(); return t.content; }
@@ -3263,6 +3265,7 @@ function render(){
       case 'mentor': body = mentorView(); break;
       case 'dashboard': body = dashboardView(); break;
       case 'messages': body = myProfile ? messagesView() : onboardView(); break;
+      case 'requests': body = myProfile ? requestsView() : onboardView(); break;
       case 'coach': body = coachView(); break;
       case 'prep': body = prepVisible() ? prepView() : homeView(); break;
       case 'prepAdmin': body = isAdmin() ? prepAdminView() : homeView(); break;
@@ -3295,6 +3298,7 @@ function navHtml(){
     <div class="brand" data-nav="home"><img class="logo-mark" src="${LOGO_DATA_URI}" alt="Workar"><span class="tag">${esc(T('tag'))}</span></div>
     <div class="navlinks">
       ${items.map(([v,l])=>`<div class="navlink ${state.view===v?'active':''}" data-nav="${v}">${esc(l)}</div>`).join('')}
+      ${uid && myProfile ? (()=>{ const n = requestsNeedingMe(); return `<div class="navlink nav-msg ${state.view==='requests'?'active':''}" data-nav="requests">${esc(T('nav_requests'))}<span class="nav-msg-badge" style="${n?'':'display:none'}">${n}</span></div>`; })() : ''}
       ${uid && myProfile ? (()=>{ const n = inboxUnreadTotal(); return `<div class="navlink nav-msg ${state.view==='messages'?'active':''}" data-nav="messages">${esc(T('nav_messages'))}<span class="nav-msg-badge" style="${n?'':'display:none'}">${n}</span></div>`; })() : ''}
       ${isAdmin() ? `<div class="navlink ${state.view==='admin'?'active':''}" data-nav="admin">${esc(T('adm_nav'))}</div>` : ''}
       ${uid ? `<div class="navlink" id="signout-btn" title="${esc(T('signed_in_as'))} ${esc(userEmail||'')}">${esc(T('nav_signout'))}</div>` : `<div class="navlink" data-nav="dashboard">${esc(T('nav_login'))}</div>`}
@@ -5790,7 +5794,7 @@ async function loadMsgs(){
   (data||[]).forEach(m=>{ (by[m.requestId] = by[m.requestId] || []).push(m); });
   cache.msgs = by;
   if(state.chatOpen) markChatSeen(state.chatOpen);
-  if(state.view==='dashboard' || state.view==='messages') render();
+  if(state.view==='dashboard' || state.view==='messages' || state.view==='requests') render();
 }
 let __msgChannel = null, __msgPoll = null;
 function watchMsgs(){
@@ -5848,7 +5852,7 @@ async function loadDms(){
   cache.dms = by;
   await resolveNames(Object.keys(by).map(t=>t.slice(3).split('_').find(x=>x!==uid)));
   if(state.view==='messages'){ if(state.inboxWith) markConvSeen(state.inboxWith); render(); }
-  else if(uid) { const n = document.querySelector('.nav-msg-badge'); const c = inboxUnreadTotal(); if(n) { n.textContent = c; n.style.display = c ? '' : 'none'; } }
+  else if(uid) { const n = document.querySelector('[data-nav="messages"] .nav-msg-badge'); const c = inboxUnreadTotal(); if(n) { n.textContent = c; n.style.display = c ? '' : 'none'; } }
 }
 let __dmWatch = null;
 function watchDms(){
@@ -6317,6 +6321,29 @@ function dashSide(isMentor){
 }
 document.addEventListener('click', e=>{ const b = e.target.closest && e.target.closest('[data-open-edit]'); if(!b) return;
   state.dashEditOpen = true; const d = document.querySelector('.dash-edit'); if(d){ d.open = true; d.scrollIntoView({behavior:'smooth', block:'start'}); } });
+// Requests a person has to act on: a mentor answering a new request, a client paying an accepted one
+// Why a checkout could not start, in words the person can act on (the admin also sees Stripe's own reason)
+function paymentFailText(err){
+  const code = err && err.code;
+  if(code==='payments-not-activated') return T(isAdmin() ? 'pay_fail_activate_admin' : 'pay_fail_not_open');
+  if(code==='booking-not-accepted') return T('pay_fail_not_accepted');
+  if(code==='already-paid') return T('pay_fail_already');
+  if(code==='sign-in-required') return T('pay_fail_signin');
+  const detail = err && err.detail && err.detail.message;
+  return isAdmin() && detail ? T('toast_payment_fail') + ' (' + detail + ')' : T('toast_payment_fail');
+}
+function requestsNeedingMe(){
+  try{ return cache.requests.filter(r=> (r.mentorId===uid && r.status==='pending') || (r.clientId===uid && r.mentorId!==uid && reqStage(r)===1)).length; }catch(e){ return 0; }
+}
+function requestsView(){
+  const isMentor = myProfile.role==='mentor';
+  const incoming = isMentor ? cache.requests.filter(r=>r.mentorId===uid) : [];
+  const mine = cache.requests.filter(r=>r.clientId===uid && r.mentorId!==uid);
+  return `<div class="dl"><div class="dl-main">
+    ${isMentor ? `<div class="section-head"><h2>${esc(T('requests_from_clients'))}</h2></div>${reqListHtml(incoming, true)}` : ''}
+    ${(!isMentor || mine.length) ? `<div class="section-head" ${isMentor?'style="margin-top:40px;"':''}><h2>${esc(T('your_requests'))}</h2></div>${reqListHtml(mine, false)}` : ''}
+  </div>${dashSide(isMentor)}</div>`;
+}
 function dashboardView(){
   const isMentor = myProfile.role==='mentor';
   const myReqs = cache.requests.filter(r=> isMentor ? r.mentorId===uid : r.clientId===uid);
@@ -6914,9 +6941,9 @@ function wire(){
           })
         });
         const data = await res.json();
-        if(!res.ok || !data.url) throw new Error(data.error || 'checkout-failed');
+        if(!res.ok || !data.url) throw Object.assign(new Error(data.error || 'checkout-failed'), { code: data.error, detail: data.detail });
         window.location.href = data.url;
-      }catch(err){ toast(T('toast_payment_fail')); btn.disabled = false; }
+      }catch(err){ toast(paymentFailText(err), 8000); btn.disabled = false; }
     });
   });
 
@@ -6996,7 +7023,7 @@ function wire(){
   if(log) log.scrollTop = log.scrollHeight;
 
   if(state.view==='mentor' && state.mentorId) loadReviews(state.mentorId);
-  if(state.view==='dashboard' || state.view==='messages') loadRequests();
+  if(state.view==='dashboard' || state.view==='messages' || state.view==='requests') loadRequests();
   if(state.view==='messages' && state.inboxWith && !cache.people[state.inboxWith] && !cache.profiles[state.inboxWith]) resolveNames([state.inboxWith]).then(()=>{ if(cache.people[state.inboxWith]) render(); });
 }
 
@@ -7228,7 +7255,7 @@ function loadRequests(){
       cache.requests = parts.mentorId.concat(parts.clientId).filter(r=>{ if(seen.has(r.id)) return false; seen.add(r.id); return true; });
       await resolveNames(cache.requests.flatMap(r=>[r.mentorId, r.clientId]));
       watchMsgs(); loadMsgs();
-      if(state.view==='dashboard' || state.view==='messages') render();
+      if(state.view==='dashboard' || state.view==='messages' || state.view==='requests') render();
     });
   });
 }

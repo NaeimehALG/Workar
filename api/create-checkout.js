@@ -171,7 +171,11 @@ module.exports = async (req, res) => {
     });
     const data = await r.json();
     if (!r.ok) {
-      res.status(502).json({ error: 'stripe-error', detail: data && data.error });
+      const msg = String((data && data.error && data.error.message) || '');
+      // A Stripe account that hasn't finished activation can't take real payments yet
+      const code = /cannot currently make live charges|activate|account.*(not|isn't).*(enabled|active)/i.test(msg) ? 'payments-not-activated' : 'stripe-error';
+      console.error('stripe-checkout-failed', msg);
+      res.status(502).json({ error: code, detail: data && data.error });
       return;
     }
     res.status(200).json({ url: data.url });
