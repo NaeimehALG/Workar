@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
     if (event === 'mentor_applied') {
       const p = await M.profile(me.id);
       if (p.role !== 'mentor') { res.status(403).end(); return; }
-      await M.sendMail(adminEmail, `New mentor application: ${p.name}`,
+      await M.sendMail(M.CONTACT_EMAIL(), `New mentor application: ${p.name}`,
         M.layout('A new mentor wants to join Workar', [`<b>${M.esc(p.name)}</b> (${M.esc(me.email)}) just created a mentor profile. It stays hidden until you approve it.`], { text: 'Review applications', url: site + '/?go=admin' }));
       res.status(200).json({ ok: true }); return;
     }

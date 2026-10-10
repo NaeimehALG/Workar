@@ -276,7 +276,7 @@ async function signups(rep, ctx) {
 
 // ---------- daily digest (always sent) ----------
 async function digest(rep, ctx, extra) {
-  const adminEmail = process.env.ADMIN_EMAIL || 'naeimeh.alaghehband@gmail.com';
+  const adminEmail = M.CONTACT_EMAIL();
   const tz = process.env.DIGEST_TZ || 'America/Vancouver';
   const now = Date.now(), site = M.SITE();
   const reqs = ctx.requests || [];

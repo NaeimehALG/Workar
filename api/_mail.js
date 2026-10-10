@@ -4,7 +4,8 @@ process.env.SUPABASE_URL = String(process.env.SUPABASE_URL || 'https://jgbjhzhbd
 //   RESEND_API_KEY            — from resend.com (free plan is enough to start)
 //   MAIL_FROM                 — e.g. "Workar <notifications@workar.me>" (domain verified in Resend)
 //   SITE_URL                  — e.g. https://workar.me
-//   ADMIN_EMAIL               — where new mentor applications are sent
+//   ADMIN_EMAIL               — existing administrator sign-in identity
+//   WORKAR_CONTACT_EMAIL      — business inbox for support, applications, and reports
 //   SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY (already set)
 
 const SITE = () => (process.env.SITE_URL || 'https://workar.me').replace(/\/$/, '');
@@ -71,7 +72,8 @@ function htmlToText(html) {
 
 // Every Workar email: HTML + plain text, and replies go to a real person (the support inbox),
 // never to the no-reply sending address.
-const SUPPORT_REPLY_TO = () => process.env.SUPPORT_REPLY_TO || process.env.ADMIN_EMAIL || 'naeimeh.alaghehband@gmail.com';
+const CONTACT_EMAIL = () => process.env.WORKAR_CONTACT_EMAIL || 'workarmentoring@gmail.com';
+const SUPPORT_REPLY_TO = () => CONTACT_EMAIL();
 async function sendMail(to, subject, html, attachments, opts = {}) {
   const key = process.env.RESEND_API_KEY;
   if (!key || !to) return { skipped: true };
@@ -93,4 +95,4 @@ async function sendMail(to, subject, html, attachments, opts = {}) {
 function link(url, text) { return `<a href="${esc(url)}" style="color:#8B6A4C;font-weight:700;">${esc(text)}</a>`; }
 function list(items) { const li = (items || []).filter(Boolean).map(x => `<li style="margin:0 0 6px;">${esc(x)}</li>`).join(''); return li ? `<ul style="margin:0;padding-left:20px;">${li}</ul>` : ''; }
 
-module.exports = { htmlToText, SUPPORT_REPLY_TO, SITE, esc, userFromToken, emailOf, rows, patch, profile, fullProfile, when, layout, sendMail, link, list };
+module.exports = { htmlToText, CONTACT_EMAIL, SUPPORT_REPLY_TO, SITE, esc, userFromToken, emailOf, rows, patch, profile, fullProfile, when, layout, sendMail, link, list };

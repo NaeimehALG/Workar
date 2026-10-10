@@ -239,7 +239,7 @@ async function createTicket(input, me, ctx, messages) {
   }).catch(() => null);
   if (!ins || !ins.ok) console.error('ticket-save-failed', ins && ins.status); // the email below still reaches the team
   const chat = ticket.transcript.map(m => `<b>${m.role === 'user' ? M.esc(ticket.name || 'Visitor') : 'Assistant'}:</b> ${M.esc(m.content).slice(0, 600)}`).join('<br>');
-  const adminEmail = process.env.ADMIN_EMAIL || 'naeimeh.alaghehband@gmail.com';
+  const adminEmail = M.CONTACT_EMAIL();
   // To the team: reply straight from your inbox and it goes to the person.
   const delivered = await M.sendMail(adminEmail, `${ticket.urgent ? '[URGENT] ' : ''}Support ${id}: ${CAT_LABEL[ticket.category] || 'Other'}`, M.layout(`Support request ${id}`, [
     `<b>From:</b> ${M.esc(ticket.name || 'Visitor')} &lt;${M.esc(email)}&gt;${ctx && ctx.role ? ' (' + M.esc(ctx.role) + ')' : ''}`,
@@ -249,7 +249,7 @@ async function createTicket(input, me, ctx, messages) {
     `<b>Conversation</b><br>${chat}`,
     `<span style="font-size:13px;color:#8a7461;">Reply to this email to answer ${M.esc(ticket.name || 'them')} directly.</span>`
   ]), [], { replyTo: email });
-  if ((!ins || !ins.ok) && (!delivered || !delivered.ok)) return { ok: false, note: 'The support request could not be saved or delivered. Ask the person to email support@workar.me directly; do not claim it was submitted.' };
+  if ((!ins || !ins.ok) && (!delivered || !delivered.ok)) return { ok: false, note: 'The support request could not be saved or delivered. Ask the person to email workarmentoring@gmail.com directly; do not claim it was submitted.' };
   // To the person: confirmation with their reference number.
   const confirmation = await M.sendMail(email, `We received your request (${id})`, M.layout('Thank you for contacting Workar', [
     `Dear ${M.esc((ticket.name || '').split(' ')[0] || 'Workar member')},`,
@@ -277,7 +277,7 @@ async function help(req, res, b) {
 
 How you work:
 - Answer from the information below and, when available, from the person's own account details. Be specific: if they ask about "my session", use their bookings (who it is with, the time, whether it is paid, what it is waiting for).
-- If the person needs a human (refund or payment problems, payouts, technical problems, complaints, account changes, or anything you cannot answer), offer to pass it to the support team and use create_support_ticket. Confirm the problem first; if they are not signed in, politely ask for their email address. After a successful ticket result, give the reference number. Only say a confirmation email was sent if confirmationSent is true. Say the team aims to reply within one business day; do not guarantee delivery or a deadline. If creation fails, clearly say it failed and offer support@workar.me.
+- If the person needs a human (refund or payment problems, payouts, technical problems, complaints, account changes, or anything you cannot answer), offer to pass it to the support team and use create_support_ticket. Confirm the problem first; if they are not signed in, politely ask for their email address. After a successful ticket result, give the reference number. Only say a confirmation email was sent if confirmationSent is true. Say the team aims to reply within one business day; do not guarantee delivery or a deadline. If creation fails, clearly say it failed and offer workarmentoring@gmail.com.
 - Never promise refunds, exceptions or outcomes; the support team decides. Never reveal anything about other people's accounts.
 - For career advice, kindly point them to a mentor or the AI coach.
 - Reply in the language the person writes in. Keep answers to 2 to 5 sentences, plain text, no markdown. When useful, mention where to click on the site (for example: My profile, then the booking card).
