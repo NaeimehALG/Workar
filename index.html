@@ -2049,7 +2049,7 @@ const I18N = {
     auth_toggle_to_login:'Already have an account? Log in',
     auth_check_email:'Account created — check your email and click the confirmation link, then log in below.',
     auth_check_spam:"Don't see it within a few minutes? Check your spam or promotions folder.",
-    auth_resend:'Resend confirmation email', auth_resent:'Sent — check your inbox',
+    auth_resend:'Resend confirmation email', auth_resent:'Sent — check your inbox', auth_too_many:'Too many emails were requested. Please wait a few minutes and try again.', auth_weak_pw:'Please choose a password with at least 6 characters.',
     auth_already_registered:'This email already has an account — please log in.',
     lbl_confirm_password_signup:'Confirm password', ph_confirm_password:'Re-enter your password', forgot_link:'Forgot password?', forgot_hint:"Enter your account email and we'll send you a link to reset your password.",
     btn_send_reset:'Send reset link', back_to_login:'Back to log in',
@@ -2450,7 +2450,7 @@ const I18N = {
     auth_toggle_to_login:'حساب دارید؟ وارد شوید',
     auth_check_email:'حساب ساخته شد. ایمیلتان را باز کنید و روی لینک تأیید بزنید، بعد همین پایین وارد شوید.',
     auth_check_spam:'اگر تا چند دقیقه ایمیل نرسید، پوشه‌ی اسپم یا Promotions را هم ببینید.',
-    auth_resend:'ارسال دوباره‌ی ایمیل تأیید', auth_resent:'ارسال شد؛ ایمیلتان را ببینید',
+    auth_resend:'ارسال دوباره‌ی ایمیل تأیید', auth_resent:'ارسال شد؛ ایمیلتان را ببینید', auth_too_many:'درخواست‌های زیادی ارسال شده است. لطفاً چند دقیقه بعد دوباره امتحان کنید.', auth_weak_pw:'لطفاً رمزی با دست‌کم ۶ کاراکتر انتخاب کنید.',
     auth_already_registered:'با این ایمیل قبلاً حساب ساخته شده است؛ لطفاً وارد شوید.',
     lbl_confirm_password_signup:'تکرار رمز عبور', ph_confirm_password:'رمز عبور را دوباره وارد کنید', forgot_link:'رمز عبور را فراموش کرده‌اید؟', forgot_hint:'ایمیل حسابتان را وارد کنید تا لینک تغییر رمز برایتان فرستاده شود.',
     btn_send_reset:'ارسال لینک تغییر رمز', back_to_login:'بازگشت به ورود',
@@ -5284,8 +5284,8 @@ function wireAuth(){
     if(!state.authEmail) return;
     state.resendBusy = true; render();
     try{
-      const { error } = await withTimeout(sb.auth.resend({ type:'signup', email: state.authEmail, options:{ emailRedirectTo: window.location.origin } }), 8000, 'resend');
-      if(error) throw error;
+      const viaUs = await authMail('auth_resend', { email: state.authEmail });
+      if(!viaUs){ const { error } = await withTimeout(sb.auth.resend({ type:'signup', email: state.authEmail, options:{ emailRedirectTo: window.location.origin } }), 8000, 'resend'); if(error) throw error; }
       state.resendDone = true;
     }catch(err){ state.authError = (err && err.message) || T('auth_error_generic'); }
     state.resendBusy = false; render();
@@ -5301,8 +5301,8 @@ function wireAuth(){
     try{
       if(state.authMode==='forgot'){
         state.authEmail = email;
-        const { error } = await withTimeout(sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin }), 8000, 'resetPassword');
-        if(error) throw error;
+        const viaUs = await authMail('auth_recover', { email });
+        if(!viaUs){ const { error } = await withTimeout(sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin }), 8000, 'resetPassword'); if(error) throw error; }
         state.authBusy = false; state.authMode = 'login'; state.authInfo = T('reset_sent'); render();
         return;
       }
@@ -5312,9 +5312,18 @@ function wireAuth(){
           const em = document.querySelector('#auth-form input[name="email"]'); if(em) em.value = email;
           return;
         }
+        state.authEmail = email;
+        const viaUs = await authMail('auth_signup', { email, password });
+        if(viaUs && viaUs.already){
+          state.authBusy = false; state.authMode = 'login'; state.authCheckEmail = false;
+          state.authInfo = T('auth_already_registered'); render(); return;
+        }
+        if(viaUs && viaUs.sent){
+          state.authBusy = false; state.authMode = 'login'; state.authCheckEmail = true;
+          state.resendDone = false; state.authInfo = ''; render(); return;
+        }
         const { data, error } = await withTimeout(sb.auth.signUp({ email, password, options:{ emailRedirectTo: window.location.origin } }), 8000, 'signUp');
         if(error) throw error;
-        state.authEmail = email;
         if(data.session){
           onSignedIn(data.session);
         } else if(data.user && Array.isArray(data.user.identities) && data.user.identities.length===0){
@@ -5340,6 +5349,19 @@ function wireAuth(){
       render();
     }
   });
+}
+
+// Account emails go through our own mail service (Supabase's built-in mailer is limited to a few an hour).
+// Returns the server's answer, or null when the server can't help so the caller falls back to Supabase.
+async function authMail(task, payload){
+  let r, j = {};
+  try{
+    r = await withTimeout(fetch('/api/agents', { method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify(Object.assign({ task, lang: state.lang==='fa'?'fa':'en', origin: window.location.origin }, payload)) }), 15000, task);
+    j = await r.json().catch(()=>({}));
+  }catch(e){ return null; }
+  if(r.status===429) throw new Error(T('auth_too_many'));
+  if(r.status===400 && j.error==='weak-password') throw new Error(T('auth_weak_pw'));
+  return r.ok ? j : null;
 }
 
 const FORMAT_KEYS = ['video','voice','chat','ai'];

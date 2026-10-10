@@ -412,6 +412,97 @@ async function deleteAccount(req, res) {
   return res.status(200).json({ ok: true });
 }
 
+// ---------------------------------------------------------------------------
+// Account emails (sign-up confirmation, resend, password reset) sent through Resend.
+// Supabase's built-in mailer allows only a few emails an hour, which blocked real sign-ups.
+// generate_link creates the secure link without Supabase sending anything; we email it ourselves.
+// ---------------------------------------------------------------------------
+async function authLimited(req, email) {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY, url = process.env.SUPABASE_URL;
+  const h = { apikey: key, Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' };
+  const ip = String(req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || 'unknown').split(',')[0].trim();
+  const since = new Date(Date.now() - 3600 * 1000).toISOString();
+  const count = async ref => {
+    const c = await fetch(`${url}/rest/v1/agent_events?kind=eq.auth_mail&ref=eq.${encodeURIComponent(ref)}&createdAt=gte.${encodeURIComponent(since)}&select=id`, { method: 'HEAD', headers: Object.assign({ Prefer: 'count=exact' }, h) });
+    return Number(((c.headers.get('content-range') || '').split('/')[1]) || 0);
+  };
+  try {
+    if (await count('ip:' + ip) >= 12 || await count('em:' + email) >= 4) return true;
+    for (const ref of ['ip:' + ip, 'em:' + email]) {
+      await fetch(`${url}/rest/v1/agent_events`, { method: 'POST', headers: Object.assign({ Prefer: 'return=minimal' }, h),
+        body: JSON.stringify({ id: `auth_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`, kind: 'auth_mail', ref }) });
+    }
+  } catch (e) { /* never block a real sign-up because of the counter */ }
+  return false;
+}
+
+async function genLink(payload, origin) {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const r = await fetch(`${process.env.SUPABASE_URL}/auth/v1/admin/generate_link`, {
+    method: 'POST', headers: { apikey: key, Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' },
+    body: JSON.stringify(Object.assign({ redirect_to: origin || M.SITE() }, payload))
+  });
+  const j = await r.json().catch(() => ({}));
+  return { ok: r.ok, status: r.status, j };
+}
+const linkOf = j => (j && (j.action_link || (j.properties && j.properties.action_link))) || '';
+const userOf = j => (j && (j.user || (j.id ? j : null))) || null;
+
+const AUTH_COPY = {
+  en: {
+    confirm: ['Confirm your email', 'Welcome to Workar. Please confirm your email address to finish creating your account.', 'Confirm my email'],
+    reset: ['Reset your password', 'We received a request to reset your Workar password. Use the button below to choose a new one.', 'Choose a new password'],
+    note: 'If you did not request this, you can safely ignore this email.'
+  },
+  fa: {
+    confirm: ['ایمیل خود را تأیید کنید', 'به Workar خوش آمدید. برای تکمیل ساخت حساب، لطفاً ایمیل خود را تأیید کنید.', 'تأیید ایمیل'],
+    reset: ['بازنشانی رمز عبور', 'درخواستی برای بازنشانی رمز عبور حساب Workar شما دریافت شد. با دکمه‌ی زیر رمز تازه‌ای انتخاب کنید.', 'انتخاب رمز تازه'],
+    note: 'اگر این درخواست از طرف شما نبوده، می‌توانید این ایمیل را نادیده بگیرید.'
+  }
+};
+async function mailAuth(email, kind, url, lang) {
+  const c = AUTH_COPY[lang === 'fa' ? 'fa' : 'en'], [title, text, cta] = c[kind];
+  const r = await M.sendMail(email, title, M.layout(title, [M.esc(text), M.esc(c.note)], { url, text: cta }));
+  if (!r || !r.ok) throw new Error('email-send-failed');
+}
+
+async function authEmail(req, res, b) {
+  const email = String(b.email || '').trim().toLowerCase();
+  const lang = b.lang === 'fa' ? 'fa' : 'en';
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) return res.status(400).json({ error: 'invalid-email' });
+  if (!process.env.RESEND_API_KEY || !process.env.SUPABASE_SERVICE_ROLE_KEY) return res.status(503).json({ error: 'fallback' });
+  if (await authLimited(req, email)) return res.status(429).json({ error: 'too-many' });
+  const origin = ['https://www.workar.me', 'https://workar.me'].includes(String(b.origin || '')) ? b.origin : '';
+
+  if (b.task === 'auth_recover') {
+    const g = await genLink({ type: 'recovery', email }, origin);
+    if (g.ok && linkOf(g.j)) await mailAuth(email, 'reset', linkOf(g.j), lang);
+    return res.status(200).json({ sent: true }); // same answer whether or not the account exists
+  }
+
+  const password = String(b.password || '');
+  if (b.task === 'auth_signup') {
+    if (password.length < 6 || password.length > 72) return res.status(400).json({ error: 'weak-password' });
+    const g = await genLink({ type: 'signup', email, password }, origin);
+    if (g.ok && linkOf(g.j)) { await mailAuth(email, 'confirm', linkOf(g.j), lang); return res.status(200).json({ sent: true }); }
+    if (!/already|registered|exists/i.test(JSON.stringify(g.j))) { console.error('auth-signup-link-failed', g.status, JSON.stringify(g.j).slice(0, 300)); return res.status(502).json({ error: 'fallback' }); }
+  }
+  // Existing address (re-sign-up, or "resend confirmation"): only unconfirmed accounts get a link.
+  const m = await genLink({ type: 'magiclink', email }, origin);
+  const u = userOf(m.j);
+  if (!m.ok || !u) return res.status(200).json({ sent: true });
+  if (u.email_confirmed_at || u.confirmed_at) return res.status(200).json({ already: true });
+  if (b.task === 'auth_signup' && password.length >= 6 && password.length <= 72) {
+    // Nobody has used this unconfirmed account yet, so the newest password wins.
+    const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    await fetch(`${process.env.SUPABASE_URL}/auth/v1/admin/users/${encodeURIComponent(u.id)}`, {
+      method: 'PUT', headers: { apikey: key, Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' }, body: JSON.stringify({ password })
+    });
+  }
+  await mailAuth(email, 'confirm', linkOf(m.j), lang);
+  return res.status(200).json({ sent: true });
+}
+
 // Public AI tasks (usable without an account) get a per-visitor hourly limit so nobody can run up the AI bill.
 async function overPublicLimit(req, task) {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY, url = process.env.SUPABASE_URL;
@@ -451,6 +542,7 @@ module.exports = async (req, res) => {
       case 'profile_review': return await profileReview(req, res, b);
       case 'reply_draft': return await replyDraft(req, res, b);
       case 'delete_account': return await deleteAccount(req, res);
+      case 'auth_signup': case 'auth_resend': case 'auth_recover': return await authEmail(req, res, b);
       default: return res.status(400).json({ error: 'Unknown task' });
     }
   } catch (e) {
