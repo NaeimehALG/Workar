@@ -81,6 +81,22 @@ module.exports = async (req, res) => {
         title = 'Your session time changed';
         paras = [`<b>${fromName}</b> changed your session to <b>${M.esc(whenTxt)}</b>.`, 'If that doesn’t work, reply to them in your Workar messages.'];
         break;
+      case 'times_proposed': {
+        if (!isMentor || !Array.isArray(r.proposedTimes) || !r.proposedTimes.length) break;
+        const tz = to.timezone || r.tz;
+        subject = `${from.name} suggested new times for your session`;
+        title = 'Pick a time that suits you';
+        paras = [`<b>${fromName}</b> can't make ${M.esc(whenTxt)} work and suggested these times instead:`,
+          M.list(r.proposedTimes.map(t => M.when({ startsAt: t }, tz))),
+          'Choose one on Workar and your session is accepted straight away.'];
+        dash.text = 'Choose a time'; dash.url = site + '/?go=requests'; break;
+      }
+      case 'time_picked':
+        if (!isClient || r.status !== 'accepted') break;
+        subject = `${from.name} picked a time`;
+        title = 'Your session is accepted';
+        paras = [`<b>${fromName}</b> chose <b>${M.esc(M.when(r, to.timezone))}</b> from the times you suggested.`, r.amountCents > 0 && !r.paid ? 'They have been asked to pay to confirm. You will get the call link as soon as they do.' : 'The session is confirmed.'];
+        dash.url = site + '/?go=requests'; break;
       case 'message': {
         // only the newest message from the sender; no email if they already wrote in the last 10 minutes
         const ms = await M.rows(`messages?requestId=eq.${encodeURIComponent(r.id)}&senderId=eq.${encodeURIComponent(me.id)}&select=text,createdAt&order=createdAt.desc&limit=2`);
@@ -88,7 +104,7 @@ module.exports = async (req, res) => {
         if (ms[1] && (new Date(ms[0].createdAt) - new Date(ms[1].createdAt)) < 10 * 60 * 1000) { res.status(200).json({ skipped: 'recent' }); return; }
         subject = `New message from ${from.name}`;
         title = `${from.name} sent you a message`;
-        paras = [`“${M.esc(String(ms[0].text).slice(0, 500))}”`];
+        paras = [`“${M.esc(String(ms[0].text).replace(/\[\[wk:[^\]]*\]\]/g, '').trim().slice(0, 500))}”`];
         dash.text = 'Reply on Workar'; break;
       }
     }

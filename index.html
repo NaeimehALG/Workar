@@ -1059,7 +1059,7 @@
   .ib-av{position:relative;}
   .ib-av.online::after{content:'';position:absolute;bottom:0;inset-inline-end:0;width:28%;height:28%;min-width:9px;min-height:9px;border-radius:50%;background:#3FA45B;border:2px solid var(--surface);}
   #ib-status.on{color:#3FA45B;font-weight:700;}
-  .ib-typing{display:none;} .ib-typing.on{display:flex;}
+  .ib-typing,.ib-msg.ib-typing{display:none;} .ib-typing.on,.ib-msg.ib-typing.on{display:flex;}
   .ib-typing .ib-bub{display:flex;gap:4px;align-items:center;padding:12px 14px;}
   .ib-typing .ib-bub i{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:ibDot 1.2s infinite ease-in-out;}
   .ib-typing .ib-bub i:nth-child(2){animation-delay:.15s} .ib-typing .ib-bub i:nth-child(3){animation-delay:.3s}
@@ -1638,6 +1638,122 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .dl-side{display:flex;flex-direction:column;gap:14px;position:sticky;top:18px;}
   @media (max-width:980px){.dl{grid-template-columns:1fr;}.dl-side{position:static;}}
   .sc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px;}
+  /* ---- Inbox hub (Requests + Messages) ---- */
+  .hub-tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:0 10px;margin:0 0 16px;}
+  .hub-tabs button{position:relative;display:inline-flex;align-items:center;gap:8px;background:none;border:0;padding:15px 16px 13px;font:inherit;font-size:15.5px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2.5px solid transparent;transition:color .15s,border-color .15s;}
+  .hub-tabs button:hover{color:var(--text);}
+  .hub-tabs button.on{color:var(--accent);border-bottom-color:var(--accent);}
+  .hub-n{font-style:normal;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:#C2412D;color:#fff;font-size:11.5px;font-weight:700;display:inline-grid;place-items:center;}
+  .hub .ib{height:min(72vh,700px);}
+  .iv-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:16px;overflow:visible;}
+  .iv-ph{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 22px;border-bottom:1px solid var(--border);}
+  .iv-ph h2{margin:0;font-size:17px;font-weight:600;color:var(--text);letter-spacing:0;font-family:inherit;}
+  .iv-ph h2 span{color:var(--muted);font-weight:500;}
+  .iv-all{background:none;border:0;font:inherit;font-weight:600;font-size:14.5px;color:var(--text);cursor:pointer;padding:4px 6px;border-radius:6px;}
+  .iv-all:hover{background:var(--surface-2);}
+  .iv-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;column-gap:18px;align-items:start;padding:20px 22px;border-top:1px solid var(--border);position:relative;transition:background .2s;}
+  .iv-ph + .iv-row{border-top:0;}
+  .iv-row.hot{background:linear-gradient(90deg,rgba(185,141,94,.08),transparent 60%);}
+  .iv-row.hot::before{content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:3px;background:var(--accent-2);}
+  .iv-av{width:72px;height:72px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:var(--surface-2);color:var(--accent);font-weight:700;font-size:22px;border:0;padding:0;cursor:pointer;flex:none;}
+  .iv-av.sm{width:52px;height:52px;font-size:17px;}
+  .iv-av img{width:100%;height:100%;object-fit:cover;}
+  .iv-body{min-width:0;}
+  .iv-title{font-size:16px;line-height:1.4;color:var(--text);}
+  .iv-title b{font-weight:700;}
+  .iv-ago{color:var(--muted);font-size:13px;margin-inline-start:8px;}
+  .iv-sub{display:block;font-size:13.5px;color:var(--muted);margin-top:1px;}
+  .iv-head{font-size:14px;color:var(--muted);margin-top:3px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .iv-meta{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:8px;font-size:13.5px;color:var(--text);}
+  .iv-meta span{display:inline-flex;align-items:center;gap:6px;}
+  .iv-meta svg{color:var(--muted);flex:none;}
+  .iv-strike{text-decoration:line-through;color:var(--muted);}
+  .iv-note{margin:10px 0 0;padding:10px 14px;background:var(--surface-2);border-radius:10px;font-size:14px;line-height:1.55;color:var(--text);}
+  .iv-note span{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+  .iv-check{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:13px;font-weight:600;padding:4px 10px 4px 8px;border-radius:999px;}
+  .iv-check.ok{color:var(--free);background:rgba(78,138,91,.1);}
+  .iv-check.warn{color:#9A6A12;background:rgba(214,158,46,.13);}
+  .iv-check.bad{color:var(--busy);background:var(--busy-bg);}
+  .iv-status{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:13.5px;color:var(--muted);}
+  .iv-act{display:flex;align-items:center;gap:10px;align-self:center;}
+  .iv-ignore{background:none;border:0;font:inherit;font-size:15px;font-weight:600;color:var(--muted);padding:8px 12px;border-radius:8px;cursor:pointer;transition:background .15s,color .15s;}
+  .iv-ignore:hover{background:var(--surface-2);color:var(--text);}
+  .iv-pill{display:inline-flex;align-items:center;gap:7px;background:transparent;border:1.5px solid var(--accent);color:var(--accent);font:inherit;font-size:15px;font-weight:700;padding:7px 20px;border-radius:999px;cursor:pointer;transition:background .15s,box-shadow .15s,color .15s;white-space:nowrap;}
+  .iv-pill:hover{background:rgba(139,106,76,.08);box-shadow:inset 0 0 0 1px var(--accent);}
+  .iv-pill.solid{background:var(--accent);color:var(--accent-ink);}
+  .iv-pill.solid:hover{background:#7A5C41;}
+  .iv-pill:disabled,.iv-ignore:disabled{opacity:.5;cursor:default;}
+  .iv-ic{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:none;border:1px solid var(--border);color:var(--muted);cursor:pointer;}
+  .iv-ic:hover{color:var(--accent);border-color:var(--accent-2);}
+  .iv-links{grid-column:2/-1;display:flex;flex-wrap:wrap;gap:4px 16px;margin-top:10px;}
+  .iv-body .iv-links{grid-column:auto;}
+  .iv-links button,.iv-link{display:inline-flex;align-items:center;gap:6px;background:none;border:0;padding:2px 0;font:inherit;font-size:13.5px;font-weight:600;color:var(--accent);cursor:pointer;}
+  .iv-links button:hover,.iv-link:hover{text-decoration:underline;}
+  .iv-row.mini{align-items:center;padding:16px 22px;}
+  .iv-row.mini .iv-meta{margin-top:4px;}
+  .iv-date{width:52px;height:56px;border-radius:10px;border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--surface);overflow:hidden;}
+  .iv-date small{width:100%;text-align:center;background:var(--accent);color:#fff;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:2px 0;}
+  .iv-date b{font-size:20px;line-height:1.5;color:var(--text);}
+  .iv-live{display:inline-flex;align-items:center;gap:6px;margin-inline-start:10px;font-size:12px;font-weight:700;color:var(--free);}
+  .iv-live::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--free);animation:ivPulse 1.6s ease-in-out infinite;}
+  @keyframes ivPulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .iv-gone,.iv-yes{display:flex;align-items:center;gap:12px;padding:16px 22px;font-size:14.5px;color:var(--muted);background:var(--surface-2);animation:ivIn .25s ease;}
+  .iv-yes{color:var(--free);font-weight:600;background:rgba(78,138,91,.08);}
+  .iv-yes-ic{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--free);color:#fff;animation:ivPop .35s cubic-bezier(.2,1.6,.4,1);}
+  .iv-undo{margin-inline-start:auto;background:none;border:0;font:inherit;font-weight:700;color:var(--accent);cursor:pointer;padding:4px 8px;border-radius:6px;}
+  .iv-undo:hover{background:var(--surface);}
+  @keyframes ivIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+  @keyframes ivPop{from{transform:scale(.3)}to{transform:scale(1)}}
+  .iv-empty{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding:34px 20px;color:var(--muted);font-size:14px;}
+  .iv-empty svg{width:28px;height:28px;color:var(--accent-2);}
+  .iv-empty b{color:var(--text);font-size:15.5px;}
+  .iv-empty .btn{margin-top:8px;}
+  .iv-past{margin:4px 0 16px;}
+  .iv-past summary{cursor:pointer;list-style:none;font-weight:600;font-size:14.5px;color:var(--muted);padding:8px 4px;}
+  .iv-past summary::-webkit-details-marker{display:none;}
+  .iv-past summary:hover{color:var(--text);}
+  .iv-past .iv-panel{padding:6px 10px;}
+  .iv-agenda{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:10px;}
+  .iv-agenda li{display:flex;flex-direction:column;font-size:13.5px;padding-inline-start:10px;border-inline-start:2px solid var(--accent-2);}
+  .iv-agenda b{font-weight:600;color:var(--text);}
+  .iv-agenda span{color:var(--muted);font-size:13px;}
+  /* suggest-times composer */
+  .pr{grid-column:1/-1;margin-top:16px;padding:18px;border:1px solid var(--border);border-radius:12px;background:var(--surface-2);animation:ivIn .2s ease;}
+  .pr-head b{display:block;font-size:15px;color:var(--text);}
+  .pr-head span{font-size:13px;color:var(--muted);}
+  .pr-chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px;}
+  .pr-chips.pick{margin:12px 0 0;}
+  .pr-chip{display:flex;flex-direction:column;align-items:flex-start;gap:1px;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:8px 14px;font:inherit;cursor:pointer;text-align:start;transition:border-color .15s,background .15s,transform .1s;}
+  .pr-chip b{font-size:13.5px;font-weight:600;color:var(--text);}
+  .pr-chip span{font-size:12.5px;color:var(--muted);}
+  .pr-chip:hover{border-color:var(--accent-2);}
+  .pr-chip:active{transform:scale(.97);}
+  .pr-chip.on{border-color:var(--accent);background:var(--accent);}
+  .pr-chip.on b,.pr-chip.on span{color:#fff;}
+  .pr-chips.pick .pr-chip{border-color:var(--accent-2);}
+  .pr-chips.pick .pr-chip:hover{background:var(--accent);border-color:var(--accent);}
+  .pr-chips.pick .pr-chip:hover b,.pr-chips.pick .pr-chip:hover span{color:#fff;}
+  .pr-empty{font-size:13.5px;color:var(--muted);margin:12px 0 4px;}
+  .pr-custom{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px;}
+  .pr-custom input{padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);font:inherit;font-size:13.5px;}
+  .pr-custom .btn svg{margin-inline-end:4px;}
+  .pr textarea{width:100%;margin-top:12px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);font:inherit;font-size:14px;line-height:1.5;resize:vertical;box-sizing:border-box;}
+  .pr textarea:focus,.pr-custom input:focus{outline:none;border-color:var(--accent-2);box-shadow:0 0 0 3px rgba(185,141,94,.16);}
+  .pr-foot{display:flex;align-items:center;gap:8px;justify-content:flex-end;margin-top:12px;}
+  .pr-count{margin-inline-end:auto;font-size:13px;color:var(--muted);}
+  .iv-row .req-edit{grid-column:1/-1;margin-top:14px;}
+  .iv-row .req-more{position:relative;}
+  @media (max-width:700px){
+    .hub-tabs{padding:0 4px;}
+    .hub-tabs button{flex:1;justify-content:center;padding:13px 8px 11px;font-size:15px;}
+    .iv-row{grid-template-columns:auto minmax(0,1fr);column-gap:14px;padding:16px;}
+    .iv-av{width:56px;height:56px;font-size:18px;}
+    .iv-av.sm{width:44px;height:44px;}
+    .iv-act{grid-column:1/-1;justify-content:flex-end;margin-top:12px;}
+    .iv-row.mini .iv-act{grid-column:1/-1;margin-top:10px;justify-content:flex-end;}
+    .iv-links{grid-column:1/-1;}
+    .iv-ph{padding:14px 16px;}
+  }
   .sc-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;}
   .sc h3{margin:0;font-size:15px;font-weight:600;letter-spacing:-.005em;}
   .sc-pct{font-size:13px;font-weight:600;color:var(--accent);}
@@ -1999,7 +2115,7 @@ const I18N = {
     api_key_saved:'API key saved', api_key_cleared:'API key cleared',
     offline_notice:'General tips (not personalized AI feedback):',
     lbl_price_usd:'Price to charge via card (USD)', price_usd_hint:'e.g. 40 — leave blank for free sessions',
-    pay_to_confirm:'Pay ${amount} to confirm', waiting_for_payment:'Waiting for client payment…',
+    pay_to_confirm:'Pay $${amount} to confirm', waiting_for_payment:'Waiting for client payment…',
     earn_title:'Your earnings', earn_note:'You keep {p}% of every paid booking. It is sent to your bank automatically 2 days after the session.', earn_total:'Earned', earn_paid:'Paid to you', earn_owed:'Owed to you',
     sess_progress_m:'{d} of {t} sessions done', sess_progress_c:'{l} of {t} sessions left', sess_all_done:'All sessions done', sess_mark:'Mark a session done', sess_mark_one:'Mark session done', sess_completed:'Completed', sess_saved:'Session recorded', sess_fail:'Could not save — check that the payouts SQL has been run',
     po_waiting:'You have {a} waiting', po_waiting_sub:'Add your bank details once and Workar sends your share automatically. It takes about 5 minutes.', po_later:'Get paid automatically', po_later_sub:'Before your first payout, add your bank details once. It takes about 5 minutes.', po_country:'Country of your bank account', po_btn_start:'Add bank details', po_btn_continue:'Finish bank setup', po_needs_info:'Finish your bank setup', po_needs_info_sub:'Stripe needs a few more details before it can pay you.', po_on:'Payouts are on', po_on_sub:'Your share is sent to your bank automatically 2 days after each session.', po_btn_dash:'Payout details', po_secure:'Bank details are handled securely by Stripe, our payment partner. Workar never sees them.', po_done_toast:'Your bank details are saved. Payouts are on.', po_pending_toast:'Almost there. Stripe still needs a few details.', po_err:'Bank setup is not available right now. Please try again later.', po_err_country:'Payouts to this country are not supported yet. Please contact support.', po_opening:'Opening Stripe…',
@@ -2105,6 +2221,18 @@ const I18N = {
     rt_kicker:"Your career path",
     sd_strength:'Profile strength', sd_strength_m:'Complete profiles get noticeably more bookings.', sd_strength_c:'A complete profile helps mentors prepare for you.', sd_done:'Your profile is complete.', sd_add:'Add', sd_i_title:'Job title', sd_i_bio:'About', sd_i_skills:'Skills', sd_i_edu:'Education', sd_i_lang:'Languages', sd_i_li:'LinkedIn', sd_i_avail:'Availability', sd_i_goals:'Goals', sd_i_cert:'Certifications', sd_msgs:'Messages', sd_all:'See all messages', sd_none:'No conversations yet.', sd_find:'Find a mentor',
     ib_ai:'Suggest a reply', earn_wait:'Awaiting payment', earn_tx_client:'Client', earn_tx_date:'Date', earn_tx_paid:'Paid', earn_tx_share:'Your share', earn_tx_out:'Paid out', earn_tx_due:'Due',
+    nav_inbox:'Inbox', iv_new_title:'Session requests', iv_wants:'wants to book a session', iv_ignore:'Ignore', iv_suggest:'Suggest times', iv_suggest_other:'Suggest another time', iv_accept_anyway:'Accept anyway', iv_accept_q:'This time has a problem (see the note on the request). Accept it anyway?',
+    iv_ignored:'Request from {n} ignored.', iv_undo:'Undo', iv_accepted:'Accepted. {n} will be asked to pay to confirm.', iv_show_all:'Show all', iv_less:'Show less',
+    iv_clear:'You\'re all caught up', iv_clear_sub:'New session requests will appear here.', iv_pick_title:'New times suggested for you', iv_suggested:'suggested new times for your session',
+    iv_none_work:'None of these work? Send a message', iv_pay_title:'Ready to confirm', iv_c_pay:'Accepted. Pay to confirm your session', iv_up_title:'Upcoming sessions', iv_join:'Join',
+    iv_starting:'Starting now', iv_waiting_title:'Waiting on clients', iv_w_pick:'Waiting for {n} to pick one of your times', iv_w_pay:'Accepted. Waiting for {n} to pay',
+    iv_change_sugg:'Change times', iv_sent_title:'Sent requests', iv_c_wait:'Waiting for {n} to reply', iv_c_none:'No sessions yet', iv_c_none_sub:'Find a mentor who has done the job you want and book your first session.',
+    iv_past:'Past and declined ({n})', iv_week:'Next 7 days', iv_week_none:'No sessions in the next 7 days.', iv_hours:'Your weekly hours', iv_hours_on:'{n} time blocks open each week. Requests outside them are flagged.',
+    iv_hours_off:'Add your weekly hours so clients only request times that suit you.', iv_hours_edit:'Update availability',
+    tc_free:'You\'re free at this time', tc_clash:'Clashes with your session with {n}', tc_outside:'Outside your usual hours', tc_past:'This time has already passed',
+    pr_title:'Suggest new times to {n}', pr_sub:'Pick up to 3. They choose one and the session is accepted straight away.', pr_no_hours:'Add weekly hours in your profile to get suggestions, or add a time below.',
+    pr_add:'Add time', pr_note:'Hi {n}, thank you for your request. {t} doesn\'t work for me. Would one of these times suit you instead?', pr_count:'{n} of 3 selected', pr_send:'Send suggestions', pr_max:'You can suggest up to 3 times',
+    pr_msg_list:'Suggested times (choose one in Requests):', pr_sent:'Suggestions sent to {n}', pick_q:'Book this time: {t}?', pick_msg:'I picked {t}. See you then!', pick_done:'Time confirmed. Your session is accepted',
     nav_requests:'Requests', nav_messages:'Messages', msg_btn:'Message', inbox_search:'Search messages', inbox_empty:'No conversations yet. Message a mentor or book a session to start one.',
     inbox_pick:'Choose a conversation to read it here.', inbox_ph:'Write a message…', inbox_send:'Send', inbox_you:'You',
     inbox_voice:'Voice call', inbox_video:'Video call', inbox_calls_locked:'Voice and video calls open once a session is booked and confirmed.',
@@ -2506,6 +2634,18 @@ const I18N = {
     rt_kicker:"مسیر شغلی شما",
     sd_strength:'قدرت پروفایل', sd_strength_m:'پروفایل کامل رزرو بیشتری می‌گیرد.', sd_strength_c:'پروفایل کامل به منتور کمک می‌کند بهتر آماده شود.', sd_done:'پروفایل شما کامل است.', sd_add:'افزودن', sd_i_title:'عنوان شغلی', sd_i_bio:'درباره‌ی من', sd_i_skills:'مهارت‌ها', sd_i_edu:'تحصیلات', sd_i_lang:'زبان‌ها', sd_i_li:'لینکدین', sd_i_avail:'زمان‌های آزاد', sd_i_goals:'اهداف', sd_i_cert:'گواهینامه‌ها', sd_msgs:'پیام‌ها', sd_all:'همه‌ی پیام‌ها', sd_none:'هنوز گفتگویی ندارید.', sd_find:'پیدا کردن منتور',
     ib_ai:'پیشنهاد پاسخ', earn_wait:'در انتظار پرداخت', earn_tx_client:'مراجع', earn_tx_date:'تاریخ', earn_tx_paid:'پرداختی', earn_tx_share:'سهم شما', earn_tx_out:'واریز شد', earn_tx_due:'در انتظار واریز',
+    nav_inbox:'صندوق ورودی', iv_new_title:'درخواست‌های جلسه', iv_wants:'درخواست یک جلسه داده است', iv_ignore:'نادیده گرفتن', iv_suggest:'پیشنهاد زمان', iv_suggest_other:'پیشنهاد زمان دیگر', iv_accept_anyway:'با این حال قبول کن', iv_accept_q:'این زمان مشکلی دارد (یادداشت روی درخواست را ببینید). باز هم قبول می‌کنید؟',
+    iv_ignored:'درخواست {n} نادیده گرفته شد.', iv_undo:'برگرداندن', iv_accepted:'قبول شد. از {n} خواسته می‌شود برای قطعی شدن پرداخت کند.', iv_show_all:'نمایش همه', iv_less:'نمایش کمتر',
+    iv_clear:'درخواست تازه‌ای ندارید', iv_clear_sub:'درخواست‌های جدید جلسه اینجا نمایش داده می‌شوند.', iv_pick_title:'زمان‌های پیشنهادی برای شما', iv_suggested:'زمان‌های تازه‌ای برای جلسه‌تان پیشنهاد داده است',
+    iv_none_work:'هیچ‌کدام مناسب نیست؟ پیام بدهید', iv_pay_title:'آماده‌ی قطعی شدن', iv_c_pay:'قبول شد. برای قطعی شدن جلسه پرداخت کنید', iv_up_title:'جلسه‌های پیش رو', iv_join:'ورود',
+    iv_starting:'در حال شروع', iv_waiting_title:'در انتظار مراجع', iv_w_pick:'منتظر انتخاب زمان از طرف {n}', iv_w_pay:'قبول شد. منتظر پرداخت {n}',
+    iv_change_sugg:'تغییر زمان‌ها', iv_sent_title:'درخواست‌های ارسالی', iv_c_wait:'منتظر پاسخ {n}', iv_c_none:'هنوز جلسه‌ای ندارید', iv_c_none_sub:'منتوری پیدا کنید که کار مورد نظرتان را انجام داده و اولین جلسه را رزرو کنید.',
+    iv_past:'گذشته و ردشده ({n})', iv_week:'۷ روز آینده', iv_week_none:'در ۷ روز آینده جلسه‌ای ندارید.', iv_hours:'ساعت‌های هفتگی شما', iv_hours_on:'{n} بازه‌ی زمانی در هفته باز است. درخواست‌های خارج از آن علامت می‌خورند.',
+    iv_hours_off:'ساعت‌های هفتگی‌تان را اضافه کنید تا مراجع‌ها فقط زمان‌های مناسب شما را درخواست بدهند.', iv_hours_edit:'به‌روزرسانی زمان‌های آزاد',
+    tc_free:'در این زمان آزاد هستید', tc_clash:'با جلسه‌ی شما با {n} تداخل دارد', tc_outside:'خارج از ساعت‌های معمول شما', tc_past:'این زمان گذشته است',
+    pr_title:'پیشنهاد زمان تازه به {n}', pr_sub:'تا ۳ زمان انتخاب کنید. مراجع یکی را انتخاب می‌کند و جلسه بلافاصله قبول می‌شود.', pr_no_hours:'برای دیدن پیشنهادها ساعت‌های هفتگی‌تان را در پروفایل اضافه کنید، یا زمانی را پایین اضافه کنید.',
+    pr_add:'افزودن زمان', pr_note:'سلام {n}، ممنون از درخواستتان. {t} برای من مناسب نیست. آیا یکی از این زمان‌ها برایتان مناسب است؟', pr_count:'{n} از ۳ انتخاب شده', pr_send:'ارسال پیشنهادها', pr_max:'حداکثر ۳ زمان می‌توانید پیشنهاد بدهید',
+    pr_msg_list:'زمان‌های پیشنهادی (یکی را در بخش درخواست‌ها انتخاب کنید):', pr_sent:'پیشنهادها برای {n} فرستاده شد', pick_q:'این زمان رزرو شود؟ {t}', pick_msg:'{t} را انتخاب کردم. می‌بینمتان!', pick_done:'زمان قطعی شد. جلسه‌ی شما قبول شد',
     nav_requests:'درخواست‌ها', nav_messages:'پیام‌ها', msg_btn:'پیام', inbox_search:'جستجو در پیام‌ها', inbox_empty:'هنوز گفتگویی ندارید. به یک منتور پیام بدهید یا جلسه رزرو کنید.',
     inbox_pick:'یک گفتگو را انتخاب کنید تا اینجا نمایش داده شود.', inbox_ph:'پیامتان را بنویسید…', inbox_send:'ارسال', inbox_you:'شما',
     inbox_voice:'تماس صوتی', inbox_video:'تماس تصویری', inbox_calls_locked:'تماس صوتی و تصویری بعد از رزرو و تأیید جلسه فعال می‌شود.',
@@ -2697,7 +2837,7 @@ async function resolveNames(ids){
   if(!sb) return;
   const need = [...new Set((ids||[]).filter(id=>id && id!==uid && !(cache.profiles[id] && cache.profiles[id].name) && !cache.people[id]))];
   if(!need.length) return;
-  const { data } = await sb.from('profiles').select('id,name,profession,role,avatarUrl,headline').in('id', need);
+  const { data } = await sb.from('profiles').select('id,name,profession,role,avatarUrl,headline,currentProfession').in('id', need);
   (data||[]).forEach(p=>{ cache.people[p.id] = p; if(p.name) cache.names[p.id] = p.name; });
 }
 function nameOf(id){
@@ -3264,8 +3404,8 @@ function render(){
       case 'browse': body = browseView(); break;
       case 'mentor': body = mentorView(); break;
       case 'dashboard': body = dashboardView(); break;
-      case 'messages': body = myProfile ? messagesView() : onboardView(); break;
-      case 'requests': body = myProfile ? requestsView() : onboardView(); break;
+      case 'messages': state.hubTab = 'messages'; body = myProfile ? messagesView() : onboardView(); break;
+      case 'requests': state.hubTab = 'requests'; body = myProfile ? requestsView() : onboardView(); break;
       case 'coach': body = coachView(); break;
       case 'prep': body = prepVisible() ? prepView() : homeView(); break;
       case 'prepAdmin': body = isAdmin() ? prepAdminView() : homeView(); break;
@@ -3298,8 +3438,8 @@ function navHtml(){
     <div class="brand" data-nav="home"><img class="logo-mark" src="${LOGO_DATA_URI}" alt="Workar"><span class="tag">${esc(T('tag'))}</span></div>
     <div class="navlinks">
       ${items.map(([v,l])=>`<div class="navlink ${state.view===v?'active':''}" data-nav="${v}">${esc(l)}</div>`).join('')}
-      ${uid && myProfile ? (()=>{ const n = requestsNeedingMe(); return `<div class="navlink nav-msg ${state.view==='requests'?'active':''}" data-nav="requests">${esc(T('nav_requests'))}<span class="nav-msg-badge" style="${n?'':'display:none'}">${n}</span></div>`; })() : ''}
-      ${uid && myProfile ? (()=>{ const n = inboxUnreadTotal(); return `<div class="navlink nav-msg ${state.view==='messages'?'active':''}" data-nav="messages">${esc(T('nav_messages'))}<span class="nav-msg-badge" style="${n?'':'display:none'}">${n}</span></div>`; })() : ''}
+      ${uid && myProfile ? (()=>{ const n = requestsNeedingMe() + inboxUnreadTotal(), on = state.view==='requests' || state.view==='messages';
+        return `<div class="navlink nav-msg ${on?'active':''}" data-nav="${requestsNeedingMe() ? 'requests' : (state.hubTab||'requests')}">${esc(T('nav_inbox'))}<span class="nav-msg-badge" style="${n?'':'display:none'}">${n}</span></div>`; })() : ''}
       ${isAdmin() ? `<div class="navlink ${state.view==='admin'?'active':''}" data-nav="admin">${esc(T('adm_nav'))}</div>` : ''}
       ${uid ? `<div class="navlink" id="signout-btn" title="${esc(T('signed_in_as'))} ${esc(userEmail||'')}">${esc(T('nav_signout'))}</div>` : `<div class="navlink" data-nav="dashboard">${esc(T('nav_login'))}</div>`}
       <div class="lang-wrap notranslate" translate="no"><div class="lang-switch" id="lang-toggle"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-inline-end:5px;"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>${esc(langName(currentUiLang()))}</div>${state.langMenu ? langMenuHtml() : ''}</div>
@@ -5929,14 +6069,14 @@ function messagesView(){
           <span class="ib-row"><span class="ib-snip">${last ? (last.senderId===uid ? esc(T('inbox_you'))+': ' : '') + esc(last.text) : esc(p.headline||p.profession||'')}</span>${c.unread && c.o!==sel ? `<i class="ib-badge">${c.unread}</i>` : ''}</span></span>
       </button>`; }).join('')
     : `<div class="ib-none">${IB_IC.chat}<p>${esc(T('inbox_empty'))}</p><button class="btn btn-primary btn-sm" data-nav="browse">${esc(T('find_mentor_title'))}</button></div>`;
-  return `<div class="ib ${sel?'has-sel':''}">
+  return `<div class="hub">${hubTabs('messages')}<div class="ib ${sel?'has-sel':''}">
     <aside class="ib-side">
       <div class="ib-side-head"><h2>${esc(T('nav_messages'))}</h2></div>
       <label class="ib-search">${IB_IC.search}<input id="ib-search" type="search" placeholder="${esc(T('inbox_search'))}" value="${esc(state.inboxQuery||'')}"></label>
       <div class="ib-list">${list}</div>
     </aside>
     <section class="ib-main">${sel ? inboxThread(sel) : `<div class="ib-pick">${IB_IC.chat}<p>${esc(T('inbox_pick'))}</p></div>`}</section>
-  </div>`;
+  </div></div>`;
 }
 // ---------- live chat: who's online, "typing…", read receipts ----------
 const onlineSet = new Set();
@@ -6019,7 +6159,8 @@ function inboxThread(o){
       <div><b>${esc(cur.packageKey ? T('pk_'+cur.packageKey+'_name') : T('inbox_booking'))}${cur.amountCents?` · $${(cur.amountCents/100).toFixed(0)}`:''}</b>
         <span>${esc(reqNextText(cur, iAmMentorHere, name))}</span></div>
       <div class="ib-ctx-act">
-        ${iAmMentorHere && cur.status==='pending' ? `<button class="btn btn-sm btn-primary" data-req="${cur.id}" data-status="accepted">${esc(T('accept'))}</button><button class="btn btn-sm btn-ghost" data-req="${cur.id}" data-status="declined">${esc(T('decline'))}</button>` : ''}
+        ${iAmMentorHere && cur.status==='pending' ? `<button class="btn btn-sm btn-primary" data-iv-accept="${cur.id}">${esc(T('accept'))}</button><button class="btn btn-sm btn-outline" data-propose-go="${cur.id}">${esc(T('iv_suggest'))}</button>` : ''}
+        ${!iAmMentorHere && cur.status==='pending' ? (cur.proposedTimes||[]).map(x=>new Date(x)).filter(i=>i.getTime() > Date.now()).sort((a,b)=>a-b).map(i=>`<button type="button" class="pr-chip" data-pick="${esc(cur.id)}" data-at="${i.toISOString()}"><b>${esc(fmtLocalDay(i))}</b><span>${esc(fmtLocalTime(i))}</span></button>`).join('') : ''}
         ${!iAmMentorHere && reqStage(cur)===1 ? `<button class="btn btn-sm btn-primary" data-pay="${cur.id}" data-amount="${cur.amountCents}" data-mentor="${cur.mentorId}">${esc(T('pay_to_confirm').replace('${amount}', (cur.amountCents/100).toFixed(2)))}</button>` : ''}
         ${reqStage(cur)===2 ? `<button class="btn btn-sm btn-primary" data-call="${cur.id}" data-url="${esc(cur.meetingUrl||'')}" data-mode="video">${esc(T('join_video'))}</button>${bookingCalendarActions(cur)}` : ''}
       </div></div>`
@@ -6038,7 +6179,7 @@ function inboxThread(o){
       </div>
     </div>
     ${ctx}
-    <div class="ib-thread" id="ib-thread">${bubbles || `<div class="ib-start"><span class="ib-av lg">${av(o)}</span><b>${esc(name)}</b><span>${esc(p.headline||p.profession||'')}</span><p>${esc(T('inbox_no_msgs').replace('{n}', name))}</p></div>`}</div>
+    <div class="ib-thread" id="ib-thread">${msgs.length ? bubbles : `<div class="ib-start"><span class="ib-av lg">${av(o)}</span><b>${esc(name)}</b><span>${esc(p.headline||p.profession||'')}</span><p>${esc(T('inbox_no_msgs').replace('{n}', name))}</p></div>`}</div>
     <form class="ib-compose" id="ib-compose" data-to="${esc(o)}">
       <button type="button" class="ib-ic ib-ai" data-ib-ai="${esc(o)}" title="${esc(T('ib_ai'))}" aria-label="${esc(T('ib_ai'))}"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 2.5l1.9 5.2a3 3 0 0 0 1.8 1.8L21 11.4l-5.3 1.9a3 3 0 0 0-1.8 1.8L12 20.4l-1.9-5.3a3 3 0 0 0-1.8-1.8L3 11.4l5.3-1.9a3 3 0 0 0 1.8-1.8L12 2.5z"/></svg></button>
       <textarea id="ib-input" rows="1" placeholder="${esc(T('inbox_ph'))}">${esc(state.inboxDraft||'')}</textarea>
@@ -6357,15 +6498,331 @@ function paymentFailText(err){
 function requestsNeedingMe(){
   try{ return cache.requests.filter(r=> (r.mentorId===uid && r.status==='pending') || (r.clientId===uid && r.mentorId!==uid && reqStage(r)===1)).length; }catch(e){ return 0; }
 }
-function requestsView(){
-  const isMentor = myProfile.role==='mentor';
-  const incoming = isMentor ? cache.requests.filter(r=>r.mentorId===uid) : [];
-  const mine = cache.requests.filter(r=>r.clientId===uid && r.mentorId!==uid);
-  return `<div class="dl"><div class="dl-main">
-    ${isMentor ? `<div class="section-head"><h2>${esc(T('requests_from_clients'))}</h2></div>${reqListHtml(incoming, true)}` : ''}
-    ${(!isMentor || mine.length) ? `<div class="section-head" ${isMentor?'style="margin-top:40px;"':''}><h2>${esc(T('your_requests'))}</h2></div>${reqListHtml(mine, false)}` : ''}
-  </div>${dashSide(isMentor)}</div>`;
+// ---------- Inbox hub: Requests + Messages in one place (LinkedIn-style) ----------
+const HUB_IC = {
+  cal:'<svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="3" y="4.5" width="14" height="12.5" rx="2"/><path d="M3 8.5h14M7 2.8v3.4M13 2.8v3.4"/></svg>',
+  pkg:'<svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M3 6.5L10 3l7 3.5v7L10 17l-7-3.5z"/><path d="M3 6.5L10 10l7-3.5M10 10v7"/></svg>',
+  ok:'<svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg>',
+  warn:'<svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 3l8 14H2z" stroke-linejoin="round"/><path d="M10 8v4M10 14.6v.1"/></svg>',
+  clock:'<svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="7.5"/><path d="M10 6v4.3l2.8 1.7" stroke-linecap="round"/></svg>',
+  msg:'<svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M3.5 4.5h13v9h-7l-4 3v-3h-2z"/></svg>',
+  video:'<svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="2.5" y="5" width="10.5" height="10" rx="2"/><path d="M13 8.5l4.5-2.5v8L13 11.5"/></svg>',
+  plus:'<svg viewBox="0 0 20 20" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 4v12M4 10h12"/></svg>'
+};
+state.ivIgnoring = state.ivIgnoring || {};
+state.proposeSel = state.proposeSel || [];
+function hubBadge(n){ return n ? `<i class="hub-n">${n>99?'99+':n}</i>` : ''; }
+function hubTabs(active){
+  return `<div class="hub-tabs" role="tablist">
+    <button type="button" role="tab" aria-selected="${active==='requests'}" class="${active==='requests'?'on':''}" data-nav="requests">${esc(T('nav_requests'))}${hubBadge(requestsNeedingMe())}</button>
+    <button type="button" role="tab" aria-selected="${active==='messages'}" class="${active==='messages'?'on':''}" data-nav="messages">${esc(T('nav_messages'))}${hubBadge(inboxUnreadTotal())}</button>
+  </div>`;
 }
+function relAgo(ms){
+  const s = Math.max(0, (Date.now() - (Number(ms)||0))/1000); if(!ms) return '';
+  const fa = state.lang==='fa', n = x=>fa ? Number(x).toLocaleString('fa-IR') : x;
+  if(s < 3600) return n(Math.max(1, Math.round(s/60))) + (fa?' دقیقه پیش':'m');
+  if(s < 86400) return n(Math.round(s/3600)) + (fa?' ساعت پیش':'h');
+  if(s < 86400*7) return n(Math.round(s/86400)) + (fa?' روز پیش':'d');
+  return n(Math.round(s/(86400*7))) + (fa?' هفته پیش':'w');
+}
+function whenLine(inst){ return inst ? fmtLocalDay(inst) + ' · ' + fmtLocalTime(inst) : ''; }
+function pkgLine(r){ return r.packageKey ? T('pk_'+r.packageKey+'_name') + (r.amountCents ? ' · $' + (r.amountCents/100).toFixed(0) : '') : (r.amountCents ? '$' + (r.amountCents/100).toFixed(0) : ''); }
+function headlineOf(o, asMentor){
+  const p = personOf(o);
+  if(asMentor) return p.headline || p.profession || '';
+  const parts = [p.currentProfession, p.profession ? T('dash_aiming').replace('{p}', p.profession) : ''].filter(Boolean);
+  return parts.join(' · ');
+}
+// Is the requested time good for this mentor? free / clash with another session / outside usual hours / passed
+function timeCheck(r){
+  const inst = reqInstant(r); if(!inst) return { k:'unknown' };
+  if(inst.getTime() < Date.now()) return { k:'past', bad:true };
+  const clash = (cache.requests||[]).find(x=>x.id!==r.id && x.mentorId===uid && x.status==='accepted' && (()=>{ const i = reqInstant(x); return i && Math.abs(i - inst) < SESSION_MIN*60000; })());
+  if(clash) return { k:'clash', bad:true, n: nameOf(clash.clientId) };
+  const tmpl = new Set((myProfile && myProfile.availability) || []);
+  if(tmpl.size){
+    const mtz = (myProfile && myProfile.timezone) || MY_TZ, w = utcToZoned(inst, mtz), d = new Date(w.date+'T12:00:00');
+    const h = toMin(w.time)/60, block = h < 12.5 ? 'morning' : h < 17 ? 'afternoon' : 'evening';
+    if(!tmpl.has(JSDAY_TO_NAME[d.getDay()]+'-'+block)) return { k:'outside', warn:true };
+  }
+  return { k:'free' };
+}
+function checkChip(c){
+  if(c.k==='unknown') return '';
+  const cls = c.bad ? 'bad' : c.warn ? 'warn' : 'ok';
+  const txt = c.k==='free' ? T('tc_free') : c.k==='clash' ? T('tc_clash').replace('{n}', c.n) : c.k==='outside' ? T('tc_outside') : T('tc_past');
+  return `<div class="iv-check ${cls}">${c.k==='free' ? HUB_IC.ok : HUB_IC.warn}<span>${esc(txt)}</span></div>`;
+}
+// Free slots from the mentor's weekly hours for the next few weeks, skipping booked times and this request
+function proposeCandidates(r){
+  const mtz = (myProfile && myProfile.timezone) || MY_TZ;
+  const busy = (cache.requests||[]).filter(x=>x.id!==r.id && x.mentorId===uid && (x.status==='accepted' || x.status==='pending')).map(x=>({ date:x.date, time:x.time }));
+  const out = [], soon = Date.now() + 12*3600*1000, cur = reqInstant(r);
+  calDays((myProfile && myProfile.availability) || [], busy, mtz).forEach(d=>d.slots.forEach(s=>{ if(!s.busy && s.inst.getTime() > soon && (!cur || Math.abs(s.inst - cur) >= 3600000)) out.push(s.inst); }));
+  // spread the picks: at most two per day
+  const perDay = {}, picked = [];
+  for(const i of out){ const k = utcToZoned(i, mtz).date; if((perDay[k] = (perDay[k]||0) + 1) <= 2) picked.push(i); if(picked.length >= 8) break; }
+  return picked;
+}
+function proposePanel(r){
+  const other = nameOf(r.clientId), sel = state.proposeSel || [], cand = proposeCandidates(r);
+  const extra = sel.filter(iso=>!cand.some(c=>c.toISOString()===iso)).map(iso=>new Date(iso));
+  const all = cand.concat(extra).sort((a,b)=>a-b);
+  const chip = i=>{ const iso = i.toISOString(), on = sel.includes(iso);
+    return `<button type="button" class="pr-chip ${on?'on':''}" data-pr-toggle="${iso}" aria-pressed="${on}"><b>${esc(fmtLocalDay(i))}</b><span>${esc(fmtLocalTime(i))}</span></button>`; };
+  const inst = reqInstant(r);
+  return `<div class="pr" id="pr-${esc(r.id)}">
+    <div class="pr-head"><b>${esc(T('pr_title').replace('{n}', other))}</b><span>${esc(T('pr_sub'))}</span></div>
+    ${all.length ? `<div class="pr-chips">${all.map(chip).join('')}</div>` : `<p class="pr-empty">${esc(T('pr_no_hours'))}</p>`}
+    <div class="pr-custom">
+      <input type="date" id="pr-date" min="${ymd(new Date())}" aria-label="${esc(T('lbl_date'))}">
+      <input type="time" id="pr-time" step="900" aria-label="${esc(T('lbl_time'))}">
+      <button type="button" class="btn btn-sm btn-ghost" data-pr-add="${esc(r.id)}">${HUB_IC.plus}${esc(T('pr_add'))}</button>
+    </div>
+    <textarea id="pr-note" rows="2">${esc(state.proposeNote != null ? state.proposeNote : T('pr_note').replace('{n}', other.split(' ')[0]).replace('{t}', inst ? whenLine(inst) : ''))}</textarea>
+    <div class="pr-foot"><span class="pr-count">${esc(T('pr_count').replace('{n}', sel.length))}</span>
+      <button type="button" class="btn btn-sm btn-ghost" data-pr-cancel="1">${esc(T('cancel'))}</button>
+      <button type="button" class="btn btn-sm btn-primary" data-pr-send="${esc(r.id)}" ${sel.length?'':'disabled'}>${esc(T('pr_send'))}</button></div>
+  </div>`;
+}
+function ivMentorRow(r){
+  const o = r.clientId, inst = reqInstant(r), c = timeCheck(r), name = nameOf(o);
+  if(state.ivIgnoring[r.id]) return `<article class="iv-row iv-gone"><span>${esc(T('iv_ignored').replace('{n}', name))}</span><button type="button" class="iv-undo" data-iv-undo="${esc(r.id)}">${esc(T('iv_undo'))}</button></article>`;
+  if(state.ivAccepted === r.id) return `<article class="iv-row iv-yes"><span class="iv-yes-ic">${HUB_IC.ok}</span><span>${esc(T('iv_accepted').replace('{n}', name))}</span></article>`;
+  const bad = c.bad, open = state.propose === r.id;
+  return `<article class="iv-row ${open?'open':''}">
+    <button type="button" class="iv-av" data-dm="${esc(o)}" aria-label="${esc(name)}">${av(o)}</button>
+    <div class="iv-body">
+      <div class="iv-title"><b>${esc(name)}</b> ${esc(T('iv_wants'))}<span class="iv-ago">${esc(relAgo(r.createdAt))}</span></div>
+      ${headlineOf(o) ? `<div class="iv-head">${esc(headlineOf(o))}</div>` : ''}
+      <div class="iv-meta">${inst ? `<span>${HUB_IC.cal}${esc(whenLine(inst))}</span>` : ''}${pkgLine(r) ? `<span>${HUB_IC.pkg}${esc(pkgLine(r))}</span>` : ''}</div>
+      ${r.message ? `<p class="iv-note"><span>“${esc(r.message)}”</span></p>` : ''}
+      ${checkChip(c)}
+    </div>
+    <div class="iv-act">
+      <button type="button" class="iv-ignore" data-iv-ignore="${esc(r.id)}">${esc(T('iv_ignore'))}</button>
+      ${bad ? `<button type="button" class="iv-pill" data-propose="${esc(r.id)}">${esc(T('iv_suggest'))}</button>`
+            : `<button type="button" class="iv-pill" data-iv-accept="${esc(r.id)}">${esc(T('accept'))}</button>`}
+    </div>
+    <div class="iv-links">
+      ${bad ? (c.k==='past' ? '' : `<button type="button" data-iv-accept="${esc(r.id)}" data-force="1">${esc(T('iv_accept_anyway'))}</button>`) : `<button type="button" data-propose="${esc(r.id)}">${esc(T('iv_suggest_other'))}</button>`}
+      <button type="button" data-dm="${esc(o)}">${HUB_IC.msg}${esc(T('msg_btn'))}</button>
+    </div>
+    ${open ? proposePanel(r) : ''}
+  </article>`;
+}
+function ivMiniRow(r, asMentor){
+  const o = asMentor ? r.clientId : r.mentorId, inst = reqInstant(r), st = reqStage(r), name = nameOf(o);
+  const proposed = (r.proposedTimes||[]).filter(t=>new Date(t).getTime() > Date.now());
+  let status = '', act = '';
+  if(asMentor){
+    if(st===0 && proposed.length) status = T('iv_w_pick').replace('{n}', name);
+    else if(st===1) status = T('iv_w_pay').replace('{n}', name);
+    if(st===0 && proposed.length) act = `<button type="button" class="iv-link" data-propose="${esc(r.id)}">${esc(T('iv_change_sugg'))}</button>`;
+  } else {
+    if(st===0) status = T('iv_c_wait').replace('{n}', name);
+    else if(st===1) { status = T('iv_c_pay'); act = `<button type="button" class="iv-pill solid" data-pay="${esc(r.id)}" data-amount="${r.amountCents}" data-mentor="${esc(r.mentorId)}">${esc(T('pay_to_confirm').replace('${amount}', (r.amountCents/100).toFixed(2)))}</button>`; }
+  }
+  return `<article class="iv-row mini ${!asMentor && st===1 ? 'hot' : ''}">
+    <button type="button" class="iv-av sm" data-dm="${esc(o)}" aria-label="${esc(name)}">${av(o)}</button>
+    <div class="iv-body">
+      <div class="iv-title"><b>${esc(name)}</b>${!asMentor ? `<span class="iv-sub">${esc(headlineOf(o, true))}</span>` : ''}</div>
+      <div class="iv-meta">${inst ? `<span>${HUB_IC.cal}${esc(whenLine(inst))}</span>` : ''}${pkgLine(r) ? `<span>${HUB_IC.pkg}${esc(pkgLine(r))}</span>` : ''}</div>
+      ${status ? `<div class="iv-status">${HUB_IC.clock}${esc(status)}</div>` : ''}
+    </div>
+    <div class="iv-act">${act}<button type="button" class="iv-ic" data-dm="${esc(o)}" title="${esc(T('msg_btn'))}" aria-label="${esc(T('msg_btn'))}">${HUB_IC.msg}</button>
+      <span class="req-more"><button class="req-dots" data-menu="${esc(r.id)}" aria-label="${esc(T('mg_more'))}"><svg viewBox="0 0 20 20" width="18" height="18"><circle cx="4" cy="10" r="1.7" fill="currentColor"/><circle cx="10" cy="10" r="1.7" fill="currentColor"/><circle cx="16" cy="10" r="1.7" fill="currentColor"/></svg></button>
+      ${state.reqMenu===r.id ? `<div class="req-menu">
+        ${st>=0 && st<2 ? `<button data-edit-time="${esc(r.id)}">${esc(T('mg_time'))}</button>` : ''}
+        ${st>=0 && st<2 ? `<button data-set-status="${esc(r.id)}" data-to="cancelled" class="danger">${esc(T(asMentor?'mg_cancel_m':'mg_cancel_c'))}</button>` : ''}
+        <button data-hide="${esc(r.id)}">${esc(T('mg_hide'))}</button></div>` : ''}</span>
+    </div>
+    ${state.propose === r.id ? proposePanel(r) : ''}
+    ${state.reqEdit===r.id ? reqEditHtml(r, nameOf(o)) : ''}
+  </article>`;
+}
+// Mentor suggested other times: the client picks one and the session is accepted on the spot
+function ivPickRow(r){
+  const o = r.mentorId, name = nameOf(o), old = reqInstant(r);
+  const times = (r.proposedTimes||[]).map(t=>new Date(t)).filter(i=>i.getTime() > Date.now()).sort((a,b)=>a-b);
+  return `<article class="iv-row hot">
+    <button type="button" class="iv-av" data-dm="${esc(o)}" aria-label="${esc(name)}">${av(o)}</button>
+    <div class="iv-body">
+      <div class="iv-title"><b>${esc(name)}</b> ${esc(T('iv_suggested'))}</div>
+      ${headlineOf(o, true) ? `<div class="iv-head">${esc(headlineOf(o, true))}</div>` : ''}
+      <div class="iv-meta">${old ? `<span class="iv-strike">${HUB_IC.cal}${esc(whenLine(old))}</span>` : ''}${pkgLine(r) ? `<span>${HUB_IC.pkg}${esc(pkgLine(r))}</span>` : ''}</div>
+      <div class="pr-chips pick">${times.map(i=>`<button type="button" class="pr-chip" data-pick="${esc(r.id)}" data-at="${i.toISOString()}"><b>${esc(fmtLocalDay(i))}</b><span>${esc(fmtLocalTime(i))}</span></button>`).join('')}</div>
+      <div class="iv-links"><button type="button" data-dm="${esc(o)}">${HUB_IC.msg}${esc(T('iv_none_work'))}</button></div>
+    </div>
+  </article>`;
+}
+function ivUpcomingRow(r, asMentor){
+  const o = asMentor ? r.clientId : r.mentorId, inst = reqInstant(r), loc = state.lang==='fa' ? 'fa-IR' : 'en-US';
+  const soon = inst && inst - Date.now() < 15*60000 && inst - Date.now() > -90*60000;
+  return `<article class="iv-row mini up">
+    <div class="iv-date">${inst ? `<small>${esc(inst.toLocaleDateString(loc, { month:'short', timeZone: MY_TZ }))}</small><b>${esc(inst.toLocaleDateString(loc, { day:'numeric', timeZone: MY_TZ }))}</b>` : ''}</div>
+    <div class="iv-body">
+      <div class="iv-title"><b>${esc(nameOf(o))}</b>${soon ? `<span class="iv-live">${esc(T('iv_starting'))}</span>` : ''}</div>
+      <div class="iv-meta">${inst ? `<span>${HUB_IC.clock}${esc(inst.toLocaleDateString(loc, { weekday:'long', timeZone: MY_TZ }))} · ${esc(fmtLocalTime(inst))}</span>` : ''}${pkgLine(r) ? `<span>${HUB_IC.pkg}${esc(pkgLine(r))}</span>` : ''}</div>
+    </div>
+    <div class="iv-act">
+      <button type="button" class="iv-pill ${soon?'solid':''}" data-call="${esc(r.id)}" data-url="${esc(r.meetingUrl||'')}" data-mode="video">${HUB_IC.video}${esc(T('iv_join'))}</button>
+      <button type="button" class="iv-ic" data-dm="${esc(o)}" title="${esc(T('msg_btn'))}" aria-label="${esc(T('msg_btn'))}">${HUB_IC.msg}</button>
+      ${asMentor ? `<span class="req-more"><button class="req-dots" data-menu="${esc(r.id)}" aria-label="${esc(T('mg_more'))}"><svg viewBox="0 0 20 20" width="18" height="18"><circle cx="4" cy="10" r="1.7" fill="currentColor"/><circle cx="10" cy="10" r="1.7" fill="currentColor"/><circle cx="16" cy="10" r="1.7" fill="currentColor"/></svg></button>
+        ${state.reqMenu===r.id ? `<div class="req-menu"><button data-edit-time="${esc(r.id)}">${esc(T('mg_time'))}</button><button data-sess="${esc(r.id)}" data-next="${(Number(r.sessionsDone)||0)+1}">${esc(T(reqSessionsTotal(r)>1 ? 'sess_mark' : 'sess_mark_one'))}</button><button data-set-status="${esc(r.id)}" data-to="cancelled" class="danger">${esc(T('mg_cancel_paid'))}</button></div>` : ''}</span>` : ''}
+    </div>
+    ${state.reqEdit===r.id ? reqEditHtml(r, nameOf(o)) : ''}
+  </article>`;
+}
+function reqEditHtml(r, other){
+  const i = reqInstant(r), lz = i ? utcToZoned(i, MY_TZ) : { date:r.date||'', time:r.time||'' };
+  return `<div class="req-edit">
+    <div class="field"><label>${esc(T('lbl_date'))}</label><input type="date" id="re-date" min="${ymd(new Date())}" value="${esc(lz.date)}"></div>
+    <div class="field"><label>${esc(T('lbl_time'))} (${esc(tzAbbr(MY_TZ))})</label><input type="time" id="re-time" step="900" value="${esc(String(lz.time).slice(0,5))}"></div>
+    <div class="req-edit-btns"><button class="btn btn-sm btn-primary" data-save-time="${esc(r.id)}">${esc(T('mg_save_time'))}</button><button class="btn btn-sm btn-ghost" data-edit-time="">${esc(T('cancel'))}</button></div>
+    <p class="muted">${esc(T('mg_time_note').replace('{n}', other))}</p></div>`;
+}
+function ivPanel(title, n, rows, extra){
+  if(!rows.length) return '';
+  return `<section class="iv-panel"><header class="iv-ph"><h2>${esc(title)}${n!=null ? ` <span>(${n})</span>` : ''}</h2>${extra||''}</header>${rows.join('')}</section>`;
+}
+function requestsView(){
+  const isMentor = myProfile.role==='mentor', hid = hiddenReqs();
+  const vis = cache.requests.filter(r=>!hid.includes(r.id));
+  const incoming = isMentor ? vis.filter(r=>r.mentorId===uid) : [];
+  const mine = vis.filter(r=>r.clientId===uid && r.mentorId!==uid);
+  const byNew = (a,b)=>(Number(b.createdAt)||0)-(Number(a.createdAt)||0), bySoon = (a,b)=>(reqInstant(a)||0)-(reqInstant(b)||0);
+  const fresh = r=>!((r.proposedTimes||[]).some(t=>new Date(t).getTime() > Date.now()));
+  const newReqs = incoming.filter(r=>(r.status==='pending' && fresh(r)) || state.ivIgnoring[r.id] || state.ivAccepted===r.id).sort(byNew);
+  const showAll = state.ivShowAll, newShown = showAll ? newReqs : newReqs.slice(0, 5);
+  const waitingM = incoming.filter(r=>!newReqs.includes(r) && (reqStage(r)===1 || (reqStage(r)===0 && !fresh(r)))).sort(bySoon);
+  const picks = mine.filter(r=>reqStage(r)===0 && !fresh(r)).sort(bySoon);
+  const pay = mine.filter(r=>reqStage(r)===1).sort(bySoon);
+  const sent = mine.filter(r=>reqStage(r)===0 && fresh(r)).sort(byNew);
+  const upcoming = vis.filter(r=>(r.mentorId===uid || r.clientId===uid) && reqStage(r)===2).sort(bySoon);
+  const past = vis.filter(r=>(r.mentorId===uid || r.clientId===uid) && (reqStage(r)<0 || reqStage(r)===3) && !newReqs.includes(r)).sort(byNew);
+  const panels = [
+    isMentor ? (newReqs.length
+      ? ivPanel(T('iv_new_title'), newReqs.filter(r=>!state.ivIgnoring[r.id] && state.ivAccepted!==r.id).length, newShown.map(ivMentorRow),
+          newReqs.length > 5 ? `<button type="button" class="iv-all" data-iv-all="1">${esc(T(showAll ? 'iv_less' : 'iv_show_all'))}</button>` : '')
+      : `<section class="iv-panel"><header class="iv-ph"><h2>${esc(T('iv_new_title'))} <span>(0)</span></h2></header><div class="iv-empty">${HUB_IC.ok}<b>${esc(T('iv_clear'))}</b><span>${esc(T('iv_clear_sub'))}</span></div></section>`) : '',
+    ivPanel(T('iv_pick_title'), picks.length, picks.map(ivPickRow)),
+    ivPanel(T('iv_pay_title'), pay.length, pay.map(r=>ivMiniRow(r, false))),
+    ivPanel(T('iv_up_title'), upcoming.length, upcoming.map(r=>ivUpcomingRow(r, r.mentorId===uid))),
+    ivPanel(T('iv_waiting_title'), waitingM.length, waitingM.map(r=>ivMiniRow(r, true))),
+    ivPanel(T('iv_sent_title'), sent.length, sent.map(r=>ivMiniRow(r, false))),
+  ].filter(Boolean);
+  const nothing = !isMentor && !picks.length && !pay.length && !sent.length && !upcoming.length;
+  return `<div class="hub">${hubTabs('requests')}<div class="dl"><div class="dl-main">
+    ${nothing ? `<section class="iv-panel"><div class="iv-empty">${HUB_IC.cal}<b>${esc(T('iv_c_none'))}</b><span>${esc(T('iv_c_none_sub'))}</span><button class="btn btn-primary btn-sm" data-nav="browse">${esc(T('find_mentor_title'))}</button></div></section>` : panels.join('')}
+    ${past.length ? `<details class="iv-past" ${state.ivPastOpen?'open':''}><summary>${esc(T('iv_past').replace('{n}', past.length))}</summary>
+      <div class="iv-panel">${past.map(r=>reqRowClosed(r, r.mentorId===uid)).join('')}</div></details>` : ''}
+    ${hid.some(id=>cache.requests.find(r=>r.id===id)) ? `<button class="btn btn-ghost btn-sm" id="unhide-reqs">${esc(T('mg_unhide'))}</button>` : ''}
+  </div>${hubSide(isMentor, upcoming)}</div></div>`;
+}
+function hubSide(isMentor, upcoming){
+  const week = upcoming.filter(r=>{ const i = reqInstant(r); return i && i - Date.now() < 7*86400000; });
+  const P = myProfile || {}, slots = (P.availability||[]).length;
+  return `<aside class="dl-side">
+    <section class="sc">
+      <div class="sc-top"><h3>${esc(T('iv_week'))}</h3><span class="sc-pct">${week.length}</span></div>
+      ${week.length ? `<ul class="iv-agenda">${week.slice(0,5).map(r=>{ const i = reqInstant(r); return `<li><b>${esc(fmtLocalDay(i))}</b><span>${esc(fmtLocalTime(i))} · ${esc(nameOf(r.mentorId===uid ? r.clientId : r.mentorId))}</span></li>`; }).join('')}</ul>`
+        : `<div class="sc-sub" style="margin-top:6px">${esc(T('iv_week_none'))}</div>`}
+    </section>
+    ${isMentor ? `<section class="sc">
+      <div class="sc-top"><h3>${esc(T('iv_hours'))}</h3></div>
+      <div class="sc-sub">${esc(slots ? T('iv_hours_on').replace('{n}', slots) : T('iv_hours_off'))}</div>
+      <button type="button" class="sc-link" data-nav="dashboard" data-open-edit="1">${esc(T('iv_hours_edit'))}</button>
+    </section>` : ''}
+    <section class="sc">
+      <div class="sc-top"><h3>${esc(T('nav_messages'))}</h3>${inboxUnreadTotal() ? `<span class="sc-pct">${inboxUnreadTotal()}</span>` : ''}</div>
+      <button type="button" class="sc-link" data-nav="messages">${esc(T('sd_all'))}</button>
+    </section>
+  </aside>`;
+}
+// --- actions ---
+document.addEventListener('click', async e=>{
+  const t = e.target.closest && e.target.closest('[data-iv-accept],[data-iv-ignore],[data-iv-undo],[data-propose],[data-pr-toggle],[data-pr-add],[data-pr-cancel],[data-pr-send],[data-pick],[data-iv-all]');
+  if(!t) return;
+  if(t.hasAttribute('data-iv-all')){ state.ivShowAll = !state.ivShowAll; render(); return; }
+  if(t.hasAttribute('data-iv-accept')){
+    const id = t.getAttribute('data-iv-accept'), r = cache.requests.find(x=>x.id===id); if(!r) return;
+    if(t.hasAttribute('data-force') && !confirm(T('iv_accept_q'))) return;
+    t.disabled = true;
+    try{ await updateReq(id, { status:'accepted', proposedTimes:null }); state.ivAccepted = id; render(); notify('request_accepted', id);
+      setTimeout(()=>{ if(state.ivAccepted===id){ state.ivAccepted = null; render(); } }, 2600); }
+    catch(err){ t.disabled = false; toast(T('toast_update_fail') + ' — ' + ((err && err.message) || ''), 6000); }
+    return;
+  }
+  if(t.hasAttribute('data-iv-ignore')){
+    const id = t.getAttribute('data-iv-ignore');
+    state.ivIgnoring[id] = setTimeout(async ()=>{
+      delete state.ivIgnoring[id];
+      try{ await updateReq(id, { status:'declined', proposedTimes:null }); notify('request_declined', id); }catch(err){ toast(T('toast_update_fail'), 5000); }
+      render();
+    }, 6000);
+    render(); return;
+  }
+  if(t.hasAttribute('data-iv-undo')){ const id = t.getAttribute('data-iv-undo'); clearTimeout(state.ivIgnoring[id]); delete state.ivIgnoring[id]; render(); return; }
+  if(t.hasAttribute('data-propose')){
+    const id = t.getAttribute('data-propose'); const r = cache.requests.find(x=>x.id===id);
+    state.propose = state.propose===id ? null : id; state.proposeNote = null; state.reqMenu = null;
+    state.proposeSel = r && r.proposedTimes ? r.proposedTimes.map(x=>new Date(x).toISOString()).filter(x=>new Date(x).getTime() > Date.now()) : [];
+    render(); const p = document.getElementById('pr-'+id); if(p) p.scrollIntoView({ behavior:'smooth', block:'nearest' }); return;
+  }
+  const keepNote = ()=>{ const n = document.getElementById('pr-note'); if(n) state.proposeNote = n.value; };
+  if(t.hasAttribute('data-pr-toggle')){
+    keepNote(); const iso = t.getAttribute('data-pr-toggle'), sel = state.proposeSel;
+    if(sel.includes(iso)) state.proposeSel = sel.filter(x=>x!==iso);
+    else if(sel.length >= 3) { toast(T('pr_max')); return; }
+    else state.proposeSel = sel.concat(iso);
+    render(); return;
+  }
+  if(t.hasAttribute('data-pr-add')){
+    keepNote(); const d = (document.getElementById('pr-date')||{}).value, tm = (document.getElementById('pr-time')||{}).value;
+    if(!d || !tm){ toast(T('toast_pick_datetime')); return; }
+    const inst = zonedToUtc(d, tm, MY_TZ);
+    if(inst.getTime() < Date.now() + 3600000){ toast(T('cal_past'), 4000); return; }
+    if(state.proposeSel.length >= 3){ toast(T('pr_max')); return; }
+    const iso = inst.toISOString(); if(!state.proposeSel.includes(iso)) state.proposeSel = state.proposeSel.concat(iso);
+    render(); return;
+  }
+  if(t.hasAttribute('data-pr-cancel')){ state.propose = null; state.proposeSel = []; state.proposeNote = null; render(); return; }
+  if(t.hasAttribute('data-pr-send')){
+    const id = t.getAttribute('data-pr-send'), r = cache.requests.find(x=>x.id===id); if(!r || !state.proposeSel.length) return;
+    const times = state.proposeSel.slice().sort(), note = ((document.getElementById('pr-note')||{}).value || '').trim();
+    t.disabled = true;
+    try{
+      await updateReq(id, { proposedTimes: times });
+      const lines = times.map(x=>'• ' + whenLine(new Date(x))).join('\n');
+      await postNote(id, (note ? note + '\n\n' : '') + T('pr_msg_list') + '\n' + lines);
+      notify('times_proposed', id);
+      state.propose = null; state.proposeSel = []; state.proposeNote = null;
+      toast(T('pr_sent').replace('{n}', nameOf(r.clientId)), 3500); render();
+    }catch(err){ t.disabled = false; toast(T('toast_update_fail') + ' — ' + ((err && err.message) || ''), 6000); }
+    return;
+  }
+  if(t.hasAttribute('data-pick')){
+    const id = t.getAttribute('data-pick'), at = t.getAttribute('data-at'), r = cache.requests.find(x=>x.id===id); if(!r) return;
+    const inst = new Date(at);
+    if(!confirm(T('pick_q').replace('{t}', whenLine(inst)))) return;
+    const mtz = r.tz || mentorTz(r.mentorId), wall = utcToZoned(inst, mtz);
+    const orig = (r.proposedTimes||[]).find(x=>new Date(x).getTime()===inst.getTime()) || at;
+    t.disabled = true;
+    try{
+      await updateReq(id, { status:'accepted', startsAt: orig, date: wall.date, time: wall.time, tz: mtz, proposedTimes: null, remindedAt: null });
+      postNote(id, T('pick_msg').replace('{t}', whenLine(inst)));
+      notify('time_picked', id); toast(T('pick_done'), 3500); render();
+    }catch(err){ t.disabled = false; toast(T('toast_update_fail') + ' — ' + ((err && err.message) || ''), 6000); }
+  }
+});
+document.addEventListener('click', e=>{ const b = e.target.closest && e.target.closest('[data-propose-go]'); if(!b) return;
+  const id = b.getAttribute('data-propose-go'), r = cache.requests.find(x=>x.id===id);
+  state.proposeSel = r && r.proposedTimes ? r.proposedTimes.map(x=>new Date(x).toISOString()).filter(x=>new Date(x).getTime() > Date.now()) : [];
+  state.proposeNote = null; nav('requests', { propose: id }); });
+document.addEventListener('toggle', e=>{ if(e.target && e.target.classList && e.target.classList.contains('iv-past')) state.ivPastOpen = e.target.open; }, true);
+
 function dashboardView(){
   const isMentor = myProfile.role==='mentor';
   const myReqs = cache.requests.filter(r=> isMentor ? r.mentorId===uid : r.clientId===uid);
