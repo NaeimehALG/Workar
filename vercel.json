@@ -1,32 +1,76 @@
 {
   "functions": {
-    "api/ai.js": { "maxDuration": 60 },
-    "api/tts.js": { "maxDuration": 60 },
-    "api/reminders.js": { "maxDuration": 60 },
-    "api/agents.js": { "maxDuration": 30 },
-    "api/stripe-webhook.js": { "maxDuration": 30 }
+    "api/ai.js": {
+      "maxDuration": 60
+    },
+    "api/tts.js": {
+      "maxDuration": 60
+    },
+    "api/reminders.js": {
+      "maxDuration": 60
+    },
+    "api/agents.js": {
+      "maxDuration": 30
+    },
+    "api/stripe-webhook.js": {
+      "maxDuration": 30
+    }
   },
   "crons": [
-    { "path": "/api/reminders", "schedule": "0 15 * * *" }
+    {
+      "path": "/api/reminders",
+      "schedule": "0 15 * * *"
+    }
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
-        { "key": "Permissions-Policy", "value": "camera=(self \"https://meet.jit.si\"), microphone=(self \"https://meet.jit.si\"), geolocation=()" },
-        { "key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(self \"https://meet.jit.si\"), microphone=(self \"https://meet.jit.si\"), geolocation=()"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=31536000; includeSubDomains"
+        }
       ]
     },
     {
       "source": "/fonts/(.*)",
-      "headers": [ { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" } ]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     },
     {
       "source": "/(.*)\\.(mp4|webm|jpg)",
-      "headers": [ { "key": "Cache-Control", "value": "public, max-age=604800" } ]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/payment-status",
+      "destination": "/api/create-checkout"
     }
   ]
 }
