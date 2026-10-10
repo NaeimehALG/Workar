@@ -66,8 +66,11 @@ export default async function handler(req, res) {
     headers: { Authorization: `Bearer ${OPENAI_API_KEY}`, "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
-  let ttsRes = await call({ model: "gpt-4o-mini-tts", voice: "nova", input, instructions, response_format: "mp3" });
-  if (!ttsRes.ok) ttsRes = await call({ model: "tts-1-hd", voice: "nova", input, response_format: "mp3" });
+  let ttsRes = await call({ model: "gpt-4o-mini-tts", voice: "marin", input, instructions, response_format: "mp3" });
+  // Only retry an unsupported voice/model; billing and rate limits cannot be fixed by another paid call.
+  if (ttsRes.status === 400 || ttsRes.status === 404) {
+    ttsRes = await call({ model: "tts-1-hd", voice: "nova", input, response_format: "mp3" });
+  }
 
   if (!ttsRes.ok) {
     const err = await ttsRes.text();
