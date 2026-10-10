@@ -29,7 +29,20 @@ const DEFAULT_PACKAGES = {
 
 const DEFAULT_PREP_BUNDLE_PRICE = 24.99;
 
+// GET /api/create-checkout → payment setup health (no secrets): key mode, live charges, webhook secret, Connect.
+async function health(res) {
+  const key = process.env.STRIPE_SECRET_KEY || '';
+  const out = { mode: key.startsWith('sk_live_') || key.startsWith('rk_live_') ? 'live' : (key ? 'test' : 'missing'), webhookSecret: !!process.env.STRIPE_WEBHOOK_SECRET };
+  if (key) {
+    const get = async path => { const r = await fetch('https://api.stripe.com/v1/' + path, { headers: { Authorization: 'Bearer ' + key } }); return { ok: r.ok, body: await r.json().catch(() => ({})) }; };
+    try { const a = await get('account'); out.chargesEnabled = a.ok ? !!a.body.charges_enabled : null; out.accountName = a.ok ? ((a.body.settings && a.body.settings.dashboard && a.body.settings.dashboard.display_name) || null) : null; } catch (e) { out.chargesEnabled = null; }
+    try { const c = await get('accounts?limit=1'); out.connect = c.ok ? true : String((c.body.error && c.body.error.message) || 'unavailable').slice(0, 160); } catch (e) { out.connect = null; }
+  }
+  res.status(200).json(out);
+}
+
 module.exports = async (req, res) => {
+  if (req.method === 'GET') return health(res);
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'method not allowed' });
     return;
