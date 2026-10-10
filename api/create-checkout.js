@@ -21,10 +21,10 @@ const AI_CREDIT_PACK_PRICE_CENTS = 499; // $4.99 — fixed server-side so it can
 
 // Must match DEFAULT_PACKAGES in index.html (used when the admin hasn't saved custom prices)
 const DEFAULT_PACKAGES = {
-  single:    { price: 49, sessions: 1 },
-  resume:    { price: 89 },
-  interview: { price: 129 },
-  offer:     { price: 249 }
+  single:    { price: 30, sessions: 1 },
+  resume:    { price: 55 },
+  interview: { price: 79 },
+  offer:     { price: 150 }
 };
 
 const DEFAULT_PREP_BUNDLE_PRICE = 24.99;
@@ -79,7 +79,7 @@ module.exports = async (req, res) => {
   params.append('success_url', successUrl || '');
   params.append('cancel_url', cancelUrl || '');
   params.append('line_items[0][quantity]', '1');
-  params.append('line_items[0][price_data][currency]', 'usd');
+  params.append('line_items[0][price_data][currency]', 'cad'); // Workar charges in Canadian dollars
 
   if (kind === 'exam') {
     // PMP Prep: price is looked up server-side (exams table, or the all-access pass in site settings)
@@ -148,7 +148,7 @@ module.exports = async (req, res) => {
         // Mentors set their own rate (never below the Workar minimum = single-session price);
         // package prices scale with that rate.
         const single = Object.assign({}, DEFAULT_PACKAGES.single, saved.find(x => x.key === 'single') || {});
-        const minRate = Math.round(Number(single.price) / (Number(single.sessions) || 1)) || 49;
+        const minRate = Math.round(Number(single.price) / (Number(single.sessions) || 1)) || 30;
         let rate = minRate;
         if (reqRow.mentorId) {
           const pr = await readRows(`${supabaseUrl}/rest/v1/profiles?id=eq.${encodeURIComponent(reqRow.mentorId)}&select=sessionRate`, h);
@@ -161,7 +161,7 @@ module.exports = async (req, res) => {
       }
     }
     if (!requestId || !Number.isSafeInteger(amount) || amount < 50) {
-      // Stripe requires at least ~$0.50 for a USD charge.
+      // Stripe requires at least ~$0.50 per charge.
       res.status(400).json({ error: 'missing-or-invalid-params' });
       return;
     }

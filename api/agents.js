@@ -271,7 +271,7 @@ async function help(req, res, b) {
   try {
     const st = await M.rows('site_settings?id=eq.main&select=data');
     const pk = st[0] && st[0].data && Array.isArray(st[0].data.packages) ? st[0].data.packages : null;
-    if (pk) prices = '\n\nCurrent package base prices (at the minimum session rate, USD): ' + pk.filter(p => !p.hidden).map(p => `${p.key}: $${p.price}${p.sessions ? ' for ' + p.sessions + ' session(s)' : ''}`).join('; ');
+    if (pk) prices = '\n\nCurrent package base prices (at the minimum session rate, CAD): ' + pk.filter(p => !p.hidden).map(p => `${p.key}: $${p.price}${p.sessions ? ' for ' + p.sessions + ' session(s)' : ''}`).join('; ');
   } catch (e) {}
   const system = `You are Workar's support assistant on workar.me, a career mentorship platform. You help visitors, clients and mentors with how Workar works, their bookings, payments, calls, refunds and becoming a mentor.
 

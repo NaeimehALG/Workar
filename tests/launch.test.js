@@ -87,7 +87,7 @@ test('call preview never asks for devices for a nonparticipant or unknown bookin
 function ticketHarness({saved=true,delivered=true,confirmed=true}={}){
   const source=fs.readFileSync(path.join(root,'api/agents.js'),'utf8');let n=0;
   const ctx={crypto:require('node:crypto'),process:{env:{SUPABASE_URL:'https://example.test'}},console:{error(){}},CAT_LABEL:{},
-    fetch:async()=>({ok:saved}),M:{esc:s=>s,layout:()=>'',list:()=>'',sendMail:async()=>({ok:++n===1?delivered:confirmed})}};
+    fetch:async()=>({ok:saved}),M:{esc:s=>s,layout:()=>'',list:()=>'',CONTACT_EMAIL:()=>'team@example.test',SUPPORT_REPLY_TO:()=>'team@example.test',sendMail:async()=>({ok:++n===1?delivered:confirmed})}};
   vm.createContext(ctx);vm.runInContext(source.slice(source.indexOf('async function createTicket('),source.indexOf('async function help(')),ctx);
   return ()=>ctx.createTicket({summary:'Camera problem'},{id:'client',email:'client@example.test'},null,[{role:'user',content:'Help'}]);
 }
