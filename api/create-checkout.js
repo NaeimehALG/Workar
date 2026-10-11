@@ -34,7 +34,7 @@ async function health(res) {
   const key = process.env.STRIPE_SECRET_KEY || '';
   const out = { mode: key.startsWith('sk_live_') || key.startsWith('rk_live_') ? 'live' : (key ? 'test' : 'missing'), webhookSecret: !!process.env.STRIPE_WEBHOOK_SECRET };
   const E = process.env; // which services are configured (true/false only, never the values)
-  out.services = { database: !!E.SUPABASE_SERVICE_ROLE_KEY, email: !!E.RESEND_API_KEY, ai: !!E.ANTHROPIC_API_KEY, voice: !!E.OPENAI_API_KEY, cron: !!E.CRON_SECRET };
+  out.services = { database: !!E.SUPABASE_SERVICE_ROLE_KEY, email: !!E.RESEND_API_KEY, ai: !!E.ANTHROPIC_API_KEY, voice: !!E.OPENAI_API_KEY, cron: !!E.CRON_SECRET, video: E.DAILY_API_KEY ? 'daily' : 'jitsi' };
   if (key) {
     const get = async path => { const r = await fetch('https://api.stripe.com/v1/' + path, { headers: { Authorization: 'Bearer ' + key } }); return { ok: r.ok, body: await r.json().catch(() => ({})) }; };
     try { const a = await get('account'); out.chargesEnabled = a.ok ? !!a.body.charges_enabled : null; out.accountId = a.ok ? (a.body.id || null) : null; if (a.ok && a.body.requirements) out.disabledReason = a.body.requirements.disabled_reason || null; out.accountName = a.ok ? ((a.body.settings && a.body.settings.dashboard && a.body.settings.dashboard.display_name) || null) : null; } catch (e) { out.chargesEnabled = null; }
