@@ -44,22 +44,22 @@ async function health(res) {
       const H = { Authorization: 'Bearer ' + key, 'Stripe-Version': process.env.STRIPE_V2_VERSION || '2026-09-30.endive', 'Content-Type': 'application/json' };
       const combos = [['express','stripe','stripe','2026-09-30.preview'],['express','application','stripe','2026-09-30.preview'],['full','stripe','stripe','2026-09-30.endive'],['none','application','stripe','2026-09-30.endive']];
       out.connectProbe = {};
-      for (const [dash, fees, losses, ver] of combos) {
-        H['Stripe-Version'] = ver;
-        const r = await fetch('https://api.stripe.com/v2/core/accounts', { method: 'POST', headers: H, body: JSON.stringify({
+      await Promise.all(combos.map(async ([dash, fees, losses, ver]) => {
+        const Hh = Object.assign({}, H, { 'Stripe-Version': ver });
+        const r = await fetch('https://api.stripe.com/v2/core/accounts', { method: 'POST', headers: Hh, body: JSON.stringify({
           dashboard: dash, identity: { country: 'ca', entity_type: 'individual' },
           configuration: { merchant: { capabilities: { card_payments: { requested: true } } } },
           defaults: { responsibilities: { fees_collector: fees, losses_collector: losses } } }) });
         const j = await r.json().catch(() => ({}));
-        let res = r.ok ? 'ok' : String((j.error && (j.error.code + ' ' + (j.error.message||''))) || r.status).slice(0, 400);
+        let res = r.ok ? 'ok' : String((j.error && (j.error.code + ' ' + (j.error.message||''))) || r.status).slice(0, 300);
         if (r.ok && j.id) {
-          const l = await fetch('https://api.stripe.com/v2/core/account_links', { method: 'POST', headers: H, body: JSON.stringify({ account: j.id, use_case: { type: 'account_onboarding', account_onboarding: { configurations: ['merchant'], refresh_url: 'https://www.workar.me/?payouts=refresh', return_url: 'https://www.workar.me/?payouts=done' } } }) });
+          const l = await fetch('https://api.stripe.com/v2/core/account_links', { method: 'POST', headers: Hh, body: JSON.stringify({ account: j.id, use_case: { type: 'account_onboarding', account_onboarding: { configurations: ['merchant'], refresh_url: 'https://www.workar.me/?payouts=refresh', return_url: 'https://www.workar.me/?payouts=done' } } }) });
           const lj = await l.json().catch(() => ({}));
           res += ' / link ' + (l.ok && lj.url ? 'ok' : String((lj.error && (lj.error.code + ' ' + lj.error.message)) || l.status).slice(0,200));
-          await fetch('https://api.stripe.com/v2/core/accounts/' + j.id + '/close', { method: 'POST', headers: H, body: '{}' });
+          fetch('https://api.stripe.com/v2/core/accounts/' + j.id + '/close', { method: 'POST', headers: Hh, body: '{}' }).catch(() => {});
         }
         out.connectProbe[dash + '|' + fees + '|' + losses + '|' + ver] = res;
-      }
+      }));
     } catch (e) { out.connectProbe = 'probe-failed'; }
   }
   res.status(200).json(out);
