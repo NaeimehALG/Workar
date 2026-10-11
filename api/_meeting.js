@@ -6,15 +6,35 @@ const crypto = require('crypto');
 const SESSION_MINUTES = () => Number(process.env.SESSION_MINUTES) || 45; // matches SESSION_MIN in index.html
 
 // A private, hard-to-guess room for each paid booking.
-function createMeeting() {
+// With DAILY_API_KEY set, calls run on Daily (inside Workar, no sign-in); otherwise Jitsi.
+const isDaily = url => /\.daily\.co\//i.test(String(url || ''));
+async function createMeeting(r) {
   const room = 'Workar-' + crypto.randomBytes(12).toString('base64url');
+  const key = process.env.DAILY_API_KEY;
+  if (key) {
+    try {
+      const start = r && r.startsAt ? new Date(r.startsAt).getTime() : Date.now();
+      const exp = Math.floor(Math.max(start, Date.now()) / 1000) + 7 * 24 * 3600; // room lives until a week after the session
+      const res = await fetch('https://api.daily.co/v1/rooms', {
+        method: 'POST',
+        headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: room.toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 40), privacy: 'public',
+          properties: { exp, max_participants: 4, enable_chat: true, enable_screenshare: true, enable_prejoin_ui: false, lang: 'en' } })
+      });
+      const d = await res.json().catch(() => ({}));
+      if (res.ok && d.url) return { room: d.name, url: d.url };
+      console.error('daily-room-failed', res.status, JSON.stringify(d).slice(0, 300));
+    } catch (e) { console.error('daily-room-failed', e.message); }
+  }
   return { room, url: 'https://meet.jit.si/' + room };
 }
 
 // Older bookings (paid before this update) used a room named after the request id.
 function meetingUrlFor(r) {
+  const url = r.meetingUrl || ('https://meet.jit.si/Workar-Session-' + encodeURIComponent(r.id));
+  if (isDaily(url)) return url;
   // English call screen by default (Jitsi otherwise follows the browser's language)
-  return (r.meetingUrl || ('https://meet.jit.si/Workar-Session-' + encodeURIComponent(r.id))) + '?lang=en#config.defaultLanguage=%22en%22';
+  return url + '?lang=en#config.defaultLanguage=%22en%22';
 }
 
 function icsStamp(d) { return new Date(d).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, ''); }
@@ -69,4 +89,4 @@ function googleCalendarLink({ r, title, description, url }) {
   return 'https://calendar.google.com/calendar/render?' + p.toString();
 }
 
-module.exports = { SESSION_MINUTES, createMeeting, meetingUrlFor, buildIcs, icsAttachment, googleCalendarLink };
+module.exports = { SESSION_MINUTES, isDaily, createMeeting, meetingUrlFor, buildIcs, icsAttachment, googleCalendarLink };

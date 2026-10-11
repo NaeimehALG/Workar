@@ -43,7 +43,7 @@
         },
         {
           "key": "Permissions-Policy",
-          "value": "camera=(self \"https://meet.jit.si\"), microphone=(self \"https://meet.jit.si\"), geolocation=()"
+          "value": "camera=(self \"https://meet.jit.si\" \"https://*.daily.co\"), microphone=(self \"https://meet.jit.si\" \"https://*.daily.co\"), display-capture=(self \"https://*.daily.co\"), fullscreen=(self \"https://*.daily.co\"), geolocation=()"
         },
         {
           "key": "Strict-Transport-Security",

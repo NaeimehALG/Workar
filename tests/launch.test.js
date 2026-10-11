@@ -108,7 +108,7 @@ test('support reports confirmation failure accurately while preserving a saved r
 });
 test('dashboard calendar links are shared by participants and hidden for unpaid or unrelated bookings',()=>{
   const source=html.slice(html.indexOf('function bookingCalendarData('),html.indexOf("document.addEventListener('click', e=>{\n  const button=e.target.closest"));
-  const ctx={uid:'client',reqStage:r=>r.paid?2:1,reqInstant:r=>new Date(r.startsAt),nameOf:()=> 'نام منتور',SESSION_MIN:45,URLSearchParams,TextEncoder,Date};
+  const ctx={uid:'client',isDailyUrl:u=>/\.daily\.co\//.test(u),reqStage:r=>r.paid?2:1,reqInstant:r=>new Date(r.startsAt),nameOf:()=> 'نام منتور',SESSION_MIN:45,URLSearchParams,TextEncoder,Date};
   vm.createContext(ctx);vm.runInContext(source,ctx);
   const r={id:'booking',mentorId:'mentor',clientId:'client',status:'accepted',paid:true,startsAt:'2026-10-08T01:00:00Z',meetingUrl:'https://meet.jit.si/room'};
   const event=ctx.bookingCalendarData(r);assert.equal(event.dates,'20261008T010000Z/20261008T014500Z');
@@ -126,4 +126,17 @@ test('payment webhook returns a retryable error when database rejects payment wr
   const req={method:'POST',headers:{'stripe-signature':`t=${t},v1=${sig}`},on(event,cb){if(event==='data')cb(payload);if(event==='end')cb();}};
   const res={status(code){this.code=code;return this},json(body){this.body=body;return this}};
   await ctx.module.exports(req,res);assert.equal(res.code,500);assert.equal(res.body.error,'update-failed');
+});
+
+test('paid sessions get a Daily room when DAILY_API_KEY is set, Jitsi otherwise', async () => {
+  const MT = require('../api/_meeting');
+  const saved = global.fetch; const key = process.env.DAILY_API_KEY;
+  delete process.env.DAILY_API_KEY;
+  assert.match((await MT.createMeeting({ startsAt: '2026-10-20T00:00:00Z' })).url, /^https:\/\/meet\.jit\.si\/Workar-/);
+  process.env.DAILY_API_KEY = 'k';
+  global.fetch = async (url, opts) => { assert.equal(url, 'https://api.daily.co/v1/rooms'); const b = JSON.parse(opts.body); return { ok: true, json: async () => ({ name: b.name, url: 'https://workar.daily.co/' + b.name }) }; };
+  const m = await MT.createMeeting({ startsAt: '2026-10-20T00:00:00Z' });
+  assert.match(m.url, /^https:\/\/workar\.daily\.co\/workar-/);
+  assert.equal(MT.meetingUrlFor({ meetingUrl: m.url }), m.url);
+  global.fetch = saved; if (key === undefined) delete process.env.DAILY_API_KEY; else process.env.DAILY_API_KEY = key;
 });

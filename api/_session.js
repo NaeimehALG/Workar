@@ -10,7 +10,9 @@ const svcHeaders = () => ({ apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Autho
 // Called by the Stripe webhook after a booking is marked paid.
 // Safe to call twice: the link is only created (and emails only sent) the first time.
 async function confirmPaidSession(requestId) {
-  const meeting = MT.createMeeting();
+  const pre = (await M.rows(`requests?id=eq.${encodeURIComponent(requestId)}&select=id,startsAt,meetingUrl`).catch(() => []))[0];
+  if (pre && pre.meetingUrl) return { skipped: 'already-confirmed' };
+  const meeting = await MT.createMeeting(pre);
   const res = await fetch(`${process.env.SUPABASE_URL}/rest/v1/requests?id=eq.${encodeURIComponent(requestId)}&meetingUrl=is.null`, {
     method: 'PATCH',
     headers: Object.assign({ Prefer: 'return=representation' }, svcHeaders()),
@@ -56,7 +58,7 @@ async function sendConfirmation(r, opts = {}) {
         : (p.isMentor
           ? `<b>${M.esc(p.other.name)}</b> completed payment. Your session is confirmed for <b>${M.esc(whenTxt)}</b>.`
           : `Your session with <b>${M.esc(p.other.name)}</b> is confirmed for <b>${M.esc(whenTxt)}</b>.`),
-      `Your private call link: ${M.link(url, url)}<br><span style="font-size:13px;color:#8a7461;">You can also join from your Workar dashboard. The first person to join may be asked to sign in with Google or GitHub to open the room.</span>`,
+      `Your private call link: ${M.link(url, url)}<br><span style="font-size:13px;color:#8a7461;">You can also join from your Workar dashboard.${MT.isDaily(url) ? ' No app or sign-in needed: it opens right in your browser.' : ' The first person to join may be asked to sign in with Google or GitHub to open the room.'}</span>`,
       gcal ? `${M.link(gcal, 'Add to Google Calendar')}, or open the attached invite to add it to Outlook or Apple Calendar. The invite reminds you 1 hour and 15 minutes before.` : '',
       p.isMentor ? 'The day before, we will email you a short prep brief about your client.' : 'The day before, we will email you a few tips to get the most out of the session.'
     ];

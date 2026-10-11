@@ -1026,6 +1026,15 @@
   /* pre-join (call) screen */
   .pj-back{position:fixed;inset:0;z-index:1000;background:rgba(20,15,10,.62);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:16px;animation:pjIn .18s ease-out;}
   @keyframes pjIn{from{opacity:0}to{opacity:1}}
+  .call-back{position:fixed;inset:0;z-index:2000;background:#140F0B;display:flex;flex-direction:column;padding:12px 16px 16px;gap:10px;}
+  .call-top{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#F5EDE3;}
+  .call-title{font-weight:600;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .call-end{background:#B3412E;color:#fff;border:0;border-radius:999px;padding:8px 16px;font:inherit;font-weight:600;cursor:pointer;}
+  .call-end:hover{background:#9A3626;}
+  .call-stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;}
+  .call-stage>iframe,.call-stage>div{width:100%;height:100%;}
+  .call-wait{color:#C9B8A6;}
+  body.in-call{overflow:hidden;}
   .pj{width:min(920px,100%);max-height:calc(100vh - 32px);overflow:auto;background:var(--surface);border-radius:22px;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);box-shadow:0 30px 80px rgba(0,0,0,.35);}
   @media (max-width:720px){ .pj{grid-template-columns:1fr;} .pj-stage{min-height:0;aspect-ratio:4/3;} }
   .pj-stage{position:relative;background:#1E1712;min-height:320px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
@@ -2178,7 +2187,7 @@ const I18N = {
     bk_step3:'Add a note and send your request', bk_video_voice:'video or voice call',
     pj_kicker_video:'Video session', pj_kicker_voice:'Voice session', pj_ready:'Ready to join?', pj_anytime:'Your session room is open', pj_live:'Happening now', pj_in_min:'Starts in {n} min', pj_at:'Scheduled for {d} at {t}', pj_ended:'Was scheduled for {d} at {t}',
     calendar_google:'Google Calendar', calendar_download:'Apple / Outlook calendar', pj_audio_ok:'Your microphone is ready. Your camera is off.', pj_checking:'Checking your camera and microphone…', pj_devices_ok:'Your camera and microphone are working. Use the buttons on the preview to turn them on or off before you join.', pj_devices_blocked:'We could not access your camera or microphone. You can still join and allow access inside the session room.',
-    pj_cam_is_off:'Your camera is off', pj_mute:'Mute microphone', pj_unmute:'Unmute microphone', pj_cam_off:'Turn camera off', pj_cam_on:'Turn camera on', pj_join:'Join now', pj_note:'Your Jitsi session opens in a new tab. Keep the link confidential and enable the lobby to admit only your mentor or client. The first participant may need to sign in to Jitsi.',
+    pj_cam_is_off:'Your camera is off', pj_mute:'Mute microphone', pj_unmute:'Unmute microphone', pj_cam_off:'Turn camera off', pj_cam_on:'Turn camera on', pj_join:'Join now', pj_note_daily:'Your call opens right here in Workar. No app or sign-in needed.', call_end:'Leave call', call_loading:'Connecting your call…', call_with:'Call with {n}', pj_note:'Your Jitsi session opens in a new tab. Keep the link confidential and enable the lobby to admit only your mentor or client. The first participant may need to sign in to Jitsi.',
     cal_free:'Free', cal_booked:'Booked', cal_na:'Not available', cal_off:'No times on this day. Pick a highlighted date.', cal_picked:'Selected: {d} at {t}', cal_busy_on:'Already booked that day: {t}', cal_none_busy:'Nothing booked that day yet.', cal_clash:'That time is already booked — please pick another.', cal_taken:'Someone just booked that time. Please pick another.',
     ft_privacy:'Privacy', ft_terms:'Terms', ft_refunds:'Refunds', legal_back:'← Back to Workar', legal_updated:'Last updated: {d}',
     auth_agree:'I agree to the {t} and {p}.', lbl_timezone:'Your time zone', tz_hint:'Your weekly availability is in this time zone. Clients see times converted to their own zone.',
@@ -2593,7 +2602,7 @@ const I18N = {
     bk_step3:'یک یادداشت بنویسید و درخواست را بفرستید', bk_video_voice:'تماس تصویری یا صوتی',
     pj_kicker_video:'جلسه‌ی تصویری', pj_kicker_voice:'جلسه‌ی صوتی', pj_ready:'آماده‌اید وارد شوید؟', pj_anytime:'اتاق جلسه‌ی شما باز است', pj_live:'جلسه همین الان در حال برگزاری است', pj_in_min:'{n} دقیقه‌ی دیگر شروع می‌شود', pj_at:'زمان جلسه: {d} ساعت {t}', pj_ended:'زمان جلسه {d} ساعت {t} بود',
     calendar_google:'تقویم گوگل', calendar_download:'تقویم اپل / اوت‌لوک', pj_audio_ok:'میکروفون آماده است. دوربین خاموش است.', pj_checking:'در حال بررسی دوربین و میکروفون…', pj_devices_ok:'دوربین و میکروفون شما کار می‌کنند. قبل از ورود می‌توانید با دکمه‌های روی تصویر آن‌ها را روشن یا خاموش کنید.', pj_devices_blocked:'به دوربین یا میکروفون دسترسی نداریم. باز هم می‌توانید وارد شوید و داخل اتاق جلسه اجازه‌ی دسترسی بدهید.',
-    pj_cam_is_off:'دوربین شما خاموش است', pj_mute:'قطع میکروفون', pj_unmute:'وصل میکروفون', pj_cam_off:'خاموش کردن دوربین', pj_cam_on:'روشن کردن دوربین', pj_join:'ورود به جلسه', pj_note:'جلسه در یک زبانه‌ی جدید Jitsi باز می‌شود. لینک را به کسی ندهید و لابی را برای تأیید ورود روشن کنید. ممکن است نفر اول لازم باشد وارد حساب Jitsi شود.',
+    pj_cam_is_off:'دوربین شما خاموش است', pj_mute:'قطع میکروفون', pj_unmute:'وصل میکروفون', pj_cam_off:'خاموش کردن دوربین', pj_cam_on:'روشن کردن دوربین', pj_join:'ورود به جلسه', pj_note_daily:'تماس همین‌جا داخل Workar باز می‌شود؛ بدون نصب برنامه یا ورود به حساب.', call_end:'خروج از تماس', call_loading:'در حال اتصال تماس…', call_with:'تماس با {n}', pj_note:'جلسه در یک زبانه‌ی جدید Jitsi باز می‌شود. لینک را به کسی ندهید و لابی را برای تأیید ورود روشن کنید. ممکن است نفر اول لازم باشد وارد حساب Jitsi شود.',
     cal_free:'آزاد', cal_booked:'رزرو شده', cal_na:'در دسترس نیست', cal_off:'در این روز زمان آزادی نیست. یکی از تاریخ‌های رنگی را انتخاب کنید.', cal_picked:'انتخاب شد: {d} ساعت {t}', cal_busy_on:'در این روز رزرو شده: {t}', cal_none_busy:'هنوز رزروی برای این روز نیست.', cal_clash:'این زمان قبلاً رزرو شده است. زمان دیگری انتخاب کنید.', cal_taken:'همین الان کسی این زمان را رزرو کرد. زمان دیگری انتخاب کنید.',
     ft_privacy:'حریم خصوصی', ft_terms:'شرایط استفاده', ft_refunds:'بازپرداخت', legal_back:'→ بازگشت به Workar', legal_updated:'آخرین به‌روزرسانی: {d}',
     auth_agree:'{t} و {p} را می‌پذیرم.', lbl_timezone:'منطقه‌ی زمانی شما', tz_hint:'زمان‌های آزاد هفتگی شما به این منطقه‌ی زمانی است. مراجعان زمان را به وقت خودشان می‌بینند.',
@@ -3246,6 +3255,7 @@ function onSignedIn(session){
     toast(T('toast_payment_success'));
     const paidReq = params.get('paid');
     history.replaceState({}, '', location.origin + location.pathname);
+    state.view = 'messages'; state.ibOpenReq = paidReq; // back to the conversation, where the Join call button now is
     confirmBookingPaid(paidReq, true);
   } else if(params.get('prepPaid')){
     toast(T('prep_paid_toast'), 4500);
@@ -5903,7 +5913,8 @@ function bookingCalendarData(r){
   if(!start || !Number.isFinite(start.getTime())) return null;
   const stamp = d=>d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
   const title = 'Workar session with '+nameOf(r.mentorId===uid ? r.clientId : r.mentorId);
-  const url = (r.meetingUrl || ('https://meet.jit.si/Workar-Session-'+encodeURIComponent(r.id))) + '?lang=en#config.defaultLanguage=%22en%22';
+  const base = r.meetingUrl || ('https://meet.jit.si/Workar-Session-'+encodeURIComponent(r.id));
+  const url = isDailyUrl(base) ? base : base + '?lang=en#config.defaultLanguage=%22en%22';
   const dates = stamp(start)+'/'+stamp(new Date(start.getTime()+SESSION_MIN*60000));
   return { title, url, dates, google:'https://calendar.google.com/calendar/render?'+new URLSearchParams({action:'TEMPLATE',text:title,dates,details:'Join your Workar session: '+url,location:url}) };
 }
@@ -6225,6 +6236,7 @@ function messagesView(){
   const convs = every.filter(c=>(!q || nameOf(c.o).toLowerCase().includes(q) || String(personOf(c.o).profession||'').toLowerCase().includes(q))
       && (filt==='requests' ? c.act : filt==='unread' ? c.unread : true))
     .sort((a,b)=>(!!b.act - !!a.act) || (b.lastT - a.lastT));
+  if(state.ibOpenReq){ const rq = (cache.requests||[]).find(x=>x.id===state.ibOpenReq); if(rq){ state.inboxWith = rq.mentorId===uid ? rq.clientId : rq.mentorId; state.ibFilter = 'all'; state.ibOpenReq = null; } }
   if(state.ibPreferAction){ state.ibPreferAction = false; if(!state.inboxWith && window.innerWidth > 760){ const f = convs.find(c=>c.act); if(f) state.inboxWith = f.o; } }
   const sel = state.inboxWith || (window.innerWidth > 760 && convs[0] ? convs[0].o : null);
   if(sel){ markConvSeen(sel); markReadDb(sel); }
@@ -6437,6 +6449,47 @@ function pjRender(){
   if(mb){ mb.innerHTML = pj.mic ? PJ_IC.mic : PJ_IC.micOff; mb.classList.toggle('off', !pj.mic); mb.setAttribute('aria-label', T(pj.mic ? 'pj_mute' : 'pj_unmute')); }
   if(cb){ cb.innerHTML = pj.cam ? PJ_IC.cam : PJ_IC.camOff; cb.classList.toggle('off', !pj.cam); cb.setAttribute('aria-label', T(pj.cam ? 'pj_cam_off' : 'pj_cam_on')); }
 }
+// ---------- In-app calls (Daily): the call opens inside Workar, like Instagram — no app, no sign-in ----------
+function isDailyUrl(u){ return /^https:\/\/[a-z0-9-]+\.daily\.co\//i.test(String(u||'')); }
+let __callFrame = null;
+function loadDaily(){
+  if(window.DailyIframe) return Promise.resolve(window.DailyIframe);
+  if(loadDaily.p) return loadDaily.p;
+  loadDaily.p = new Promise((ok, bad)=>{ const sc = document.createElement('script'); sc.src = 'https://cdn.jsdelivr.net/npm/@daily-co/daily-js@0.92.2/dist/daily-iframe.js'; sc.async = true;
+    sc.onload = ()=> window.DailyIframe ? ok(window.DailyIframe) : bad(new Error('daily-missing')); sc.onerror = ()=>{ loadDaily.p = null; bad(new Error('daily-load-failed')); }; document.head.appendChild(sc); });
+  return loadDaily.p;
+}
+function closeInAppCall(){
+  const f = __callFrame; __callFrame = null;
+  if(f){ try{ f.destroy(); }catch(e){} }
+  const el = document.getElementById('call-back'); if(el) el.remove();
+  document.body.classList.remove('in-call');
+}
+async function openInAppCall(url, o){
+  closeInAppCall();
+  const el = document.createElement('div');
+  el.id = 'call-back'; el.className = 'call-back'; el.setAttribute('role','dialog'); el.setAttribute('aria-modal','true'); el.setAttribute('aria-label', T('call_with').replace('{n}', o.other||''));
+  el.innerHTML = `<div class="call-top"><span class="call-title">${esc(T('call_with').replace('{n}', o.other||''))}</span><button type="button" class="call-end" id="call-end">${esc(T('call_end'))}</button></div>
+    <div class="call-stage" id="call-stage"><p class="call-wait">${esc(T('call_loading'))}</p></div>`;
+  document.body.appendChild(el); document.body.classList.add('in-call');
+  document.getElementById('call-end').onclick = async ()=>{ if(__callFrame){ try{ await __callFrame.leave(); }catch(e){} } closeInAppCall(); };
+  const stage = document.getElementById('call-stage');
+  try{
+    const Daily = await loadDaily();
+    if(!document.getElementById('call-back')) return;
+    stage.innerHTML = '';
+    const f = Daily.createFrame(stage, { iframeStyle:{ width:'100%', height:'100%', border:'0', borderRadius:'16px', background:'#1d1611' }, showLeaveButton:true, showFullscreenButton:true, lang: state.lang==='fa' ? 'fa' : 'en',
+      theme:{ colors:{ accent:'#8B5E3C', accentText:'#FFFFFF', background:'#1D1611', backgroundAccent:'#2A211A', baseText:'#F5EDE3', border:'#3A2E24', mainAreaBg:'#140F0B', mainAreaBgAccent:'#2A211A', mainAreaText:'#F5EDE3', supportiveText:'#C9B8A6' } } });
+    __callFrame = f;
+    f.on('left-meeting', ()=>closeInAppCall());
+    await f.join({ url, userName: o.name, startVideoOff: !o.cam, startAudioOff: !o.mic });
+  }catch(e){
+    // Fallback: plain embedded call page
+    if(!document.getElementById('call-back')) return;
+    __callFrame = null;
+    stage.innerHTML = `<iframe src="${esc(url)}" allow="camera; microphone; fullscreen; display-capture; autoplay" style="width:100%;height:100%;border:0;border-radius:16px;background:#1d1611"></iframe>`;
+  }
+}
 async function openPrejoin(reqId, url, mode){
   pjClose();
   const r = (cache.requests||[]).find(x=>x.id===reqId);
@@ -6472,7 +6525,7 @@ async function openPrejoin(reqId, url, mode){
         <button type="button" class="btn btn-primary" id="pj-join">${esc(T('pj_join'))}</button>
         <button type="button" class="btn btn-ghost" id="pj-cancel">${esc(T('cancel'))}</button>
       </div>
-      <p class="pj-msg">${esc(T('pj_note'))}</p>
+      <p class="pj-msg">${esc(T(isDailyUrl(pj.url) ? 'pj_note_daily' : 'pj_note'))}</p>
     </div>
   </div>`;
   document.body.appendChild(el);
@@ -6487,6 +6540,7 @@ async function openPrejoin(reqId, url, mode){
     }
     pjRender(); };
   document.getElementById('pj-join').onclick = ()=>{
+    if(isDailyUrl(pj.url)){ const u = pj.url, mic = pj.mic, cam = pj.cam; pjClose(); openInAppCall(u, { name: myName || 'Workar user', other: oname, mic, cam }); return; }
     let cfg = '#config.prejoinPageEnabled=false&config.disableDeepLinking=true'
       + '&config.defaultLanguage=' + encodeURIComponent('"'+(state.lang==='fa'?'fa':'en')+'"')
       + '&config.subject=' + encodeURIComponent('"Workar · '+oname+'"')
