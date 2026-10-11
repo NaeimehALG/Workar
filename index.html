@@ -1717,6 +1717,31 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .iv-agenda li{display:flex;flex-direction:column;font-size:13.5px;padding-inline-start:10px;border-inline-start:2px solid var(--accent-2);}
   .iv-agenda b{font-weight:600;color:var(--text);}
   .iv-agenda span{color:var(--muted);font-size:13px;}
+  /* one inbox: filters, request tags and request card in the thread */
+  .ib-filters{display:flex;gap:6px;padding:4px 16px 10px;flex-wrap:wrap;}
+  .ib-filt{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);font:inherit;font-size:13px;font-weight:600;padding:5px 12px;border-radius:999px;cursor:pointer;}
+  .ib-filt i{font-style:normal;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:#C2412D;color:#fff;font-size:11px;display:inline-grid;place-items:center;}
+  .ib-filt.on{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .ib-filt.on i{background:#fff;color:var(--accent);}
+  .ib-item.act b{font-weight:700;}
+  .ib-tag{flex:none;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;margin-inline-end:6px;background:rgba(185,141,94,.16);color:var(--accent);}
+  .ib-tag.new{background:#C2412D;color:#fff;}
+  .ib-tag.pay{background:rgba(78,138,91,.14);color:var(--free);}
+  .ibr{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 16px;margin:12px 16px 0;padding:14px 16px;border:1px solid var(--border);border-inline-start:3px solid var(--accent-2);border-radius:12px;background:var(--surface);animation:ivIn .2s ease;}
+  .ibr-stack{flex:none;max-height:68%;overflow-y:auto;padding-bottom:4px;}
+  .ibr + .ibr{margin-top:8px;}
+  .ibr.hot{border-inline-start-color:var(--accent);background:linear-gradient(90deg,rgba(185,141,94,.08),var(--surface) 70%);}
+  .ibr.gone,.ibr.yes{font-size:14px;color:var(--muted);background:var(--surface-2);}
+  .ibr.yes{color:var(--free);font-weight:600;background:rgba(78,138,91,.08);justify-content:flex-start;}
+  .ibr-main{min-width:0;flex:1 1 300px;}
+  .ibr-title{font-size:15px;font-weight:700;color:var(--text);}
+  .ibr .iv-meta{margin-top:5px;}
+  .ibr .iv-note{margin-top:8px;font-size:13.5px;}
+  .ibr .pr-chips{margin-top:10px;}
+  .pr-chips.static .pr-chip{cursor:default;}
+  .ibr-act{display:flex;flex-wrap:wrap;align-items:center;gap:8px;}
+  .ibr-act .iv-pill{padding:6px 16px;font-size:14px;}
+  .ibr .pr{flex-basis:100%;margin-top:4px;}
   /* suggest-times composer */
   .pr{grid-column:1/-1;margin-top:16px;padding:18px;border:1px solid var(--border);border-radius:12px;background:var(--surface-2);animation:ivIn .2s ease;}
   .pr-head b{display:block;font-size:15px;color:var(--text);}
@@ -2223,7 +2248,7 @@ const I18N = {
     rt_kicker:"Your career path",
     sd_strength:'Profile strength', sd_strength_m:'Complete profiles get noticeably more bookings.', sd_strength_c:'A complete profile helps mentors prepare for you.', sd_done:'Your profile is complete.', sd_add:'Add', sd_i_title:'Job title', sd_i_bio:'About', sd_i_skills:'Skills', sd_i_edu:'Education', sd_i_lang:'Languages', sd_i_li:'LinkedIn', sd_i_avail:'Availability', sd_i_goals:'Goals', sd_i_cert:'Certifications', sd_msgs:'Messages', sd_all:'See all messages', sd_none:'No conversations yet.', sd_find:'Find a mentor',
     ib_ai:'Suggest a reply', earn_wait:'Awaiting payment', earn_tx_client:'Client', earn_tx_date:'Date', earn_tx_paid:'Paid', earn_tx_share:'Your share', earn_tx_out:'Paid out', earn_tx_due:'Due',
-    nav_inbox:'Inbox', iv_new_title:'Session requests', iv_wants:'wants to book a session', iv_ignore:'Ignore', iv_suggest:'Suggest times', iv_suggest_other:'Suggest another time', iv_accept_anyway:'Accept anyway', iv_accept_q:'This time has a problem (see the note on the request). Accept it anyway?',
+    nav_inbox:'Inbox', ibf_all:'All', ibf_requests:'Requests', ibf_unread:'Unread', ibf_none:'No unread messages.', ibt_new:'New request', ibt_pick:'Pick a time', ibt_pay:'Ready to pay', ibr_new:'{n} wants to book a session', ibr_waiting_pick:'You suggested new times. Waiting for {n} to pick one', ibr_pick:'{n} suggested new times. Pick one to confirm', ibr_sent:'Session request sent', ibr_accepted:'Session accepted', ibr_confirmed:'Session confirmed', iv_new_title:'Session requests', iv_wants:'wants to book a session', iv_ignore:'Ignore', iv_suggest:'Suggest times', iv_suggest_other:'Suggest another time', iv_accept_anyway:'Accept anyway', iv_accept_q:'This time has a problem (see the note on the request). Accept it anyway?',
     iv_ignored:'Request from {n} ignored.', iv_undo:'Undo', iv_accepted:'Accepted. {n} will be asked to pay to confirm.', iv_show_all:'Show all', iv_less:'Show less',
     iv_clear:'You\'re all caught up', iv_clear_sub:'New session requests will appear here.', iv_pick_title:'New times suggested for you', iv_suggested:'suggested new times for your session',
     iv_none_work:'None of these work? Send a message', iv_pay_title:'Ready to confirm', iv_c_pay:'Accepted. Pay to confirm your session', iv_up_title:'Upcoming sessions', iv_join:'Join',
@@ -2636,7 +2661,7 @@ const I18N = {
     rt_kicker:"مسیر شغلی شما",
     sd_strength:'قدرت پروفایل', sd_strength_m:'پروفایل کامل رزرو بیشتری می‌گیرد.', sd_strength_c:'پروفایل کامل به منتور کمک می‌کند بهتر آماده شود.', sd_done:'پروفایل شما کامل است.', sd_add:'افزودن', sd_i_title:'عنوان شغلی', sd_i_bio:'درباره‌ی من', sd_i_skills:'مهارت‌ها', sd_i_edu:'تحصیلات', sd_i_lang:'زبان‌ها', sd_i_li:'لینکدین', sd_i_avail:'زمان‌های آزاد', sd_i_goals:'اهداف', sd_i_cert:'گواهینامه‌ها', sd_msgs:'پیام‌ها', sd_all:'همه‌ی پیام‌ها', sd_none:'هنوز گفتگویی ندارید.', sd_find:'پیدا کردن منتور',
     ib_ai:'پیشنهاد پاسخ', earn_wait:'در انتظار پرداخت', earn_tx_client:'مراجع', earn_tx_date:'تاریخ', earn_tx_paid:'پرداختی', earn_tx_share:'سهم شما', earn_tx_out:'واریز شد', earn_tx_due:'در انتظار واریز',
-    nav_inbox:'صندوق ورودی', iv_new_title:'درخواست‌های جلسه', iv_wants:'درخواست یک جلسه داده است', iv_ignore:'نادیده گرفتن', iv_suggest:'پیشنهاد زمان', iv_suggest_other:'پیشنهاد زمان دیگر', iv_accept_anyway:'با این حال قبول کن', iv_accept_q:'این زمان مشکلی دارد (یادداشت روی درخواست را ببینید). باز هم قبول می‌کنید؟',
+    nav_inbox:'صندوق ورودی', ibf_all:'همه', ibf_requests:'درخواست‌ها', ibf_unread:'خوانده‌نشده', ibf_none:'پیام خوانده‌نشده‌ای ندارید.', ibt_new:'درخواست جدید', ibt_pick:'انتخاب زمان', ibt_pay:'آماده‌ی پرداخت', ibr_new:'{n} درخواست جلسه داده است', ibr_waiting_pick:'زمان‌های تازه پیشنهاد دادید. منتظر انتخاب {n}', ibr_pick:'{n} زمان‌های تازه پیشنهاد داده است. یکی را انتخاب کنید', ibr_sent:'درخواست جلسه ارسال شد', ibr_accepted:'جلسه قبول شد', ibr_confirmed:'جلسه قطعی شد', iv_new_title:'درخواست‌های جلسه', iv_wants:'درخواست یک جلسه داده است', iv_ignore:'نادیده گرفتن', iv_suggest:'پیشنهاد زمان', iv_suggest_other:'پیشنهاد زمان دیگر', iv_accept_anyway:'با این حال قبول کن', iv_accept_q:'این زمان مشکلی دارد (یادداشت روی درخواست را ببینید). باز هم قبول می‌کنید؟',
     iv_ignored:'درخواست {n} نادیده گرفته شد.', iv_undo:'برگرداندن', iv_accepted:'قبول شد. از {n} خواسته می‌شود برای قطعی شدن پرداخت کند.', iv_show_all:'نمایش همه', iv_less:'نمایش کمتر',
     iv_clear:'درخواست تازه‌ای ندارید', iv_clear_sub:'درخواست‌های جدید جلسه اینجا نمایش داده می‌شوند.', iv_pick_title:'زمان‌های پیشنهادی برای شما', iv_suggested:'زمان‌های تازه‌ای برای جلسه‌تان پیشنهاد داده است',
     iv_none_work:'هیچ‌کدام مناسب نیست؟ پیام بدهید', iv_pay_title:'آماده‌ی قطعی شدن', iv_c_pay:'قبول شد. برای قطعی شدن جلسه پرداخت کنید', iv_up_title:'جلسه‌های پیش رو', iv_join:'ورود',
@@ -2806,13 +2831,15 @@ let state = { view:'home', mentorId:null, coachMode:'resume', chatMsgs:[], sendi
   matchQuery:'', matchResults:null, matching:false, interviewRole:'', interviewStarted:false, bookingOpen:false, selectedSlot:null,
   authMode:'login', authError:'', authCheckEmail:false, authBusy:false,
   lang:'en', query:'', role:null, voiceMode:false, listening:false, outOfCredits:false };
-try{ const __go = new URLSearchParams(location.search).get('go'); if(__go && ['dashboard','admin','privacy','terms','refunds','browse','coach','prep','requests','messages'].includes(__go)){ state.view = __go; history.replaceState(null, '', location.pathname + location.hash); } }catch(e){}
+try{ const __go = new URLSearchParams(location.search).get('go'); if(__go && ['dashboard','admin','privacy','terms','refunds','browse','coach','prep','requests','messages'].includes(__go)){ if(__go==='requests'){ state.ibPreferAction = true; } state.view = __go==='requests' ? 'messages' : __go; history.replaceState(null, '', location.pathname + location.hash); } }catch(e){}
 let cache = { profiles:{}, reviews:{}, requests:[], names:{}, people:{}, msgs:{}, busy:{}, busyLoaded:{} };
 
 function el(html){ const t=document.createElement('template'); t.innerHTML=html.trim(); return t.content; }
 function esc(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function toast(msg, ms){ const d=document.createElement('div'); d.className='toast'; d.textContent=msg; document.body.appendChild(d); setTimeout(()=>d.remove(), ms||2600); }
 function nav(view, params, fromHistory){
+  // Requests and messages live in one inbox; 'requests' opens it on the first conversation that needs you
+  if(view==='requests'){ view = 'messages'; params = Object.assign({ ibPreferAction:true, inboxWith:null }, params||{}); }
   // Start a fresh auth entry after leaving the form; keep in-form tab changes intact.
   if(!uid && view!==state.view && (view==='dashboard' || view==='onboard')){
     state.authMode = view==='onboard' ? 'signup' : 'login';
@@ -3406,8 +3433,8 @@ function render(){
       case 'browse': body = browseView(); break;
       case 'mentor': body = mentorView(); break;
       case 'dashboard': body = dashboardView(); break;
-      case 'messages': state.hubTab = 'messages'; body = myProfile ? messagesView() : onboardView(); break;
-      case 'requests': state.hubTab = 'requests'; body = myProfile ? requestsView() : onboardView(); break;
+      case 'messages': body = myProfile ? messagesView() : onboardView(); break;
+      case 'requests': body = myProfile ? messagesView() : onboardView(); break;
       case 'coach': body = coachView(); break;
       case 'prep': body = prepVisible() ? prepView() : homeView(); break;
       case 'prepAdmin': body = isAdmin() ? prepAdminView() : homeView(); break;
@@ -3420,7 +3447,7 @@ function render(){
   if(state.langPrompt) app.appendChild(el(langPromptHtml()));
   app.appendChild(el(`<footer>Workar · ${esc(T('footer_tag'))}<br><span class="foot-links"><a data-nav="privacy">${esc(T('ft_privacy'))}</a> · <a data-nav="terms">${esc(T('ft_terms'))}</a> · <a data-nav="refunds">${esc(T('ft_refunds'))}</a></span><br><a class="ig-link" href="${INSTAGRAM_URL}" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg> @workarmentoring</a> <a class="ig-link" href="${LINKEDIN_URL}" target="_blank" rel="noopener noreferrer" aria-label="Workar on LinkedIn" style="margin-inline-start:18px"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 3a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM3 9h4v12H3V9Zm6 0h4v1.6C13.7 9.5 14.8 9 16.2 9 19 9 21 10.7 21 14v7h-4v-6.3c0-1.7-.7-2.7-2-2.7s-2 1-2 2.7V21H9V9Z"/></svg> LinkedIn</a> <a class="ig-link" href="${YOUTUBE_URL}" target="_blank" rel="noopener noreferrer" aria-label="Workar on YouTube" style="margin-inline-start:18px"><svg width="16" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 7s-.2-1.5-.8-2.1C20.4 4.1 19.5 4 19 4c-2.9-.2-7-.2-7-.2s-4.1 0-7 .2c-.5 0-1.4.1-2.2.9C2.2 5.5 2 7 2 7s-.2 1.8-.2 3.5v3c0 1.7.2 3.5.2 3.5s.2 1.5.8 2.1c.8.8 1.8.8 2.4.9 1.7.2 6.8.2 6.8.2s4.1 0 7-.2c.5 0 1.4-.1 2.2-.9.6-.6.8-2.1.8-2.1s.2-1.8.2-3.5v-3C22.2 8.8 22 7 22 7ZM10 15.5v-7l6 3.5-6 3.5Z"/></svg> YouTube</a><p class="foot-disc">${esc(T('disclaimer'))}</p></footer>`));
   wire();
-  if(state.view==='messages') wireInbox();
+  if(state.view==='messages' || state.view==='requests') wireInbox();
   if(window.WorkarAgents) WorkarAgents.afterRender();
   wireRateWidgets();
   setupReveal();
@@ -3441,7 +3468,7 @@ function navHtml(){
     <div class="navlinks">
       ${items.map(([v,l])=>`<div class="navlink ${state.view===v?'active':''}" data-nav="${v}">${esc(l)}</div>`).join('')}
       ${uid && myProfile ? (()=>{ const n = requestsNeedingMe() + inboxUnreadTotal(), on = state.view==='requests' || state.view==='messages';
-        return `<div class="navlink nav-msg ${on?'active':''}" data-nav="${requestsNeedingMe() ? 'requests' : (state.hubTab||'requests')}">${esc(T('nav_inbox'))}<span class="nav-msg-badge" style="${n?'':'display:none'}">${n}</span></div>`; })() : ''}
+        return `<div class="navlink nav-msg ${on?'active':''}" data-nav="${requestsNeedingMe() ? 'requests' : 'messages'}">${esc(T('nav_inbox'))}<span class="nav-msg-badge" style="${n?'':'display:none'}">${n}</span></div>`; })() : ''}
       ${isAdmin() ? `<div class="navlink ${state.view==='admin'?'active':''}" data-nav="admin">${esc(T('adm_nav'))}</div>` : ''}
       ${uid ? `<div class="navlink" id="signout-btn" title="${esc(T('signed_in_as'))} ${esc(userEmail||'')}">${esc(T('nav_signout'))}</div>` : `<div class="navlink" data-nav="dashboard">${esc(T('nav_login'))}</div>`}
       <div class="lang-wrap notranslate" translate="no"><div class="lang-switch" id="lang-toggle"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-inline-end:5px;"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>${esc(langName(currentUiLang()))}</div>${state.langMenu ? langMenuHtml() : ''}</div>
@@ -6057,27 +6084,86 @@ const IB_IC = {
   trash:'<svg viewBox="0 0 20 20" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h12M8 6V4h4v2M6 6l1 10h6l1-10"/></svg>',
   chat:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.6A8 8 0 1 1 21 12z"/></svg>'
 };
+// Request card shown at the top of a conversation (one inbox for requests and messages)
+function convAction(c){
+  for(const r of (c.reqs||[])){
+    const st = reqStage(r), fresh = !((r.proposedTimes||[]).some(t=>new Date(t).getTime() > Date.now()));
+    if(r.mentorId===uid && r.status==='pending' && fresh && !state.ivIgnoring[r.id]) return 'new';
+    if(r.clientId===uid && r.mentorId!==uid && st===0 && !fresh) return 'pick';
+    if(r.clientId===uid && r.mentorId!==uid && st===1) return 'pay';
+  }
+  return '';
+}
+function ibReqCard(cur, iAmMentor, name){
+  const inst = reqInstant(cur), st = reqStage(cur);
+  const proposed = (cur.proposedTimes||[]).map(x=>new Date(x)).filter(i=>i.getTime() > Date.now()).sort((a,b)=>a-b);
+  if(state.ivIgnoring[cur.id]) return `<div class="ibr gone"><span>${esc(T('iv_ignored').replace('{n}', name))}</span><button type="button" class="iv-undo" data-iv-undo="${esc(cur.id)}">${esc(T('iv_undo'))}</button></div>`;
+  if(state.ivAccepted===cur.id) return `<div class="ibr yes"><span class="iv-yes-ic">${HUB_IC.ok}</span><span>${esc(T('iv_accepted').replace('{n}', name))}</span></div>`;
+  let title, status = '', act = '', extra = '';
+  if(iAmMentor && cur.status==='pending' && !proposed.length){
+    const c = timeCheck(cur);
+    title = T('ibr_new').replace('{n}', name);
+    extra = (cur.message ? `<p class="iv-note"><span>“${esc(cur.message)}”</span></p>` : '') + checkChip(c);
+    act = `<button type="button" class="iv-ignore" data-iv-ignore="${esc(cur.id)}">${esc(T('iv_ignore'))}</button>`
+      + (c.bad ? `<button type="button" class="iv-pill solid" data-propose="${esc(cur.id)}">${esc(T('iv_suggest'))}</button>${c.k!=='past' ? `<button type="button" class="iv-link" data-iv-accept="${esc(cur.id)}" data-force="1">${esc(T('iv_accept_anyway'))}</button>` : ''}`
+               : `<button type="button" class="iv-pill" data-propose="${esc(cur.id)}">${esc(T('iv_suggest_other'))}</button><button type="button" class="iv-pill solid" data-iv-accept="${esc(cur.id)}">${esc(T('accept'))}</button>`);
+  } else if(iAmMentor && cur.status==='pending'){
+    title = T('ibr_waiting_pick').replace('{n}', name);
+    extra = `<div class="pr-chips static">${proposed.map(i=>`<span class="pr-chip"><b>${esc(fmtLocalDay(i))}</b><span>${esc(fmtLocalTime(i))}</span></span>`).join('')}</div>`;
+    act = `<button type="button" class="iv-link" data-propose="${esc(cur.id)}">${esc(T('iv_change_sugg'))}</button>`;
+  } else if(!iAmMentor && cur.status==='pending' && proposed.length){
+    title = T('ibr_pick').replace('{n}', name);
+    extra = `<div class="pr-chips pick">${proposed.map(i=>`<button type="button" class="pr-chip" data-pick="${esc(cur.id)}" data-at="${i.toISOString()}"><b>${esc(fmtLocalDay(i))}</b><span>${esc(fmtLocalTime(i))}</span></button>`).join('')}</div>`;
+  } else if(!iAmMentor && cur.status==='pending'){
+    title = T('ibr_sent'); status = T('iv_c_wait').replace('{n}', name);
+    act = `<button type="button" class="iv-link" data-set-status="${esc(cur.id)}" data-to="cancelled">${esc(T('mg_cancel_c'))}</button>`;
+  } else if(st===1){
+    title = T('ibr_accepted'); status = iAmMentor ? T('iv_w_pay').replace('{n}', name) : T('iv_c_pay');
+    if(!iAmMentor) act = `<button type="button" class="iv-pill solid" data-pay="${esc(cur.id)}" data-amount="${cur.amountCents}" data-mentor="${esc(cur.mentorId)}">${esc(T('pay_to_confirm').replace('${amount}', (cur.amountCents/100).toFixed(2)))}</button>`;
+  } else if(st===2){
+    const soon = inst && inst - Date.now() < 15*60000 && inst - Date.now() > -90*60000;
+    title = T('ibr_confirmed') + (soon ? ` <span class="iv-live">${esc(T('iv_starting'))}</span>` : '');
+    act = `<button type="button" class="iv-pill solid" data-call="${esc(cur.id)}" data-url="${esc(cur.meetingUrl||'')}" data-mode="video">${HUB_IC.video}${esc(T('iv_join'))}</button>${bookingCalendarActions(cur)}`;
+  } else return '';
+  return `<div class="ibr ${act && /solid/.test(act) ? 'hot' : ''}">
+    <div class="ibr-main">
+      <div class="ibr-title">${st===2 ? title : esc(title)}</div>
+      <div class="iv-meta">${inst ? `<span class="${proposed.length && !iAmMentor ? 'iv-strike' : ''}">${HUB_IC.cal}${esc(whenLine(inst))}</span>` : ''}${pkgLine(cur) ? `<span>${HUB_IC.pkg}${esc(pkgLine(cur))}</span>` : ''}</div>
+      ${status ? `<div class="iv-status">${HUB_IC.clock}${esc(status)}</div>` : ''}
+      ${extra}
+    </div>
+    ${act ? `<div class="ibr-act">${act}</div>` : ''}
+    ${state.propose===cur.id ? proposePanel(cur) : ''}
+  </div>`;
+}
 function messagesView(){
   if(!uid || !myProfile) return `<div class="empty">${esc(T('set_profile_first'))}</div>`;
-  const q = (state.inboxQuery||'').toLowerCase();
-  const convs = conversations().filter(c=>!q || nameOf(c.o).toLowerCase().includes(q) || String(personOf(c.o).profession||'').toLowerCase().includes(q));
+  const q = (state.inboxQuery||'').toLowerCase(), filt = state.ibFilter || 'all';
+  const every = conversations().map(c=>Object.assign(c, { act: convAction(c) }));
+  const nReq = every.filter(c=>c.act).length, nUnread = every.filter(c=>c.unread).length;
+  const convs = every.filter(c=>(!q || nameOf(c.o).toLowerCase().includes(q) || String(personOf(c.o).profession||'').toLowerCase().includes(q))
+      && (filt==='requests' ? c.act : filt==='unread' ? c.unread : true))
+    .sort((a,b)=>(!!b.act - !!a.act) || (b.lastT - a.lastT));
+  if(state.ibPreferAction){ state.ibPreferAction = false; if(!state.inboxWith && window.innerWidth > 760){ const f = convs.find(c=>c.act); if(f) state.inboxWith = f.o; } }
   const sel = state.inboxWith || (window.innerWidth > 760 && convs[0] ? convs[0].o : null);
   if(sel){ markConvSeen(sel); markReadDb(sel); }
   const list = convs.length ? convs.map(c=>{ const p = personOf(c.o), last = c.last;
-      return `<button type="button" class="ib-item ${c.o===sel?'on':''}" data-inbox="${esc(c.o)}">
+      return `<button type="button" class="ib-item ${c.o===sel?'on':''} ${c.act?'act':''}" data-inbox="${esc(c.o)}">
         <span class="ib-av ${onlineSet.has(c.o)?'online':''}" data-presence="${esc(c.o)}">${av(c.o)}</span>
         <span class="ib-meta"><span class="ib-row"><b>${esc(nameOf(c.o))}</b><time>${esc(inboxShortTime(c.lastT))}</time></span>
-          <span class="ib-row"><span class="ib-snip">${last ? (last.senderId===uid ? esc(T('inbox_you'))+': ' : '') + esc(last.text) : esc(p.headline||p.profession||'')}</span>${c.unread && c.o!==sel ? `<i class="ib-badge">${c.unread}</i>` : ''}</span></span>
+          <span class="ib-row">${c.act ? `<span class="ib-tag ${c.act}">${esc(T('ibt_'+c.act))}</span>` : ''}<span class="ib-snip">${last ? (last.senderId===uid ? esc(T('inbox_you'))+': ' : '') + esc(last.text) : esc(p.headline||p.profession||'')}</span>${c.unread && c.o!==sel ? `<i class="ib-badge">${c.unread}</i>` : ''}</span></span>
       </button>`; }).join('')
-    : `<div class="ib-none">${IB_IC.chat}<p>${esc(T('inbox_empty'))}</p><button class="btn btn-primary btn-sm" data-nav="browse">${esc(T('find_mentor_title'))}</button></div>`;
-  return `<div class="hub">${hubTabs('messages')}<div class="ib ${sel?'has-sel':''}">
+    : filt!=='all' ? `<div class="ib-none">${HUB_IC.ok}<p>${esc(T(filt==='requests' ? 'iv_clear' : 'ibf_none'))}</p></div>` : `<div class="ib-none">${IB_IC.chat}<p>${esc(T('inbox_empty'))}</p><button class="btn btn-primary btn-sm" data-nav="browse">${esc(T('find_mentor_title'))}</button></div>`;
+  const pill = (k, n)=>`<button type="button" class="ib-filt ${filt===k?'on':''}" data-ib-filter="${k}">${esc(T('ibf_'+k))}${n ? ` <i>${n}</i>` : ''}</button>`;
+  return `<div class="ib ${sel?'has-sel':''}">
     <aside class="ib-side">
-      <div class="ib-side-head"><h2>${esc(T('nav_messages'))}</h2></div>
+      <div class="ib-side-head"><h2>${esc(T('nav_inbox'))}</h2></div>
+      <div class="ib-filters">${pill('all')}${pill('requests', nReq)}${pill('unread', nUnread)}</div>
       <label class="ib-search">${IB_IC.search}<input id="ib-search" type="search" placeholder="${esc(T('inbox_search'))}" value="${esc(state.inboxQuery||'')}"></label>
       <div class="ib-list">${list}</div>
     </aside>
-    <section class="ib-main">${sel ? inboxThread(sel) : `<div class="ib-pick">${IB_IC.chat}<p>${esc(T('inbox_pick'))}</p></div>`}</section>
-  </div></div>`;
+    <section class="ib-main">${sel ? inboxThread(sel) : `<div class="ib-pick">${IB_IC.chat}<p>${esc(T(filt==='requests' ? 'iv_clear' : 'inbox_pick'))}</p></div>`}</section>
+  </div>`;
 }
 // ---------- live chat: who's online, "typing…", read receipts ----------
 const onlineSet = new Set();
@@ -6136,7 +6222,7 @@ function inboxThread(o){
   const reqs = (cache.requests||[]).filter(r=>(r.mentorId===uid && r.clientId===o) || (r.clientId===uid && r.mentorId===o))
     .sort((a,b)=>(Number(b.createdAt)||0)-(Number(a.createdAt)||0));
   const live = reqs.find(r=>reqStage(r)===2);                      // a confirmed, paid session: calls are open
-  const cur = live || reqs.find(r=>reqStage(r)>=0 && reqStage(r)<3) || null;
+  const cur = reqs.find(r=>r.mentorId===uid && r.status==='pending') || reqs.find(r=>r.clientId===uid && reqStage(r)<=1 && reqStage(r)>=0) || live || reqs.find(r=>reqStage(r)>=0 && reqStage(r)<3) || null;
   const iAmMentorHere = cur ? cur.mentorId===uid : false;
   const msgs = convMessages(o);
   let lastDay = '', prev = null;
@@ -6156,15 +6242,11 @@ function inboxThread(o){
        <button class="ib-ic" data-call="${live.id}" data-url="${esc(live.meetingUrl||'')}" data-mode="video" title="${esc(T('inbox_video'))}" aria-label="${esc(T('inbox_video'))}">${IB_IC.video}</button>`
     : `<button class="ib-ic off" data-call-locked="1" title="${esc(T('inbox_calls_locked'))}" aria-label="${esc(T('inbox_voice'))}">${IB_IC.voice}</button>
        <button class="ib-ic off" data-call-locked="1" title="${esc(T('inbox_calls_locked'))}" aria-label="${esc(T('inbox_video'))}">${IB_IC.video}</button>`;
-  const ctx = cur ? `<div class="ib-ctx">
-      <div><b>${esc(cur.packageKey ? T('pk_'+cur.packageKey+'_name') : T('inbox_booking'))}${cur.amountCents?` · $${(cur.amountCents/100).toFixed(0)}`:''}</b>
-        <span>${esc(reqNextText(cur, iAmMentorHere, name))}</span></div>
-      <div class="ib-ctx-act">
-        ${iAmMentorHere && cur.status==='pending' ? `<button class="btn btn-sm btn-primary" data-iv-accept="${cur.id}">${esc(T('accept'))}</button><button class="btn btn-sm btn-outline" data-propose-go="${cur.id}">${esc(T('iv_suggest'))}</button>` : ''}
-        ${!iAmMentorHere && cur.status==='pending' ? (cur.proposedTimes||[]).map(x=>new Date(x)).filter(i=>i.getTime() > Date.now()).sort((a,b)=>a-b).map(i=>`<button type="button" class="pr-chip" data-pick="${esc(cur.id)}" data-at="${i.toISOString()}"><b>${esc(fmtLocalDay(i))}</b><span>${esc(fmtLocalTime(i))}</span></button>`).join('') : ''}
-        ${!iAmMentorHere && reqStage(cur)===1 ? `<button class="btn btn-sm btn-primary" data-pay="${cur.id}" data-amount="${cur.amountCents}" data-mentor="${cur.mentorId}">${esc(T('pay_to_confirm').replace('${amount}', (cur.amountCents/100).toFixed(2)))}</button>` : ''}
-        ${reqStage(cur)===2 ? `<button class="btn btn-sm btn-primary" data-call="${cur.id}" data-url="${esc(cur.meetingUrl||'')}" data-mode="video">${esc(T('join_video'))}</button>${bookingCalendarActions(cur)}` : ''}
-      </div></div>`
+  const pri = r=>{ const me = r.mentorId===uid, st = reqStage(r), prop = (r.proposedTimes||[]).some(t=>new Date(t).getTime() > Date.now());
+    return me && r.status==='pending' && !prop ? 0 : !me && st===0 && prop ? 0 : !me && st===1 ? 1 : st===2 ? 2 : 3; };
+  const active = reqs.filter(r=>(reqStage(r)>=0 && reqStage(r)<3) || state.ivIgnoring[r.id] || state.ivAccepted===r.id)
+    .sort((a,b)=>(pri(a)-pri(b)) || ((reqInstant(a)||0)-(reqInstant(b)||0)));
+  const ctx = active.length ? `<div class="ibr-stack">${active.map(r=>ibReqCard(r, r.mentorId===uid, name)).join('')}</div>`
     : (p.role!=='client' && o!==uid ? `<div class="ib-ctx soft"><div><b>${esc(T('inbox_no_booking'))}</b><span>${esc(T('inbox_calls_locked'))}</span></div><div class="ib-ctx-act"><button class="btn btn-sm btn-primary" data-nav="mentor" data-mentor="${esc(o)}">${esc(T('book_session'))}</button></div></div>` : '');
   return `<div class="ib-head">
       <button class="ib-back ib-ic" data-inbox-back="1" aria-label="${esc(T('inbox_back'))}">${IB_IC.back}</button>
@@ -6821,7 +6903,9 @@ document.addEventListener('click', async e=>{
 document.addEventListener('click', e=>{ const b = e.target.closest && e.target.closest('[data-propose-go]'); if(!b) return;
   const id = b.getAttribute('data-propose-go'), r = cache.requests.find(x=>x.id===id);
   state.proposeSel = r && r.proposedTimes ? r.proposedTimes.map(x=>new Date(x).toISOString()).filter(x=>new Date(x).getTime() > Date.now()) : [];
-  state.proposeNote = null; nav('requests', { propose: id }); });
+  state.proposeNote = null; state.propose = id; render(); });
+document.addEventListener('click', e=>{ const b = e.target.closest && e.target.closest('[data-ib-filter]'); if(!b) return;
+  state.ibFilter = b.getAttribute('data-ib-filter'); render(); });
 document.addEventListener('toggle', e=>{ if(e.target && e.target.classList && e.target.classList.contains('iv-past')) state.ivPastOpen = e.target.open; }, true);
 
 function dashboardView(){
@@ -6971,7 +7055,7 @@ function coachView(){
   const voiceControls = (state.coachMode==='interview' && state.interviewStarted) ? `
     <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px;flex-wrap:wrap;">
       <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
-        <input type="checkbox" id="voice-mode-toggle" ${state.voiceMode?'checked':''}> ${esc(T('voice_mode'))}${state.voiceMode && state.voiceEngine ? ` <span class="voice-engine ${state.voiceEngine==='natural'?'ok':''}">${esc(T('ve_'+state.voiceEngine))}</span>` : ''}</label> <button type="button" class="btn btn-sm btn-outline" id="voice-test">${esc(T('voice_test'))}</button>${state.voiceDetail ? `<div class="voice-detail">${esc(state.voiceDetail)}</div>` : ''}<label style="display:none">
+        <input type="checkbox" id="voice-mode-toggle" ${state.voiceMode?'checked':''}> ${esc(T('voice_mode'))}${state.voiceMode && state.voiceEngine ? ` <span class="voice-engine ${state.voiceEngine==='natural'?'ok':''}">${esc(T('ve_'+state.voiceEngine))}</span>` : ''}</label>${state.voiceDetail ? `<div class="voice-detail">${esc(state.voiceDetail)}</div>` : ''}<label style="display:none">
       </label>
       ${speechSupported() ? `<button class="btn btn-sm btn-outline" id="mic-btn" type="button">${state.listening ? esc(T('listening')) : esc(T('mic_start'))}</button>` : `<span class="muted" style="font-size:12px;">${esc(T('voice_not_supported'))}</span>`}
     </div>` : '';
