@@ -33,7 +33,7 @@ module.exports = async (req, res) => {
   if (!prof || prof.role !== 'mentor') { res.status(403).json({ error: 'mentors-only' }); return; }
 
   try {
-    const row = await P.accountRow(me.id);
+    const row = await (P.usableAccountRow || P.accountRow)(me.id);
     if (action === 'status') {
       if (!row) { res.status(200).json({ connected: false, enabled: false }); return; }
       res.status(200).json(await P.refreshStatus(row)); return;

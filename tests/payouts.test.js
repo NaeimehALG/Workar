@@ -88,3 +88,15 @@ test('the share is locked in when the client pays', async () => {
   assert.deepEqual(upd, { payoutCents: 3430, stripeChargeId: 'ch_9' });
   assert.ok(calls.length >= 1);
 });
+
+test('a saved payout account the live key cannot see is forgotten so the mentor can set up again', async () => {
+  const calls = [];
+  global.fetch = async (url, opts = {}) => {
+    calls.push({ url, method: opts.method || 'GET' });
+    if (url.includes('/mentor_payout_accounts') && (opts.method || 'GET') === 'GET') return { ok: true, json: async () => [{ mentorId: 'm1', stripeAccountId: 'acct_old' }] };
+    if (url.includes('api.stripe.com/v1/accounts/acct_old')) return { ok: false, status: 404, json: async () => ({ error: { code: 'resource_missing', message: "No such account: 'acct_old'" } }) };
+    return { ok: true, json: async () => ({}) };
+  };
+  assert.equal(await P.usableAccountRow('m1'), null);
+  assert.ok(calls.some(c => c.method === 'DELETE' && c.url.includes('mentor_payout_accounts?mentorId=eq.m1')));
+});

@@ -113,6 +113,21 @@ async function accountRow(mentorId) {
   const rows = await dbRows(`mentor_payout_accounts?mentorId=eq.${encodeURIComponent(mentorId)}&select=*`);
   return rows[0] || null;
 }
+// Like accountRow, but forgets a saved account the current Stripe key can't see
+// (e.g. one made with the sandbox key before Workar switched to live), so the mentor can start fresh.
+const MISSING = e => !!(e && e.stripe && (e.code === 'resource_missing' || e.code === 'account_invalid' || /no such account|does not exist|not have access to account|not connected to your platform/i.test(e.message || '')));
+async function usableAccountRow(mentorId) {
+  const row = await accountRow(mentorId);
+  if (!row) return null;
+  try { await stripe('GET', 'accounts/' + encodeURIComponent(row.stripeAccountId)); return row; }
+  catch (e) {
+    if (!MISSING(e)) throw e;
+    console.warn('payout-account-forgotten', mentorId, row.stripeAccountId, e.message);
+    const r = await fetch(`${SB()}/rest/v1/mentor_payout_accounts?mentorId=eq.${encodeURIComponent(mentorId)}`, { method: 'DELETE', headers: Object.assign({ Prefer: 'return=minimal' }, svc()) });
+    if (!r.ok) throw new Error('database-write-failed ' + r.status);
+    return null;
+  }
+}
 
 function isReady(acct) {
   return !!(acct && acct.payouts_enabled && acct.capabilities && acct.capabilities.transfers === 'active');
@@ -281,5 +296,5 @@ async function releaseDue({ sendMail } = {}) {
 
 module.exports = {
   HOLD_HOURS, DEFAULT_MENTOR_SHARE, stripe, form, mentorSharePct, recordPayment,
-  accountRow, refreshStatus, createAccount, onboardingLink, dashboardLink, confirmPayment, isReady, isReleasable, releaseDue
+  accountRow, usableAccountRow, refreshStatus, createAccount, onboardingLink, dashboardLink, confirmPayment, isReady, isReleasable, releaseDue
 };
