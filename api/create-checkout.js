@@ -37,7 +37,7 @@ async function health(res) {
   out.services = { database: !!E.SUPABASE_SERVICE_ROLE_KEY, email: !!E.RESEND_API_KEY, ai: !!E.ANTHROPIC_API_KEY, voice: !!E.OPENAI_API_KEY, cron: !!E.CRON_SECRET };
   if (key) {
     const get = async path => { const r = await fetch('https://api.stripe.com/v1/' + path, { headers: { Authorization: 'Bearer ' + key } }); return { ok: r.ok, body: await r.json().catch(() => ({})) }; };
-    try { const a = await get('account'); out.chargesEnabled = a.ok ? !!a.body.charges_enabled : null; out.accountName = a.ok ? ((a.body.settings && a.body.settings.dashboard && a.body.settings.dashboard.display_name) || null) : null; } catch (e) { out.chargesEnabled = null; }
+    try { const a = await get('account'); out.chargesEnabled = a.ok ? !!a.body.charges_enabled : null; out.accountId = a.ok ? (a.body.id || null) : null; if (a.ok && a.body.requirements) out.disabledReason = a.body.requirements.disabled_reason || null; out.accountName = a.ok ? ((a.body.settings && a.body.settings.dashboard && a.body.settings.dashboard.display_name) || null) : null; } catch (e) { out.chargesEnabled = null; }
     try { const c = await get('accounts?limit=1'); out.connect = c.ok ? true : String((c.body.error && c.body.error.message) || 'unavailable').slice(0, 160); } catch (e) { out.connect = null; }
   }
   // Test mode only: try creating (then delete) a mentor payout account to surface Connect setup problems
