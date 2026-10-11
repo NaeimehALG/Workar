@@ -3459,16 +3459,18 @@ function render(){
 }
 
 function navHtml(){
-  const items = [
-    ['home', T('nav_home')], ['browse', T('nav_browse')], ['coach', T('nav_coach')], ...(prepVisible() ? [['prep', T('nav_prep')]] : []),
-    ['dashboard', myProfile ? T('nav_dash') : T('nav_start')]
-  ];
+  const isMentorNav = !!(uid && myProfile && myProfile.role==='mentor');
+  const prepItem = prepVisible() ? [['prep', T('nav_prep')]] : [];
+  // Signed-in mentors: Home · Inbox · My profile · Find a mentor · AI coach (inbox is their daily tool)
+  const items = isMentorNav
+    ? [['home', T('nav_home')], ['@inbox'], ['dashboard', T('nav_dash')], ['browse', T('nav_browse')], ...prepItem, ['coach', T('nav_coach')]]
+    : [['home', T('nav_home')], ['browse', T('nav_browse')], ['coach', T('nav_coach')], ...prepItem, ['dashboard', myProfile ? T('nav_dash') : T('nav_start')], ['@inbox']];
+  const inboxItem = ()=>{ if(!(uid && myProfile)) return ''; const n = requestsNeedingMe() + inboxUnreadTotal(), on = state.view==='requests' || state.view==='messages';
+    return `<div class="navlink nav-msg ${on?'active':''}" data-nav="${requestsNeedingMe() ? 'requests' : 'messages'}">${esc(T('nav_inbox'))}<span class="nav-msg-badge" style="${n?'':'display:none'}">${n}</span></div>`; };
   return `<div class="nav">
     <div class="brand" data-nav="home"><img class="logo-mark" src="${LOGO_DATA_URI}" alt="Workar"><span class="tag">${esc(T('tag'))}</span></div>
     <div class="navlinks">
-      ${items.map(([v,l])=>`<div class="navlink ${state.view===v?'active':''}" data-nav="${v}">${esc(l)}</div>`).join('')}
-      ${uid && myProfile ? (()=>{ const n = requestsNeedingMe() + inboxUnreadTotal(), on = state.view==='requests' || state.view==='messages';
-        return `<div class="navlink nav-msg ${on?'active':''}" data-nav="${requestsNeedingMe() ? 'requests' : 'messages'}">${esc(T('nav_inbox'))}<span class="nav-msg-badge" style="${n?'':'display:none'}">${n}</span></div>`; })() : ''}
+      ${items.map(([v,l])=>v==='@inbox' ? inboxItem() : `<div class="navlink ${state.view===v?'active':''}" data-nav="${v}">${esc(l)}</div>`).join('')}
       ${isAdmin() ? `<div class="navlink ${state.view==='admin'?'active':''}" data-nav="admin">${esc(T('adm_nav'))}</div>` : ''}
       ${uid ? `<div class="navlink" id="signout-btn" title="${esc(T('signed_in_as'))} ${esc(userEmail||'')}">${esc(T('nav_signout'))}</div>` : `<div class="navlink" data-nav="dashboard">${esc(T('nav_login'))}</div>`}
       <div class="lang-wrap notranslate" translate="no"><div class="lang-switch" id="lang-toggle"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-inline-end:5px;"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>${esc(langName(currentUiLang()))}</div>${state.langMenu ? langMenuHtml() : ''}</div>
