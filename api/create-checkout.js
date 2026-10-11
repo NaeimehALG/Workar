@@ -41,11 +41,19 @@ async function health(res) {
   // Test mode only: try creating (then delete) a mentor payout account to surface Connect setup problems
   if (out.mode === 'test' && /probe=connect/.test(String((res.req && res.req.url) || ''))) {
     try {
-      const body = new URLSearchParams({ type: 'express', country: 'CA', business_type: 'individual', 'capabilities[transfers][requested]': 'true' });
-      const r = await fetch('https://api.stripe.com/v1/accounts', { method: 'POST', headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/x-www-form-urlencoded' }, body });
+      const H = { Authorization: 'Bearer ' + key, 'Stripe-Version': process.env.STRIPE_V2_VERSION || '2026-09-30.endive', 'Content-Type': 'application/json' };
+      const r = await fetch('https://api.stripe.com/v2/core/accounts', { method: 'POST', headers: H, body: JSON.stringify({
+        dashboard: 'express', identity: { country: 'ca', entity_type: 'individual' },
+        configuration: { recipient: { capabilities: { stripe_balance: { stripe_transfers: { requested: true } } } } },
+        defaults: { responsibilities: { fees_collector: 'application', losses_collector: 'application' } } }) });
       const j = await r.json().catch(() => ({}));
-      out.connectProbe = r.ok ? 'ok' : String((j.error && j.error.message) || r.status).slice(0, 300);
-      if (r.ok && j.id) await fetch('https://api.stripe.com/v1/accounts/' + j.id, { method: 'DELETE', headers: { Authorization: 'Bearer ' + key } });
+      out.connectProbe = r.ok ? 'ok' : String((j.error && (j.error.code + ': ' + j.error.message)) || r.status).slice(0, 400);
+      if (r.ok && j.id) {
+        const l = await fetch('https://api.stripe.com/v2/core/account_links', { method: 'POST', headers: H, body: JSON.stringify({ account: j.id, use_case: { type: 'account_onboarding', account_onboarding: { configurations: ['recipient'], refresh_url: 'https://www.workar.me/?payouts=refresh', return_url: 'https://www.workar.me/?payouts=done' } } }) });
+        const lj = await l.json().catch(() => ({}));
+        out.linkProbe = l.ok && lj.url ? 'ok' : String((lj.error && (lj.error.code + ': ' + lj.error.message)) || l.status).slice(0, 300);
+        await fetch('https://api.stripe.com/v2/core/accounts/' + j.id + '/close', { method: 'POST', headers: H, body: '{}' });
+      }
     } catch (e) { out.connectProbe = 'probe-failed'; }
   }
   res.status(200).json(out);

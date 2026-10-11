@@ -64,6 +64,25 @@ async function stripe(method, path, params, idempotencyKey) {
   return data;
 }
 
+// Stripe Accounts v2 (new Connect integrations must create connected accounts here)
+const STRIPE_V2_VERSION = () => process.env.STRIPE_V2_VERSION || '2026-09-30.endive';
+async function stripeV2(method, path, body, idempotencyKey) {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) throw Object.assign(new Error('STRIPE_SECRET_KEY is not set'), { code: 'not-configured' });
+  const headers = { Authorization: 'Bearer ' + key, 'Stripe-Version': STRIPE_V2_VERSION() };
+  if (body) headers['Content-Type'] = 'application/json';
+  if (idempotencyKey) headers['Idempotency-Key'] = idempotencyKey;
+  const r = await fetch('https://api.stripe.com/v2/' + path, { method, headers, body: body ? JSON.stringify(body) : undefined });
+  const data = await r.json().catch(() => ({}));
+  if (!r.ok) {
+    const e = data && data.error;
+    const err = new Error((e && e.message) || ('stripe-error ' + r.status));
+    err.code = e && e.code; err.stripe = true;
+    throw err;
+  }
+  return data;
+}
+
 async function mentorSharePct() {
   try {
     const st = await dbRows('site_settings?id=eq.main&select=data');
@@ -97,43 +116,65 @@ async function accountRow(mentorId) {
 function isReady(acct) {
   return !!(acct && acct.payouts_enabled && acct.capabilities && acct.capabilities.transfers === 'active');
 }
+// v2 account: the recipient configuration must be able to receive transfers and pay out to the bank
+function isReadyV2(a) {
+  const sb = a && a.configuration && a.configuration.recipient && a.configuration.recipient.capabilities && a.configuration.recipient.capabilities.stripe_balance;
+  if (!sb) return false;
+  const ok = c => c && c.status === 'active';
+  return ok(sb.stripe_transfers) && (!sb.payouts || ok(sb.payouts));
+}
 
 async function refreshStatus(row) {
-  const acct = await stripe('GET', 'accounts/' + encodeURIComponent(row.stripeAccountId));
-  const enabled = isReady(acct);
+  let enabled, needsInfo;
+  try {
+    const a = await stripeV2('GET', `core/accounts/${encodeURIComponent(row.stripeAccountId)}?include=configuration.recipient&include=requirements`);
+    enabled = isReadyV2(a);
+    const entries = (a.requirements && a.requirements.entries) || [];
+    needsInfo = !enabled && (entries.length > 0 || !enabled);
+  } catch (e) {
+    // accounts created before the switch to Accounts v2
+    const acct = await stripe('GET', 'accounts/' + encodeURIComponent(row.stripeAccountId));
+    enabled = isReady(acct);
+    const due = (acct.requirements && acct.requirements.currently_due) || [];
+    needsInfo = !enabled && (due.length > 0 || !acct.details_submitted);
+  }
   if (enabled !== !!row.payoutsEnabled) {
     await dbPatch(`mentor_payout_accounts?mentorId=eq.${encodeURIComponent(row.mentorId)}`, { payoutsEnabled: enabled, updatedAt: new Date().toISOString() });
   }
-  const due = (acct.requirements && acct.requirements.currently_due) || [];
-  return { connected: true, enabled, needsInfo: !enabled && (due.length > 0 || !acct.details_submitted) };
+  return { connected: true, enabled, needsInfo };
 }
 
 async function createAccount({ mentorId, email, country }) {
-  const platform = String(process.env.PLATFORM_COUNTRY || 'CA').toUpperCase();
-  const params = {
-    type: 'express',
-    country,
-    email: email || undefined,
-    business_type: 'individual',
-    capabilities: { transfers: { requested: true } },
-    business_profile: { product_description: 'Career mentoring sessions sold on Workar (workar.me)', url: 'https://workar.me' },
-    metadata: { workarUserId: mentorId }
-  };
-  // Mentors outside Workar's own country can only receive money (not take card payments themselves)
-  if (country !== platform) params.tos_acceptance = { service_agreement: 'recipient' };
-  const acct = await stripe('POST', 'accounts', params, 'workar-acct-' + mentorId + '-' + country);
+  // Accounts v2: a "recipient" that receives Workar's transfers and has the Express dashboard
+  const acct = await stripeV2('POST', 'core/accounts', {
+    contact_email: email || undefined,
+    dashboard: 'express',
+    identity: { country: String(country).toLowerCase(), entity_type: 'individual' },
+    configuration: { recipient: { capabilities: { stripe_balance: { stripe_transfers: { requested: true } } } } },
+    defaults: { responsibilities: { fees_collector: 'application', losses_collector: 'application' } },
+    metadata: { workarUserId: mentorId },
+    include: ['configuration.recipient', 'identity']
+  }, 'workar-acct-v2-' + mentorId + '-' + country);
   await dbInsert('mentor_payout_accounts', { mentorId, stripeAccountId: acct.id, country, payoutsEnabled: false });
   return acct.id;
 }
 
 async function onboardingLink(stripeAccountId, site) {
-  const link = await stripe('POST', 'account_links', {
-    account: stripeAccountId,
-    type: 'account_onboarding',
-    refresh_url: site + '/?payouts=refresh',
-    return_url: site + '/?payouts=done'
-  });
-  return link.url;
+  try {
+    const link = await stripeV2('POST', 'core/account_links', {
+      account: stripeAccountId,
+      use_case: { type: 'account_onboarding', account_onboarding: {
+        configurations: ['recipient'],
+        refresh_url: site + '/?payouts=refresh',
+        return_url: site + '/?payouts=done'
+      } }
+    });
+    return link.url;
+  } catch (e) {
+    // accounts created before the switch to Accounts v2
+    const link = await stripe('POST', 'account_links', { account: stripeAccountId, type: 'account_onboarding', refresh_url: site + '/?payouts=refresh', return_url: site + '/?payouts=done' });
+    return link.url;
+  }
 }
 
 async function dashboardLink(stripeAccountId) {
