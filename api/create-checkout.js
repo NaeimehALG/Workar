@@ -42,7 +42,7 @@ async function health(res) {
   if (out.mode === 'test' && /probe=connect/.test(String((res.req && res.req.url) || ''))) {
     try {
       const H = { Authorization: 'Bearer ' + key, 'Stripe-Version': process.env.STRIPE_V2_VERSION || '2026-09-30.endive', 'Content-Type': 'application/json' };
-      const combos = [['express','stripe','stripe'],['full','stripe','stripe'],[null,'stripe','stripe']];
+      const combos = [['express','application','application']];
       out.connectProbe = {};
       for (const [dash, fees, losses] of combos) {
         const r = await fetch('https://api.stripe.com/v2/core/accounts', { method: 'POST', headers: H, body: JSON.stringify({
