@@ -29,7 +29,7 @@ module.exports = async (req, res) => {
   try { me = await M.userFromToken(String((req.headers || {}).authorization || '').replace(/^Bearer\s+/i, '')); }
   catch (e) { res.status(503).json({ error: 'authentication-unavailable' }); return; }
   if (!me || !me.id) { res.status(401).json({ error: 'sign-in-required' }); return; }
-  const prof = (await M.rows(`profiles?id=eq.${encodeURIComponent(me.id)}&select=id,role`))[0];
+  const prof = (await M.rows(`profiles?id=eq.${encodeURIComponent(me.id)}&select=id,role,name`))[0];
   if (!prof || prof.role !== 'mentor') { res.status(403).json({ error: 'mentors-only' }); return; }
 
   try {
@@ -49,7 +49,7 @@ module.exports = async (req, res) => {
       if (!acctId) {
         const c = String(country || '').toUpperCase();
         if (!COUNTRIES.includes(c)) { res.status(400).json({ error: 'country-not-supported' }); return; }
-        acctId = await P.createAccount({ mentorId: me.id, email: me.email, country: c });
+        acctId = await P.createAccount({ mentorId: me.id, email: me.email, country: c, name: prof.name });
       }
       res.status(200).json({ url: await P.onboardingLink(acctId, M.SITE()) }); return;
     }

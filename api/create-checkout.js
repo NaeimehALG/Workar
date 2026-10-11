@@ -42,7 +42,7 @@ async function health(res) {
   if (out.mode === 'test' && /probe=connect/.test(String((res.req && res.req.url) || ''))) {
     try {
       const H = { Authorization: 'Bearer ' + key, 'Stripe-Version': process.env.STRIPE_V2_VERSION || '2026-09-30.endive', 'Content-Type': 'application/json' };
-      const combos = [['express','stripe','stripe','2026-09-30.preview'],['express','application','stripe','2026-09-30.preview'],['full','stripe','stripe','2026-09-30.endive'],['none','application','stripe','2026-09-30.endive']];
+      const combos = [['full','stripe','stripe', process.env.STRIPE_V2_VERSION || '2026-09-30.endive']];
       out.connectProbe = {};
       await Promise.all(combos.map(async ([dash, fees, losses, ver]) => {
         const Hh = Object.assign({}, H, { 'Stripe-Version': ver });
@@ -53,7 +53,7 @@ async function health(res) {
         const j = await r.json().catch(() => ({}));
         let res = r.ok ? 'ok' : String((j.error && (j.error.code + ' ' + (j.error.message||''))) || r.status).slice(0, 300);
         if (r.ok && j.id) {
-          const l = await fetch('https://api.stripe.com/v2/core/account_links', { method: 'POST', headers: Hh, body: JSON.stringify({ account: j.id, use_case: { type: 'account_onboarding', account_onboarding: { configurations: ['merchant'], refresh_url: 'https://www.workar.me/?payouts=refresh', return_url: 'https://www.workar.me/?payouts=done' } } }) });
+          const l = await fetch('https://api.stripe.com/v2/core/account_links', { method: 'POST', headers: Hh, body: JSON.stringify({ account: j.id, use_case: { type: 'account_onboarding', account_onboarding: { refresh_url: 'https://www.workar.me/?payouts=refresh', return_url: 'https://www.workar.me/?payouts=done' } } }) });
           const lj = await l.json().catch(() => ({}));
           res += ' / link ' + (l.ok && lj.url ? 'ok' : String((lj.error && (lj.error.code + ' ' + lj.error.message)) || l.status).slice(0,200));
           fetch('https://api.stripe.com/v2/core/accounts/' + j.id + '/close', { method: 'POST', headers: Hh, body: '{}' }).catch(() => {});
@@ -90,6 +90,16 @@ module.exports = async (req, res) => {
   catch (e) { return res.status(503).json({ error: 'authentication-unavailable' }); }
   if (!me || !me.id) return res.status(401).json({ error: 'sign-in-required' });
   if (userId && userId !== me.id) return res.status(403).json({ error: 'not-your-account' });
+  if (kind === 'confirm') {
+    // Bookings are paid on the mentor's own Stripe account; check the session and mark the booking paid
+    try {
+      const rq = await readRows(`${process.env.SUPABASE_URL}/rest/v1/requests?id=eq.${encodeURIComponent(requestId || '')}&select=clientId,mentorId`, { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: 'Bearer ' + process.env.SUPABASE_SERVICE_ROLE_KEY });
+      const row = rq[0];
+      if (!row) return res.status(404).json({ error: 'request-not-found' });
+      if (row.clientId !== me.id && row.mentorId !== me.id) return res.status(403).json({ error: 'not-your-booking' });
+      return res.status(200).json(await require('./_payouts').confirmDirectPayment(requestId));
+    } catch (e) { console.error('confirm-failed', e.message); return res.status(502).json({ error: 'confirm-failed' }); }
+  }
   if (kind && !['booking', 'exam', 'ai_credits'].includes(kind)) return res.status(400).json({ error: 'invalid-purchase-kind' });
   const allowed = new Set(['https://workar.me', 'https://www.workar.me']);
   try { if (process.env.SITE_URL) allowed.add(new URL(process.env.SITE_URL).origin); } catch (e) {}
@@ -99,6 +109,7 @@ module.exports = async (req, res) => {
   }
 
   const params = new URLSearchParams();
+  let directAcct = null; // the mentor's Stripe account when a booking is paid directly to them
   params.append('mode', 'payment');
   params.append('success_url', successUrl || '');
   params.append('cancel_url', cancelUrl || '');
@@ -189,24 +200,56 @@ module.exports = async (req, res) => {
       res.status(400).json({ error: 'missing-or-invalid-params' });
       return;
     }
+    // Direct payment to the mentor (Stripe-managed risk): Workar only receives its commission
+    const P = require('./_payouts');
+    let mentorAcct = null, bookingMentorId = null;
+    try {
+      const h2 = { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: 'Bearer ' + process.env.SUPABASE_SERVICE_ROLE_KEY };
+      const rq2 = await readRows(`${process.env.SUPABASE_URL}/rest/v1/requests?id=eq.${encodeURIComponent(requestId)}&select=mentorId`, h2);
+      bookingMentorId = rq2[0] && rq2[0].mentorId;
+      const row = bookingMentorId ? await P.accountRow(bookingMentorId) : null;
+      if (row && (await P.refreshStatus(row)).enabled) mentorAcct = row.stripeAccountId;
+    } catch (e) { console.error('mentor-account-check-failed', e.message); }
+    if (!mentorAcct) {
+      // let the mentor know a client is waiting to pay them
+      try {
+        const M = require('./_mail');
+        await M.sendMail(await M.emailOf(bookingMentorId), 'A client is ready to pay you on Workar',
+          M.layout('Set up payments to get paid', ['A client wants to pay for a session with you, but your payment setup on Workar is not finished yet.', 'It takes about 5 minutes with Stripe. As soon as it is done, they can pay and your session is confirmed.'], { text: 'Set up payments', url: M.SITE() + '/?go=dashboard' }));
+      } catch (e) {}
+      return res.status(409).json({ error: 'mentor-not-ready' });
+    }
+    const sharePct = await P.mentorSharePct();
+    const fee = Math.round(amount * (100 - sharePct) / 100);
+    params.set('success_url', String(successUrl || '') + (String(successUrl || '').includes('?') ? '&' : '?') + 'cs={CHECKOUT_SESSION_ID}');
+    params.append('payment_intent_data[application_fee_amount]', String(fee));
+    params.append('payment_intent_data[metadata][requestId]', requestId);
     params.append('client_reference_id', requestId);
     params.append('metadata[kind]', 'booking');
     params.append('metadata[requestId]', requestId);
     params.append('line_items[0][price_data][unit_amount]', String(amount));
+    directAcct = mentorAcct;
     params.append('line_items[0][price_data][product_data][name]',
       `Workar mentoring with ${mentorName || 'your mentor'}`);
   }
 
   try {
+    const direct = directAcct;
     const r = await fetch('https://api.stripe.com/v1/checkout/sessions', {
       method: 'POST',
-      headers: {
+      headers: Object.assign({
         'Authorization': 'Bearer ' + key,
         'Content-Type': 'application/x-www-form-urlencoded'
-      },
+      }, direct ? { 'Stripe-Account': direct } : {}),
       body: params.toString()
     });
     const data = await r.json();
+    if (r.ok && direct && requestId) {
+      // remember the session so the booking can be confirmed even if the client closes the tab
+      await fetch(`${process.env.SUPABASE_URL}/rest/v1/requests?id=eq.${encodeURIComponent(requestId)}`, { method: 'PATCH',
+        headers: { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: 'Bearer ' + process.env.SUPABASE_SERVICE_ROLE_KEY, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+        body: JSON.stringify({ stripeSessionId: data.id }) }).catch(e => console.error('session-save-failed', e.message));
+    }
     if (!r.ok) {
       const msg = String((data && data.error && data.error.message) || '');
       // A Stripe account that hasn't finished activation can't take real payments yet

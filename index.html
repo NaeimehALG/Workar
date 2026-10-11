@@ -1742,6 +1742,8 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .ibr-act{display:flex;flex-wrap:wrap;align-items:center;gap:8px;}
   .ibr-act .iv-pill{padding:6px 16px;font-size:14px;}
   .ibr .pr{flex-basis:100%;margin-top:4px;}
+  .ib-paybanner{display:flex;align-items:center;justify-content:space-between;gap:12px 18px;flex-wrap:wrap;margin:0 0 14px;padding:14px 18px;border:1px solid var(--border);border-inline-start:3px solid #C2412D;border-radius:12px;background:var(--surface);}
+  .ib-paybanner b{display:block;font-size:15px;color:var(--text);} .ib-paybanner span{font-size:13.5px;color:var(--muted);}
   /* suggest-times composer */
   .pr{grid-column:1/-1;margin-top:16px;padding:18px;border:1px solid var(--border);border-radius:12px;background:var(--surface-2);animation:ivIn .2s ease;}
   .pr-head b{display:block;font-size:15px;color:var(--text);}
@@ -2143,12 +2145,13 @@ const I18N = {
     offline_notice:'General tips (not personalized AI feedback):',
     lbl_price_usd:'Price to charge via card (USD)', price_usd_hint:'e.g. 40 — leave blank for free sessions',
     pay_to_confirm:'Pay $${amount} to confirm', waiting_for_payment:'Waiting for client payment…',
-    earn_title:'Your earnings', earn_note:'You keep {p}% of every paid booking. It is sent to your bank automatically 2 days after the session.', earn_total:'Earned', earn_paid:'Paid to you', earn_owed:'Owed to you',
+    earn_title:'Your earnings', earn_note:'Clients pay you directly through Stripe. You keep {p}% of every booking (Stripe\'s card fee is deducted by Stripe), and Stripe sends it to your bank.', earn_total:'Earned', earn_paid:'Paid to you', earn_owed:'Owed to you',
     sess_progress_m:'{d} of {t} sessions done', sess_progress_c:'{l} of {t} sessions left', sess_all_done:'All sessions done', sess_mark:'Mark a session done', sess_mark_one:'Mark session done', sess_completed:'Completed', sess_saved:'Session recorded', sess_fail:'Could not save — check that the payouts SQL has been run',
     po_err_connect_admin:'Stripe needs one more step before mentors can add bank details: in Stripe open Settings → Connect → Platform profile (dashboard.stripe.com/settings/connect/platform-profile) and complete the loss-liability acknowledgement.',
-    po_waiting:'You have {a} waiting', po_waiting_sub:'Add your bank details once and Workar sends your share automatically. It takes about 5 minutes.', po_later:'Get paid automatically', po_later_sub:'Before your first payout, add your bank details once. It takes about 5 minutes.', po_country:'Country of your bank account', po_btn_start:'Add bank details', po_btn_continue:'Finish bank setup', po_needs_info:'Finish your bank setup', po_needs_info_sub:'Stripe needs a few more details before it can pay you.', po_on:'Payouts are on', po_on_sub:'Your share is sent to your bank automatically 2 days after each session.', po_btn_dash:'Payout details', po_secure:'Bank details are handled securely by Stripe, our payment partner. Workar never sees them.', po_done_toast:'Your bank details are saved. Payouts are on.', po_pending_toast:'Almost there. Stripe still needs a few details.', po_err:'Bank setup is not available right now. Please try again later.', po_err_country:'Payouts to this country are not supported yet. Please contact support.', po_opening:'Opening Stripe…',
+    pay_fail_mentor_setup:'Your mentor is finishing their payment setup. We have let them know, and you can pay as soon as it is done.',
+    po_waiting:'You have {a} waiting', po_waiting_sub:'A client is waiting to pay you. Set up payments with Stripe once (about 5 minutes) so they can book.', po_later:'Set up payments to get booked', po_later_sub:'Clients pay you directly through Stripe, so set this up once before your first paid session. It takes about 5 minutes.', po_country:'Country of your bank account', po_btn_start:'Set up payments', po_btn_continue:'Finish payment setup', po_needs_info:'Finish your payment setup', po_needs_info_sub:'Stripe needs a few more details before clients can pay you.', po_on:'Payments are on', po_on_sub:'Clients pay you directly. Stripe sends your money to your bank on its regular schedule.', po_btn_dash:'Open Stripe', po_secure:'Payments and bank details are handled securely by Stripe. Workar never sees them.', po_done_toast:'Your payment setup is done. Clients can now pay you.', po_pending_toast:'Almost there. Stripe still needs a few details.', po_err:'Payment setup is not available right now. Please try again later.', po_err_country:'Payouts to this country are not supported yet. Please contact support.', po_opening:'Opening Stripe…',
     adm_share:'Mentor share (%)', adm_share_hint:'The part of each booking that goes to the mentor. Workar keeps the rest. A change applies to new bookings only.',
-    pay_title:'Mentor payouts', pay_hint:'Mentors are paid automatically through Stripe 2 days after each session, once they have added their bank details. Use “Mark as paid” only if you paid someone yourself outside Stripe.', pay_c_bank:'Bank', pay_bank_on:'Automatic', pay_bank_off:'Not set up', pay_held:'On hold', pay_loading:'Loading payouts…', pay_error:'Could not load payouts — check that the payouts SQL has been run.', pay_none:'No paid bookings yet.', pay_tot_owed:'Owed to mentors', pay_tot_keep:'Workar keeps',
+    pay_title:'Mentor payouts', pay_hint:'Clients pay mentors directly on the mentor\'s own Stripe account; Workar receives its commission automatically and carries no refund or dispute liability. Older bookings may still show here.', pay_c_bank:'Bank', pay_bank_on:'Automatic', pay_bank_off:'Not set up', pay_held:'On hold', pay_loading:'Loading payouts…', pay_error:'Could not load payouts — check that the payouts SQL has been run.', pay_none:'No paid bookings yet.', pay_tot_owed:'Owed to mentors', pay_tot_keep:'Workar keeps',
     pay_c_mentor:'Mentor', pay_c_n:'Paid bookings', pay_c_collected:'Collected', pay_c_share:'Mentor share', pay_c_owed:'Owed now', pay_mark:'Mark as paid', pay_settled:'Settled', pay_confirm:'Record that you paid {a} to {n}?', pay_done:'Payout recorded', pay_fail:'Could not record the payout — check that the payouts SQL has been run',
     auth_side_h:'Every step of your career, with someone who knows the way.', auth_side_p:'From a stronger resume to a confident interview to the offer, your mentor walks each step with you.', map_you:'You', map_1:'Resume', map_2:'Interview', map_3:'Offer', map_goal:'Next role', auth_f1_t:'Experienced professionals', auth_f1_s:'Real experience in the roles you are targeting.', auth_f2_t:'Structured sessions', auth_f2_s:'45-minute video or voice sessions, arranged by message.', auth_f3_t:'Secure payment', auth_f3_s:'Charged only after your mentor confirms.', auth_pt1:'Book a 45-minute video or voice session in a few clicks', auth_pt2:'Chat with your mentor before you meet', auth_pt3:'Pay only after your mentor says yes', auth_tab_signup:'Sign up', auth_h_login:'Welcome back', auth_h_signup:'Create your account', auth_sub_login:'Log in to manage your sessions and messages.', auth_sub_signup:'Create your account with an email and password. You will set up your profile next.', auth_forgot_h:'Reset your password', auth_fine_login:'New to Workar? Choose Sign up above.', auth_fine_signup:'Free to join — no card needed.', pw_show:'Show password', pw_hide:'Hide password',
     ob_sub:'Tell us who you are. It takes about two minutes and you can change everything later.', ob_s_about:'About you', ob_preview:'How clients will see you', ob_preview_note:'This card appears in Find a mentor. A clear headline and a bio written to a mentee get the most bookings.', ob_pv_name:'Your name', ob_pv_head:'Your title and company', ob_pv_bio:'Your bio will appear here.', ob_next:'What happens next', ob_next1_t:'Finish your profile', ob_next1_s:'So your mentor knows where you are and where you want to go.', ob_next2_t:'Pick a mentor and a time', ob_next2_s:'Choose a package and a slot that suits you.', ob_next3_t:'Meet on Workar', ob_next3_s:'Once the mentor accepts, join by video or voice right here.', ob_submit_book:'Save and pick a time',
@@ -2557,12 +2560,13 @@ const I18N = {
     offline_notice:'نکات کلی (نه فیدبک اختصاصی هوش مصنوعی):',
     lbl_price_usd:'مبلغ پرداخت با کارت (دلار)', price_usd_hint:'مثلاً ۴۰؛ برای جلسه‌ی رایگان خالی بگذارید',
     pay_to_confirm:'پرداخت ${amount} دلار کانادا برای تأیید', waiting_for_payment:'منتظر پرداخت مراجع…',
-    earn_title:'درآمد شما', earn_note:'{p}٪ از هر رزرو پرداخت‌شده سهم شماست و ۲ روز بعد از جلسه خودکار به حساب بانکی‌تان واریز می‌شود.', earn_total:'کل درآمد', earn_paid:'پرداخت‌شده به شما', earn_owed:'طلب شما',
+    earn_title:'درآمد شما', earn_note:'مراجع‌ها مستقیم از طریق Stripe به شما پرداخت می‌کنند. {p}٪ هر رزرو سهم شماست (کارمزد کارت را Stripe کم می‌کند) و Stripe آن را به حساب بانکی‌تان واریز می‌کند.', earn_total:'کل درآمد', earn_paid:'پرداخت‌شده به شما', earn_owed:'طلب شما',
     sess_progress_m:'{d} از {t} جلسه برگزار شد', sess_progress_c:'{l} از {t} جلسه باقی مانده', sess_all_done:'همه‌ی جلسات برگزار شد', sess_mark:'ثبت برگزاری یک جلسه', sess_mark_one:'ثبت برگزاری جلسه', sess_completed:'تمام‌شده', sess_saved:'جلسه ثبت شد', sess_fail:'ذخیره نشد؛ مطمئن شوید SQL پرداخت منتورها اجرا شده است',
     po_err_connect_admin:'Stripe پیش از ثبت اطلاعات بانکی منتورها یک مرحله‌ی دیگر لازم دارد: در Stripe به Settings → Connect → Platform profile بروید و تأیید مسئولیت زیان (loss liability) را کامل کنید.',
-    po_waiting:'{a} منتظر واریز به شماست', po_waiting_sub:'یک بار اطلاعات بانکی‌تان را وارد کنید تا Workar سهمتان را خودکار بفرستد. حدود ۵ دقیقه طول می‌کشد.', po_later:'دریافت خودکار درآمد', po_later_sub:'قبل از اولین واریز، یک بار اطلاعات بانکی‌تان را وارد کنید. حدود ۵ دقیقه طول می‌کشد.', po_country:'کشور حساب بانکی', po_btn_start:'افزودن حساب بانکی', po_btn_continue:'تکمیل اطلاعات بانکی', po_needs_info:'اطلاعات بانکی‌تان را کامل کنید', po_needs_info_sub:'Stripe قبل از واریز به چند اطلاعات دیگر نیاز دارد.', po_on:'واریز خودکار فعال است', po_on_sub:'سهم شما ۲ روز بعد از هر جلسه خودکار به حساب بانکی‌تان واریز می‌شود.', po_btn_dash:'جزئیات واریزها', po_secure:'اطلاعات بانکی به‌صورت امن نزد Stripe، شریک پرداخت ما، نگهداری می‌شود و Workar آن را نمی‌بیند.', po_done_toast:'اطلاعات بانکی‌تان ثبت شد. واریز خودکار فعال است.', po_pending_toast:'تقریباً تمام است. Stripe هنوز به چند اطلاعات دیگر نیاز دارد.', po_err:'الان امکان ثبت حساب بانکی نیست. لطفاً بعداً دوباره امتحان کنید.', po_err_country:'واریز به این کشور هنوز پشتیبانی نمی‌شود. لطفاً با پشتیبانی تماس بگیرید.', po_opening:'در حال باز کردن Stripe…',
+    pay_fail_mentor_setup:'منتور شما در حال تکمیل تنظیمات پرداخت است. به او اطلاع دادیم و به محض تکمیل، می‌توانید پرداخت کنید.',
+    po_waiting:'{a} منتظر واریز به شماست', po_waiting_sub:'مراجعی منتظر است به شما پرداخت کند. یک بار پرداخت را با Stripe تنظیم کنید (حدود ۵ دقیقه) تا بتواند رزرو کند.', po_later:'برای رزرو شدن، پرداخت را تنظیم کنید', po_later_sub:'مراجع‌ها مستقیم از طریق Stripe به شما پرداخت می‌کنند، پس پیش از اولین جلسه‌ی پولی یک بار این را تنظیم کنید. حدود ۵ دقیقه طول می‌کشد.', po_country:'کشور حساب بانکی', po_btn_start:'تنظیم پرداخت', po_btn_continue:'تکمیل تنظیم پرداخت', po_needs_info:'تنظیم پرداخت را کامل کنید', po_needs_info_sub:'Stripe پیش از اینکه مراجع‌ها بتوانند پرداخت کنند به چند اطلاعات دیگر نیاز دارد.', po_on:'پرداخت فعال است', po_on_sub:'مراجع‌ها مستقیم به شما پرداخت می‌کنند و Stripe طبق برنامه‌ی خودش پول را به حساب بانکی‌تان واریز می‌کند.', po_btn_dash:'باز کردن Stripe', po_secure:'پرداخت‌ها و اطلاعات بانکی به‌صورت امن نزد Stripe است و Workar آن‌ها را نمی‌بیند.', po_done_toast:'تنظیم پرداخت تمام شد. حالا مراجع‌ها می‌توانند به شما پرداخت کنند.', po_pending_toast:'تقریباً تمام است. Stripe هنوز به چند اطلاعات دیگر نیاز دارد.', po_err:'الان امکان تنظیم پرداخت نیست. لطفاً بعداً دوباره امتحان کنید.', po_err_country:'واریز به این کشور هنوز پشتیبانی نمی‌شود. لطفاً با پشتیبانی تماس بگیرید.', po_opening:'در حال باز کردن Stripe…',
     adm_share:'سهم منتور (٪)', adm_share_hint:'سهمی از هر رزرو که به منتور می‌رسد. بقیه سهم Workar است. تغییر فقط روی رزروهای جدید اعمال می‌شود.',
-    pay_title:'پرداخت به منتورها', pay_hint:'سهم منتورها ۲ روز بعد از هر جلسه خودکار از طریق Stripe واریز می‌شود، به شرطی که اطلاعات بانکی‌شان را وارد کرده باشند. «ثبت پرداخت» را فقط وقتی بزنید که خودتان بیرون از Stripe به کسی پول داده‌اید.', pay_c_bank:'حساب بانکی', pay_bank_on:'خودکار', pay_bank_off:'ثبت نشده', pay_held:'متوقف', pay_loading:'در حال بارگذاری…', pay_error:'بارگذاری نشد؛ مطمئن شوید SQL پرداخت منتورها اجرا شده است.', pay_none:'هنوز رزرو پرداخت‌شده‌ای نیست.', pay_tot_owed:'بدهی به منتورها', pay_tot_keep:'سهم Workar',
+    pay_title:'پرداخت به منتورها', pay_hint:'مراجع‌ها مستقیم روی حساب Stripe خود منتور پرداخت می‌کنند؛ کمیسیون Workar خودکار دریافت می‌شود و Workar مسئولیتی در قبال بازپرداخت یا اعتراض بانکی ندارد. رزروهای قدیمی‌تر ممکن است هنوز اینجا دیده شوند.', pay_c_bank:'حساب بانکی', pay_bank_on:'خودکار', pay_bank_off:'ثبت نشده', pay_held:'متوقف', pay_loading:'در حال بارگذاری…', pay_error:'بارگذاری نشد؛ مطمئن شوید SQL پرداخت منتورها اجرا شده است.', pay_none:'هنوز رزرو پرداخت‌شده‌ای نیست.', pay_tot_owed:'بدهی به منتورها', pay_tot_keep:'سهم Workar',
     pay_c_mentor:'منتور', pay_c_n:'رزروهای پرداخت‌شده', pay_c_collected:'دریافتی', pay_c_share:'سهم منتور', pay_c_owed:'بدهی فعلی', pay_mark:'ثبت پرداخت', pay_settled:'تسویه‌شده', pay_confirm:'ثبت شود که {a} به {n} پرداخت کرده‌اید؟', pay_done:'پرداخت ثبت شد', pay_fail:'ثبت نشد؛ مطمئن شوید SQL پرداخت منتورها اجرا شده است',
     auth_side_h:'هر قدم مسیر شغلی‌تان، کنار کسی که راه را می‌شناسد.', auth_side_p:'از رزومه‌ای قوی‌تر تا مصاحبه‌ای مطمئن و پیشنهاد کاری، منتورتان در هر قدم کنار شماست.', map_you:'شما', map_1:'رزومه', map_2:'مصاحبه', map_3:'پیشنهاد کاری', map_goal:'شغل بعدی', auth_f1_t:'متخصصان باتجربه', auth_f1_s:'تجربه‌ی واقعی در نقش‌هایی که هدف شماست.', auth_f2_t:'جلسات ساختارمند', auth_f2_s:'جلسه‌های ۴۵ دقیقه‌ای تصویری یا صوتی، با هماهنگی از طریق پیام.', auth_f3_t:'پرداخت امن', auth_f3_s:'پرداخت فقط بعد از تأیید منتور.', auth_pt1:'با چند کلیک یک جلسه‌ی ۴۵ دقیقه‌ای تصویری یا صوتی رزرو کنید', auth_pt2:'قبل از جلسه به منتورتان پیام بدهید', auth_pt3:'فقط بعد از تأیید منتور پرداخت می‌کنید', auth_tab_signup:'ثبت‌نام', auth_h_login:'خوشحالیم که برگشتید', auth_h_signup:'حسابتان را بسازید', auth_sub_login:'برای مدیریت جلسه‌ها و پیام‌هایتان وارد شوید.', auth_sub_signup:'با ایمیل و رمز عبور حساب بسازید. در قدم بعد پروفایلتان را کامل می‌کنید.', auth_forgot_h:'بازیابی رمز عبور', auth_fine_login:'تازه وارد هستید؟ بالای صفحه «ثبت‌نام» را بزنید.', auth_fine_signup:'عضویت رایگان است و کارت بانکی لازم نیست.', pw_show:'نمایش رمز', pw_hide:'پنهان کردن رمز',
     ob_sub:'خودتان را معرفی کنید. حدود دو دقیقه طول می‌کشد و بعداً می‌توانید همه‌چیز را تغییر دهید.', ob_s_about:'درباره‌ی شما', ob_preview:'مراجعان شما را این‌طور می‌بینند', ob_preview_note:'این کارت در صفحه‌ی پیدا کردن منتور نمایش داده می‌شود. عنوانی واضح و معرفی‌ای که خطاب به مراجع نوشته شده باشد، بیشترین رزرو را می‌گیرد.', ob_pv_name:'نام شما', ob_pv_head:'عنوان شغلی و شرکت', ob_pv_bio:'معرفی شما اینجا نمایش داده می‌شود.', ob_next:'قدم‌های بعدی', ob_next1_t:'پروفایلتان را کامل کنید', ob_next1_s:'تا منتور بداند الان کجا هستید و می‌خواهید به کجا برسید.', ob_next2_t:'منتور و زمان را انتخاب کنید', ob_next2_s:'پکیج و زمانی را که برایتان مناسب است انتخاب کنید.', ob_next3_t:'جلسه را در Workar برگزار کنید', ob_next3_s:'بعد از تأیید منتور، همین‌جا با تماس تصویری یا صوتی وصل شوید.', ob_submit_book:'ذخیره و انتخاب زمان',
@@ -3235,7 +3239,9 @@ function onSignedIn(session){
   const params = new URLSearchParams(location.search);
   if(params.get('paid')){
     toast(T('toast_payment_success'));
+    const paidReq = params.get('paid');
     history.replaceState({}, '', location.origin + location.pathname);
+    confirmBookingPaid(paidReq, true);
   } else if(params.get('prepPaid')){
     toast(T('prep_paid_toast'), 4500);
     history.replaceState({}, '', location.origin + location.pathname);
@@ -6140,6 +6146,12 @@ function ibReqCard(cur, iAmMentor, name){
     ${state.propose===cur.id ? proposePanel(cur) : ''}
   </div>`;
 }
+function mentorPayCheck(){
+  if(!uid || !myProfile || myProfile.role!=='mentor' || state.payReadyFor===uid || state.payReadyLoading) return;
+  state.payReadyLoading = true;
+  payoutsApi('status').then(d=>{ state.payReady = !!(d && d.enabled); }).catch(()=>{ state.payReady = null; })
+    .finally(()=>{ state.payReadyLoading = false; state.payReadyFor = uid; if(state.view==='messages') render(); });
+}
 function messagesView(){
   if(!uid || !myProfile) return `<div class="empty">${esc(T('set_profile_first'))}</div>`;
   const q = (state.inboxQuery||'').toLowerCase(), filt = state.ibFilter || 'all';
@@ -6159,7 +6171,9 @@ function messagesView(){
       </button>`; }).join('')
     : filt!=='all' ? `<div class="ib-none">${HUB_IC.ok}<p>${esc(T(filt==='requests' ? 'iv_clear' : 'ibf_none'))}</p></div>` : `<div class="ib-none">${IB_IC.chat}<p>${esc(T('inbox_empty'))}</p><button class="btn btn-primary btn-sm" data-nav="browse">${esc(T('find_mentor_title'))}</button></div>`;
   const pill = (k, n)=>`<button type="button" class="ib-filt ${filt===k?'on':''}" data-ib-filter="${k}">${esc(T('ibf_'+k))}${n ? ` <i>${n}</i>` : ''}</button>`;
-  return `<div class="ib ${sel?'has-sel':''}">
+  mentorPayCheck();
+  const payBanner = myProfile.role==='mentor' && state.payReady===false ? `<div class="ib-paybanner"><div><b>${esc(T('po_later'))}</b><span>${esc(T('po_later_sub'))}</span></div><button type="button" class="iv-pill solid" data-nav="dashboard" data-open-pay="1">${esc(T('po_btn_start'))}</button></div>` : '';
+  return `${payBanner}<div class="ib ${sel?'has-sel':''}">
     <aside class="ib-side">
       <div class="ib-side-head"><h2>${esc(T('nav_inbox'))}</h2></div>
       <div class="ib-filters">${pill('all')}${pill('requests', nReq)}${pill('unread', nUnread)}</div>
@@ -6573,10 +6587,25 @@ document.addEventListener('click', e=>{ const b = e.target.closest && e.target.c
   state.dashEditOpen = true; const d = document.querySelector('.dash-edit'); if(d){ d.open = true; d.scrollIntoView({behavior:'smooth', block:'start'}); } });
 // Requests a person has to act on: a mentor answering a new request, a client paying an accepted one
 // Why a checkout could not start, in words the person can act on (the admin also sees Stripe's own reason)
+// Bookings are paid straight to the mentor's Stripe account; ask the server to confirm and unlock the call link
+const __confirmTried = new Set();
+async function confirmBookingPaid(reqId, retry){
+  if(!reqId || !sb) return;
+  try{
+    const r = await fetch('/api/create-checkout', { method:'POST', headers: await checkoutHeaders(), body: JSON.stringify({ kind:'confirm', requestId: reqId }) });
+    const d = await r.json().catch(()=>({}));
+    if(d.paid){ const x = (cache.requests||[]).find(q=>q.id===reqId); if(x) x.paid = true; loadRequests(); return; }
+  }catch(e){}
+  if(retry) [3000, 8000].forEach(ms=>setTimeout(()=>confirmBookingPaid(reqId, false), ms));
+}
+function recheckUnpaid(){
+  (cache.requests||[]).forEach(r=>{ if(r.clientId===uid && r.status==='accepted' && !r.paid && r.stripeSessionId && !__confirmTried.has(r.id)){ __confirmTried.add(r.id); confirmBookingPaid(r.id, false); } });
+}
 function paymentFailText(err){
   const code = err && err.code;
   if(code==='payments-not-activated') return T(isAdmin() ? 'pay_fail_activate_admin' : 'pay_fail_not_open');
   if(code==='booking-not-accepted') return T('pay_fail_not_accepted');
+  if(code==='mentor-not-ready') return T('pay_fail_mentor_setup');
   if(code==='already-paid') return T('pay_fail_already');
   if(code==='sign-in-required') return T('pay_fail_signin');
   const detail = err && err.detail && err.detail.message;
@@ -6908,6 +6937,7 @@ document.addEventListener('click', e=>{ const b = e.target.closest && e.target.c
   const id = b.getAttribute('data-propose-go'), r = cache.requests.find(x=>x.id===id);
   state.proposeSel = r && r.proposedTimes ? r.proposedTimes.map(x=>new Date(x).toISOString()).filter(x=>new Date(x).getTime() > Date.now()) : [];
   state.proposeNote = null; state.propose = id; render(); });
+document.addEventListener('click', e=>{ const b = e.target.closest && e.target.closest('[data-open-pay]'); if(!b) return; setTimeout(()=>{ const po = document.querySelector('.po'); if(po) po.scrollIntoView({ behavior:'smooth', block:'center' }); }, 400); });
 document.addEventListener('click', e=>{ const b = e.target.closest && e.target.closest('[data-ib-filter]'); if(!b) return;
   state.ibFilter = b.getAttribute('data-ib-filter'); render(); });
 document.addEventListener('toggle', e=>{ if(e.target && e.target.classList && e.target.classList.contains('iv-past')) state.ivPastOpen = e.target.open; }, true);
@@ -7151,7 +7181,7 @@ async function handlePayoutReturn(kind){
   if(kind === 'refresh'){ try{ await startPayoutSetup(); }catch(e){ toast(payoutErrText(e), 6000); } return; }
   try{
     const st = await payoutsApi('status');
-    toast(st.enabled ? T('po_done_toast') : T('po_pending_toast'), 5000);
+    state.payReady = !!st.enabled; state.payReadyFor = uid; toast(st.enabled ? T('po_done_toast') : T('po_pending_toast'), 5000);
   }catch(e){ toast(T('po_err'), 6000); }
   state.payoutAcct = undefined; render();
 }
@@ -7827,7 +7857,7 @@ function loadRequests(){
       const seen = new Set();
       cache.requests = parts.mentorId.concat(parts.clientId).filter(r=>{ if(seen.has(r.id)) return false; seen.add(r.id); return true; });
       await resolveNames(cache.requests.flatMap(r=>[r.mentorId, r.clientId]));
-      watchMsgs(); loadMsgs();
+      watchMsgs(); loadMsgs(); recheckUnpaid();
       if(state.view==='dashboard' || state.view==='messages' || state.view==='requests') render();
     });
   });
