@@ -13,6 +13,33 @@ const crypto = require('crypto');
 const M = require('./_mail');
 const AI = require('./_ai');
 const KNOWLEDGE = require('./_knowledge');
+const PRICING = require('../pricing');
+
+async function priceRecommendation(req, res, b) {
+  const me = await M.userFromToken(bearer(req));
+  if (!me) return res.status(401).json({ error: 'Sign in first.' });
+  const p = await M.fullProfile(me.id);
+  if (p.role && p.role !== 'mentor') return res.status(403).json({ error: 'This is for mentors.' });
+  if (await overPublicLimit(req, 'price_recommend')) return res.status(429).json({ error: 'Please try again later.' });
+  const settings = await M.rows('site_settings?id=eq.main&select=data');
+  const data = settings[0] && settings[0].data || {};
+  const single = (data.packages || []).find(pk=>pk.key==='single');
+  const peers = await M.rows('profiles?role=eq.mentor&approved=eq.true&select=id,role,approved,field,experience,helpsWith,sessionRate&limit=500');
+  const input = { id: me.id, minimum: single ? Number(single.price)/Math.max(1,Number(single.sessions)||1) : 30,
+    services: PRICING.services(b.services), years: Math.max(0,Math.min(60,Number(b.years)||0)),
+    field: String(b.field || p.field || '').slice(0,100) };
+  const recommendation = PRICING.recommend(input, peers);
+  try {
+    const out = await AI.askJSON(
+      `You recommend an affordable CAD price for one 45-minute Workar mentoring session. The mentor keeps control. Choose one price within the supplied range, in increments of 5. Use only the selected services, years of experience and supplied benchmark. Services are focus areas within the same session, not extra sessions or unlimited document rewriting. Do not invent market demand, booking history or earning guarantees. If source is starting-guidance, explicitly describe it as introductory guidance rather than a market price. If source is comparable-listings, describe listed prices, never completed bookings. Return {"amount":number,"explanation":one short sentence}. Write the explanation in ${b.lang==='fa'?'Persian':'English'}.`,
+      JSON.stringify({ years:input.years, field:input.field, services:input.services, recommendation }),
+      {maxTokens:200,timeoutMs:15000});
+    return res.status(200).json({ ...recommendation, amount:PRICING.boundedAIAmount(out.amount,recommendation), ai:true, explanation:String(out.explanation||'').slice(0,400) });
+  } catch(e) {
+    // The usable baseline stays available when the AI provider is unavailable.
+    return res.status(200).json({ ...recommendation, ai:false });
+  }
+}
 
 const MAX_MSG = 40, MAX_CHARS = 12000;
 
@@ -540,6 +567,7 @@ module.exports = async (req, res) => {
       case 'match': return await match(req, res, b);
       case 'request_note': return await requestNote(req, res, b);
       case 'profile_review': return await profileReview(req, res, b);
+      case 'price_recommend': return await priceRecommendation(req, res, b);
       case 'reply_draft': return await replyDraft(req, res, b);
       case 'delete_account': return await deleteAccount(req, res);
       case 'auth_signup': case 'auth_resend': case 'auth_recover': return await authEmail(req, res, b);
