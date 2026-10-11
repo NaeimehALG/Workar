@@ -49,7 +49,7 @@ async function health(res) {
       await Promise.all(combos.map(async ([dash, fees, losses, ver]) => {
         const Hh = Object.assign({}, H, { 'Stripe-Version': ver });
         const r = await fetch('https://api.stripe.com/v2/core/accounts', { method: 'POST', headers: Hh, body: JSON.stringify({
-          dashboard: dash, identity: { country: 'ca', entity_type: 'individual' },
+          dashboard: dash, contact_email: 'probe@workar.me', identity: { country: 'ca', entity_type: 'individual' },
           configuration: { recipient: { capabilities: { stripe_balance: { stripe_transfers: { requested: true } } } } },
           defaults: { responsibilities: { fees_collector: fees, losses_collector: losses } } }) });
         const j = await r.json().catch(() => ({}));
