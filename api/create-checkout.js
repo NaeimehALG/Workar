@@ -38,11 +38,21 @@ async function health(res) {
     try { const a = await get('account'); out.chargesEnabled = a.ok ? !!a.body.charges_enabled : null; out.accountName = a.ok ? ((a.body.settings && a.body.settings.dashboard && a.body.settings.dashboard.display_name) || null) : null; } catch (e) { out.chargesEnabled = null; }
     try { const c = await get('accounts?limit=1'); out.connect = c.ok ? true : String((c.body.error && c.body.error.message) || 'unavailable').slice(0, 160); } catch (e) { out.connect = null; }
   }
+  // Test mode only: try creating (then delete) a mentor payout account to surface Connect setup problems
+  if (out.mode === 'test' && /probe=connect/.test(String((res.req && res.req.url) || ''))) {
+    try {
+      const body = new URLSearchParams({ type: 'express', country: 'CA', business_type: 'individual', 'capabilities[transfers][requested]': 'true' });
+      const r = await fetch('https://api.stripe.com/v1/accounts', { method: 'POST', headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/x-www-form-urlencoded' }, body });
+      const j = await r.json().catch(() => ({}));
+      out.connectProbe = r.ok ? 'ok' : String((j.error && j.error.message) || r.status).slice(0, 300);
+      if (r.ok && j.id) await fetch('https://api.stripe.com/v1/accounts/' + j.id, { method: 'DELETE', headers: { Authorization: 'Bearer ' + key } });
+    } catch (e) { out.connectProbe = 'probe-failed'; }
+  }
   res.status(200).json(out);
 }
 
 module.exports = async (req, res) => {
-  if (req.method === 'GET') return health(res);
+  if (req.method === 'GET') { res.req = res.req || req; return health(res); }
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'method not allowed' });
     return;

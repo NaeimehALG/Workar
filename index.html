@@ -2145,6 +2145,7 @@ const I18N = {
     pay_to_confirm:'Pay $${amount} to confirm', waiting_for_payment:'Waiting for client payment…',
     earn_title:'Your earnings', earn_note:'You keep {p}% of every paid booking. It is sent to your bank automatically 2 days after the session.', earn_total:'Earned', earn_paid:'Paid to you', earn_owed:'Owed to you',
     sess_progress_m:'{d} of {t} sessions done', sess_progress_c:'{l} of {t} sessions left', sess_all_done:'All sessions done', sess_mark:'Mark a session done', sess_mark_one:'Mark session done', sess_completed:'Completed', sess_saved:'Session recorded', sess_fail:'Could not save — check that the payouts SQL has been run',
+    po_err_connect_admin:'Stripe Connect is not finished on the Workar Stripe account. In Stripe open Settings → Connect → Platform profile and complete it.',
     po_waiting:'You have {a} waiting', po_waiting_sub:'Add your bank details once and Workar sends your share automatically. It takes about 5 minutes.', po_later:'Get paid automatically', po_later_sub:'Before your first payout, add your bank details once. It takes about 5 minutes.', po_country:'Country of your bank account', po_btn_start:'Add bank details', po_btn_continue:'Finish bank setup', po_needs_info:'Finish your bank setup', po_needs_info_sub:'Stripe needs a few more details before it can pay you.', po_on:'Payouts are on', po_on_sub:'Your share is sent to your bank automatically 2 days after each session.', po_btn_dash:'Payout details', po_secure:'Bank details are handled securely by Stripe, our payment partner. Workar never sees them.', po_done_toast:'Your bank details are saved. Payouts are on.', po_pending_toast:'Almost there. Stripe still needs a few details.', po_err:'Bank setup is not available right now. Please try again later.', po_err_country:'Payouts to this country are not supported yet. Please contact support.', po_opening:'Opening Stripe…',
     adm_share:'Mentor share (%)', adm_share_hint:'The part of each booking that goes to the mentor. Workar keeps the rest. A change applies to new bookings only.',
     pay_title:'Mentor payouts', pay_hint:'Mentors are paid automatically through Stripe 2 days after each session, once they have added their bank details. Use “Mark as paid” only if you paid someone yourself outside Stripe.', pay_c_bank:'Bank', pay_bank_on:'Automatic', pay_bank_off:'Not set up', pay_held:'On hold', pay_loading:'Loading payouts…', pay_error:'Could not load payouts — check that the payouts SQL has been run.', pay_none:'No paid bookings yet.', pay_tot_owed:'Owed to mentors', pay_tot_keep:'Workar keeps',
@@ -2558,6 +2559,7 @@ const I18N = {
     pay_to_confirm:'پرداخت ${amount} دلار کانادا برای تأیید', waiting_for_payment:'منتظر پرداخت مراجع…',
     earn_title:'درآمد شما', earn_note:'{p}٪ از هر رزرو پرداخت‌شده سهم شماست و ۲ روز بعد از جلسه خودکار به حساب بانکی‌تان واریز می‌شود.', earn_total:'کل درآمد', earn_paid:'پرداخت‌شده به شما', earn_owed:'طلب شما',
     sess_progress_m:'{d} از {t} جلسه برگزار شد', sess_progress_c:'{l} از {t} جلسه باقی مانده', sess_all_done:'همه‌ی جلسات برگزار شد', sess_mark:'ثبت برگزاری یک جلسه', sess_mark_one:'ثبت برگزاری جلسه', sess_completed:'تمام‌شده', sess_saved:'جلسه ثبت شد', sess_fail:'ذخیره نشد؛ مطمئن شوید SQL پرداخت منتورها اجرا شده است',
+    po_err_connect_admin:'Stripe Connect در حساب Stripe ورکار کامل نشده است. در Stripe به Settings → Connect → Platform profile بروید و آن را کامل کنید.',
     po_waiting:'{a} منتظر واریز به شماست', po_waiting_sub:'یک بار اطلاعات بانکی‌تان را وارد کنید تا Workar سهمتان را خودکار بفرستد. حدود ۵ دقیقه طول می‌کشد.', po_later:'دریافت خودکار درآمد', po_later_sub:'قبل از اولین واریز، یک بار اطلاعات بانکی‌تان را وارد کنید. حدود ۵ دقیقه طول می‌کشد.', po_country:'کشور حساب بانکی', po_btn_start:'افزودن حساب بانکی', po_btn_continue:'تکمیل اطلاعات بانکی', po_needs_info:'اطلاعات بانکی‌تان را کامل کنید', po_needs_info_sub:'Stripe قبل از واریز به چند اطلاعات دیگر نیاز دارد.', po_on:'واریز خودکار فعال است', po_on_sub:'سهم شما ۲ روز بعد از هر جلسه خودکار به حساب بانکی‌تان واریز می‌شود.', po_btn_dash:'جزئیات واریزها', po_secure:'اطلاعات بانکی به‌صورت امن نزد Stripe، شریک پرداخت ما، نگهداری می‌شود و Workar آن را نمی‌بیند.', po_done_toast:'اطلاعات بانکی‌تان ثبت شد. واریز خودکار فعال است.', po_pending_toast:'تقریباً تمام است. Stripe هنوز به چند اطلاعات دیگر نیاز دارد.', po_err:'الان امکان ثبت حساب بانکی نیست. لطفاً بعداً دوباره امتحان کنید.', po_err_country:'واریز به این کشور هنوز پشتیبانی نمی‌شود. لطفاً با پشتیبانی تماس بگیرید.', po_opening:'در حال باز کردن Stripe…',
     adm_share:'سهم منتور (٪)', adm_share_hint:'سهمی از هر رزرو که به منتور می‌رسد. بقیه سهم Workar است. تغییر فقط روی رزروهای جدید اعمال می‌شود.',
     pay_title:'پرداخت به منتورها', pay_hint:'سهم منتورها ۲ روز بعد از هر جلسه خودکار از طریق Stripe واریز می‌شود، به شرطی که اطلاعات بانکی‌شان را وارد کرده باشند. «ثبت پرداخت» را فقط وقتی بزنید که خودتان بیرون از Stripe به کسی پول داده‌اید.', pay_c_bank:'حساب بانکی', pay_bank_on:'خودکار', pay_bank_off:'ثبت نشده', pay_held:'متوقف', pay_loading:'در حال بارگذاری…', pay_error:'بارگذاری نشد؛ مطمئن شوید SQL پرداخت منتورها اجرا شده است.', pay_none:'هنوز رزرو پرداخت‌شده‌ای نیست.', pay_tot_owed:'بدهی به منتورها', pay_tot_keep:'سهم Workar',
@@ -7102,7 +7104,7 @@ async function loadPayoutAcct(){
 async function payoutsApi(action, extra){
   const res = await fetch('/api/payouts', { method:'POST', headers: await checkoutHeaders(), body: JSON.stringify(Object.assign({ action }, extra||{})) });
   let data = {}; try{ data = await res.json(); }catch(e){}
-  if(!res.ok) throw Object.assign(new Error(data.error || 'payouts-failed'), { code: data.error });
+  if(!res.ok) throw Object.assign(new Error(data.error || 'payouts-failed'), { code: data.error, detail: data.detail });
   return data;
 }
 function payoutCardHtml(owedCents){
@@ -7117,7 +7119,7 @@ function payoutCardHtml(owedCents){
     <div class="po-act"><select id="po-country" aria-label="${esc(T('po_country'))}">${PAYOUT_COUNTRIES.map(([c,n])=>`<option value="${c}" ${c===tzGuess?'selected':''}>${esc(n)}</option>`).join('')}</select>
     <button class="btn btn-sm ${owedCents>0?'btn-primary':'btn-outline'}" id="po-start">${esc(T('po_btn_start'))}</button></div></div>`;
 }
-function payoutErrText(e){ return (e && e.code)==='country-not-supported' ? T('po_err_country') : T('po_err'); }
+function payoutErrText(e){ const base = (e && e.code)==='country-not-supported' ? T('po_err_country') : (e && e.code)==='connect-not-enabled' && isAdmin() ? T('po_err_connect_admin') : T('po_err'); return isAdmin() && e && e.detail ? base + ' (Stripe: ' + e.detail + ')' : base; }
 async function startPayoutSetup(country){
   toast(T('po_opening'));
   const { url } = await payoutsApi('start', country ? { country } : {});
@@ -7132,7 +7134,7 @@ function wirePayouts(){
     start.disabled = true;
     const c = document.getElementById('po-country');
     try{ await startPayoutSetup(c ? c.value : null); }
-    catch(e){ start.disabled = false; toast(payoutErrText(e), 6000); }
+    catch(e){ start.disabled = false; toast(payoutErrText(e), isAdmin() ? 15000 : 6000); }
   });
   const dash = document.getElementById('po-dash');
   if(dash) dash.addEventListener('click', async ()=>{

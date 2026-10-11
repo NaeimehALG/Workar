@@ -12,7 +12,7 @@ const COUNTRIES = ['CA', 'US', 'GB', 'AU', 'NZ', 'IE', 'DE', 'FR', 'NL', 'BE', '
 
 function friendly(e) {
   const msg = String((e && e.message) || e);
-  if (/signed up for Connect|platform.*profile|connect.*not enabled/i.test(msg)) return { status: 503, error: 'connect-not-enabled' };
+  if (/signed up for Connect|platform.?profile|connect.*not enabled|responsibilit|losses|review the requirements/i.test(msg)) return { status: 503, error: 'connect-not-enabled' };
   if (e && e.stripe && /country|not supported|cross-border|recipient/i.test(msg)) return { status: 400, error: 'country-not-supported' };
   if (e && e.code === 'not-configured') return { status: 503, error: 'server-not-configured' };
   return { status: 502, error: 'stripe-error' };
@@ -57,7 +57,9 @@ module.exports = async (req, res) => {
   } catch (e) {
     console.error('payouts-endpoint-failed', action, e.message);
     const f = friendly(e);
-    res.status(f.status).json({ error: f.error });
+    // The Workar admin sees Stripe's own reason so setup problems can be fixed without guesswork
+    const isAdmin = String(me.email || '').toLowerCase() === String(process.env.ADMIN_EMAIL || 'naeimeh.alaghehband@gmail.com').toLowerCase();
+    res.status(f.status).json(Object.assign({ error: f.error }, isAdmin ? { detail: String(e.message || e).slice(0, 300) } : {}));
   }
 };
 module.exports.COUNTRIES = COUNTRIES;
