@@ -13,7 +13,7 @@ process.env.SUPABASE_URL = String(process.env.SUPABASE_URL || 'https://jgbjhzhbd
 // Environment Variables in Vercel: STRIPE_SECRET_KEY, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 // Optional: PLATFORM_COUNTRY (country of Workar's own Stripe account, default CA)
 
-const HOLD_HOURS = 48;
+const HOLD_HOURS = (Number(process.env.PAYOUT_HOLD_DAYS) || 7) * 24; // like Airbnb/Turo: Workar holds the payment, then pays the mentor
 const DEFAULT_MENTOR_SHARE = 70; // must match mentorSharePct() in index.html
 const PKG_SESSIONS = { single: 1, resume: 2, interview: 3, offer: 6 };
 const MAX_PER_RUN = 25;
@@ -117,21 +117,22 @@ async function accountRow(mentorId) {
 function isReady(acct) {
   return !!(acct && acct.payouts_enabled && acct.capabilities && acct.capabilities.transfers === 'active');
 }
-// Mentors are paid directly: their Stripe account must be able to take card payments
+// Workar pays mentors by transfer: their account must be able to receive transfers and pay out to the bank
 function isReadyV2(a) {
-  const m = a && a.configuration && a.configuration.merchant && a.configuration.merchant.capabilities;
-  return !!(m && m.card_payments && m.card_payments.status === 'active');
+  const sb = a && a.configuration && a.configuration.recipient && a.configuration.recipient.capabilities && a.configuration.recipient.capabilities.stripe_balance;
+  const ok = c => c && c.status === 'active';
+  return !!(sb && ok(sb.stripe_transfers) && (!sb.payouts || ok(sb.payouts)));
 }
 
 async function refreshStatus(row) {
   let enabled, needsInfo;
   try {
-    const a = await stripeV2('GET', `core/accounts/${encodeURIComponent(row.stripeAccountId)}?include=configuration.merchant`);
+    const a = await stripeV2('GET', `core/accounts/${encodeURIComponent(row.stripeAccountId)}?include=configuration.recipient`);
     enabled = isReadyV2(a);
     needsInfo = !enabled;
   } catch (e) {
     const acct = await stripe('GET', 'accounts/' + encodeURIComponent(row.stripeAccountId));
-    enabled = !!acct.charges_enabled;
+    enabled = isReady(acct);
     const due = (acct.requirements && acct.requirements.currently_due) || [];
     needsInfo = !enabled && (due.length > 0 || !acct.details_submitted);
   }
@@ -142,18 +143,17 @@ async function refreshStatus(row) {
 }
 
 async function createAccount({ mentorId, email, country, name }) {
-  // Accounts v2 with Stripe-managed risk: the mentor is the seller, Stripe handles card fees, refunds,
-  // disputes and negative balances, and Workar only takes its commission (no platform liability).
+  // Accounts v2 "recipient" with the Express dashboard: receives Workar's transfers after each session
   const acct = await stripeV2('POST', 'core/accounts', {
     contact_email: email || undefined,
     display_name: name || undefined,
-    dashboard: 'full',
+    dashboard: 'express',
     identity: { country: String(country).toLowerCase(), entity_type: 'individual' },
-    configuration: { merchant: { capabilities: { card_payments: { requested: true } } } },
-    defaults: { responsibilities: { fees_collector: 'stripe', losses_collector: 'stripe' } },
+    configuration: { recipient: { capabilities: { stripe_balance: { stripe_transfers: { requested: true } } } } },
+    defaults: { responsibilities: { fees_collector: 'application', losses_collector: 'application' } },
     metadata: { workarUserId: mentorId },
-    include: ['configuration.merchant', 'identity']
-  }, 'workar-acct-direct-' + mentorId + '-' + country);
+    include: ['configuration.recipient', 'identity']
+  }, 'workar-acct-recipient-' + mentorId + '-' + country);
   await dbInsert('mentor_payout_accounts', { mentorId, stripeAccountId: acct.id, country, payoutsEnabled: false });
   return acct.id;
 }
@@ -171,23 +171,22 @@ async function onboardingLink(stripeAccountId, site) {
   }
 }
 
-// Mentors have their own full Stripe Dashboard (payments, refunds, payouts, bank details)
-async function dashboardLink() { return 'https://dashboard.stripe.com/'; }
+// Express dashboard: the mentor's payout history and bank details
+async function dashboardLink(stripeAccountId) {
+  const link = await stripe('POST', `accounts/${encodeURIComponent(stripeAccountId)}/login_links`, {});
+  return link.url;
+}
 
-// ---------- direct payments: confirm a booking paid on the mentor's own Stripe account ----------
-async function confirmDirectPayment(requestId) {
+// ---------- confirm a paid booking by checking its Checkout Session (backup for the webhook) ----------
+async function confirmPayment(requestId) {
   const r = (await dbRows(`requests?id=eq.${encodeURIComponent(requestId)}&select=*`))[0];
   if (!r) return { error: 'request-not-found' };
   if (r.paid) return { paid: true, already: true };
   if (!r.stripeSessionId) return { paid: false };
-  const row = await accountRow(r.mentorId);
-  if (!row) return { paid: false };
-  const session = await stripe('GET', 'checkout/sessions/' + encodeURIComponent(r.stripeSessionId), {}, null, row.stripeAccountId);
+  const session = await stripe('GET', 'checkout/sessions/' + encodeURIComponent(r.stripeSessionId));
   if (session.payment_status !== 'paid') return { paid: false };
-  const amount = Number(session.amount_total) || 0, share = await mentorSharePct();
-  const upd = { paid: true, payoutDone: true, payoutAt: new Date().toISOString(), stripeTransferId: 'direct', payoutCents: Math.round(amount * share / 100) };
-  if (session.payment_intent) upd.stripeChargeId = String(session.payment_intent);
-  await dbPatch(`requests?id=eq.${encodeURIComponent(requestId)}&paid=is.false`, upd);
+  await dbPatch(`requests?id=eq.${encodeURIComponent(requestId)}&paid=is.false`, { paid: true });
+  try { await recordPayment(requestId, session); } catch (e) { console.error('payout-record-failed', e.message); }
   try { await require('./_session').confirmPaidSession(requestId); } catch (e) { console.error('session-confirm-failed', e); }
   return { paid: true };
 }
@@ -199,6 +198,7 @@ function sessionsIn(r) { return Number(r.sessions) || PKG_SESSIONS[r.packageKey]
 function isReleasable(r, now = Date.now()) {
   if (!r.paid || r.payoutDone || r.stripeTransferId || !(Number(r.amountCents) > 0)) return false;
   if (['cancelled', 'declined', 'refunded'].includes(r.status)) return false;
+  if (r.problemReportedAt && !r.problemResolvedAt) return false; // the client reported a problem: wait for the admin
   const start = r.startsAt ? Date.parse(r.startsAt) : NaN;
   if (!Number.isFinite(start) || now - start < HOLD_HOURS * 3600 * 1000) return false;
   // multi-session packages wait until the mentor has marked every session done
@@ -281,5 +281,5 @@ async function releaseDue({ sendMail } = {}) {
 
 module.exports = {
   HOLD_HOURS, DEFAULT_MENTOR_SHARE, stripe, form, mentorSharePct, recordPayment,
-  accountRow, refreshStatus, createAccount, onboardingLink, dashboardLink, confirmDirectPayment, isReady, isReleasable, releaseDue
+  accountRow, refreshStatus, createAccount, onboardingLink, dashboardLink, confirmPayment, isReady, isReleasable, releaseDue
 };

@@ -31,15 +31,12 @@ test('checkout ignores browser amount and calculates mentor rate on server',asyn
   const stripe=h.calls.find(c=>c.url.includes('stripe.com'));
   assert.equal(new URLSearchParams(stripe.opts.body).get('line_items[0][price_data][unit_amount]'),'6000');
 });
-test('booking is charged on the mentor account with Workar commission as application fee',async()=>{
+test('booking is charged to Workar (held, like Airbnb) and the session is saved for confirmation',async()=>{
   const h=checkout();assert.equal((await h.run()).code,200);
   const st=h.calls.find(c=>c.url.includes('checkout/sessions'));const p=new URLSearchParams(st.opts.body);
-  assert.equal(st.opts.headers['Stripe-Account'],'acct_mentor');assert.equal(p.get('payment_intent_data[application_fee_amount]'),'1800');
+  assert.equal(st.opts.headers['Stripe-Account'],undefined);assert.equal(p.get('payment_intent_data[application_fee_amount]'),null);
   assert.match(p.get('success_url'),/cs=\{CHECKOUT_SESSION_ID\}/);
-});
-test('booking waits for the mentor to finish payment setup and never charges the platform',async()=>{
-  const h=checkout({mentorReady:false});const res=await h.run();assert.equal(res.code,409);assert.equal(res.body.error,'mentor-not-ready');
-  assert.equal(h.calls.some(c=>c.url.includes('checkout/sessions')),false);
+  assert.ok(h.calls.some(c=>c.url.includes('/requests?id=eq.booking') && c.opts && c.opts.method==='PATCH'));
 });
 test('checkout fails closed on database errors and external return URLs',async()=>{
   for(const [options,extra,code] of [[{fail:true},{},503],[{},{successUrl:'https://attacker.test/'},400],[{},{kind:'ai_credits',userId:'someone-else'},403]]){

@@ -44,13 +44,13 @@ async function health(res) {
   if (out.mode === 'test' && /probe=connect/.test(String((res.req && res.req.url) || ''))) {
     try {
       const H = { Authorization: 'Bearer ' + key, 'Stripe-Version': process.env.STRIPE_V2_VERSION || '2026-09-30.endive', 'Content-Type': 'application/json' };
-      const combos = [['full','stripe','stripe', process.env.STRIPE_V2_VERSION || '2026-09-30.endive']];
+      const combos = [['express','application','application', process.env.STRIPE_V2_VERSION || '2026-09-30.endive']];
       out.connectProbe = {};
       await Promise.all(combos.map(async ([dash, fees, losses, ver]) => {
         const Hh = Object.assign({}, H, { 'Stripe-Version': ver });
         const r = await fetch('https://api.stripe.com/v2/core/accounts', { method: 'POST', headers: Hh, body: JSON.stringify({
           dashboard: dash, identity: { country: 'ca', entity_type: 'individual' },
-          configuration: { merchant: { capabilities: { card_payments: { requested: true } } } },
+          configuration: { recipient: { capabilities: { stripe_balance: { stripe_transfers: { requested: true } } } } },
           defaults: { responsibilities: { fees_collector: fees, losses_collector: losses } } }) });
         const j = await r.json().catch(() => ({}));
         let res = r.ok ? 'ok' : String((j.error && (j.error.code + ' ' + (j.error.message||''))) || r.status).slice(0, 300);
@@ -99,7 +99,7 @@ module.exports = async (req, res) => {
       const row = rq[0];
       if (!row) return res.status(404).json({ error: 'request-not-found' });
       if (row.clientId !== me.id && row.mentorId !== me.id) return res.status(403).json({ error: 'not-your-booking' });
-      return res.status(200).json(await require('./_payouts').confirmDirectPayment(requestId));
+      return res.status(200).json(await require('./_payouts').confirmPayment(requestId));
     } catch (e) { console.error('confirm-failed', e.message); return res.status(502).json({ error: 'confirm-failed' }); }
   }
   if (kind && !['booking', 'exam', 'ai_credits'].includes(kind)) return res.status(400).json({ error: 'invalid-purchase-kind' });
@@ -111,7 +111,7 @@ module.exports = async (req, res) => {
   }
 
   const params = new URLSearchParams();
-  let directAcct = null; // the mentor's Stripe account when a booking is paid directly to them
+  let saveSession = false; // bookings: remember the Checkout Session so payment can be confirmed without the webhook
   params.append('mode', 'payment');
   params.append('success_url', successUrl || '');
   params.append('cancel_url', cancelUrl || '');
@@ -202,51 +202,28 @@ module.exports = async (req, res) => {
       res.status(400).json({ error: 'missing-or-invalid-params' });
       return;
     }
-    // Direct payment to the mentor (Stripe-managed risk): Workar only receives its commission
-    const P = require('./_payouts');
-    let mentorAcct = null, bookingMentorId = null;
-    try {
-      const h2 = { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: 'Bearer ' + process.env.SUPABASE_SERVICE_ROLE_KEY };
-      const rq2 = await readRows(`${process.env.SUPABASE_URL}/rest/v1/requests?id=eq.${encodeURIComponent(requestId)}&select=mentorId`, h2);
-      bookingMentorId = rq2[0] && rq2[0].mentorId;
-      const row = bookingMentorId ? await P.accountRow(bookingMentorId) : null;
-      if (row && (await P.refreshStatus(row)).enabled) mentorAcct = row.stripeAccountId;
-    } catch (e) { console.error('mentor-account-check-failed', e.message); }
-    if (!mentorAcct) {
-      // let the mentor know a client is waiting to pay them
-      try {
-        const M = require('./_mail');
-        await M.sendMail(await M.emailOf(bookingMentorId), 'A client is ready to pay you on Workar',
-          M.layout('Set up payments to get paid', ['A client wants to pay for a session with you, but your payment setup on Workar is not finished yet.', 'It takes about 5 minutes with Stripe. As soon as it is done, they can pay and your session is confirmed.'], { text: 'Set up payments', url: M.SITE() + '/?go=dashboard' }));
-      } catch (e) {}
-      return res.status(409).json({ error: 'mentor-not-ready' });
-    }
-    const sharePct = await P.mentorSharePct();
-    const fee = Math.round(amount * (100 - sharePct) / 100);
     params.set('success_url', String(successUrl || '') + (String(successUrl || '').includes('?') ? '&' : '?') + 'cs={CHECKOUT_SESSION_ID}');
-    params.append('payment_intent_data[application_fee_amount]', String(fee));
     params.append('payment_intent_data[metadata][requestId]', requestId);
     params.append('client_reference_id', requestId);
     params.append('metadata[kind]', 'booking');
     params.append('metadata[requestId]', requestId);
     params.append('line_items[0][price_data][unit_amount]', String(amount));
-    directAcct = mentorAcct;
+    saveSession = true;
     params.append('line_items[0][price_data][product_data][name]',
       `Workar mentoring with ${mentorName || 'your mentor'}`);
   }
 
   try {
-    const direct = directAcct;
     const r = await fetch('https://api.stripe.com/v1/checkout/sessions', {
       method: 'POST',
       headers: Object.assign({
         'Authorization': 'Bearer ' + key,
         'Content-Type': 'application/x-www-form-urlencoded'
-      }, direct ? { 'Stripe-Account': direct } : {}),
+      }),
       body: params.toString()
     });
     const data = await r.json();
-    if (r.ok && direct && requestId) {
+    if (r.ok && saveSession && requestId) {
       // remember the session so the booking can be confirmed even if the client closes the tab
       await fetch(`${process.env.SUPABASE_URL}/rest/v1/requests?id=eq.${encodeURIComponent(requestId)}`, { method: 'PATCH',
         headers: { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: 'Bearer ' + process.env.SUPABASE_SERVICE_ROLE_KEY, 'Content-Type': 'application/json', Prefer: 'return=minimal' },

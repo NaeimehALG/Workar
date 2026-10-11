@@ -7,11 +7,13 @@ process.env.SUPABASE_URL = 'https://example.test';
 const P = require('../api/_payouts');
 
 const H = 3600 * 1000;
-const base = { id: 'r1', mentorId: 'm1', clientId: 'c1', paid: true, amountCents: 4900, status: 'accepted', packageKey: 'single', startsAt: new Date(Date.now() - 50 * H).toISOString(), stripeChargeId: 'ch_1', payoutCents: 3430 };
+const base = { id: 'r1', mentorId: 'm1', clientId: 'c1', paid: true, amountCents: 4900, status: 'accepted', packageKey: 'single', startsAt: new Date(Date.now() - 170 * H).toISOString(), stripeChargeId: 'ch_1', payoutCents: 3430 };
 
-test('payouts wait 48 hours after the session and for every session of a package', () => {
+test('payouts wait 7 days after the session, for every session of a package, and for reported problems', () => {
   assert.equal(P.isReleasable(base), true);
-  assert.equal(P.isReleasable({ ...base, startsAt: new Date(Date.now() - 10 * H).toISOString() }), false);
+  assert.equal(P.isReleasable({ ...base, startsAt: new Date(Date.now() - 6 * 24 * H).toISOString() }), false);
+  assert.equal(P.isReleasable({ ...base, problemReportedAt: new Date().toISOString() }), false);
+  assert.equal(P.isReleasable({ ...base, problemReportedAt: new Date().toISOString(), problemResolvedAt: new Date().toISOString() }), true);
   assert.equal(P.isReleasable({ ...base, packageKey: 'interview', sessionsDone: 2 }), false);
   assert.equal(P.isReleasable({ ...base, packageKey: 'interview', sessionsDone: 3 }), true);
   assert.equal(P.isReleasable({ ...base, payoutDone: true }), false);

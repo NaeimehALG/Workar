@@ -43,6 +43,16 @@ module.exports = async (req, res) => {
     const dash = { text: 'Open Workar', url: site + '/?go=dashboard' };
     let subject, title, paras, attachments = [];
 
+    if (event === 'problem_reported') {
+      if (!isClient || !r.problemReportedAt) { res.status(403).end(); return; }
+      await M.sendMail(M.CONTACT_EMAIL ? M.CONTACT_EMAIL() : adminEmail, `Problem reported: ${from.name} → ${to.name}`,
+        M.layout('A client reported a problem with a session', [
+          `<b>${fromName}</b> reported a problem with the session with <b>${M.esc(to.name || '')}</b> on ${M.esc(whenTxt)} (${r.amountCents ? '$' + (r.amountCents / 100).toFixed(2) + ' CAD' : 'free'}).`,
+          r.problemNote ? `Their note: “${M.esc(String(r.problemNote).slice(0, 800))}”` : '',
+          'The payment to the mentor is on hold until you decide. In the admin Payouts table you can release it, or refund the client in Stripe.'
+        ], { text: 'Open admin', url: site + '/?go=admin' }), [], { replyTo: me.email || undefined });
+      res.status(200).json({ ok: true }); return;
+    }
     switch (event) {
       case 'request_new':
         if (!isClient) break;

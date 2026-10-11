@@ -118,12 +118,12 @@ module.exports = async (req, res) => {
   const out = {}, problems = [];
   try { Object.assign(out, await sessionReminders()); } catch (e) { console.error('reminders-failed', e); problems.push('Session reminders failed: ' + (e.message || e)); }
   try { Object.assign(out, await reengage()); } catch (e) { console.error('reengage-failed', e); problems.push('Re-engagement emails failed: ' + (e.message || e)); }
-  // Direct payments: confirm any booking paid on the mentor's Stripe account that the browser didn't report
+  // Backup for the Stripe webhook: confirm any paid booking that wasn't marked paid yet
   try {
     const url = process.env.SUPABASE_URL, key = process.env.SUPABASE_SERVICE_ROLE_KEY;
     const r = await fetch(`${url}/rest/v1/requests?status=eq.accepted&paid=is.false&stripeSessionId=not.is.null&select=id`, { headers: { apikey: key, Authorization: 'Bearer ' + key } });
     const rows = r.ok ? await r.json() : [];
-    let n = 0; for (const x of rows) { try { if ((await P.confirmDirectPayment(x.id)).paid) n++; } catch (e) { console.error('confirm-sweep', x.id, e.message); } }
+    let n = 0; for (const x of rows) { try { if ((await P.confirmPayment(x.id)).paid) n++; } catch (e) { console.error('confirm-sweep', x.id, e.message); } }
     out.paymentsConfirmed = n;
   } catch (e) { problems.push('Payment check failed: ' + (e.message || e)); }
   try {
