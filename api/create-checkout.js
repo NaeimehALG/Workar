@@ -42,9 +42,10 @@ async function health(res) {
   if (out.mode === 'test' && /probe=connect/.test(String((res.req && res.req.url) || ''))) {
     try {
       const H = { Authorization: 'Bearer ' + key, 'Stripe-Version': process.env.STRIPE_V2_VERSION || '2026-09-30.endive', 'Content-Type': 'application/json' };
-      const combos = [['express','stripe','stripe'],['express','application','stripe']];
+      const combos = [['express','stripe','stripe','2026-09-30.preview'],['express','application','stripe','2026-09-30.preview'],['full','stripe','stripe','2026-09-30.endive'],['none','application','stripe','2026-09-30.endive']];
       out.connectProbe = {};
-      for (const [dash, fees, losses] of combos) {
+      for (const [dash, fees, losses, ver] of combos) {
+        H['Stripe-Version'] = ver;
         const r = await fetch('https://api.stripe.com/v2/core/accounts', { method: 'POST', headers: H, body: JSON.stringify({
           dashboard: dash, identity: { country: 'ca', entity_type: 'individual' },
           configuration: { merchant: { capabilities: { card_payments: { requested: true } } } },
@@ -57,7 +58,7 @@ async function health(res) {
           res += ' / link ' + (l.ok && lj.url ? 'ok' : String((lj.error && (lj.error.code + ' ' + lj.error.message)) || l.status).slice(0,200));
           await fetch('https://api.stripe.com/v2/core/accounts/' + j.id + '/close', { method: 'POST', headers: H, body: '{}' });
         }
-        out.connectProbe[dash + '|' + fees + '|' + losses + '|merchant'] = res;
+        out.connectProbe[dash + '|' + fees + '|' + losses + '|' + ver] = res;
       }
     } catch (e) { out.connectProbe = 'probe-failed'; }
   }
