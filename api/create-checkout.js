@@ -42,15 +42,15 @@ async function health(res) {
   if (out.mode === 'test' && /probe=connect/.test(String((res.req && res.req.url) || ''))) {
     try {
       const H = { Authorization: 'Bearer ' + key, 'Stripe-Version': process.env.STRIPE_V2_VERSION || '2026-09-30.endive', 'Content-Type': 'application/json' };
-      const combos = [['express','stripe','stripe'],['none','stripe','stripe'],['none','application','stripe'],['full','stripe','stripe']];
+      const combos = [['express','stripe','stripe'],['full','stripe','stripe'],[null,'stripe','stripe']];
       out.connectProbe = {};
       for (const [dash, fees, losses] of combos) {
         const r = await fetch('https://api.stripe.com/v2/core/accounts', { method: 'POST', headers: H, body: JSON.stringify({
-          dashboard: dash, identity: { country: 'ca', entity_type: 'individual' },
+          ...(dash ? { dashboard: dash } : {}), identity: { country: 'ca', entity_type: 'individual' },
           configuration: { recipient: { capabilities: { stripe_balance: { stripe_transfers: { requested: true } } } } },
           defaults: { responsibilities: { fees_collector: fees, losses_collector: losses } } }) });
         const j = await r.json().catch(() => ({}));
-        let res = r.ok ? 'ok' : String((j.error && j.error.code) || r.status);
+        let res = r.ok ? 'ok' : String((j.error && (j.error.code + ' ' + (j.error.message||'') + ' ' + JSON.stringify(j.error.details||j.error.invalid_fields||''))) || r.status).slice(0, 500);
         if (r.ok && j.id) {
           const l = await fetch('https://api.stripe.com/v2/core/account_links', { method: 'POST', headers: H, body: JSON.stringify({ account: j.id, use_case: { type: 'account_onboarding', account_onboarding: { configurations: ['recipient'], refresh_url: 'https://www.workar.me/?payouts=refresh', return_url: 'https://www.workar.me/?payouts=done' } } }) });
           const lj = await l.json().catch(() => ({}));
