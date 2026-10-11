@@ -1026,6 +1026,9 @@
   /* pre-join (call) screen */
   .pj-back{position:fixed;inset:0;z-index:1000;background:rgba(20,15,10,.62);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:16px;animation:pjIn .18s ease-out;}
   @keyframes pjIn{from{opacity:0}to{opacity:1}}
+  .ci-rev{margin-top:10px;display:flex;flex-direction:column;gap:10px;}
+  .ci-rev textarea{width:100%;border:1px solid var(--border);border-radius:12px;padding:10px 12px;font:inherit;background:var(--surface);resize:vertical;}
+  .ci-stars span{font-size:26px;cursor:pointer;}
   .call-back{position:fixed;inset:0;z-index:2000;background:#140F0B;display:flex;flex-direction:column;padding:12px 16px 16px;gap:10px;}
   .call-top{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#F5EDE3;}
   .call-title{font-weight:600;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
@@ -1738,6 +1741,7 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .ib-tag{flex:none;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;margin-inline-end:6px;background:rgba(185,141,94,.16);color:var(--accent);}
   .ib-tag.new{background:#C2412D;color:#fff;}
   .ib-tag.pay{background:rgba(78,138,91,.14);color:var(--free);}
+  .ib-tag.check{background:rgba(139,94,60,.12);color:var(--accent,#8B5E3C);}
   .ibr{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 16px;margin:12px 16px 0;padding:14px 16px;border:1px solid var(--border);border-inline-start:3px solid var(--accent-2);border-radius:12px;background:var(--surface);animation:ivIn .2s ease;}
   .ibr-stack{flex:none;max-height:68%;overflow-y:auto;padding-bottom:4px;}
   .ibr + .ibr{margin-top:8px;}
@@ -2266,7 +2270,7 @@ const I18N = {
     rt_kicker:"Your career path",
     sd_strength:'Profile strength', sd_strength_m:'Complete profiles get noticeably more bookings.', sd_strength_c:'A complete profile helps mentors prepare for you.', sd_done:'Your profile is complete.', sd_add:'Add', sd_i_title:'Job title', sd_i_bio:'About', sd_i_skills:'Skills', sd_i_edu:'Education', sd_i_lang:'Languages', sd_i_li:'LinkedIn', sd_i_avail:'Availability', sd_i_goals:'Goals', sd_i_cert:'Certifications', sd_msgs:'Messages', sd_all:'See all messages', sd_none:'No conversations yet.', sd_find:'Find a mentor',
     ib_ai:'Suggest a reply', earn_wait:'Awaiting payment', earn_tx_client:'Client', earn_tx_date:'Date', earn_tx_paid:'Paid', earn_tx_share:'Your share', earn_tx_out:'Paid out', earn_tx_due:'Due',
-    nav_inbox:'Inbox', prob_btn:'Report a problem', prob_ph:'What went wrong? For example: the mentor didn\'t show up, or the session was cut short.', prob_send:'Send report', prob_hint:'The payment to your mentor is put on hold and the Workar team will get back to you by email.', prob_need_note:'Please describe what happened.', prob_done:'Thanks. Your report was sent and the payment is on hold.', prob_reported_title:'Problem reported', prob_reported_sub:'The payment to your mentor is on hold. The Workar team will contact you by email.', prob_admin_tag:'Problem reported by', prob_release:'Release payout', prob_release_q:'Release this payout to the mentor? Do this only if the problem is resolved.', prob_released:'Payout released. It goes out with the next daily run.', ibf_all:'All', ibf_requests:'Requests', ibf_unread:'Unread', ibf_none:'No unread messages.', ibt_new:'New request', ibt_pick:'Pick a time', ibt_pay:'Ready to pay', ibr_new:'{n} wants to book a session', ibr_waiting_pick:'You suggested new times. Waiting for {n} to pick one', ibr_pick:'{n} suggested new times. Pick one to confirm', ibr_sent:'Session request sent', ibr_accepted:'Session accepted', ibr_confirmed:'Session confirmed', iv_new_title:'Session requests', iv_wants:'wants to book a session', iv_ignore:'Ignore', iv_suggest:'Suggest times', iv_suggest_other:'Suggest another time', iv_accept_anyway:'Accept anyway', iv_accept_q:'This time has a problem (see the note on the request). Accept it anyway?',
+    nav_inbox:'Inbox', prob_btn:'Report a problem', prob_ph:'What went wrong? For example: the mentor didn\'t show up, or the session was cut short.', prob_send:'Send report', prob_hint:'The payment to your mentor is put on hold and the Workar team will get back to you by email.', prob_need_note:'Please describe what happened.', prob_done:'Thanks. Your report was sent and the payment is on hold.', prob_reported_title:'Problem reported', prob_reported_sub:'The payment to your mentor is on hold. The Workar team will contact you by email.', prob_admin_tag:'Problem reported by', prob_release:'Release payout', prob_release_q:'Release this payout to the mentor? Do this only if the problem is resolved.', prob_released:'Payout released. It goes out with the next daily run.', ibf_all:'All', ibf_requests:'Requests', ibf_unread:'Unread', ibf_none:'No unread messages.', ibt_new:'New request', ibt_pick:'Pick a time', ibt_pay:'Ready to pay', ibt_check:'How did it go?', ci_q:'Did your session with {n} happen?', ci_q_sub:'Let us know so we can pay your mentor, or help if something went wrong.', ci_yes:'Yes, it happened', ci_no:'No, there was a problem', ci_rev_t:'How was your session with {n}?', ci_rev_ph:'What was most helpful about talking with {n}?', ci_later:'Later', ci_need_stars:'Pick 1 to 5 stars first.', ci_thanks_t:'Thank you for your review', ci_thanks_s:'It helps other people find the right mentor.', ci_mq:'Did your session with {n} happen?', ci_mq_sub:'Confirm it so your payout is released 7 days after the session.', ci_myes:'Yes, mark as done', ibr_new:'{n} wants to book a session', ibr_waiting_pick:'You suggested new times. Waiting for {n} to pick one', ibr_pick:'{n} suggested new times. Pick one to confirm', ibr_sent:'Session request sent', ibr_accepted:'Session accepted', ibr_confirmed:'Session confirmed', iv_new_title:'Session requests', iv_wants:'wants to book a session', iv_ignore:'Ignore', iv_suggest:'Suggest times', iv_suggest_other:'Suggest another time', iv_accept_anyway:'Accept anyway', iv_accept_q:'This time has a problem (see the note on the request). Accept it anyway?',
     iv_ignored:'Request from {n} ignored.', iv_undo:'Undo', iv_accepted:'Accepted. {n} will be asked to pay to confirm.', iv_show_all:'Show all', iv_less:'Show less',
     iv_clear:'You\'re all caught up', iv_clear_sub:'New session requests will appear here.', iv_pick_title:'New times suggested for you', iv_suggested:'suggested new times for your session',
     iv_none_work:'None of these work? Send a message', iv_pay_title:'Ready to confirm', iv_c_pay:'Accepted. Pay to confirm your session', iv_up_title:'Upcoming sessions', iv_join:'Join',
@@ -2681,7 +2685,7 @@ const I18N = {
     rt_kicker:"مسیر شغلی شما",
     sd_strength:'قدرت پروفایل', sd_strength_m:'پروفایل کامل رزرو بیشتری می‌گیرد.', sd_strength_c:'پروفایل کامل به منتور کمک می‌کند بهتر آماده شود.', sd_done:'پروفایل شما کامل است.', sd_add:'افزودن', sd_i_title:'عنوان شغلی', sd_i_bio:'درباره‌ی من', sd_i_skills:'مهارت‌ها', sd_i_edu:'تحصیلات', sd_i_lang:'زبان‌ها', sd_i_li:'لینکدین', sd_i_avail:'زمان‌های آزاد', sd_i_goals:'اهداف', sd_i_cert:'گواهینامه‌ها', sd_msgs:'پیام‌ها', sd_all:'همه‌ی پیام‌ها', sd_none:'هنوز گفتگویی ندارید.', sd_find:'پیدا کردن منتور',
     ib_ai:'پیشنهاد پاسخ', earn_wait:'در انتظار پرداخت', earn_tx_client:'مراجع', earn_tx_date:'تاریخ', earn_tx_paid:'پرداختی', earn_tx_share:'سهم شما', earn_tx_out:'واریز شد', earn_tx_due:'در انتظار واریز',
-    nav_inbox:'صندوق ورودی', prob_btn:'گزارش مشکل', prob_ph:'چه مشکلی پیش آمد؟ مثلاً منتور نیامد یا جلسه نیمه‌کاره ماند.', prob_send:'ارسال گزارش', prob_hint:'پرداخت به منتور متوقف می‌شود و تیم Workar از طریق ایمیل با شما تماس می‌گیرد.', prob_need_note:'لطفاً توضیح دهید چه اتفاقی افتاد.', prob_done:'ممنون. گزارش شما ارسال شد و پرداخت متوقف شد.', prob_reported_title:'مشکل گزارش شد', prob_reported_sub:'پرداخت به منتور متوقف است. تیم Workar از طریق ایمیل با شما تماس می‌گیرد.', prob_admin_tag:'گزارش مشکل از', prob_release:'آزاد کردن پرداخت', prob_release_q:'پرداخت این جلسه برای منتور آزاد شود؟ فقط وقتی مشکل حل شده این کار را بکنید.', prob_released:'پرداخت آزاد شد و در اجرای روزانه‌ی بعدی ارسال می‌شود.', ibf_all:'همه', ibf_requests:'درخواست‌ها', ibf_unread:'خوانده‌نشده', ibf_none:'پیام خوانده‌نشده‌ای ندارید.', ibt_new:'درخواست جدید', ibt_pick:'انتخاب زمان', ibt_pay:'آماده‌ی پرداخت', ibr_new:'{n} درخواست جلسه داده است', ibr_waiting_pick:'زمان‌های تازه پیشنهاد دادید. منتظر انتخاب {n}', ibr_pick:'{n} زمان‌های تازه پیشنهاد داده است. یکی را انتخاب کنید', ibr_sent:'درخواست جلسه ارسال شد', ibr_accepted:'جلسه قبول شد', ibr_confirmed:'جلسه قطعی شد', iv_new_title:'درخواست‌های جلسه', iv_wants:'درخواست یک جلسه داده است', iv_ignore:'نادیده گرفتن', iv_suggest:'پیشنهاد زمان', iv_suggest_other:'پیشنهاد زمان دیگر', iv_accept_anyway:'با این حال قبول کن', iv_accept_q:'این زمان مشکلی دارد (یادداشت روی درخواست را ببینید). باز هم قبول می‌کنید؟',
+    nav_inbox:'صندوق ورودی', prob_btn:'گزارش مشکل', prob_ph:'چه مشکلی پیش آمد؟ مثلاً منتور نیامد یا جلسه نیمه‌کاره ماند.', prob_send:'ارسال گزارش', prob_hint:'پرداخت به منتور متوقف می‌شود و تیم Workar از طریق ایمیل با شما تماس می‌گیرد.', prob_need_note:'لطفاً توضیح دهید چه اتفاقی افتاد.', prob_done:'ممنون. گزارش شما ارسال شد و پرداخت متوقف شد.', prob_reported_title:'مشکل گزارش شد', prob_reported_sub:'پرداخت به منتور متوقف است. تیم Workar از طریق ایمیل با شما تماس می‌گیرد.', prob_admin_tag:'گزارش مشکل از', prob_release:'آزاد کردن پرداخت', prob_release_q:'پرداخت این جلسه برای منتور آزاد شود؟ فقط وقتی مشکل حل شده این کار را بکنید.', prob_released:'پرداخت آزاد شد و در اجرای روزانه‌ی بعدی ارسال می‌شود.', ibf_all:'همه', ibf_requests:'درخواست‌ها', ibf_unread:'خوانده‌نشده', ibf_none:'پیام خوانده‌نشده‌ای ندارید.', ibt_new:'درخواست جدید', ibt_pick:'انتخاب زمان', ibt_pay:'آماده‌ی پرداخت', ibt_check:'جلسه چطور بود؟', ci_q:'جلسه‌ی شما با {n} برگزار شد؟', ci_q_sub:'به ما بگویید تا مبلغ به منتور پرداخت شود، یا اگر مشکلی بود کمکتان کنیم.', ci_yes:'بله، برگزار شد', ci_no:'نه، مشکلی پیش آمد', ci_rev_t:'جلسه با {n} چطور بود؟', ci_rev_ph:'چه چیزی در گفتگو با {n} بیشتر کمکتان کرد؟', ci_later:'بعداً', ci_need_stars:'اول از ۱ تا ۵ ستاره انتخاب کنید.', ci_thanks_t:'از نظرتان ممنونیم', ci_thanks_s:'نظر شما به دیگران کمک می‌کند منتور مناسب را پیدا کنند.', ci_mq:'جلسه‌ی شما با {n} برگزار شد؟', ci_mq_sub:'تأیید کنید تا مبلغ شما ۷ روز بعد از جلسه واریز شود.', ci_myes:'بله، انجام شد', ibr_new:'{n} درخواست جلسه داده است', ibr_waiting_pick:'زمان‌های تازه پیشنهاد دادید. منتظر انتخاب {n}', ibr_pick:'{n} زمان‌های تازه پیشنهاد داده است. یکی را انتخاب کنید', ibr_sent:'درخواست جلسه ارسال شد', ibr_accepted:'جلسه قبول شد', ibr_confirmed:'جلسه قطعی شد', iv_new_title:'درخواست‌های جلسه', iv_wants:'درخواست یک جلسه داده است', iv_ignore:'نادیده گرفتن', iv_suggest:'پیشنهاد زمان', iv_suggest_other:'پیشنهاد زمان دیگر', iv_accept_anyway:'با این حال قبول کن', iv_accept_q:'این زمان مشکلی دارد (یادداشت روی درخواست را ببینید). باز هم قبول می‌کنید؟',
     iv_ignored:'درخواست {n} نادیده گرفته شد.', iv_undo:'برگرداندن', iv_accepted:'قبول شد. از {n} خواسته می‌شود برای قطعی شدن پرداخت کند.', iv_show_all:'نمایش همه', iv_less:'نمایش کمتر',
     iv_clear:'درخواست تازه‌ای ندارید', iv_clear_sub:'درخواست‌های جدید جلسه اینجا نمایش داده می‌شوند.', iv_pick_title:'زمان‌های پیشنهادی برای شما', iv_suggested:'زمان‌های تازه‌ای برای جلسه‌تان پیشنهاد داده است',
     iv_none_work:'هیچ‌کدام مناسب نیست؟ پیام بدهید', iv_pay_title:'آماده‌ی قطعی شدن', iv_c_pay:'قبول شد. برای قطعی شدن جلسه پرداخت کنید', iv_up_title:'جلسه‌های پیش رو', iv_join:'ورود',
@@ -2852,6 +2856,7 @@ let state = { view:'home', mentorId:null, coachMode:'resume', chatMsgs:[], sendi
   authMode:'login', authError:'', authCheckEmail:false, authBusy:false,
   lang:'en', query:'', role:null, voiceMode:false, listening:false, outOfCredits:false };
 try{ const __go = new URLSearchParams(location.search).get('go'); if(__go && ['dashboard','admin','privacy','terms','refunds','browse','coach','prep','requests','messages'].includes(__go)){ if(__go==='requests'){ state.ibPreferAction = true; } state.view = __go==='requests' ? 'messages' : __go; history.replaceState(null, '', location.pathname + location.hash); } }catch(e){}
+state.ciSkip = state.ciSkip || {}; state.ciStars = state.ciStars || {};
 let cache = { profiles:{}, reviews:{}, requests:[], names:{}, people:{}, msgs:{}, busy:{}, busyLoaded:{} };
 
 function el(html){ const t=document.createElement('template'); t.innerHTML=html.trim(); return t.content; }
@@ -6143,10 +6148,24 @@ function convAction(c){
     if(r.mentorId===uid && r.status==='pending' && fresh && !state.ivIgnoring[r.id]) return 'new';
     if(r.clientId===uid && r.mentorId!==uid && st===0 && !fresh) return 'pick';
     if(r.clientId===uid && r.mentorId!==uid && st===1) return 'pay';
+    if(checkInFor(r)) return 'check';
   }
   return '';
 }
 // A client can report a problem from booking until 7 days after the session, while the mentor's payout is still on hold
+// After the session: ask the client "did it happen?" then for a review; ask the mentor to confirm it happened
+function sessionEnded(r){ const i = reqInstant(r); return !!(i && Date.now() > i.getTime() + SESSION_MIN*60000); }
+function checkInFor(r){
+  if(!r || !r.paid || r.status!=='accepted' || !sessionEnded(r)) return '';
+  if(r.clientId===uid && r.mentorId!==uid){
+    if(r.problemReportedAt) return '';
+    if(!r.clientConfirmedAt) return 'happened';
+    if(!r.clientReviewedAt && !state.ciSkip[r.id]) return 'review';
+    return '';
+  }
+  if(r.mentorId===uid && !(Number(r.sessionsDone)>0)) return 'mentor';
+  return '';
+}
 function canReport(r){
   if(!r || r.clientId!==uid || !r.paid || r.problemReportedAt || r.payoutDone) return false;
   const i = reqInstant(r); return !i || Date.now() < i.getTime() + 7*86400000;
@@ -6154,6 +6173,32 @@ function canReport(r){
 document.addEventListener('click', async e=>{
   const o = e.target.closest && e.target.closest('[data-prob-open]');
   if(o){ state.probOpen = o.getAttribute('data-prob-open') || null; render(); const t = document.getElementById('prob-note'); if(t) t.focus(); return; }
+  const cy = e.target.closest && e.target.closest('[data-ci-yes]');
+  if(cy){ const id = cy.getAttribute('data-ci-yes'); cy.disabled = true;
+    try{ await updateReq(id, { clientConfirmedAt: new Date().toISOString() }); const x = (cache.requests||[]).find(q=>q.id===id); if(x) x.clientConfirmedAt = new Date().toISOString(); render(); }
+    catch(err){ cy.disabled = false; toast(T('toast_update_fail'), 5000); } return; }
+  const cs = e.target.closest && e.target.closest('[data-ci-star]');
+  if(cs){ const id = cs.getAttribute('data-ci-star'), ta = document.getElementById('ci-text-'+id), keep = ta ? ta.value : '';
+    state.ciStars[id] = parseInt(cs.getAttribute('data-v'),10); render(); const t2 = document.getElementById('ci-text-'+id); if(t2){ t2.value = keep; } return; }
+  const cl = e.target.closest && e.target.closest('[data-ci-later]');
+  if(cl){ state.ciSkip[cl.getAttribute('data-ci-later')] = true; render(); return; }
+  const cp = e.target.closest && e.target.closest('[data-ci-post]');
+  if(cp){ const id = cp.getAttribute('data-ci-post'), r = (cache.requests||[]).find(q=>q.id===id); if(!r) return;
+    const rating = state.ciStars[id] || 0, text = ((document.getElementById('ci-text-'+id)||{}).value||'').trim().slice(0,2000);
+    if(!rating){ toast(T('ci_need_stars')); return; }
+    cp.disabled = true;
+    try{
+      await window.__db.doc('reviews/rev_'+id).set({ mentorId: r.mentorId, clientId: uid, rating, text, createdAt: Date.now() });
+      try{ await updateReq(id, { clientReviewedAt: new Date().toISOString() }); }catch(e2){}
+      r.clientReviewedAt = new Date().toISOString(); state.ciThanks = id; delete state.ciStars[id];
+      toast(T('toast_review_posted')); try{ loadReviews(r.mentorId); }catch(e3){} render();
+    }catch(err){ console.error('review-post-failed', err); cp.disabled = false; toast(T('toast_review_fail'), 5000); }
+    return; }
+  const cm = e.target.closest && e.target.closest('[data-ci-mdone]');
+  if(cm){ const id = cm.getAttribute('data-ci-mdone'), r = (cache.requests||[]).find(q=>q.id===id); if(!r) return; cm.disabled = true;
+    const next = (Number(r.sessionsDone)||0)+1;
+    try{ await updateReq(id, { sessionsDone: next }); r.sessionsDone = next; toast(T('sess_saved')); render(); }
+    catch(err){ cm.disabled = false; toast(T('toast_update_fail'), 5000); } return; }
   const sb2 = e.target.closest && e.target.closest('[data-prob-send]');
   if(sb2){
     const id = sb2.getAttribute('data-prob-send'), note = ((document.getElementById('prob-note')||{}).value||'').trim().slice(0,1500);
@@ -6198,6 +6243,20 @@ function ibReqCard(cur, iAmMentor, name){
   } else if(st===1){
     title = T('ibr_accepted'); status = iAmMentor ? T('iv_w_pay').replace('{n}', name) : T('iv_c_pay');
     if(!iAmMentor) act = `<button type="button" class="iv-pill solid" data-pay="${esc(cur.id)}" data-amount="${cur.amountCents}" data-mentor="${esc(cur.mentorId)}">${esc(T('pay_to_confirm').replace('${amount}', (cur.amountCents/100).toFixed(2)))}</button>`;
+  } else if(state.ciThanks===cur.id){
+    title = T('ci_thanks_t'); status = T('ci_thanks_s');
+  } else if(checkInFor(cur)==='happened'){
+    title = T('ci_q').replace('{n}', name); status = T('ci_q_sub');
+    act = `<button type="button" class="iv-pill" data-prob-open="${esc(cur.id)}">${esc(T('ci_no'))}</button><button type="button" class="iv-pill solid" data-ci-yes="${esc(cur.id)}">${esc(T('ci_yes'))}</button>`;
+  } else if(checkInFor(cur)==='review'){
+    const n = state.ciStars[cur.id] || 0;
+    title = T('ci_rev_t').replace('{n}', name);
+    extra = `<div class="ci-rev"><div class="star-input ci-stars" role="radiogroup" aria-label="${esc(T('rate_experience'))}">${[1,2,3,4,5].map(k=>`<span role="radio" tabindex="0" aria-checked="${k===n}" aria-label="${k}" data-ci-star="${esc(cur.id)}" data-v="${k}" class="${k<=n?'on':''}">★</span>`).join('')}</div>
+      <textarea id="ci-text-${esc(cur.id)}" rows="3" placeholder="${esc(T('ci_rev_ph').replace('{n}', name))}"></textarea>
+      <div class="pr-foot"><button type="button" class="btn btn-sm btn-ghost" data-ci-later="${esc(cur.id)}">${esc(T('ci_later'))}</button><button type="button" class="btn btn-sm btn-primary" data-ci-post="${esc(cur.id)}">${esc(T('post_review'))}</button></div></div>`;
+  } else if(checkInFor(cur)==='mentor'){
+    title = T('ci_mq').replace('{n}', name); status = T('ci_mq_sub');
+    act = `<button type="button" class="iv-pill solid" data-ci-mdone="${esc(cur.id)}">${esc(T('ci_myes'))}</button>`;
   } else if(st>=2 && !iAmMentor && cur.problemReportedAt){
     title = T('prob_reported_title'); status = T('prob_reported_sub');
   } else if(st===2){
@@ -6207,7 +6266,7 @@ function ibReqCard(cur, iAmMentor, name){
   } else if(st===3 && !iAmMentor && canReport(cur)){
     title = T('sess_completed');
   } else return '';
-  if(!iAmMentor && canReport(cur)) act += `<button type="button" class="iv-link" data-prob-open="${esc(cur.id)}">${esc(T('prob_btn'))}</button>`;
+  if(!iAmMentor && canReport(cur) && !checkInFor(cur) && state.ciThanks!==cur.id) act += `<button type="button" class="iv-link" data-prob-open="${esc(cur.id)}">${esc(T('prob_btn'))}</button>`;
   if(state.probOpen===cur.id) extra += `<div class="prob-box"><textarea id="prob-note" rows="3" placeholder="${esc(T('prob_ph'))}"></textarea>
     <div class="pr-foot"><button type="button" class="btn btn-sm btn-ghost" data-prob-open="">${esc(T('cancel'))}</button><button type="button" class="btn btn-sm btn-primary" data-prob-send="${esc(cur.id)}">${esc(T('prob_send'))}</button></div>
     <p class="muted" style="font-size:12.5px;margin:8px 0 0;">${esc(T('prob_hint'))}</p></div>`;
@@ -6338,7 +6397,7 @@ function inboxThread(o){
        <button class="ib-ic off" data-call-locked="1" title="${esc(T('inbox_calls_locked'))}" aria-label="${esc(T('inbox_video'))}">${IB_IC.video}</button>`;
   const pri = r=>{ const me = r.mentorId===uid, st = reqStage(r), prop = (r.proposedTimes||[]).some(t=>new Date(t).getTime() > Date.now());
     return me && r.status==='pending' && !prop ? 0 : !me && st===0 && prop ? 0 : !me && st===1 ? 1 : st===2 ? 2 : 3; };
-  const active = reqs.filter(r=>(reqStage(r)>=0 && reqStage(r)<3) || state.ivIgnoring[r.id] || state.ivAccepted===r.id)
+  const active = reqs.filter(r=>(reqStage(r)>=0 && reqStage(r)<3) || checkInFor(r) || state.ciThanks===r.id || state.ivIgnoring[r.id] || state.ivAccepted===r.id)
     .sort((a,b)=>(pri(a)-pri(b)) || ((reqInstant(a)||0)-(reqInstant(b)||0)));
   const ctx = active.length ? `<div class="ibr-stack">${active.map(r=>ibReqCard(r, r.mentorId===uid, name)).join('')}</div>`
     : (p.role!=='client' && o!==uid ? `<div class="ib-ctx soft"><div><b>${esc(T('inbox_no_booking'))}</b><span>${esc(T('inbox_calls_locked'))}</span></div><div class="ib-ctx-act"><button class="btn btn-sm btn-primary" data-nav="mentor" data-mentor="${esc(o)}">${esc(T('book_session'))}</button></div></div>` : '');
@@ -6730,7 +6789,7 @@ function paymentFailText(err){
   return isAdmin() && detail ? T('toast_payment_fail') + ' (' + detail + ')' : T('toast_payment_fail');
 }
 function requestsNeedingMe(){
-  try{ return cache.requests.filter(r=> (r.mentorId===uid && r.status==='pending') || (r.clientId===uid && r.mentorId!==uid && reqStage(r)===1)).length; }catch(e){ return 0; }
+  try{ return cache.requests.filter(r=> (r.mentorId===uid && r.status==='pending') || (r.clientId===uid && r.mentorId!==uid && reqStage(r)===1) || !!checkInFor(r)).length; }catch(e){ return 0; }
 }
 // ---------- Inbox hub: Requests + Messages in one place (LinkedIn-style) ----------
 const HUB_IC = {
