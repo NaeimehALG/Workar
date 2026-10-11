@@ -85,6 +85,14 @@ async function handler(req, res) {
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
     const md = session.metadata || {};
+    // Card-hold bookings: the card is held (or saved) now and charged only after the session — see api/_holds.js
+    if (md.kind === 'booking' && md.holdMode) {
+      const requestId = md.requestId || session.client_reference_id;
+      try { if (requestId) await require('./_holds').secureFromSession(requestId, session); }
+      catch (e) { console.error('hold-record-failed', e.message); res.status(500).json({ error: 'update-failed' }); return; } // Stripe will retry
+      res.status(200).json({ received: true });
+      return;
+    }
     // only act on money that actually arrived (e.g. ignore delayed bank payments still pending)
     if (session.payment_status && session.payment_status !== 'paid' && session.payment_status !== 'no_payment_required') {
       res.status(200).json({ received: true, skipped: 'unpaid' }); return;

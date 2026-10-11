@@ -166,7 +166,7 @@ module.exports = async (req, res) => {
   } else {
     // Price is decided server-side from the booking's package + the admin's site settings,
     // so the amount can't be changed in the browser.
-    let amount = 0;
+    let amount = 0, startsAt = null;
     const supabaseUrl = process.env.SUPABASE_URL;
     const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
     if (supabaseUrl && serviceKey && requestId) {
@@ -178,6 +178,7 @@ module.exports = async (req, res) => {
         if (reqRow.clientId !== me.id) { res.status(403).json({ error: 'not-your-booking' }); return; }
         if (reqRow.status !== 'accepted') { res.status(409).json({ error: 'booking-not-accepted' }); return; }
         if (reqRow.paid) { res.status(400).json({ error: 'already-paid' }); return; }
+        startsAt = reqRow.startsAt || null;
         const st = await readRows(`${supabaseUrl}/rest/v1/site_settings?id=eq.main&select=data`, h);
         const saved = (Array.isArray(st) && st[0] && st[0].data && Array.isArray(st[0].data.packages)) ? st[0].data.packages : [];
         const key = reqRow.packageKey || 'single';
@@ -202,15 +203,39 @@ module.exports = async (req, res) => {
       res.status(400).json({ error: 'missing-or-invalid-params' });
       return;
     }
+    // TaskRabbit-style: the card is held, not charged. It is charged only after the session happens,
+    // and released if the session doesn't happen (api/_holds.js runs the rest every day).
+    const H = require('./_holds');
+    let customer;
+    try { customer = await H.customerFor(me); }
+    catch (e) { console.error('customer-failed', e.message); res.status(502).json({ error: 'stripe-error' }); return; }
+    const holdNow = H.holdNowAtCheckout(startsAt);
+    const price = '$' + (amount / 100).toFixed(2) + ' CAD';
     params.set('success_url', String(successUrl || '') + (String(successUrl || '').includes('?') ? '&' : '?') + 'cs={CHECKOUT_SESSION_ID}');
-    params.append('payment_intent_data[metadata][requestId]', requestId);
     params.append('client_reference_id', requestId);
+    params.append('customer', customer);
+    params.append('payment_method_types[0]', 'card');
     params.append('metadata[kind]', 'booking');
     params.append('metadata[requestId]', requestId);
-    params.append('line_items[0][price_data][unit_amount]', String(amount));
+    params.append('metadata[amountCents]', String(amount));
+    params.append('metadata[holdMode]', holdNow ? 'now' : 'later');
+    if (holdNow) {
+      params.append('payment_intent_data[capture_method]', 'manual');
+      params.append('payment_intent_data[setup_future_usage]', 'off_session'); // lets Workar hold it again if the session moves
+      params.append('payment_intent_data[metadata][requestId]', requestId);
+      params.append('payment_intent_data[description]', `Workar mentoring with ${mentorName || 'your mentor'}`);
+      params.append('line_items[0][price_data][unit_amount]', String(amount));
+      params.append('line_items[0][price_data][product_data][name]', `Workar mentoring with ${mentorName || 'your mentor'}`);
+      params.append('custom_text[submit][message]', `This is a hold on your card, not a charge. You are charged ${price} only after your session takes place. If your mentor cancels or doesn't show up, the hold is released and you pay nothing.`);
+    } else {
+      // Setup mode: save the card only. Stripe holds can't last until a session this far away.
+      params.set('mode', 'setup');
+      ['line_items[0][quantity]', 'line_items[0][price_data][currency]'].forEach(k => params.delete(k));
+      params.append('setup_intent_data[metadata][requestId]', requestId);
+      params.append('setup_intent_data[description]', `Workar mentoring with ${mentorName || 'your mentor'} — ${price}`);
+      params.append('custom_text[submit][message]', `Nothing is charged today. Two days before your session we place a hold of ${price} on this card, and charge it only after your session takes place. If your mentor cancels or doesn't show up, you pay nothing.`);
+    }
     saveSession = true;
-    params.append('line_items[0][price_data][product_data][name]',
-      `Workar mentoring with ${mentorName || 'your mentor'}`);
   }
 
   try {

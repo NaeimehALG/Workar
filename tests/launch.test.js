@@ -5,15 +5,16 @@ const vm = require('node:vm');
 const path = require('node:path');
 const root = path.join(__dirname, '..');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-function checkout({signedIn=true, owner='client', status='accepted', paid=false, fail=false, mentorReady=true}={}) {
+const holds=require('../api/_holds');
+function checkout({signedIn=true, owner='client', status='accepted', paid=false, fail=false, mentorReady=true, startsAt=null}={}) {
   const calls=[];
   const ctx={module:{exports:{}}, process:{env:{STRIPE_SECRET_KEY:'test',SUPABASE_SERVICE_ROLE_KEY:'test',SUPABASE_URL:'https://example.test'}}, URL,URLSearchParams,console:{error(){}},
     require:()=>({userFromToken:async token=>signedIn && token==='test-token'?{id:'client'}:null,
       accountRow:async()=>mentorReady?{mentorId:'mentor',stripeAccountId:'acct_mentor'}:null, refreshStatus:async()=>({enabled:mentorReady}), mentorSharePct:async()=>70,
-      sendMail:async()=>({ok:true}), emailOf:async()=>'m@example.test', layout:()=>'', SITE:()=>'https://www.workar.me'}),
+      sendMail:async()=>({ok:true}), customerFor:async()=>'cus_test', holdNowAtCheckout:holds.holdNowAtCheckout, emailOf:async()=>'m@example.test', layout:()=>'', SITE:()=>'https://www.workar.me'}),
     fetch:async(url,opts)=>{calls.push({url,opts}); let data=[];
       if(url.includes('stripe.com')) data={url:'https://checkout.stripe.com/test'};
-      if(url.includes('/requests?')) data=[{clientId:owner,status,paid,mentorId:'mentor',packageKey:'single'}];
+      if(url.includes('/requests?')) data=[{clientId:owner,status,paid,mentorId:'mentor',packageKey:'single',startsAt}];
       if(url.includes('/profiles?')) data=[{sessionRate:60}];
       return {ok:!fail || url.includes('stripe.com'),json:async()=>data};
     }};
@@ -37,6 +38,17 @@ test('booking is charged to Workar (held, like Airbnb) and the session is saved 
   assert.equal(st.opts.headers['Stripe-Account'],undefined);assert.equal(p.get('payment_intent_data[application_fee_amount]'),null);
   assert.match(p.get('success_url'),/cs=\{CHECKOUT_SESSION_ID\}/);
   assert.ok(h.calls.some(c=>c.url.includes('/requests?id=eq.booking') && c.opts && c.opts.method==='PATCH'));
+});
+test('booking card is held, not charged; far-away sessions only save the card',async()=>{
+  let h=checkout({startsAt:new Date(Date.now()+2*86400000).toISOString()});assert.equal((await h.run()).code,200);
+  let p=new URLSearchParams(h.calls.find(c=>c.url.includes('checkout/sessions')).opts.body);
+  assert.equal(p.get('mode'),'payment');assert.equal(p.get('payment_intent_data[capture_method]'),'manual');
+  assert.equal(p.get('metadata[holdMode]'),'now');assert.equal(p.get('customer'),'cus_test');assert.equal(p.get('metadata[amountCents]'),'6000');
+  h=checkout({startsAt:new Date(Date.now()+10*86400000).toISOString()});assert.equal((await h.run()).code,200);
+  p=new URLSearchParams(h.calls.find(c=>c.url.includes('checkout/sessions')).opts.body);
+  assert.equal(p.get('mode'),'setup');assert.equal(p.get('metadata[holdMode]'),'later');
+  assert.equal(p.get('line_items[0][price_data][unit_amount]'),null);assert.equal(p.get('line_items[0][quantity]'),null);
+  assert.equal(p.get('metadata[amountCents]'),'6000');
 });
 test('checkout fails closed on database errors and external return URLs',async()=>{
   for(const [options,extra,code] of [[{fail:true},{},503],[{},{successUrl:'https://attacker.test/'},400],[{},{kind:'ai_credits',userId:'someone-else'},403]]){

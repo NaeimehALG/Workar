@@ -51,13 +51,14 @@ async function sendConfirmation(r, opts = {}) {
     const whenTxt = M.when(r, p.me.timezone);
     const subject = opts.updated
       ? `Updated time: your Workar session with ${p.other.name}`
-      : (p.isMentor ? `${p.other.name} paid, your session is confirmed` : `You're booked with ${p.other.name}`);
+      : (p.isMentor ? `${p.other.name} confirmed, your session is booked` : `You're booked with ${p.other.name}`);
     const paras = [
       opts.updated
         ? `Your session with <b>${M.esc(p.other.name)}</b> is now on <b>${M.esc(whenTxt)}</b>.`
         : (p.isMentor
-          ? `<b>${M.esc(p.other.name)}</b> completed payment. Your session is confirmed for <b>${M.esc(whenTxt)}</b>.`
+          ? `<b>${M.esc(p.other.name)}</b> confirmed with their card. Your session is booked for <b>${M.esc(whenTxt)}</b>. Their card is charged after the session takes place, and your share is paid out as usual.`
           : `Your session with <b>${M.esc(p.other.name)}</b> is confirmed for <b>${M.esc(whenTxt)}</b>.`),
+      !opts.updated && !p.isMentor && r.holdStatus ? `<span style="font-size:13px;color:#8a7461;">Your card is not charged yet. ${r.holdStatus === 'saved' ? 'We place a hold on it two days before the session, and' : 'The amount is on hold, and'} you're charged only after the session takes place. If your mentor cancels or doesn't show up, you pay nothing.</span>` : '',
       `Your private call link: ${M.link(url, url)}<br><span style="font-size:13px;color:#8a7461;">You can also join from your Workar dashboard.${MT.isDaily(url) ? ' No app or sign-in needed: it opens right in your browser.' : ' The first person to join may be asked to sign in with Google or GitHub to open the room.'}</span>`,
       gcal ? `${M.link(gcal, 'Add to Google Calendar')}, or open the attached invite to add it to Outlook or Apple Calendar. The invite reminds you 1 hour and 15 minutes before.` : '',
       p.isMentor ? 'The day before, we will email you a short prep brief about your client.' : 'The day before, we will email you a few tips to get the most out of the session.'

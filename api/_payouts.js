@@ -199,6 +199,8 @@ async function confirmPayment(requestId) {
   if (r.paid) return { paid: true, already: true };
   if (!r.stripeSessionId) return { paid: false };
   const session = await stripe('GET', 'checkout/sessions/' + encodeURIComponent(r.stripeSessionId));
+  // card-hold bookings: the card is held or saved, and charged only after the session (api/_holds.js)
+  if (session.metadata && session.metadata.holdMode) return require('./_holds').secureFromSession(requestId, session);
   if (session.payment_status !== 'paid') return { paid: false };
   await dbPatch(`requests?id=eq.${encodeURIComponent(requestId)}&paid=is.false`, { paid: true });
   try { await recordPayment(requestId, session); } catch (e) { console.error('payout-record-failed', e.message); }
@@ -212,7 +214,10 @@ function sessionsIn(r) { return Number(r.sessions) || PKG_SESSIONS[r.packageKey]
 // A booking is ready to pay out once its (last) session is safely in the past.
 function isReleasable(r, now = Date.now()) {
   if (!r.paid || r.payoutDone || r.stripeTransferId || !(Number(r.amountCents) > 0)) return false;
-  if (['cancelled', 'declined', 'refunded'].includes(r.status)) return false;
+  if (['cancelled', 'declined', 'refunded'].includes(r.status) && r.holdStatus !== 'captured') return false;
+  if (r.status === 'refunded') return false;
+  // card-hold bookings pay out only once the client's card has actually been charged
+  if (r.holdStatus && r.holdStatus !== 'captured') return false;
   if (r.problemReportedAt && !r.problemResolvedAt) return false; // the client reported a problem: wait for the admin
   const start = r.startsAt ? Date.parse(r.startsAt) : NaN;
   if (!Number.isFinite(start) || now - start < HOLD_HOURS * 3600 * 1000) return false;
