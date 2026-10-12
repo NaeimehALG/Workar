@@ -60,7 +60,7 @@ const bearer = req => (req.headers.authorization || '').replace(/^Bearer\s+/i, '
 const FIELDS = ['Technology & Data', 'Business & Management', 'Finance & Accounting', 'Engineering', 'Healthcare & Life Sciences', 'Marketing & Sales', 'Design & Creative', 'Education & Research', 'Law & Public Sector', 'Operations & Trades', 'Other'];
 const SENIORITY = ['early-career', 'mid-level', 'senior', 'lead-or-manager', 'executive'];
 const HELPS_WITH = ['resume_review', 'interview_prep', 'career_switch', 'job_search_strategy', 'salary_negotiation', 'promotion_and_growth', 'leadership', 'newcomer_career_start', 'certification_prep', 'portfolio_review', 'linkedin_and_networking'];
-const REQUIRED = ['headline', 'profession', 'yearsExperience', 'bio', 'languages', 'skills', 'helpsWith'];
+const REQUIRED = ['headline', 'profession', 'company', 'yearsExperience', 'bio', 'languages', 'skills', 'helpsWith'];
 
 const ONBOARD_TOOL = {
   name: 'update_profile_draft',
@@ -70,6 +70,7 @@ const ONBOARD_TOOL = {
     properties: {
       headline: { type: 'string', description: 'One line, max 90 characters, e.g. "Senior data analyst helping career switchers break into analytics".' },
       profession: { type: 'string', description: 'Current job title, e.g. "Data Analyst".' },
+      company: { type: 'string', description: 'Name of the organization they currently work at, e.g. "Stantec". Required: always ask if not given.' },
       yearsExperience: { type: 'integer', minimum: 0, maximum: 60 },
       bio: { type: 'string', description: 'First-person bio, 60 to 120 words, in the mentor\'s voice, only facts they gave.' },
       languages: { type: 'array', items: { type: 'string' }, maxItems: 6, description: 'Languages they can mentor in, in English, e.g. ["English","Persian"].' },

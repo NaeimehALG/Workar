@@ -2142,7 +2142,7 @@ const I18N = {
     lbl_profession_c:'Your current or target profession', ph_profession_c:'e.g. aspiring Data Analyst', lbl_current_job:'Current profession', ph_current_job:'e.g. Document Controller', first_job:'N/A — this will be my first job', lbl_target_job:'Target profession', ph_target_job:'e.g. Data Analyst', onboard_err:'Your profile could not be saved. Send this message to Workar support:',
     lbl_goal_c:"What's your goal?", ph_goal_c:'What are you working toward, and by when?',
     lbl_help_c:'What kind of help do you need? (comma-separated)',
-    lbl_linkedin_opt:'LinkedIn profile', opt_label:'(optional)',
+    lbl_linkedin_opt:'LinkedIn profile', opt_label:'(optional)', toast_company_req:'Please add your current workplace.',
     create_profile:'Create profile',
     find_mentor_title:'Find a mentor',
     ai_match_title:'Let AI find your match',
@@ -2315,7 +2315,7 @@ const I18N = {
     inbox_delete_msg:'Delete message', inbox_today:'Today', inbox_yesterday:'Yesterday', inbox_back:'Back', inbox_booking:'Booking',
     inbox_no_booking:'No session booked yet', inbox_no_msgs:'Say hello to {n}. You can chat before booking, and every message stays here.',
     ds_active:'Active bookings', ds_done:'Sessions completed', ds_rating:'Rating', ds_convs:'Conversations', ds_unread:'Unread messages',
-    lbl_title_m:'Job title', ph_title_m:'e.g. Senior Structural Engineer', lbl_company:'Company', ph_company:'e.g. Stantec', at_word:'at',
+    lbl_title_m:'Job title', ph_title_m:'e.g. Senior Structural Engineer', lbl_company:'Current workplace', ph_company:'e.g. Stantec', at_word:'at',
     lbl_degree:'Degree', ph_degree:'e.g. B.Sc. Civil Engineering', lbl_university:'University', ph_university:'e.g. University of British Columbia',
     ai_k:"Powered by AI, guided by people", ai_t:"A team of AI assistants working for you around the clock",
     ai_s:"Your mentor brings the experience. Our assistants take care of everything around the session, so nothing falls through the cracks.",
@@ -2557,7 +2557,7 @@ const I18N = {
     lbl_profession_c:'شغل فعلی یا هدف شما', ph_profession_c:'مثلاً علاقه‌مند به تحلیل داده', lbl_current_job:'شغل فعلی', ph_current_job:'مثلاً کنترل مدارک', first_job:'ندارم؛ این اولین شغل من است', lbl_target_job:'شغل هدف', ph_target_job:'مثلاً تحلیل‌گر داده', onboard_err:'پروفایل ذخیره نشد. این پیام را برای پشتیبانی Workar بفرستید:',
     lbl_goal_c:'هدفتان چیست؟', ph_goal_c:'به چه سمتی می‌روید و تا چه زمانی؟',
     lbl_help_c:'به چه کمکی نیاز دارید؟ (با کاما جدا کنید)',
-    lbl_linkedin_opt:'پروفایل لینکدین', opt_label:'(اختیاری)',
+    lbl_linkedin_opt:'پروفایل لینکدین', opt_label:'(اختیاری)', toast_company_req:'لطفاً محل کار فعلی‌تان را وارد کنید.',
     create_profile:'ساخت پروفایل',
     find_mentor_title:'پیدا کردن منتور',
     ai_match_title:'بگذارید هوش مصنوعی بهترین منتور را برایتان پیدا کند',
@@ -2730,7 +2730,7 @@ const I18N = {
     inbox_delete_msg:'حذف پیام', inbox_today:'امروز', inbox_yesterday:'دیروز', inbox_back:'بازگشت', inbox_booking:'رزرو',
     inbox_no_booking:'هنوز جلسه‌ای رزرو نشده', inbox_no_msgs:'به {n} سلام کنید. قبل از رزرو هم می‌توانید گفتگو کنید و همه‌ی پیام‌ها اینجا می‌ماند.',
     ds_active:'رزروهای فعال', ds_done:'جلسه‌های انجام‌شده', ds_rating:'امتیاز', ds_convs:'گفتگوها', ds_unread:'پیام‌های نخوانده',
-    lbl_title_m:'عنوان شغلی', ph_title_m:'مثلاً مهندس سازه‌ی ارشد', lbl_company:'شرکت', ph_company:'مثلاً استنتک', at_word:'در',
+    lbl_title_m:'عنوان شغلی', ph_title_m:'مثلاً مهندس سازه‌ی ارشد', lbl_company:'محل کار فعلی', ph_company:'مثلاً استنتک', at_word:'در',
     lbl_degree:'مدرک تحصیلی', ph_degree:'مثلاً کارشناسی مهندسی عمران', lbl_university:'دانشگاه', ph_university:'مثلاً دانشگاه تهران',
     ai_k:"با هوش مصنوعی، به راهنمایی انسان", ai_t:'تیمی از دستیارهای هوش مصنوعی که شبانه‌روز برای شما کار می‌کنند',
     ai_s:'تجربه را منتورتان می‌آورد و دستیارهای ما بقیه‌ی کارها را انجام می‌دهند تا چیزی از قلم نیفتد.',
@@ -5683,7 +5683,7 @@ function onboardView(){
         <div class="field"><label>${esc(T('lbl_name'))}</label><input name="name" required autocomplete="name" placeholder="${esc(T('ph_name'))}"></div>
         <div class="field-row">
           <div class="field"><label>${esc(T('lbl_title_m'))}</label><input name="profession" required placeholder="${esc(T('ph_title_m'))}"></div>
-          <div class="field"><label>${esc(T('lbl_company'))} <span class="hint" style="display:inline;">${esc(T('opt_label'))}</span></label><input name="company" placeholder="${esc(T('ph_company'))}"></div>
+          <div class="field"><label>${esc(T('lbl_company'))}</label><input name="company" required placeholder="${esc(T('ph_company'))}"></div>
         </div>
         <div class="field"><label>${esc(T('lbl_experience'))}</label><input name="experience" type="number" min="0" placeholder="${esc(T('ph_experience'))}"></div>
         <div class="field"><label>${esc(T('lbl_bio_m'))}</label><textarea name="bio" required placeholder="${esc(T('ph_bio_m'))}"></textarea></div>
@@ -7291,7 +7291,7 @@ function dashboardView(){
         <div class="field"><label>${esc(T('lbl_name'))}</label><input id="edit-name" value="${esc(myProfile.name||'')}"></div>
         <div class="field"><label>${esc(T(isMentor?'lbl_title_m':'lbl_target_job'))}</label><input id="edit-profession" value="${esc(myProfile.profession||'')}"></div>
       </div>
-      ${isMentor ? `<div class="field"><label>${esc(T('lbl_company'))}</label><input id="edit-company" value="${esc(myProfile.company||'')}" placeholder="${esc(T('ph_company'))}"></div>` : currentJobField('#edit-current-job', myProfile.currentProfession||'')}
+      ${isMentor ? `<div class="field"><label>${esc(T('lbl_company'))}</label><input id="edit-company" required value="${esc(myProfile.company||'')}" placeholder="${esc(T('ph_company'))}"></div>` : currentJobField('#edit-current-job', myProfile.currentProfession||'')}
       ${!isMentor ? `
       <div class="field-row">
         <div class="field"><label>${esc(T('lbl_stage_c'))}</label>${stageSelect('id="edit-stage"', myProfile.careerStage||'')}</div>
@@ -7699,6 +7699,7 @@ function wire(){
     const skillsEl = document.getElementById('edit-skills');
     if(skillsEl) patch.skills = skillsEl.value.split(',').map(s=>s.trim()).filter(Boolean);
     const companyEl = document.getElementById('edit-company');
+    if(companyEl && !companyEl.value.trim()){ toast(T('toast_company_req')); companyEl.focus(); return; }
     if(companyEl){ patch.company = companyEl.value.trim(); patch.headline = patch.company ? `${patch.profession} ${T('at_word')} ${patch.company}` : patch.profession; }
     const degEl = document.getElementById('edit-degree'), uniEl = document.getElementById('edit-university');
     if(degEl && uniEl){ patch.degree = degEl.value.trim(); patch.university = uniEl.value.trim(); patch.education = [patch.degree, patch.university].filter(Boolean).join(', '); }
@@ -8277,7 +8278,7 @@ init();
   }
 
   /* ---------- 1. Mentor onboarding assistant ---------- */
-  const ob = { messages:null, draft:{}, missing:['headline','profession','yearsExperience','bio','languages','skills','helpsWith'], busy:false, error:'' };
+  const ob = { messages:null, draft:{}, missing:['headline','profession','company','yearsExperience','bio','languages','skills','helpsWith'], busy:false, error:'' };
   const FORM_MAP = { company:'company', profession:'profession', yearsExperience:'experience', bio:'bio', languages:'languages', education:'degree', certifications:'certifications', skills:'skills' };
   function fillForm(onlyEmpty){
     const form = document.getElementById('onboard-form'); if(!form) return;
@@ -8294,7 +8295,7 @@ init();
   }
   function mountOb(box){
     if(!ob.messages) ob.messages = [{ role:'assistant', content:t('ag_ob_hello') }];
-    const pct = Math.round(100*(7-ob.missing.length)/7);
+    const pct = Math.round(100*(8-ob.missing.length)/8);
     const chips = ob.messages.length<=1 ? `<div class="ag-chips">
         <button type="button" class="ag-chip" data-ag-chip="__paste">${h(t('ag_ob_chip_cv'))}</button>
         <button type="button" class="ag-chip" data-ag-chip="${h(t('ag_ob_chip_q_text'))}">${h(t('ag_ob_chip_q'))}</button></div>` : '';
@@ -8309,7 +8310,7 @@ init();
       </div></section>`;
     chat(box, { busy:()=>ob.busy, send:v=>sendOb(v) });
     const rs = box.querySelector('[data-ag-ob-reset]');
-    if(rs) rs.addEventListener('click', ()=>{ ob.messages=null; ob.draft={}; ob.missing=Object.keys(FORM_MAP).slice(0,0).concat(['headline','profession','yearsExperience','bio','languages','skills','helpsWith']); ob.error=''; mountOb(box); });
+    if(rs) rs.addEventListener('click', ()=>{ ob.messages=null; ob.draft={}; ob.missing=Object.keys(FORM_MAP).slice(0,0).concat(['headline','profession','company','yearsExperience','bio','languages','skills','helpsWith']); ob.error=''; mountOb(box); });
   }
   async function sendOb(text){
     ob.error=''; ob.messages.push({ role:'user', content:text }); ob.busy=true;
