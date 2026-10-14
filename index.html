@@ -6723,9 +6723,12 @@ async function openInAppCall(url, o){
   }
 }
 // ---------- Device & connection test: camera, mic and a Daily network check, no booking needed ----------
-const dt = { stream:null, call:null, raf:0, ctx:null, gen:0 };
+const dt = { stream:null, call:null, raf:0, ctx:null, gen:0, clones:[] };
 function dtStop(){ dt.gen++; cancelAnimationFrame(dt.raf); dt.raf = 0;
   if(dt.call){ const c = dt.call; dt.call = null; try{ c.stopTestCallQuality && c.stopTestCallQuality(); }catch(e){} try{ c.destroy(); }catch(e){} }
+  // Daily does not stop tracks it was given, so the copies handed to it must be stopped here too,
+  // otherwise the camera light stays on after the test.
+  dt.clones.forEach(t=>{ try{ t.stop(); }catch(e){} }); dt.clones = [];
   if(dt.stream){ dt.stream.getTracks().forEach(t=>t.stop()); dt.stream = null; }
   if(dt.ctx){ try{ dt.ctx.close(); }catch(e){} dt.ctx = null; } }
 function dtClose(){ dtStop(); const el = document.getElementById('dt-back'); if(el) el.remove(); document.removeEventListener('keydown', dtKey); }
@@ -6754,13 +6757,15 @@ async function dtRun(){
   try{
     const D = await loadDaily(); if(!live()) return;
     const v = stream.getVideoTracks()[0], a = stream.getAudioTracks()[0];
-    dt.call = D.createCallObject({ videoSource: v ? v.clone() : false, audioSource: a ? a.clone() : false });
+    const vc = v ? v.clone() : null, ac = a ? a.clone() : null; dt.clones = [vc, ac].filter(Boolean);
+    dt.call = D.createCallObject({ videoSource: vc || false, audioSource: ac || false });
     await dt.call.startCamera(); if(!live()) return;
     const res = await Promise.race([ dt.call.testCallQuality(), new Promise(ok=>setTimeout(()=>ok({ result:'failed' }), 45000)) ]);
     verdict = (res && res.result) || 'failed';
   }catch(e){ console.warn('device-test', e); verdict = 'failed'; }
   if(!live()) return;
   if(dt.call){ const c = dt.call; dt.call = null; try{ c.destroy(); }catch(e){} }
+  dt.clones.forEach(t=>{ try{ t.stop(); }catch(e){} }); dt.clones = [];
   const k = verdict==='good' ? 'dt_net_good' : verdict==='warning' ? 'dt_net_warning' : verdict==='bad' ? 'dt_net_bad' : 'dt_net_failed';
   net.textContent = T(k); net.className = 'pj-msg ' + (verdict==='good' ? 'ok' : verdict==='warning' ? '' : 'err');
   again.disabled = false;
@@ -6788,6 +6793,7 @@ function openDeviceTest(){
   document.addEventListener('keydown', dtKey);
   dtRun();
 }
+if(typeof window.addEventListener==='function') window.addEventListener('pagehide', dtClose);
 document.addEventListener('click', e=>{ const b = e.target.closest && e.target.closest('[data-devtest]'); if(b){ e.preventDefault(); openDeviceTest(); } });
 async function openPrejoin(reqId, url, mode){
   pjClose();
