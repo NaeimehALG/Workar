@@ -1825,6 +1825,34 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .pr-custom .btn svg{margin-inline-end:4px;}
   .pr textarea{width:100%;margin-top:12px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);font:inherit;font-size:14px;line-height:1.5;resize:vertical;box-sizing:border-box;}
   .pr textarea:focus,.pr-custom input:focus{outline:none;border-color:var(--accent-2);box-shadow:0 0 0 3px rgba(185,141,94,.16);}
+.time-select{-webkit-appearance:none;appearance:none;cursor:pointer;padding-inline-end:36px !important;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 20 20' fill='none' stroke='%238b6a4c' stroke-width='2'%3E%3Ccircle cx='10' cy='10' r='7.5'/%3E%3Cpath d='M10 6v4l2.5 2'/%3E%3C/svg%3E") !important;
+  background-repeat:no-repeat !important;background-position:right 12px center !important;background-size:16px !important;}
+[dir="rtl"] .time-select{background-position:left 12px center !important;}
+.field .time-select,.field .dp-btn{height:48px;box-sizing:border-box;padding-top:0;padding-bottom:0;}
+.pr-custom .time-select{padding:8px 10px;border:1px solid var(--border);border-radius:8px;background-color:var(--surface);color:var(--text);font:inherit;font-size:13.5px;min-width:130px;}
+.pr-custom .time-select:focus{outline:none;border-color:var(--accent-2);box-shadow:0 0 0 3px rgba(185,141,94,.16);}
+.dp{position:relative;display:block;}
+.pr-custom .dp{display:inline-block;}
+.dp-btn{width:100%;text-align:start;cursor:pointer;font:inherit;color:var(--text);background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 40px 11px 13px;font-size:14.5px;line-height:normal;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 20 20' fill='none' stroke='%238b6a4c' stroke-width='1.7' stroke-linejoin='round'%3E%3Crect x='3' y='4.5' width='14' height='12.5' rx='2'/%3E%3Cpath d='M3 8.5h14M7 2.8v3.4M13 2.8v3.4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-size:16px;}
+[dir="rtl"] .dp-btn{padding:11px 13px 11px 40px;background-position:left 12px center;}
+.dp-btn.empty{color:var(--muted);}
+.dp-btn:focus{outline:none;border-color:var(--accent-2);box-shadow:0 0 0 3px rgba(185,141,94,.16);}
+.pr-custom .dp-btn{padding:8px 36px 8px 10px;border-radius:8px;background-color:var(--surface);font-size:13.5px;min-width:150px;}
+.dp-pop{position:absolute;z-index:1200;top:calc(100% + 6px);inset-inline-start:0;width:280px;max-width:calc(100vw - 32px);background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 14px 40px rgba(60,40,20,.16);padding:12px;}
+.dp-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.dp-head b{font-size:14.5px;color:var(--text);}
+.dp-nav{width:32px;height:32px;border-radius:50%;border:0;background:transparent;color:var(--text);font-size:20px;line-height:1;cursor:pointer;}
+.dp-nav:hover:not(:disabled){background:var(--surface-2);}
+.dp-nav:disabled{opacity:.3;cursor:default;}
+.dp-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+.dp-wk span{font-size:11.5px;font-weight:700;color:var(--muted);text-align:center;padding:4px 0;}
+.dp-day{aspect-ratio:1;border:0;border-radius:50%;background:transparent;color:var(--text);font:inherit;font-size:13.5px;cursor:pointer;}
+.dp-day:hover:not(:disabled){background:var(--surface-2);}
+.dp-day.today{box-shadow:inset 0 0 0 1.5px var(--accent-2);}
+.dp-day.on{background:var(--accent);color:#fff;font-weight:700;}
+.dp-day:disabled{color:var(--muted);opacity:.35;cursor:default;}
   .pr-foot{display:flex;align-items:center;gap:8px;justify-content:flex-end;margin-top:12px;}
   .pr-count{margin-inline-end:auto;font-size:13px;color:var(--muted);}
   .iv-row .req-edit{grid-column:1/-1;margin-top:14px;}
@@ -3122,6 +3150,61 @@ function canReview(mentorId){
 // Every 30 minutes inside each availability block (sessions are 30 minutes long)
 const BLOCK_HOURS = { morning:['09:00','09:30','10:00','10:30','11:00','11:30'], afternoon:['13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30'], evening:['17:00','17:30','18:00','18:30','19:00','19:30','20:00','20:30'] };
 const SESSION_MIN = 30;
+// A date picker in Workar's own style (the browser's built-in one can't be styled).
+// The chosen date lives in a hidden input with the same id, so the rest of the code reads .value as before.
+function dpLocale(){ return state.lang==='fa' ? 'fa-IR-u-ca-gregory' : 'en-US'; }
+function dpLabel(v){ if(!v) return T('lbl_date'); try{ return new Date(v+'T12:00:00').toLocaleDateString(dpLocale(), { weekday:'short', month:'short', day:'numeric', year:'numeric' }); }catch(e){ return v; } }
+function dateField(id, value){
+  const v = String(value||'').slice(0,10);
+  return `<span class="dp"><input type="hidden" id="${id}" value="${esc(v)}" data-min="${ymd(new Date())}"><button type="button" class="dp-btn ${v?'':'empty'}" data-dp-for="${id}" aria-haspopup="dialog" aria-label="${esc(T('lbl_date'))}">${esc(dpLabel(v))}</button></span>`;
+}
+const dp = { el:null, input:null, month:null };
+function dpClose(){ if(dp.el){ dp.el.remove(); dp.el = null; } dp.input = null; document.removeEventListener('keydown', dpKey, true); }
+function dpKey(e){ if(e.key==='Escape'){ e.stopPropagation(); dpClose(); } }
+function dpDraw(){
+  if(!dp.el || !dp.input) return;
+  const min = dp.input.getAttribute('data-min') || '', val = dp.input.value, today = ymd(new Date());
+  const y = dp.month.getFullYear(), mo = dp.month.getMonth();
+  const first = new Date(y, mo, 1), startPad = first.getDay(), days = new Date(y, mo+1, 0).getDate();
+  const head = first.toLocaleDateString(dpLocale(), { month:'long', year:'numeric' });
+  const wk = [...Array(7)].map((_,i)=>new Date(2026,1,1+i).toLocaleDateString(dpLocale(), { weekday:'narrow' }));
+  let cells = '';
+  for(let i=0;i<startPad;i++) cells += '<span></span>';
+  for(let d=1; d<=days; d++){ const iso = ymd(new Date(y, mo, d)), off = min && iso < min;
+    cells += `<button type="button" class="dp-day ${iso===val?'on':''} ${iso===today?'today':''}" data-dp-day="${iso}" ${off?'disabled':''}>${new Date(y,mo,d).toLocaleDateString(dpLocale(), { day:'numeric' })}</button>`; }
+  const canPrev = !min || ymd(new Date(y, mo, 0)) >= min;
+  const rtl = document.documentElement.dir==='rtl';
+  dp.el.innerHTML = `<div class="dp-head"><button type="button" class="dp-nav" data-dp-move="-1" ${canPrev?'':'disabled'} aria-label="Previous month">${rtl?'›':'‹'}</button><b>${esc(head)}</b><button type="button" class="dp-nav" data-dp-move="1" aria-label="Next month">${rtl?'‹':'›'}</button></div>
+    <div class="dp-grid dp-wk">${wk.map(w=>`<span>${esc(w)}</span>`).join('')}</div><div class="dp-grid">${cells}</div>`;
+}
+function dpOpen(btn){
+  dpClose();
+  const input = document.getElementById(btn.getAttribute('data-dp-for')); if(!input) return;
+  dp.input = input; const v = input.value || input.getAttribute('data-min') || ymd(new Date());
+  const d = new Date(v+'T12:00:00'); dp.month = new Date(d.getFullYear(), d.getMonth(), 1);
+  dp.el = document.createElement('div'); dp.el.className = 'dp-pop'; dp.el.setAttribute('role','dialog');
+  btn.parentNode.appendChild(dp.el); dpDraw();
+  document.addEventListener('keydown', dpKey, true);
+}
+document.addEventListener('click', e=>{
+  const t = e.target; if(!t || !t.closest) return;
+  const btn = t.closest('.dp-btn'); if(btn){ e.preventDefault(); if(dp.el && dp.el.parentNode===btn.parentNode) dpClose(); else dpOpen(btn); return; }
+  const mv = t.closest('[data-dp-move]'); if(mv && dp.el){ e.preventDefault(); dp.month = new Date(dp.month.getFullYear(), dp.month.getMonth() + Number(mv.getAttribute('data-dp-move')), 1); dpDraw(); return; }
+  const day = t.closest('[data-dp-day]'); if(day && dp.input){ e.preventDefault();
+    const input = dp.input, v = day.getAttribute('data-dp-day'); input.value = v;
+    const b = input.parentNode.querySelector('.dp-btn'); if(b){ b.textContent = dpLabel(v); b.classList.remove('empty'); }
+    dpClose(); input.dispatchEvent(new Event('change', { bubbles:true })); return; }
+  if(dp.el && !t.closest('.dp-pop')) dpClose();
+});
+// A tidy time picker: every 30 minutes, shown in the person's language (e.g. 2:00 PM / ۲:۰۰ ب.ظ.)
+function timeLabel(hm){ const [h,m] = String(hm).split(':').map(Number);
+  try{ return new Date(2000,0,1,h,m).toLocaleTimeString(state.lang==='fa' ? 'fa-IR' : 'en-US', { hour:'numeric', minute:'2-digit' }); }catch(e){ return hm; } }
+function timeSelect(id, value, attrs){
+  const v = String(value||'').slice(0,5), list = [];
+  for(let h=6; h<24; h++) for(const m of ['00','30']) list.push(String(h).padStart(2,'0')+':'+m);
+  if(v && !list.includes(v)) list.push(v), list.sort();
+  return `<select id="${id}" class="time-select" ${attrs||''}><option value="">${esc(T('lbl_time'))}</option>${list.map(t=>`<option value="${t}" ${t===v?'selected':''}>${esc(timeLabel(t))}</option>`).join('')}</select>`;
+}
 function toMin(t){ const m = /^(\d{1,2}):(\d{2})/.exec(t||''); return m ? (+m[1])*60 + (+m[2]) : -1; }
 function ymd(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 function busyFor(mentorId){
@@ -3158,8 +3241,8 @@ function bookingCalendar(id, p){
     const dayBusy = sel.date ? busy.map(b=>zonedToUtc(b.date, String(b.time).slice(0,5), mtz0)).filter(i=>utcToZoned(i, MY_TZ).date===sel.date).sort((a,b)=>a-b).map(i=>fmtLocalTime(i)) : [];
     return `<p class="muted" style="font-size:13px;margin-bottom:10px;">${esc(T('no_slots_pick_own'))}</p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px;">
-        <div class="field"><label>${esc(T('lbl_date'))}</label><input type="date" id="book-date" min="${ymd(new Date())}" value="${esc(sel.date||'')}"></div>
-        <div class="field"><label>${esc(T('lbl_time'))}</label><input type="time" id="book-time" step="900" value="${esc(sel.time||'')}"></div>
+        <div class="field"><label>${esc(T('lbl_date'))}</label>${dateField('book-date', sel.date||'')}</div>
+        <div class="field"><label>${esc(T('lbl_time'))}</label>${timeSelect('book-time', sel.time)}</div>
       </div>
       ${sel.date ? `<p class="cal-note ${dayBusy.length?'':'ok'}">${dayBusy.length ? esc(T('cal_busy_on').replace('{t}', dayBusy.join(', '))) : esc(T('cal_none_busy'))}</p>` : ''}
       ${sel.date && sel.time && (()=>{ const w = utcToZoned(zonedToUtc(sel.date, sel.time, MY_TZ), mtz0); return isBusy(busy, w.date, w.time); })() ? `<p class="cal-note bad">${esc(T('cal_clash'))}</p>` : ''}
@@ -6093,8 +6176,8 @@ function reqCard(r, isMentor, grouped){
     </div>
     ${state.reqEdit===r.id ? `<div class="req-edit">
       ${(()=>{ const i = reqInstant(r), lz = i ? utcToZoned(i, MY_TZ) : { date:r.date||'', time:r.time||'' };
-        return `<div class="field"><label>${esc(T('lbl_date'))}</label><input type="date" id="re-date" min="${ymd(new Date())}" value="${esc(lz.date)}"></div>
-      <div class="field"><label>${esc(T('lbl_time'))} (${esc(tzAbbr(MY_TZ))})</label><input type="time" id="re-time" step="900" value="${esc(String(lz.time).slice(0,5))}"></div>`; })()}
+        return `<div class="field"><label>${esc(T('lbl_date'))}</label>${dateField('re-date', lz.date)}</div>
+      <div class="field"><label>${esc(T('lbl_time'))} (${esc(tzAbbr(MY_TZ))})</label>${timeSelect('re-time', lz.time)}</div>`; })()}
       <div class="req-edit-btns"><button class="btn btn-sm btn-primary" data-save-time="${r.id}">${esc(T('mg_save_time'))}</button><button class="btn btn-sm btn-ghost" data-edit-time="">${esc(T('cancel'))}</button></div>
       <p class="muted">${esc(T('mg_time_note').replace('{n}', other))}</p>
     </div>` : ''}
@@ -7131,8 +7214,8 @@ function proposePanel(r){
     <div class="pr-head"><b>${esc(T('pr_title').replace('{n}', other))}</b><span>${esc(T('pr_sub'))}</span></div>
     ${all.length ? `<div class="pr-chips">${all.map(chip).join('')}</div>` : `<p class="pr-empty">${esc(T('pr_no_hours'))}</p>`}
     <div class="pr-custom">
-      <input type="date" id="pr-date" min="${ymd(new Date())}" aria-label="${esc(T('lbl_date'))}">
-      <input type="time" id="pr-time" step="900" aria-label="${esc(T('lbl_time'))}">
+      ${dateField('pr-date', '')}
+      ${timeSelect('pr-time', '', 'aria-label="'+esc(T('lbl_time'))+'"')}
       <button type="button" class="btn btn-sm btn-ghost" data-pr-add="${esc(r.id)}">${HUB_IC.plus}${esc(T('pr_add'))}</button>
     </div>
     <textarea id="pr-note" rows="2">${esc(state.proposeNote != null ? state.proposeNote : T('pr_note').replace('{n}', other.split(' ')[0]).replace('{t}', inst ? whenLine(inst) : ''))}</textarea>
@@ -7233,8 +7316,8 @@ function ivUpcomingRow(r, asMentor){
 function reqEditHtml(r, other){
   const i = reqInstant(r), lz = i ? utcToZoned(i, MY_TZ) : { date:r.date||'', time:r.time||'' };
   return `<div class="req-edit">
-    <div class="field"><label>${esc(T('lbl_date'))}</label><input type="date" id="re-date" min="${ymd(new Date())}" value="${esc(lz.date)}"></div>
-    <div class="field"><label>${esc(T('lbl_time'))} (${esc(tzAbbr(MY_TZ))})</label><input type="time" id="re-time" step="900" value="${esc(String(lz.time).slice(0,5))}"></div>
+    <div class="field"><label>${esc(T('lbl_date'))}</label>${dateField('re-date', lz.date)}</div>
+    <div class="field"><label>${esc(T('lbl_time'))} (${esc(tzAbbr(MY_TZ))})</label>${timeSelect('re-time', lz.time)}</div>
     <div class="req-edit-btns"><button class="btn btn-sm btn-primary" data-save-time="${esc(r.id)}">${esc(T('mg_save_time'))}</button><button class="btn btn-sm btn-ghost" data-edit-time="">${esc(T('cancel'))}</button></div>
     <p class="muted">${esc(T('mg_time_note').replace('{n}', other))}</p></div>`;
 }
