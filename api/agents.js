@@ -433,6 +433,22 @@ async function deleteAccount(req, res) {
   const h = { apikey: key, Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' };
   const prof = (await M.rows(`profiles?id=eq.${encodeURIComponent(me.id)}&select=isAdmin`))[0];
   if (prof && prof.isAdmin) return res.status(403).json({ error: 'admin', message: 'This is the Workar admin account, so it cannot be deleted from the site.' });
+  // Don't let someone vanish in the middle of a booking: an upcoming session, or a payment that
+  // hasn't been settled with the mentor yet, would leave the other person (and the money) stranded.
+  const idq = encodeURIComponent(me.id);
+  const open = await M.rows(`requests?or=(mentorId.eq.${idq},clientId.eq.${idq})&status=in.(pending,accepted)&select=id,status,paid,payoutDone,startsAt`);
+  const now = Date.now();
+  const blocking = (open || []).filter(r => (r.startsAt && new Date(r.startsAt).getTime() > now - 2 * 3600e3 && r.status === 'accepted') || (r.paid && !r.payoutDone));
+  if (blocking.length) return res.status(409).json({ error: 'active_bookings', count: blocking.length });
+  // Close any still-pending requests so the other side isn't left waiting on a deleted account.
+  await fetch(`${url}/rest/v1/requests?or=(mentorId.eq.${idq},clientId.eq.${idq})&status=eq.pending`, { method: 'PATCH', headers: Object.assign({ Prefer: 'return=minimal' }, h), body: JSON.stringify({ status: 'cancelled' }) }).catch(() => {});
+  // Remove the profile photo and the Stripe payout link stored for this person.
+  try {
+    const pr = (await M.rows(`profiles?id=eq.${idq}&select=avatarUrl`))[0];
+    const path = pr && pr.avatarUrl ? String(pr.avatarUrl).split('/avatars/')[1] : '';
+    if (path) await fetch(`${url}/storage/v1/object/avatars`, { method: 'DELETE', headers: h, body: JSON.stringify({ prefixes: [decodeURIComponent(path.split('?')[0])] }) });
+  } catch (e) { /* the account is still deleted if the photo can't be removed */ }
+  await fetch(`${url}/rest/v1/mentor_payout_accounts?mentorId=eq.${idq}`, { method: 'DELETE', headers: Object.assign({ Prefer: 'return=minimal' }, h) }).catch(() => {});
   const d = await fetch(`${url}/rest/v1/profiles?id=eq.${encodeURIComponent(me.id)}`, { method: 'DELETE', headers: Object.assign({ Prefer: 'return=minimal' }, h) });
   if (!d.ok) throw new Error('profile delete ' + d.status + ' ' + await d.text());
   const u = await fetch(`${url}/auth/v1/admin/users/${encodeURIComponent(me.id)}`, { method: 'DELETE', headers: h });
