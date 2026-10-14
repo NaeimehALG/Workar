@@ -3658,13 +3658,11 @@ function render(){
 }
 
 function navHtml(){
-  const isMentorNav = !!(uid && myProfile && myProfile.role==='mentor');
   const prepItem = prepVisible() ? [['prep', T('nav_prep')]] : [];
-  // Signed-in mentors: Home · Inbox · My profile · Find a mentor · AI coach (inbox is their daily tool)
-  const items = isMentorNav
-    ? [['home', T('nav_home')], ['@inbox'], ['dashboard', T('nav_dash')], ['browse', T('nav_browse')], ...prepItem, ['coach', T('nav_coach')]]
-    : [['home', T('nav_home')], ['browse', T('nav_browse')], ['coach', T('nav_coach')], ...prepItem, ['dashboard', myProfile ? T('nav_dash') : T('nav_start')], ['@inbox']];
-  const inboxItem = ()=>{ if(!(uid && myProfile)) return ''; const n = requestsNeedingMe() + inboxUnreadTotal(), on = state.view==='requests' || state.view==='messages';
+  // One fixed order for everyone, so the menu never reshuffles while the profile loads after a refresh:
+  // Home · Inbox · My profile · Find a mentor · AI coach (Inbox only when signed in)
+  const items = [['home', T('nav_home')], ['@inbox'], ['dashboard', (uid || myProfile) ? T('nav_dash') : T('nav_start')], ['browse', T('nav_browse')], ...prepItem, ['coach', T('nav_coach')]];
+  const inboxItem = ()=>{ if(!uid) return ''; const n = requestsNeedingMe() + inboxUnreadTotal(), on = state.view==='requests' || state.view==='messages';
     return `<div class="navlink nav-msg ${on?'active':''}" data-nav="${requestsNeedingMe() ? 'requests' : 'messages'}">${esc(T('nav_inbox'))}<span class="nav-msg-badge" style="${n?'':'display:none'}">${n}</span></div>`; };
   return `<div class="nav">
     <div class="brand" data-nav="home"><img class="logo-mark" src="${LOGO_DATA_URI}" alt="Workar"><span class="tag">${esc(T('tag'))}</span></div>
