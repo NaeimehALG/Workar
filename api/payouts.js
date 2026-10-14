@@ -33,6 +33,9 @@ module.exports = async (req, res) => {
   if (!prof || prof.role !== 'mentor') { res.status(403).json({ error: 'mentors-only' }); return; }
 
   try {
+    // Remember the saved country first: if the saved Stripe account turns out to be unusable it is
+    // forgotten below, and "Finish bank setup" (which sends no country) must still be able to start fresh.
+    const savedRow = P.accountRow ? await P.accountRow(me.id).catch(() => null) : null;
     const row = await (P.usableAccountRow || P.accountRow)(me.id);
     if (action === 'status') {
       if (!row) { res.status(200).json({ connected: false, enabled: false }); return; }
@@ -47,7 +50,7 @@ module.exports = async (req, res) => {
     if (action === 'start') {
       let acctId = row && row.stripeAccountId;
       if (!acctId) {
-        const c = String(country || '').toUpperCase();
+        const c = String(country || (savedRow && savedRow.country) || process.env.PLATFORM_COUNTRY || 'CA').toUpperCase();
         if (!COUNTRIES.includes(c)) { res.status(400).json({ error: 'country-not-supported' }); return; }
         acctId = await P.createAccount({ mentorId: me.id, email: me.email, country: c, name: prof.name });
       }

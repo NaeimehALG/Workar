@@ -94,8 +94,17 @@ Return an array: [{"id": "...", "flag": true|false, "reason": "short reason, emp
 }
 
 // A profile is only auto-approved when the basics are really there, whatever the AI says.
+// Extra limits on what the AI may approve by itself; everything else waits for the admin:
+//   at least AUTO_APPROVE_MIN_YEARS years of experience (default 3), a current workplace,
+//   and no more than AUTO_APPROVE_DAILY_MAX approvals per day (default 3).
+const MIN_YEARS = () => Number(process.env.AUTO_APPROVE_MIN_YEARS || 3);
+const DAILY_MAX = () => Number(process.env.AUTO_APPROVE_DAILY_MAX || 3);
 function profileComplete(p) {
   return !!(p.name && (p.headline || p.profession) && String(p.bio || '').trim().length >= 80 && /linkedin\.com\//i.test(String(p.linkedin || '')));
+}
+function meetsAutoLimits(p) {
+  const years = parseFloat(String(p.experience || p.yearsExperience || '').replace(/[^0-9.]/g, '')) || 0;
+  return years >= MIN_YEARS() && String(p.company || '').trim().length > 0;
 }
 
 // ---------- 1. mentor applications ----------
@@ -108,6 +117,14 @@ async function mentorApplications(rep, ctx) {
   for (const p of apps) {
     const a = assess[p.id];
     if (!a) { rep.needs.push({ kind: 'app', text: `Mentor application from <b>${M.esc(p.name || 'no name')}</b> (${M.esc(p.profession || 'no profession')}). The AI review was not available, so please check it.` }); continue; }
+    if (a.verdict === 'approve' && profileComplete(p) && on('AUTO_APPROVE_MENTORS') && !meetsAutoLimits(p)) {
+      rep.needs.push({ kind: 'app', text: `<b>${M.esc(p.name)}</b> (${M.esc(p.profession || '')}) looks good to the AI, but has under ${MIN_YEARS()} years of experience or no current workplace, so it waits for your approval. ${M.esc(a.summary || '')}` });
+      continue;
+    }
+    if (a.verdict === 'approve' && profileComplete(p) && on('AUTO_APPROVE_MENTORS') && (ctx.approvedNow || 0) >= DAILY_MAX()) {
+      rep.needs.push({ kind: 'app', text: `<b>${M.esc(p.name)}</b> (${M.esc(p.profession || '')}) looks good to the AI, but today's limit of ${DAILY_MAX()} automatic approvals was reached, so it waits for you (or tomorrow's run). ${M.esc(a.summary || '')}` });
+      continue;
+    }
     if (a.verdict === 'approve' && profileComplete(p) && on('AUTO_APPROVE_MENTORS')) {
       if (!(await once('approve', p.id))) continue;
       const r = await M.patch(`profiles?id=eq.${encodeURIComponent(p.id)}`, { approved: true });
