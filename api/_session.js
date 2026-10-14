@@ -101,11 +101,11 @@ async function makePrepBrief(r) {
     chatBeforeSession: chat || '(none)'
   };
   const brief = await AI.askJSON(
-    `You prepare Workar mentors and clients for a 45-minute career mentoring session.
+    `You prepare Workar mentors and clients for a 30-minute career mentoring session.
 Use only the information given. Never invent facts about the client. If information is thin, say what the mentor should ask.
 Return: {"goal": one sentence on what the client most likely wants from this session,
 "context": up to 3 short facts about the client that matter for this session,
-"agenda": 3 short agenda items that fit 45 minutes,
+"agenda": 3 short agenda items that fit 30 minutes,
 "firstQuestion": one good opening question for the mentor to ask,
 "clientTips": 3 short, specific tips for the client to prepare (addressed to the client as "you")}.
 Plain English, short sentences.`,

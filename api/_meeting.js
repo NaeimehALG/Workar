@@ -3,7 +3,7 @@ process.env.SUPABASE_URL = String(process.env.SUPABASE_URL || 'https://jgbjhzhbd
 // and every email, reminder and dashboard button follows automatically.
 const crypto = require('crypto');
 
-const SESSION_MINUTES = () => Number(process.env.SESSION_MINUTES) || 45; // matches SESSION_MIN in index.html
+const SESSION_MINUTES = () => Number(process.env.SESSION_MINUTES) || 30; // matches SESSION_MIN in index.html
 
 // A private, hard-to-guess room for each paid booking.
 // With DAILY_API_KEY set, calls run on Daily (inside Workar, no sign-in); otherwise Jitsi.
