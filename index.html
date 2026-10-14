@@ -6474,14 +6474,18 @@ function messagesView(){
   if(!uid || !myProfile) return `<div class="empty">${esc(T('set_profile_first'))}</div>`;
   const q = (state.inboxQuery||'').toLowerCase(), filt = state.ibFilter || 'all';
   const every = conversations().map(c=>Object.assign(c, { act: convAction(c) }));
-  const nReq = every.filter(c=>c.act).length, nUnread = every.filter(c=>c.unread).length;
+  // "Requests" lists every open booking (waiting on you or on them); the number on the pill counts only those waiting on you
+  const openReq = c=>!!c.act || (c.reqs||[]).some(r=>{ const st = reqStage(r); return st>=0 && st<3; });
+  const nReq = every.filter(c=>c.act).length; let nUnread = every.filter(c=>c.unread).length;
   const convs = every.filter(c=>(!q || nameOf(c.o).toLowerCase().includes(q) || String(personOf(c.o).profession||'').toLowerCase().includes(q))
-      && (filt==='requests' ? c.act : filt==='unread' ? c.unread : true))
+      && (filt==='requests' ? openReq(c) : filt==='unread' ? (c.unread || c.o===state.inboxWith) : true))
     .sort((a,b)=>(!!b.act - !!a.act) || (b.lastT - a.lastT));
   if(state.ibOpenReq){ const rq = (cache.requests||[]).find(x=>x.id===state.ibOpenReq); if(rq){ state.inboxWith = rq.mentorId===uid ? rq.clientId : rq.mentorId; state.ibFilter = 'all'; state.ibOpenReq = null; } }
   if(state.ibPreferAction){ state.ibPreferAction = false; if(!state.inboxWith && window.innerWidth > 760){ const f = convs.find(c=>c.act); if(f) state.inboxWith = f.o; } }
   const sel = state.inboxWith || (window.innerWidth > 760 && convs[0] ? convs[0].o : null);
-  if(sel){ markConvSeen(sel); markReadDb(sel); }
+  if(sel){ markConvSeen(sel); markReadDb(sel);
+    // the open conversation is read now, so the Unread pill must not keep counting it
+    every.forEach(c=>{ if(c.o===sel) c.unread = 0; }); nUnread = every.filter(c=>c.unread).length; }
   const list = convs.length ? convs.map(c=>{ const p = personOf(c.o), last = c.last;
       return `<button type="button" class="ib-item ${c.o===sel?'on':''} ${c.act?'act':''}" data-inbox="${esc(c.o)}">
         <span class="ib-av ${onlineSet.has(c.o)?'online':''}" data-presence="${esc(c.o)}">${av(c.o)}</span>
