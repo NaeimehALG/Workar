@@ -35,6 +35,12 @@ async function health(res) {
   const out = { mode: key.startsWith('sk_live_') || key.startsWith('rk_live_') ? 'live' : (key ? 'test' : 'missing'), webhookSecret: !!process.env.STRIPE_WEBHOOK_SECRET };
   const E = process.env; // which services are configured (true/false only, never the values)
   out.services = { database: !!E.SUPABASE_SERVICE_ROLE_KEY, email: !!E.RESEND_API_KEY, ai: !!E.ANTHROPIC_API_KEY, voice: !!E.OPENAI_API_KEY, cron: !!E.CRON_SECRET, video: E.DAILY_API_KEY ? 'daily' : 'jitsi' };
+  // Video: confirm the Daily key is accepted (a read-only call; no room is created).
+  // If it is missing or rejected, sessions still get a working Jitsi link, but outside Workar.
+  if (E.DAILY_API_KEY) {
+    try { const d = await fetch('https://api.daily.co/v1/', { headers: { Authorization: 'Bearer ' + E.DAILY_API_KEY } }); out.videoKeyWorks = d.ok; if (!d.ok) out.videoKeyStatus = d.status; }
+    catch (e) { out.videoKeyWorks = null; }
+  }
   if (key) {
     const get = async path => { const r = await fetch('https://api.stripe.com/v1/' + path, { headers: { Authorization: 'Bearer ' + key } }); return { ok: r.ok, body: await r.json().catch(() => ({})) }; };
     try { const a = await get('account'); out.chargesEnabled = a.ok ? !!a.body.charges_enabled : null; out.accountId = a.ok ? (a.body.id || null) : null; if (a.ok && a.body.requirements) out.disabledReason = a.body.requirements.disabled_reason || null; out.accountName = a.ok ? ((a.body.settings && a.body.settings.dashboard && a.body.settings.dashboard.display_name) || null) : null; } catch (e) { out.chargesEnabled = null; }
