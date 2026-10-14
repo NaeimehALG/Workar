@@ -3551,6 +3551,7 @@ function render(){
   }
   app.appendChild(el(body));
   restoreFormDrafts();
+  updateNavBadge();
   if(__focusKey){ const f = [...document.querySelectorAll('#onboard-form input, #onboard-form select, #onboard-form textarea, .dash-form input, .dash-form select, .dash-form textarea')].find(e=>draftKey(e)===__focusKey);
     if(f){ f.focus({ preventScroll:true }); try{ if(__sel && __sel[0]!=null) f.setSelectionRange(__sel[0], __sel[1]); }catch(e){} } }
   if(state.langPrompt) app.appendChild(el(langPromptHtml()));
@@ -6182,7 +6183,7 @@ async function loadDms(){
   cache.dms = by;
   await resolveNames(Object.keys(by).map(t=>t.slice(3).split('_').find(x=>x!==uid)));
   if(state.view==='messages'){ if(state.inboxWith) markConvSeen(state.inboxWith); render(); }
-  else if(uid) { const n = document.querySelector('[data-nav="messages"] .nav-msg-badge'); const c = inboxUnreadTotal(); if(n) { n.textContent = c; n.style.display = c ? '' : 'none'; } }
+  else if(uid) updateNavBadge();
 }
 let __dmWatch = null;
 function watchDms(){
@@ -6958,8 +6959,14 @@ function paymentFailText(err){
   const detail = err && err.detail && err.detail.message;
   return isAdmin() && detail ? T('toast_payment_fail') + ' (' + detail + ')' : T('toast_payment_fail');
 }
+// Counted exactly the way the Inbox "Requests" filter decides what needs you, so the badge
+// never shows a number that the inbox itself can't show.
 function requestsNeedingMe(){
-  try{ return cache.requests.filter(r=> (r.mentorId===uid && r.status==='pending') || (r.clientId===uid && r.mentorId!==uid && reqStage(r)===1) || !!checkInFor(r)).length; }catch(e){ return 0; }
+  try{ return conversations().filter(c=>convAction(c)).length; }catch(e){ return 0; }
+}
+function updateNavBadge(){
+  const b = document.querySelector('.nav-msg .nav-msg-badge'); if(!b || !uid || !myProfile) return;
+  const n = requestsNeedingMe() + inboxUnreadTotal(); b.textContent = n; b.style.display = n ? '' : 'none';
 }
 // ---------- Inbox hub: Requests + Messages in one place (LinkedIn-style) ----------
 const HUB_IC = {
