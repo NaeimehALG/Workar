@@ -1527,7 +1527,7 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .hero-arch .ar-hero-wrap svg.ar-line{filter:drop-shadow(0 26px 44px rgba(74,53,38,.10));}
   @media (prefers-reduced-motion:reduce){.ar-line .ar-ring{animation:none}}
   /* original footer, plus the disclaimer in small type */
-  .foot-disc{max-width:720px;margin:18px auto 0;font-size:11.5px;line-height:1.6;color:var(--muted);opacity:.85;}
+  .foot-disc{max-width:720px;margin:10px auto 14px;font-size:11.5px;line-height:1.6;color:var(--muted);opacity:.85;}
 
   @keyframes proUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
   @keyframes proArch{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:none}}
@@ -3474,7 +3474,37 @@ function langPromptHtml(){
   </div></div>`;
 }
 
+// Keeps what someone has typed in the sign-up / edit-profile forms when the page redraws
+// (live updates from the database redraw the whole page, which used to wipe these fields).
+const __formDrafts = {};
+const DRAFT_FORMS = '#onboard-form, .dash-form';
+function draftKey(e){
+  const f = e.closest && e.closest(DRAFT_FORMS); if(!f) return null;
+  const k = e.name || e.id || (e.classList.contains('first-job-cb') ? 'first-job-cb' : e.classList.contains('rate-number') ? 'rate-number' : '');
+  if(!k) return null;
+  return (f.id==='onboard-form' ? 'ob' : 'dash') + '|' + k + ((e.type==='checkbox' || e.type==='radio') ? '|' + e.value : '');
+}
+function rememberDraft(ev){
+  const e = ev.target, k = draftKey(e); if(!k) return;
+  __formDrafts[k] = (e.type==='checkbox' || e.type==='radio') ? { c: e.checked } : { v: e.value };
+}
+document.addEventListener('input', rememberDraft, true);
+document.addEventListener('change', rememberDraft, true);
+function clearFormDrafts(scope){ Object.keys(__formDrafts).forEach(k=>{ if(k.startsWith(scope+'|')) delete __formDrafts[k]; }); }
+function restoreFormDrafts(){
+  document.querySelectorAll('#onboard-form input, #onboard-form select, #onboard-form textarea, .dash-form input, .dash-form select, .dash-form textarea').forEach(e=>{
+    const d = __formDrafts[draftKey(e)]; if(!d) return;
+    if('c' in d) e.checked = d.c; else e.value = d.v;
+  });
+  document.querySelectorAll(DRAFT_FORMS).forEach(f=>f.querySelectorAll('.first-job-cb').forEach(cb=>{
+    const inp = cb.closest('.field') && cb.closest('.field').querySelector('.cur-job'); if(inp){ inp.disabled = cb.checked; if(cb.checked) inp.value = ''; }
+  }));
+  document.querySelectorAll('.rate-w').forEach(w=>{ const n = w.querySelector('.rate-number'), h = w.querySelector('input[type="hidden"]'); if(n && h && __formDrafts[draftKey(n)]) h.value = n.value; });
+}
+
 function render(){
+  const __act = document.activeElement, __focusKey = __act ? draftKey(__act) : null;
+  let __sel = null; try{ __sel = __focusKey ? [__act.selectionStart, __act.selectionEnd] : null; }catch(e){}
   applyDir();
   const app = document.getElementById('app');
   app.innerHTML = '';
@@ -3506,8 +3536,11 @@ function render(){
     }
   }
   app.appendChild(el(body));
+  restoreFormDrafts();
+  if(__focusKey){ const f = [...document.querySelectorAll('#onboard-form input, #onboard-form select, #onboard-form textarea, .dash-form input, .dash-form select, .dash-form textarea')].find(e=>draftKey(e)===__focusKey);
+    if(f){ f.focus({ preventScroll:true }); try{ if(__sel && __sel[0]!=null) f.setSelectionRange(__sel[0], __sel[1]); }catch(e){} } }
   if(state.langPrompt) app.appendChild(el(langPromptHtml()));
-  app.appendChild(el(`<footer>Workar · ${esc(T('footer_tag'))}<br><span class="foot-links"><a data-nav="privacy">${esc(T('ft_privacy'))}</a> · <a data-nav="terms">${esc(T('ft_terms'))}</a> · <a data-nav="refunds">${esc(T('ft_refunds'))}</a></span><br><a class="ig-link" href="${INSTAGRAM_URL}" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg> @workarmentoring</a> <a class="ig-link" href="${LINKEDIN_URL}" target="_blank" rel="noopener noreferrer" aria-label="Workar on LinkedIn" style="margin-inline-start:18px"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 3a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM3 9h4v12H3V9Zm6 0h4v1.6C13.7 9.5 14.8 9 16.2 9 19 9 21 10.7 21 14v7h-4v-6.3c0-1.7-.7-2.7-2-2.7s-2 1-2 2.7V21H9V9Z"/></svg> LinkedIn</a> <a class="ig-link" href="${YOUTUBE_URL}" target="_blank" rel="noopener noreferrer" aria-label="Workar on YouTube" style="margin-inline-start:18px"><svg width="16" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 7s-.2-1.5-.8-2.1C20.4 4.1 19.5 4 19 4c-2.9-.2-7-.2-7-.2s-4.1 0-7 .2c-.5 0-1.4.1-2.2.9C2.2 5.5 2 7 2 7s-.2 1.8-.2 3.5v3c0 1.7.2 3.5.2 3.5s.2 1.5.8 2.1c.8.8 1.8.8 2.4.9 1.7.2 6.8.2 6.8.2s4.1 0 7-.2c.5 0 1.4-.1 2.2-.9.6-.6.8-2.1.8-2.1s.2-1.8.2-3.5v-3C22.2 8.8 22 7 22 7ZM10 15.5v-7l6 3.5-6 3.5Z"/></svg> YouTube</a><p class="foot-disc">${esc(T('disclaimer'))}</p></footer>`));
+  app.appendChild(el(`<footer>Workar · ${esc(T('footer_tag'))}<p class="foot-disc">${esc(T('disclaimer'))}</p><span class="foot-links"><a data-nav="privacy">${esc(T('ft_privacy'))}</a> · <a data-nav="terms">${esc(T('ft_terms'))}</a> · <a data-nav="refunds">${esc(T('ft_refunds'))}</a></span><br><a class="ig-link" href="${INSTAGRAM_URL}" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg> @workarmentoring</a> <a class="ig-link" href="${LINKEDIN_URL}" target="_blank" rel="noopener noreferrer" aria-label="Workar on LinkedIn" style="margin-inline-start:18px"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 3a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM3 9h4v12H3V9Zm6 0h4v1.6C13.7 9.5 14.8 9 16.2 9 19 9 21 10.7 21 14v7h-4v-6.3c0-1.7-.7-2.7-2-2.7s-2 1-2 2.7V21H9V9Z"/></svg> LinkedIn</a> <a class="ig-link" href="${YOUTUBE_URL}" target="_blank" rel="noopener noreferrer" aria-label="Workar on YouTube" style="margin-inline-start:18px"><svg width="16" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 7s-.2-1.5-.8-2.1C20.4 4.1 19.5 4 19 4c-2.9-.2-7-.2-7-.2s-4.1 0-7 .2c-.5 0-1.4.1-2.2.9C2.2 5.5 2 7 2 7s-.2 1.8-.2 3.5v3c0 1.7.2 3.5.2 3.5s.2 1.5.8 2.1c.8.8 1.8.8 2.4.9 1.7.2 6.8.2 6.8.2s4.1 0 7-.2c.5 0 1.4-.1 2.2-.9.6-.6.8-2.1.8-2.1s.2-1.8.2-3.5v-3C22.2 8.8 22 7 22 7ZM10 15.5v-7l6 3.5-6 3.5Z"/></svg> YouTube</a></footer>`));
   wire();
   if(state.view==='messages' || state.view==='requests') wireInbox();
   if(window.WorkarAgents) WorkarAgents.afterRender();
@@ -7547,6 +7580,7 @@ function wire(){
     try{
       state.onboardError = '';
       await saveProfileSafe(doc, 'set');
+      clearFormDrafts('ob');
       toast(T('toast_profile_created'));
       if(state.role==='mentor') notify('mentor_applied');
       if(state.role==='client' && state.returnMentorId){
@@ -7727,7 +7761,7 @@ function wire(){
     if(priceEl) patch.priceUsd = priceEl.value==='' ? null : Math.max(0, Number(priceEl.value)||0);
     const availChecks = document.querySelectorAll('.avail-check');
     if(availChecks.length) patch.availability = Array.from(availChecks).filter(c=>c.checked).map(c=>c.getAttribute('data-slotkey'));
-    try{ await saveProfileSafe(patch, 'update'); myProfile = Object.assign({}, myProfile, patch); toast(T('toast_saved')); render(); }
+    try{ await saveProfileSafe(patch, 'update'); myProfile = Object.assign({}, myProfile, patch); clearFormDrafts('dash'); toast(T('toast_saved')); render(); }
     catch(err){
       console.error('profile save failed:', err);
       toast(T('toast_save_fail'));
