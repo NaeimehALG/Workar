@@ -2350,7 +2350,7 @@ const I18N = {
     iv_hours_off:'Add your weekly hours so clients only request times that suit you.', iv_hours_edit:'Update availability',
     tc_free:'You\'re free at this time', tc_clash:'Clashes with your session with {n}', tc_outside:'Outside your usual hours', tc_past:'This time has already passed',
     pr_title:'Suggest new times to {n}', pr_sub:'Pick up to 3. They choose one and the session is accepted straight away.', pr_no_hours:'Add weekly hours in your profile to get suggestions, or add a time below.',
-    pr_add:'Add time', pr_note:'Hi {n}, thank you for your request. {t} doesn\'t work for me. Would one of these times suit you instead?', pr_count:'{n} of 3 selected', pr_send:'Send suggestions', pr_max:'You can suggest up to 3 times',
+    pr_add:'Add time', pr_note:'Hi {n}, thank you for your request. {t} doesn\'t work for me. Would one of these times suit you instead?', pr_count:'{n} of 3 selected', pr_need_one:'Pick or add at least one time to send', pr_send:'Send suggestions', pr_max:'You can suggest up to 3 times',
     pr_msg_list:'Suggested times (choose one in Requests):', pr_sent:'Suggestions sent to {n}', pick_q:'Book this time: {t}?', pick_msg:'I picked {t}. See you then!', pick_done:'Time confirmed. Your session is accepted',
     nav_requests:'Requests', nav_messages:'Messages', msg_btn:'Message', inbox_search:'Search messages', inbox_empty:'No conversations yet. Message a mentor or book a session to start one.',
     inbox_pick:'Choose a conversation to read it here.', inbox_ph:'Write a message…', inbox_send:'Send', inbox_you:'You',
@@ -2765,7 +2765,7 @@ const I18N = {
     iv_hours_off:'ساعت‌های هفتگی‌تان را اضافه کنید تا مراجع‌ها فقط زمان‌های مناسب شما را درخواست بدهند.', iv_hours_edit:'به‌روزرسانی زمان‌های آزاد',
     tc_free:'در این زمان آزاد هستید', tc_clash:'با جلسه‌ی شما با {n} تداخل دارد', tc_outside:'خارج از ساعت‌های معمول شما', tc_past:'این زمان گذشته است',
     pr_title:'پیشنهاد زمان تازه به {n}', pr_sub:'تا ۳ زمان انتخاب کنید. مراجع یکی را انتخاب می‌کند و جلسه بلافاصله قبول می‌شود.', pr_no_hours:'برای دیدن پیشنهادها ساعت‌های هفتگی‌تان را در پروفایل اضافه کنید، یا زمانی را پایین اضافه کنید.',
-    pr_add:'افزودن زمان', pr_note:'سلام {n}، ممنون از درخواستتان. {t} برای من مناسب نیست. آیا یکی از این زمان‌ها برایتان مناسب است؟', pr_count:'{n} از ۳ انتخاب شده', pr_send:'ارسال پیشنهادها', pr_max:'حداکثر ۳ زمان می‌توانید پیشنهاد بدهید',
+    pr_add:'افزودن زمان', pr_note:'سلام {n}، ممنون از درخواستتان. {t} برای من مناسب نیست. آیا یکی از این زمان‌ها برایتان مناسب است؟', pr_count:'{n} از ۳ انتخاب شده', pr_need_one:'برای ارسال، حداقل یک زمان انتخاب یا اضافه کنید', pr_send:'ارسال پیشنهادها', pr_max:'حداکثر ۳ زمان می‌توانید پیشنهاد بدهید',
     pr_msg_list:'زمان‌های پیشنهادی (یکی را در بخش درخواست‌ها انتخاب کنید):', pr_sent:'پیشنهادها برای {n} فرستاده شد', pick_q:'این زمان رزرو شود؟ {t}', pick_msg:'{t} را انتخاب کردم. می‌بینمتان!', pick_done:'زمان قطعی شد. جلسه‌ی شما قبول شد',
     nav_requests:'درخواست‌ها', nav_messages:'پیام‌ها', msg_btn:'پیام', inbox_search:'جستجو در پیام‌ها', inbox_empty:'هنوز گفتگویی ندارید. به یک منتور پیام بدهید یا جلسه رزرو کنید.',
     inbox_pick:'یک گفتگو را انتخاب کنید تا اینجا نمایش داده شود.', inbox_ph:'پیامتان را بنویسید…', inbox_send:'ارسال', inbox_you:'شما',
@@ -7219,7 +7219,7 @@ function proposePanel(r){
       <button type="button" class="btn btn-sm btn-ghost" data-pr-add="${esc(r.id)}">${HUB_IC.plus}${esc(T('pr_add'))}</button>
     </div>
     <textarea id="pr-note" rows="2">${esc(state.proposeNote != null ? state.proposeNote : T('pr_note').replace('{n}', other.split(' ')[0]).replace('{t}', inst ? whenLine(inst) : ''))}</textarea>
-    <div class="pr-foot"><span class="pr-count">${esc(T('pr_count').replace('{n}', sel.length))}</span>
+    <div class="pr-foot"><span class="pr-count">${esc(sel.length ? T('pr_count').replace('{n}', sel.length) : T('pr_need_one'))}</span>
       <button type="button" class="btn btn-sm btn-ghost" data-pr-cancel="1">${esc(T('cancel'))}</button>
       <button type="button" class="btn btn-sm btn-primary" data-pr-send="${esc(r.id)}" ${sel.length?'':'disabled'}>${esc(T('pr_send'))}</button></div>
   </div>`;
@@ -7380,6 +7380,13 @@ function hubSide(isMentor, upcoming){
   </aside>`;
 }
 // --- actions ---
+// In "Suggest other times": once both a date and a time are chosen, add that time straight away
+// (the "Add time" button still works, but people often missed it and the Send button stayed off).
+document.addEventListener('change', e=>{
+  const id = e.target && e.target.id; if(id!=='pr-date' && id!=='pr-time') return;
+  const d = (document.getElementById('pr-date')||{}).value, tm = (document.getElementById('pr-time')||{}).value;
+  const add = document.querySelector('[data-pr-add]'); if(d && tm && add) add.click();
+});
 document.addEventListener('click', async e=>{
   const t = e.target.closest && e.target.closest('[data-iv-accept],[data-iv-ignore],[data-iv-undo],[data-propose],[data-pr-toggle],[data-pr-add],[data-pr-cancel],[data-pr-send],[data-pick],[data-iv-all]');
   if(!t) return;
