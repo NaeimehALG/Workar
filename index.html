@@ -2205,7 +2205,7 @@ const I18N = {
     offline_notice:'General tips (not personalized AI feedback):',
     lbl_price_usd:'Price to charge via card (USD)', price_usd_hint:'e.g. 40 — leave blank for free sessions',
     pay_to_confirm:'Confirm with card · $${amount}', pay_hold_note:"Nothing is charged now — your card is charged only after the session takes place.", prob_nocharge:"Don't charge", prob_nocharge_q:"Don't charge the client for this session? Their card hold is released (or the charge refunded) and the mentor isn't paid for it.", prob_nocharged:'Done. The client will not be charged.', waiting_for_payment:'Waiting for the client to confirm with their card…',
-    earn_title:'Your earnings', earn_note:'You keep {p}% of every paid booking. Like Airbnb, Workar holds the payment and sends your share to your bank automatically 7 days after the session.', earn_total:'Earned', earn_paid:'Paid to you', earn_owed:'Owed to you',
+    earn_title:'Your earnings', earn_note:'You keep {p}% of every paid booking. Workar holds the payment securely and sends your share to your bank automatically 7 days after the session.', earn_total:'Earned', earn_paid:'Paid to you', earn_owed:'On its way to you',
     sess_progress_m:'{d} of {t} sessions done', sess_progress_c:'{l} of {t} sessions left', sess_all_done:'All sessions done', sess_mark:'Mark a session done', sess_mark_one:'Mark session done', sess_completed:'Completed', sess_saved:'Session recorded', sess_fail:'Could not save — check that the payouts SQL has been run',
     po_err_connect_admin:'Stripe needs one more step before mentors can add bank details: in Stripe open Settings → Connect → Platform profile (dashboard.stripe.com/settings/connect/platform-profile) and complete the loss-liability acknowledgement.',
     pay_fail_mentor_setup:'Your mentor is finishing their payment setup. We have let them know, and you can pay as soon as it is done.',
@@ -2239,7 +2239,7 @@ const I18N = {
     auth_agree:'I agree to the {t} and {p}.', lbl_timezone:'Your time zone', tz_hint:'Your weekly availability is in this time zone. Clients see times converted to their own zone.',
     cal_tz_same:'Times are in your time zone ({z}).', cal_tz_diff:'Times are shown in your time zone ({z}). The mentor is in {m}.', cal_tz_own:'Enter the date and time in your own time zone ({z}).', cal_past:'That time has already passed — please choose a later one.',
     mp_tz:'Mentor\'s time zone: {z}', mentor_not_available:'This mentor profile isn\'t available yet.', pending_review:'Your mentor profile is under review. Workar will email you once it\'s approved and visible in Find a mentor.',
-    review_after_session:'You can leave a review after your first session with {n}.',
+    review_after_session:'You can leave a review after your first session with {n}.', review_done:'Thank you, you have already reviewed {n}.',
     apps_title:'Mentor applications', apps_hint:'New mentor profiles stay hidden until you approve them. The mentor gets an email when approved.', apps_none:'No applications waiting.', apps_error:'Could not load applications — run the latest Workar SQL.', apps_approve:'Approve', apps_view:'View profile', apps_done:'Mentor approved', apps_fail:'Could not approve — run the latest Workar SQL.',
     voice_test:'🔊 Test voice', voice_testing:'Testing the voice…', voice_test_line:'Hi! I\'m your Workar interviewer. Can you hear me clearly?', voice_tap_replay:'Tap Replay to hear the answer.', ve_natural:'Natural voice ✓', ve_device:'Device voice', ve_credit:'Natural voice is temporarily unavailable. You can continue in text.', ve_nokey:'Natural voice is temporarily unavailable. Please try again.', ve_nofile:'Natural voice is temporarily unavailable. Please try again.', ve_signin:'Sign in on this device to hear the natural interview voice.', ve_limit:'You have reached today’s voice limit. Please try tomorrow.', ve_error:'Natural voice could not play. Tap Replay to try again.', ve_blocked:'Phone blocked audio — tap Replay', join_call:'Join video/voice call', paid_badge:'Paid',
     toast_payment_fail:'Could not start payment — try again',
@@ -2620,7 +2620,7 @@ const I18N = {
     offline_notice:'نکات کلی (نه فیدبک اختصاصی هوش مصنوعی):',
     lbl_price_usd:'مبلغ پرداخت با کارت (دلار)', price_usd_hint:'مثلاً ۴۰؛ برای جلسه‌ی رایگان خالی بگذارید',
     pay_to_confirm:'تأیید با کارت · ${amount} دلار کانادا', pay_hold_note:'الان چیزی کسر نمی‌شود؛ مبلغ فقط بعد از برگزاری جلسه از کارت کسر می‌شود.', prob_nocharge:'کسر نشود', prob_nocharge_q:'برای این جلسه از مراجع پولی کسر نشود؟ hold کارتش آزاد می‌شود (یا مبلغ برگشت داده می‌شود) و به منتور هم پرداختی نمی‌شود.', prob_nocharged:'انجام شد. از مراجع چیزی کسر نمی‌شود.', waiting_for_payment:'منتظر تأیید کارت مراجع…',
-    earn_title:'درآمد شما', earn_note:'{p}٪ از هر رزرو پرداخت‌شده سهم شماست. مثل Airbnb، Workar پرداخت را نگه می‌دارد و سهم شما را ۷ روز بعد از جلسه خودکار به حساب بانکی‌تان واریز می‌کند.', earn_total:'کل درآمد', earn_paid:'پرداخت‌شده به شما', earn_owed:'طلب شما',
+    earn_title:'درآمد شما', earn_note:'{p}٪ از هر رزرو پرداخت‌شده سهم شماست. Workar پرداخت را به‌صورت امن نگه می‌دارد و سهم شما را ۷ روز بعد از جلسه خودکار به حساب بانکی‌تان واریز می‌کند.', earn_total:'کل درآمد', earn_paid:'پرداخت‌شده به شما', earn_owed:'در راه حساب شما',
     sess_progress_m:'{d} از {t} جلسه برگزار شد', sess_progress_c:'{l} از {t} جلسه باقی مانده', sess_all_done:'همه‌ی جلسات برگزار شد', sess_mark:'ثبت برگزاری یک جلسه', sess_mark_one:'ثبت برگزاری جلسه', sess_completed:'تمام‌شده', sess_saved:'جلسه ثبت شد', sess_fail:'ذخیره نشد؛ مطمئن شوید SQL پرداخت منتورها اجرا شده است',
     po_err_connect_admin:'Stripe پیش از ثبت اطلاعات بانکی منتورها یک مرحله‌ی دیگر لازم دارد: در Stripe به Settings → Connect → Platform profile بروید و تأیید مسئولیت زیان (loss liability) را کامل کنید.',
     pay_fail_mentor_setup:'منتور شما در حال تکمیل تنظیمات پرداخت است. به او اطلاع دادیم و به محض تکمیل، می‌توانید پرداخت کنید.',
@@ -2654,7 +2654,7 @@ const I18N = {
     auth_agree:'{t} و {p} را می‌پذیرم.', lbl_timezone:'منطقه‌ی زمانی شما', tz_hint:'زمان‌های آزاد هفتگی شما به این منطقه‌ی زمانی است. مراجعان زمان را به وقت خودشان می‌بینند.',
     cal_tz_same:'زمان‌ها به وقت شماست ({z}).', cal_tz_diff:'زمان‌ها به وقت شما ({z}) نمایش داده می‌شوند. منتور در {m} است.', cal_tz_own:'تاریخ و ساعت را به وقت خودتان ({z}) وارد کنید.', cal_past:'این زمان گذشته است — زمان دیرتری انتخاب کنید.',
     mp_tz:'منطقه‌ی زمانی منتور: {z}', mentor_not_available:'این پروفایل منتور هنوز در دسترس نیست.', pending_review:'پروفایل منتوری شما در حال بررسی است. بعد از تأیید، Workar به شما ایمیل می‌زند و پروفایلتان در فهرست منتورها نمایش داده می‌شود.',
-    review_after_session:'بعد از اولین جلسه با {n} می‌توانید نظر بنویسید.',
+    review_after_session:'بعد از اولین جلسه با {n} می‌توانید نظر بنویسید.', review_done:'ممنون، شما قبلاً برای {n} نظر نوشته‌اید.',
     apps_title:'درخواست‌های منتوری', apps_hint:'پروفایل منتورهای جدید تا تأیید شما پنهان می‌ماند. بعد از تأیید، به منتور ایمیل فرستاده می‌شود.', apps_none:'درخواستی در انتظار نیست.', apps_error:'بارگذاری نشد؛ SQL جدید Workar را اجرا کنید.', apps_approve:'تأیید', apps_view:'دیدن پروفایل', apps_done:'منتور تأیید شد', apps_fail:'تأیید نشد؛ SQL جدید Workar را اجرا کنید.',
     voice_test:'🔊 تست صدا', voice_testing:'در حال تست صدا…', voice_test_line:'سلام! من مصاحبه‌گر Workar هستم. صدای من را واضح می‌شنوید؟', voice_tap_replay:'برای شنیدن جواب، دکمه‌ی «پخش دوباره» را بزنید.', ve_natural:'صدای طبیعی ✓', ve_device:'صدای دستگاه', ve_credit:'صدای طبیعی موقتاً در دسترس نیست؛ می‌توانید با متن ادامه دهید.', ve_nokey:'صدای طبیعی موقتاً در دسترس نیست؛ دوباره تلاش کنید.', ve_nofile:'صدای طبیعی موقتاً در دسترس نیست؛ دوباره تلاش کنید.', ve_signin:'برای شنیدن صدای طبیعی مصاحبه، در همین دستگاه وارد حساب شوید.', ve_limit:'سهمیه‌ی صدای امروز تمام شده؛ فردا دوباره تلاش کنید.', ve_error:'صدای طبیعی پخش نشد؛ دکمه‌ی پخش دوباره را بزنید.', ve_blocked:'گوشی صدا را مسدود کرد؛ «پخش دوباره» را بزنید', join_call:'ورود به تماس تصویری/صوتی', paid_badge:'پرداخت‌شده',
     toast_payment_fail:'پرداخت شروع نشد؛ دوباره امتحان کنید',
@@ -3110,9 +3110,12 @@ async function notify(event, requestId, targetId){
     fetch('/api/notify', { method:'POST', headers:{ 'Content-Type':'application/json', Authorization:'Bearer '+tok }, body: JSON.stringify({ event, requestId, targetId }) }).catch(()=>{});
   }catch(e){}
 }
+// One review per client per mentor, only after a paid session has taken place (the database enforces the same rules).
+function hasReviewed(mentorId){ return (cache.reviews[mentorId]||[]).some(v=>v.clientId===uid); }
 function canReview(mentorId){
   const now = Date.now();
-  return (cache.requests||[]).some(r=> r.clientId===uid && r.mentorId===mentorId && r.status==='accepted' && (r.paid || !r.amountCents)
+  if(hasReviewed(mentorId)) return false;
+  return (cache.requests||[]).some(r=> r.clientId===uid && r.mentorId===mentorId && r.status==='accepted' && r.paid
     && ((Number(r.sessionsDone)||0) > 0 || ((reqInstant(r)||{getTime:()=>Infinity}).getTime() < now)));
 }
 // ---------- booking calendar: free / booked / unavailable ----------
@@ -5970,7 +5973,7 @@ function mentorView(){
       </section>` : ''}
       <section class="mp-sec">
         <h3>${esc(T('reviews_title'))}</h3>
-        ${iAmClient && !isSelf && !canReview(id) ? `<p class="muted mp-empty" style="margin-bottom:14px;">${esc(T('review_after_session').replace('{n}', nameOf(id)))}</p>` : ''}
+        ${iAmClient && !isSelf && !canReview(id) ? `<p class="muted mp-empty" style="margin-bottom:14px;">${esc(T(hasReviewed(id) ? 'review_done' : 'review_after_session').replace('{n}', nameOf(id)))}</p>` : ''}
         ${iAmClient && !isSelf && canReview(id) ? `
         <form id="review-form" class="mp-review-form">
           <label style="font-size:13px;font-weight:700;display:block;margin-bottom:8px;">${esc(T('rate_experience'))}</label>
