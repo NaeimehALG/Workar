@@ -6724,8 +6724,14 @@ async function openInAppCall(url, o){
 }
 // ---------- Device & connection test: camera, mic and a Daily network check, no booking needed ----------
 const dt = { stream:null, call:null, raf:0, ctx:null, gen:0, clones:[] };
+function dtKillCall(c){ if(!c) return;
+  // Stop every track Daily holds as well, in case it opened the camera itself.
+  try{ const l = c.participants && c.participants().local; const tr = (l && l.tracks) || {};
+    Object.keys(tr).forEach(k=>{ const t = tr[k] && (tr[k].persistentTrack || tr[k].track); if(t && t.stop) try{ t.stop(); }catch(e){} }); }catch(e){}
+  try{ c.stopTestCallQuality && c.stopTestCallQuality(); }catch(e){}
+  try{ const p = c.destroy(); if(p && p.catch) p.catch(()=>{}); }catch(e){} }
 function dtStop(){ dt.gen++; cancelAnimationFrame(dt.raf); dt.raf = 0;
-  if(dt.call){ const c = dt.call; dt.call = null; try{ c.stopTestCallQuality && c.stopTestCallQuality(); }catch(e){} try{ c.destroy(); }catch(e){} }
+  if(dt.call){ const c = dt.call; dt.call = null; dtKillCall(c); }
   // Daily does not stop tracks it was given, so the copies handed to it must be stopped here too,
   // otherwise the camera light stays on after the test.
   dt.clones.forEach(t=>{ try{ t.stop(); }catch(e){} }); dt.clones = [];
@@ -6764,7 +6770,7 @@ async function dtRun(){
     verdict = (res && res.result) || 'failed';
   }catch(e){ console.warn('device-test', e); verdict = 'failed'; }
   if(!live()) return;
-  if(dt.call){ const c = dt.call; dt.call = null; try{ c.destroy(); }catch(e){} }
+  if(dt.call){ const c = dt.call; dt.call = null; dtKillCall(c); }
   dt.clones.forEach(t=>{ try{ t.stop(); }catch(e){} }); dt.clones = [];
   const k = verdict==='good' ? 'dt_net_good' : verdict==='warning' ? 'dt_net_warning' : verdict==='bad' ? 'dt_net_bad' : 'dt_net_failed';
   net.textContent = T(k); net.className = 'pj-msg ' + (verdict==='good' ? 'ok' : verdict==='warning' ? '' : 'err');
