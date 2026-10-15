@@ -2234,7 +2234,7 @@ const I18N = {
     lbl_skills:'Skills / topics (comma-separated)', ph_skills:'resume review, interview prep, career switching',
     lbl_experience:'Years of experience', ph_experience:'e.g. 8',
     lbl_languages:'Languages (comma-separated)', ph_languages:'e.g. English, Farsi',
-    rs_title:'Start with your resume', rs_dash_title:'Resume',
+    rs_title:'Start with your resume', rs_dash_title:'Fill your profile with AI', rs_sub_dash:'Upload your resume or your LinkedIn profile saved as a PDF. The AI fills in every field it can, and you review it before saving.', rs_ai_fill:'Fill with AI', rs_filled_dash:'The AI filled in your profile from your resume. Please review each field, then press Save changes.', rs_nothing:'We could not find new details in this file.',
     rs_sub_m:'Upload your resume or LinkedIn profile (PDF or Word). Our assistant fills in the form and writes a recommended bio for you to review.',
     rs_sub_c:'Upload your resume or LinkedIn profile (PDF or Word). We fill in your background, and your mentor can read it before your session.',
     rs_li_tip:'No resume at hand? On LinkedIn, open your profile, choose More, then Save to PDF.',
@@ -2683,7 +2683,7 @@ const I18N = {
     lbl_skills:'مهارت‌ها / موضوعات (با کاما جدا کنید)', ph_skills:'بازبینی رزومه، آماده‌سازی مصاحبه، تغییر مسیر شغلی',
     lbl_experience:'سال‌های تجربه', ph_experience:'مثلاً ۸',
     lbl_languages:'زبان‌ها (با کاما جدا کنید)', ph_languages:'مثلاً فارسی، انگلیسی',
-    rs_title:'با رزومه‌ی خود شروع کنید', rs_dash_title:'رزومه',
+    rs_title:'با رزومه‌ی خود شروع کنید', rs_dash_title:'پر کردن پروفایل با هوش مصنوعی', rs_sub_dash:'رزومه یا پروفایل لینکدین خود را به‌صورت PDF بارگذاری کنید. هوش مصنوعی هر فیلدی را که بتواند پر می‌کند و شما پیش از ذخیره آن را بررسی می‌کنید.', rs_ai_fill:'پر کردن با هوش مصنوعی', rs_filled_dash:'هوش مصنوعی پروفایل شما را از روی رزومه پر کرد. لطفاً همه‌ی فیلدها را بررسی کنید و سپس «ذخیره‌ی تغییرات» را بزنید.', rs_nothing:'اطلاعات تازه‌ای در این فایل پیدا نشد.',
     rs_sub_m:'رزومه یا پروفایل لینکدین خود را بارگذاری کنید (PDF یا Word). دستیار، فرم را پر می‌کند و یک بیوگرافی پیشنهادی برای بررسی شما می‌نویسد.',
     rs_sub_c:'رزومه یا پروفایل لینکدین خود را بارگذاری کنید (PDF یا Word). سوابق شما در فرم پر می‌شود و منتور می‌تواند پیش از جلسه آن را بخواند.',
     rs_li_tip:'رزومه در دسترس ندارید؟ در لینکدین، پروفایل خود را باز کنید، More و سپس Save to PDF را بزنید.',
@@ -6631,36 +6631,45 @@ function resumeCard(where){
   return `<div class="rs-card ${busy?'busy':''}">
     <span class="rs-ic">${FILE_IC}</span>
     <div class="rs-txt"><b>${esc(T(where==='ob'?'rs_title':'rs_dash_title'))}</b>
-      <span>${esc(busy ? T(busy) : cur ? (cur.name||'') : T(role==='mentor'?'rs_sub_m':'rs_sub_c'))}</span>
-      ${!busy && !cur && where==='ob' ? `<small>${esc(T('rs_li_tip'))}</small>` : ''}
+      <span>${esc(busy ? T(busy) : cur ? (cur.name||'') : T(where==='dash' ? 'rs_sub_dash' : role==='mentor'?'rs_sub_m':'rs_sub_c'))}</span>
+      ${!busy && !cur ? `<small>${esc(T('rs_li_tip'))}</small>` : ''}
     </div>
     <div class="rs-acts">
       ${cur && !busy ? `<button type="button" class="btn btn-ghost btn-sm" data-file-open="${esc(cur.path)}">${esc(T('rs_view'))}</button>` : ''}
+      ${cur && !busy && where==='dash' ? `<button type="button" class="btn btn-primary btn-sm" data-resume-ai="1">${esc(T('rs_ai_fill'))}</button>` : ''}
       <button type="button" class="btn ${cur?'btn-outline':'btn-primary'} btn-sm" data-resume-up="${where}" ${busy?'disabled':''}>${esc(T(cur?'rs_replace':'rs_btn'))}</button>
     </div>
   </div>${sug}`;
 }
-async function handleResume(where, file){
+async function handleResume(where, file, existing){
   const role = where==='ob' ? state.role : (myProfile && myProfile.role);
-  state.resumeBusy = { where, key:'rs_uploading' }; render();
-  let a;
-  try{ a = await uploadFile(file, RESUME_EXT); }
-  catch(e){ state.resumeBusy = null; render(); toast(e.message, 5000); return; }
+  if(where==='dash') state.dashEditOpen = true;
+  let a = existing;
+  if(!a){
+    state.resumeBusy = { where, key:'rs_uploading' }; render();
+    try{ a = await uploadFile(file, RESUME_EXT); }
+    catch(e){ state.resumeBusy = null; render(); toast(e.message, 5000); return; }
+  }
   if(where==='ob') state.obResume = { path:a.path, name:a.name };
-  else {
+  else if(!existing){
     try{ await saveProfileSafe({ resumePath:a.path, resumeName:a.name }, 'update'); myProfile.resumePath = a.path; myProfile.resumeName = a.name; toast(T('rs_saved')); }
     catch(e){ console.error('resume save failed', e); }
   }
   state.resumeBusy = { where, key:'rs_reading' }; render();
   try{
-    const d = window.WorkarAgents && WorkarAgents.readResume ? await WorkarAgents.readResume(a, role, where) : null;
-    if(where==='dash' && role==='mentor' && d && d.draft && d.draft.bio) state.resumeBio = d.draft.bio;
+    // The dashboard form must be on screen before the AI fills it
+    if(where==='dash'){ state.resumeBusy = null; render(); }
+    if(window.WorkarAgents && WorkarAgents.readResume){
+      if(where==='dash'){ toast(T('rs_reading'), 20000); }
+      await WorkarAgents.readResume(a, role, where);
+    }
   }catch(e){ toast(e.message, 6000); }
   state.resumeBusy = null; render();
 }
 document.addEventListener('click', e=>{
   const t = e.target && e.target.closest ? e.target : null; if(!t) return;
   const f = t.closest('[data-file-open]'); if(f){ e.preventDefault(); e.stopPropagation(); openFile(f.getAttribute('data-file-open')); return; }
+  const ai = t.closest('[data-resume-ai]'); if(ai){ e.preventDefault(); if(myProfile && myProfile.resumePath) handleResume('dash', null, { path:myProfile.resumePath, name:myProfile.resumeName }); return; }
   const up = t.closest('[data-resume-up]'); if(up){ e.preventDefault(); const where = up.getAttribute('data-resume-up'); pickFile('.pdf,.docx,.txt', file=>handleResume(where, file)); return; }
   const ia = t.closest('[data-ib-attach]'); if(ia){ e.preventDefault(); const o = ia.getAttribute('data-ib-attach'); pickFile('.pdf,.docx,.doc,.txt,.png,.jpg,.jpeg,.webp', file=>{ setHiddenConv(o, false); sendAttachment(dmId(uid, o), file, true); }); return; }
   const ra = t.closest('[data-rc-attach]'); if(ra){ e.preventDefault(); const id = ra.getAttribute('data-rc-attach'); pickFile('.pdf,.docx,.doc,.txt,.png,.jpg,.jpeg,.webp', file=>sendAttachment(id, file, false)); return; }
@@ -8953,7 +8962,7 @@ init();
 
   /* ---------- 1. Mentor onboarding assistant ---------- */
   const ob = { messages:null, draft:{}, missing:['headline','profession','company','yearsExperience','bio','languages','skills','helpsWith'], busy:false, error:'' };
-  const FORM_MAP = { company:'company', profession:'profession', yearsExperience:'experience', bio:'bio', languages:'languages', education:'degree', certifications:'certifications', skills:'skills' };
+  const FORM_MAP = { company:'company', profession:'profession', yearsExperience:'experience', bio:'bio', languages:'languages', education:'degree', university:'university', certifications:'certifications', skills:'skills' };
   function fillForm(onlyEmpty){
     const form = document.getElementById('onboard-form'); if(!form) return;
     Object.entries(FORM_MAP).forEach(([k,name])=>{
@@ -9210,7 +9219,7 @@ init();
   async function readResume(file, role, where){
     const lang = (typeof state!=='undefined' && state.lang) || 'en';
     const d = await api({ task:'resume_read', path:file.path, role, lang, draft: role==='mentor' ? ob.draft : undefined }, true);
-    if(where!=='ob') return d;
+    if(where==='dash'){ fillDash(d, role); return d; }
     if(role==='mentor'){
       if(!ob.messages) ob.messages = [{ role:'assistant', content:t('ag_ob_hello') }];
       ob.messages.push({ role:'user', content:'📎 ' + file.name }, { role:'assistant', content:d.reply || t('rs_done_m') });
@@ -9224,6 +9233,29 @@ init();
     put('[name="degree"]', d.degree); put('[name="university"]', d.university); put('[name="certifications"]', d.certifications);
     if(typeof toast==='function') toast(t('rs_done_c'), 5000);
     return d;
+  }
+
+  // Dashboard "Edit profile": the AI fills every field it can from the resume / LinkedIn PDF; the person reviews and saves.
+  function fillDash(d, role){
+    const f = document.querySelector('.dash-form'); if(!f) return;
+    const ed = document.querySelector('.dash-edit'); if(ed && !ed.open){ ed.open = true; try{ state.dashEditOpen = true; }catch(e){} }
+    let n = 0;
+    const put = (sel, v)=>{ const el = f.querySelector(sel); if(!el || el.disabled || v===undefined || v===null || v==='' || (Array.isArray(v) && !v.length)) return;
+      el.value = Array.isArray(v) ? v.join(', ') : String(v); n++;
+      el.dispatchEvent(new Event('input', { bubbles:true })); el.dispatchEvent(new Event('change', { bubbles:true })); };
+    if(role==='mentor'){
+      const r = d.draft || {};
+      put('#edit-profession', r.profession); put('#edit-company', r.company); put('#edit-bio', r.bio);
+      put('#edit-degree', r.education); put('#edit-university', r.university); put('#edit-certifications', r.certifications);
+      put('#edit-experience', r.yearsExperience); put('#edit-skills', r.skills); put('#edit-languages', r.languages);
+      if(Array.isArray(r.helpsWith) && r.helpsWith.length){ f.querySelectorAll('[name="helpsWith"]').forEach(c=>{ c.checked = r.helpsWith.includes(c.value); c.dispatchEvent(new Event('change', { bubbles:true })); }); n++; }
+      Object.assign(ob.draft, r);
+    } else {
+      put('#edit-current-job', d.currentProfession); put('#edit-stage', d.careerStage); put('#edit-target-field', d.targetField);
+      put('#edit-degree', d.degree); put('#edit-university', d.university); put('#edit-certifications', d.certifications);
+      if(d.summary){ const b = f.querySelector('#edit-bio'); if(b && !b.value.trim()) put('#edit-bio', d.summary); }
+    }
+    if(typeof toast==='function') toast(t(n ? 'rs_filled_dash' : 'rs_nothing'), 8000);
   }
 
   /* ---------- hook called after every render ---------- */

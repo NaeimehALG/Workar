@@ -77,7 +77,8 @@ const ONBOARD_TOOL = {
       yearsExperience: { type: 'integer', minimum: 0, maximum: 60 },
       bio: { type: 'string', description: 'First-person bio, 60 to 120 words, in the mentor\'s voice, only facts they gave.' },
       languages: { type: 'array', items: { type: 'string' }, maxItems: 6, description: 'Languages they can mentor in, in English, e.g. ["English","Persian"].' },
-      education: { type: 'string', description: 'Highest or most relevant degree(s), one line.' },
+      education: { type: 'string', description: 'Highest or most relevant degree, without the school, e.g. "M.Sc. Construction Management".' },
+      university: { type: 'string', description: 'The school for that degree, e.g. "University of Southern California".' },
       certifications: { type: 'array', items: { type: 'string' }, maxItems: 8 },
       skills: { type: 'array', items: { type: 'string' }, maxItems: 10, description: 'Concrete skills, tools or specialties.' },
       helpsWith: { type: 'array', items: { type: 'string', enum: HELPS_WITH }, maxItems: 6 },
@@ -134,6 +135,7 @@ function applyDraft(draft, input) {
   set('bio', str(input.bio, 1500));
   set('languages', strArr(input.languages, 6, 30));
   set('education', str(input.education, 200));
+  set('university', str(input.university, 160));
   set('certifications', strArr(input.certifications, 8, 80));
   set('skills', strArr(input.skills, 10, 50));
   set('helpsWith', strArr(input.helpsWith, 6, 40, HELPS_WITH));
