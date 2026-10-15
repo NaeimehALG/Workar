@@ -33,6 +33,28 @@ module.exports = async (req, res) => {
     // ---- booking events ----
     const r = (await M.rows(`requests?id=eq.${encodeURIComponent(requestId || '')}&select=*`))[0];
     if (!r) { res.status(404).json({ error: 'no request' }); return; }
+    // Admin approved a decision on a reported problem: tell both sides the outcome.
+    if (event === 'dispute_resolved') {
+      if ((me.email || '').toLowerCase() !== adminEmail || !r.problemResolvedAt) { res.status(403).end(); return; }
+      const refunded = r.status === 'refunded';
+      const [toM, toC] = await Promise.all([M.emailOf(r.mentorId), M.emailOf(r.clientId)]);
+      const mName = (await M.profile(r.mentorId)).name, cName = (await M.profile(r.clientId)).name;
+      if (toC) await M.sendMail(toC, 'The outcome of your session review',
+        M.layout('Your report has been reviewed', [
+          `Thank you for your patience while we reviewed your session with <b>${M.esc(mName)}</b> on <b>${M.esc(M.when(r))}</b>.`,
+          refunded ? 'We have decided not to charge your card for this session. The hold on your card has been released and you will not be charged.'
+                   : 'After reviewing both accounts and the call record, we found that the session took place, so the session fee will be charged as booked.',
+          'If you have any questions, please reply to this email.'
+        ], { text: 'Open Workar', url: site + '/?go=messages' }));
+      if (toM) await M.sendMail(toM, 'The outcome of the session review',
+        M.layout('The session review is complete', [
+          `Thank you for sharing your side about your session with <b>${M.esc(cName)}</b> on <b>${M.esc(M.when(r))}</b>.`,
+          refunded ? 'After reviewing both accounts and the call record, we decided that the client will not be charged for this session, so no payout is due for it.'
+                   : 'After reviewing both accounts and the call record, we released the payment. Your share will be paid out as usual.',
+          'If you have any questions, please reply to this email.'
+        ], { text: 'Open Workar', url: site + '/?go=dashboard' }));
+      res.status(200).json({ ok: true }); return;
+    }
     const isMentor = r.mentorId === me.id, isClient = r.clientId === me.id;
     if (!isMentor && !isClient) { res.status(403).end(); return; }
     const toId = isMentor ? r.clientId : r.mentorId;
@@ -45,12 +67,17 @@ module.exports = async (req, res) => {
 
     if (event === 'problem_reported') {
       if (!isClient || !r.problemReportedAt) { res.status(403).end(); return; }
-      await M.sendMail(M.CONTACT_EMAIL ? M.CONTACT_EMAIL() : adminEmail, `Problem reported: ${from.name} → ${to.name}`,
-        M.layout('A client reported a problem with a session', [
-          `<b>${fromName}</b> reported a problem with the session with <b>${M.esc(to.name || '')}</b> on ${M.esc(whenTxt)} (${r.amountCents ? '$' + (r.amountCents / 100).toFixed(2) + ' CAD' : 'free'}).`,
-          r.problemNote ? `Their note: “${M.esc(String(r.problemNote).slice(0, 800))}”` : '',
-          'The payment to the mentor is on hold until you decide. In the admin Payouts table you can release it, or refund the client in Stripe.'
-        ], { text: 'Open admin', url: site + '/?go=admin' }), [], { replyTo: me.email || undefined });
+      // The dispute agent asks both sides, reads the call attendance and briefs the admin (api/_dispute.js).
+      let opened = false;
+      try { const o = await require('./_dispute').open(r); opened = !!(o.ok || o.skipped); } catch (e) { console.error('dispute-open-failed', r.id, e.message); }
+      if (!opened) {
+        await M.sendMail(M.CONTACT_EMAIL ? M.CONTACT_EMAIL() : adminEmail, `Problem reported: ${from.name} → ${to.name}`,
+          M.layout('A client reported a problem with a session', [
+            `<b>${fromName}</b> reported a problem with the session with <b>${M.esc(to.name || '')}</b> on ${M.esc(whenTxt)} (${r.amountCents ? '$' + (r.amountCents / 100).toFixed(2) + ' CAD' : 'free'}).`,
+            r.problemNote ? `Their note: “${M.esc(String(r.problemNote).slice(0, 800))}”` : '',
+            'The payment to the mentor is on hold until you decide. In the admin Payouts table you can release it, or refund the client in Stripe.'
+          ], { text: 'Open admin', url: site + '/?go=admin' }), [], { replyTo: me.email || undefined });
+      }
       res.status(200).json({ ok: true }); return;
     }
     switch (event) {

@@ -157,6 +157,8 @@ module.exports = async (req, res) => {
     out.payoutsSent = p.paidOut; out.payoutsSentCents = p.paidOutCents; out.payoutsWaitingForBank = p.waitingForBank.length;
     problems.push(...p.problems);
   } catch (e) { console.error('payouts-failed', e); problems.push('Mentor payouts failed: ' + (e.message || e)); }
+  // Dispute agent: brief the admin on reported problems before the card hold runs out
+  try { Object.assign(out, await require('./_dispute').runDue(problems)); } catch (e) { console.error('disputes-failed', e); problems.push('Dispute agent failed: ' + (e.message || e)); }
   // Autopilot agents + the daily digest to the admin (always sent, even on a quiet day)
   try { Object.assign(out, await require('./_autopilot').run(problems)); } catch (e) { console.error('autopilot-failed', e); out.autopilotError = String(e.message || e); }
   res.status(200).json(out);

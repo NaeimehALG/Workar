@@ -2074,6 +2074,12 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .att-chip small{font-size:11.5px;color:var(--muted);}
   .iv-note + .att-chip, .att-chip.req{margin-top:8px;}
   .rc-att{flex:none;padding-inline:10px;}
+  .dp-card{max-width:640px;margin:10px auto 40px;}
+  .dp-card h2{margin:0 0 8px;font-size:22px;}
+  .dp-quote{margin:12px 0 18px;padding:10px 14px;border-inline-start:3px solid var(--accent);background:var(--surface);border-radius:8px;font-size:14px;color:var(--text);}
+  .dp-done{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--border);font-size:14.5px;}
+  .dp-ai{margin:6px 0;font-size:12.5px;line-height:1.5;color:var(--text);}
+  .dp-rec{margin-top:4px;}
 </style>
 </head>
 <body>
@@ -2211,6 +2217,16 @@ const I18N = {
     rs_err_type:'Please upload a PDF or Word (.docx) file.', rs_err_size:'Please upload a file under 9 MB.', rs_err:'The upload did not work. Please try again.',
     rs_bio_sug:'Recommended bio from your resume', rs_use:'Use this bio', rs_saved:'Your resume was saved.', rs_client_resume:'Resume',
     att_btn:'Attach a file', att_uploading:'Sending your file...', att_open_err:'This file could not be opened.',
+    dp_title:'Session review', dp_title_m:'Please tell us what happened', dp_title_c:'Add details to your report',
+    dp_intro_m:'{n} reported a problem with your session on {d}. Before anything is decided, we would like to hear your side.',
+    dp_intro_c:'Thank you for your report about your session with {n} on {d}. Your card will not be charged while we review it. You can add anything that would help.',
+    dp_lbl_m:'Your side of what happened', dp_lbl_c:'Anything to add (optional)', dp_ph:'For example: when you joined, whether the other person joined, and what happened during the session.',
+    dp_note:'The Workar team reviews both accounts together with the call record, and makes the final decision.',
+    dp_send:'Send', dp_sending:'Sending...', dp_short:'Please write a few words.', dp_thanks:'Thank you. We have received your account and the Workar team will email you with the outcome.',
+    dp_closed:'This report has already been reviewed. The Workar team has emailed you with the outcome.', dp_already:'You have already sent your account. You can add more below.', dp_missing:'This link is not complete.',
+    dp_ai:'AI review:', dp_ai_wait:'AI review: waiting for the mentor\'s side.', dp_ai_none:'AI review: not started yet.', dp_rec:'Recommendation',
+    dp_rec_release:'release the payment', dp_rec_refund:'do not charge the client', dp_rec_unclear:'unclear, please look into it',
+    dp_approve_release:'Approve: release payout', dp_approve_refund:'Approve: don\'t charge',
     lbl_linkedin:'LinkedIn profile', ph_linkedin:'https://linkedin.com/in/yourname',
     lbl_rate:'Price per session', rate_hint:'(leave blank if free)', ph_rate:'e.g. $40 / session',
     lbl_profession_c:'Your current or target profession', ph_profession_c:'e.g. aspiring Data Analyst', lbl_current_job:'Current profession', ph_current_job:'e.g. Document Controller', first_job:'N/A — this will be my first job', lbl_target_job:'Target profession', ph_target_job:'e.g. Data Analyst', onboard_err:'Your profile could not be saved. Send this message to Workar support:',
@@ -2635,6 +2651,16 @@ const I18N = {
     rs_err_type:'لطفاً فایل PDF یا Word (.docx) بارگذاری کنید.', rs_err_size:'لطفاً فایلی کمتر از ۹ مگابایت بارگذاری کنید.', rs_err:'بارگذاری انجام نشد. لطفاً دوباره تلاش کنید.',
     rs_bio_sug:'بیوگرافی پیشنهادی از روی رزومه‌ی شما', rs_use:'استفاده از این بیوگرافی', rs_saved:'رزومه‌ی شما ذخیره شد.', rs_client_resume:'رزومه',
     att_btn:'پیوست فایل', att_uploading:'در حال ارسال فایل...', att_open_err:'این فایل باز نشد.',
+    dp_title:'بررسی جلسه', dp_title_m:'لطفاً بگویید چه اتفاقی افتاد', dp_title_c:'افزودن جزئیات به گزارش',
+    dp_intro_m:'{n} درباره‌ی جلسه‌ی شما در {d} مشکلی گزارش کرده است. پیش از هر تصمیمی، مایلیم روایت شما را هم بشنویم.',
+    dp_intro_c:'از گزارش شما درباره‌ی جلسه با {n} در {d} سپاسگزاریم. تا پایان بررسی، مبلغی از کارت شما برداشت نمی‌شود. اگر نکته‌ای کمک‌کننده است، اینجا بنویسید.',
+    dp_lbl_m:'روایت شما از آنچه اتفاق افتاد', dp_lbl_c:'توضیح بیشتر (اختیاری)', dp_ph:'برای مثال: چه زمانی وارد شدید، آیا طرف مقابل وارد شد و در جلسه چه گذشت.',
+    dp_note:'تیم Workar هر دو روایت را همراه با سابقه‌ی تماس بررسی می‌کند و تصمیم نهایی را می‌گیرد.',
+    dp_send:'ارسال', dp_sending:'در حال ارسال...', dp_short:'لطفاً چند کلمه بنویسید.', dp_thanks:'سپاسگزاریم. روایت شما دریافت شد و تیم Workar نتیجه را به شما ایمیل می‌کند.',
+    dp_closed:'این گزارش پیش‌تر بررسی شده است. تیم Workar نتیجه را به شما ایمیل کرده است.', dp_already:'روایت خود را پیش‌تر فرستاده‌اید. در صورت نیاز می‌توانید مطلبی اضافه کنید.', dp_missing:'این لینک کامل نیست.',
+    dp_ai:'بررسی هوش مصنوعی:', dp_ai_wait:'بررسی هوش مصنوعی: در انتظار روایت منتور.', dp_ai_none:'بررسی هوش مصنوعی: هنوز شروع نشده است.', dp_rec:'پیشنهاد',
+    dp_rec_release:'آزاد کردن پرداخت', dp_rec_refund:'عدم برداشت از کارت مراجع', dp_rec_unclear:'نامشخص؛ لطفاً بررسی کنید',
+    dp_approve_release:'تأیید: آزاد کردن پرداخت', dp_approve_refund:'تأیید: عدم برداشت',
     lbl_linkedin:'پروفایل لینکدین', ph_linkedin:'https://linkedin.com/in/yourname',
     lbl_rate:'قیمت هر جلسه', rate_hint:'(اگر رایگان است خالی بگذارید)', ph_rate:'مثلاً ۴۰ دلار برای هر جلسه',
     lbl_profession_c:'شغل فعلی یا هدف شما', ph_profession_c:'مثلاً علاقه‌مند به تحلیل داده', lbl_current_job:'شغل فعلی', ph_current_job:'مثلاً کنترل مدارک', first_job:'ندارم؛ این اولین شغل من است', lbl_target_job:'شغل هدف', ph_target_job:'مثلاً تحلیل‌گر داده', onboard_err:'پروفایل ذخیره نشد. این پیام را برای پشتیبانی Workar بفرستید:',
@@ -2964,6 +2990,7 @@ let state = { view:'home', mentorId:null, coachMode:'resume', chatMsgs:[], sendi
   matchQuery:'', matchResults:null, matching:false, interviewRole:'', interviewStarted:false, bookingOpen:false, selectedSlot:null,
   authMode:'login', authError:'', authCheckEmail:false, authBusy:false,
   lang:'en', query:'', role:null, voiceMode:false, listening:false, outOfCredits:false };
+try{ const __qs = new URLSearchParams(location.search), __dr = __qs.get('r'); if(__qs.get('go')==='dispute' && __dr){ state.view = 'dispute'; state.disputeReq = __dr.slice(0,120); history.replaceState(null, '', location.pathname + location.hash); } }catch(e){}
 try{ const __go = new URLSearchParams(location.search).get('go'); if(__go && ['dashboard','admin','privacy','terms','refunds','browse','coach','prep','requests','messages'].includes(__go)){ if(__go==='requests'){ state.ibPreferAction = true; } state.view = __go==='requests' ? 'messages' : __go; history.replaceState(null, '', location.pathname + location.hash); } }catch(e){}
 state.ciSkip = state.ciSkip || {}; state.ciStars = state.ciStars || {};
 let cache = { profiles:{}, reviews:{}, requests:[], names:{}, people:{}, msgs:{}, busy:{}, busyLoaded:{} };
@@ -3653,7 +3680,7 @@ function render(){
   app.innerHTML = '';
   app.appendChild(el(navHtml()));
   let body;
-  const wantsAccount = (state.view==='dashboard' || state.view==='onboard');
+  const wantsAccount = (state.view==='dashboard' || state.view==='onboard' || state.view==='dispute');
   const showAuthScreen = wantsAccount && !uid;
   if(state.recoveryMode){
     body = resetPasswordView();
@@ -3671,6 +3698,7 @@ function render(){
       case 'messages': body = myProfile ? messagesView() : onboardView(); break;
       case 'requests': body = myProfile ? messagesView() : onboardView(); break;
       case 'coach': body = coachView(); break;
+      case 'dispute': body = disputeView(); break;
       case 'prep': body = prepVisible() ? prepView() : homeView(); break;
       case 'prepAdmin': body = isAdmin() ? prepAdminView() : homeView(); break;
       case 'admin': body = isAdmin() ? adminView() : homeView(); break;
@@ -4017,7 +4045,7 @@ function adminView(){
         <thead><tr><th>${esc(T('pay_c_mentor'))}</th><th>${esc(T('pay_c_n'))}</th><th>${esc(T('pay_c_collected'))}</th><th>${esc(T('pay_c_share'))}</th><th>${esc(T('pay_c_owed'))}</th><th>${esc(T('pay_c_bank'))}</th><th></th></tr></thead>
         <tbody>${rows.map(r=>`<tr>
           <td><b>${esc(r.name)}</b></td><td>${r.n}</td><td>${fmtMoney(r.collected)}</td><td>${fmtMoney(r.share)}</td>
-          <td class="${r.owed?'owe':''}">${fmtMoney(r.owed)}${r.held.length ? `<div class="muted" style="font-size:11.5px;" title="${esc(r.held.join(' · '))}">${esc(T('pay_held'))}: ${esc(r.held[0])}</div>` : ''}${r.problems.map(q=>`<div class="pay-prob"><b>${esc(T('prob_admin_tag'))}</b> ${esc(nameOf(q.clientId))}${q.problemNote ? `: “${esc(String(q.problemNote).slice(0,140))}”` : ''} <button type="button" class="btn btn-sm btn-ghost" data-prob-release="${esc(q.id)}">${esc(T('prob_release'))}</button> <button class="btn btn-sm btn-ghost" data-prob-nocharge="${esc(q.id)}">${esc(T('prob_nocharge'))}</button></div>`).join('')}</td>
+          <td class="${r.owed?'owe':''}">${fmtMoney(r.owed)}${r.held.length ? `<div class="muted" style="font-size:11.5px;" title="${esc(r.held.join(' · '))}">${esc(T('pay_held'))}: ${esc(r.held[0])}</div>` : ''}${r.problems.map(q=>`<div class="pay-prob"><b>${esc(T('prob_admin_tag'))}</b> ${esc(nameOf(q.clientId))}${q.problemNote ? `: “${esc(String(q.problemNote).slice(0,140))}”` : ''} ${q.disputeSummary ? `<div class="dp-ai"><b>${esc(T('dp_ai'))}</b> ${esc(q.disputeSummary)}<div class="dp-rec">${esc(T('dp_rec'))}: <b>${esc(T('dp_rec_'+(q.disputeRecommendation||'unclear')))}</b>${q.disputeEvidence && q.disputeEvidence.reason ? ' · '+esc(q.disputeEvidence.reason) : ''}</div></div>` : `<div class="dp-ai muted">${esc(T(q.disputeOpenedAt ? 'dp_ai_wait' : 'dp_ai_none'))}</div>`}<button type="button" class="btn btn-sm ${q.disputeRecommendation==='release'?'btn-primary':'btn-ghost'}" data-prob-release="${esc(q.id)}">${esc(T(q.disputeRecommendation==='release'?'dp_approve_release':'prob_release'))}</button> <button class="btn btn-sm ${q.disputeRecommendation==='refund'?'btn-primary':'btn-ghost'}" data-prob-nocharge="${esc(q.id)}">${esc(T(q.disputeRecommendation==='refund'?'dp_approve_refund':'prob_nocharge'))}</button></div>`).join('')}</td>
           <td><span class="muted" style="font-size:12.5px;">${esc(T(r.bank?'pay_bank_on':'pay_bank_off'))}</span></td>
           <td>${r.owed ? `<button class="btn btn-sm btn-outline" data-payout="${esc(r.ids.join(','))}" data-name="${esc(r.name)}" data-amt="${fmtMoney(r.owed)}">${esc(T('pay_mark'))}</button>` : `<span class="muted" style="font-size:12.5px;">${esc(T('pay_settled'))}</span>`}</td>
         </tr>`).join('')}</tbody></table></div>`; })()}
@@ -6271,6 +6299,52 @@ async function sendMsg(reqId, text){
   else notify('message', reqId);
 }
 
+// ---------- dispute form: a side's account after a reported problem (api/_dispute.js) ----------
+async function disputeApi(payload){
+  const { data } = await sb.auth.getSession(); const tok = data && data.session && data.session.access_token;
+  const r = await fetch('/api/agents', { method:'POST', headers:{ 'Content-Type':'application/json', Authorization:'Bearer '+(tok||'') }, body: JSON.stringify(payload) });
+  const d = await r.json().catch(()=>({}));
+  if(!r.ok) throw new Error(d.error || ('Error '+r.status));
+  return d;
+}
+async function loadDispute(){
+  state.dispute = { loading:true }; 
+  try{ state.dispute = { info: await disputeApi({ task:'dispute_info', requestId: state.disputeReq }) }; }
+  catch(e){ state.dispute = { error: e.message }; }
+  if(state.view==='dispute') render();
+}
+function disputeView(){
+  if(!state.disputeReq) return `<div class="empty">${esc(T('dp_missing'))}</div>`;
+  const d = state.dispute;
+  if(!d){ setTimeout(loadDispute, 0); state.dispute = { loading:true }; }
+  if(!d || d.loading) return `<div class="panel dp-card"><p class="muted">${esc(T('pv_loading'))}</p></div>`;
+  if(d.error) return `<div class="panel dp-card"><h2>${esc(T('dp_title'))}</h2><p class="muted">${esc(d.error)}</p></div>`;
+  const i = d.info, isM = i.role==='mentor';
+  const whenTxt = i.startsAt ? new Date(i.startsAt).toLocaleString(state.lang==='fa'?'fa-IR':'en-CA', { weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'2-digit' }) : [i.date, i.time].filter(Boolean).join(' ');
+  const done = d.sent || (!i.open);
+  return `<div class="panel dp-card">
+    <h2>${esc(T(isM ? 'dp_title_m' : 'dp_title_c'))}</h2>
+    <p class="muted">${esc(T(isM ? 'dp_intro_m' : 'dp_intro_c').replace('{n}', i.other||'').replace('{d}', whenTxt))}</p>
+    ${isM && i.problemNote ? `<blockquote class="dp-quote">“${esc(i.problemNote)}”</blockquote>` : ''}
+    ${done ? `<div class="dp-done">${esc(T(i.open ? 'dp_thanks' : 'dp_closed'))}</div>` : `
+      ${i.sent ? `<p class="muted" style="font-size:13px;">${esc(T('dp_already'))}</p>` : ''}
+      <div class="field"><label for="dp-text">${esc(T(isM ? 'dp_lbl_m' : 'dp_lbl_c'))}</label>
+        <textarea id="dp-text" rows="6" maxlength="4000" placeholder="${esc(T('dp_ph'))}">${esc(state.dpDraft||'')}</textarea></div>
+      <p class="muted" style="font-size:12.5px;margin:-4px 0 14px;">${esc(T('dp_note'))}</p>
+      <button type="button" class="btn btn-primary" id="dp-send" ${d.busy?'disabled':''}>${esc(T(d.busy ? 'dp_sending' : 'dp_send'))}</button>`}
+  </div>`;
+}
+document.addEventListener('click', async e=>{
+  const b = e.target && e.target.closest && e.target.closest('#dp-send'); if(!b) return;
+  const ta = document.getElementById('dp-text'); const text = ta ? ta.value.trim() : '';
+  if(text.length < 3){ toast(T('dp_short')); return; }
+  state.dpDraft = text; state.dispute.busy = true; render();
+  try{ await disputeApi({ task:'dispute_statement', requestId: state.disputeReq, text }); state.dispute.sent = true; state.dpDraft = ''; }
+  catch(err){ toast(err.message, 6000); }
+  state.dispute.busy = false; render();
+});
+document.addEventListener('input', e=>{ if(e.target && e.target.id==='dp-text') state.dpDraft = e.target.value; });
+
 // ---------- files: resumes and chat attachments (private Supabase bucket "files") ----------
 const FILE_TYPES = { pdf:'application/pdf', docx:'application/vnd.openxmlformats-officedocument.wordprocessingml.document', doc:'application/msword', txt:'text/plain', png:'image/png', jpg:'image/jpeg', jpeg:'image/jpeg', webp:'image/webp' };
 const RESUME_EXT = ['pdf','docx','txt'];
@@ -6520,7 +6594,7 @@ document.addEventListener('click', async e=>{
     const { error } = await sb.from('requests').update({ status:'refunded', problemResolvedAt: now }).eq('id', id);
     if(error){ nc.disabled = false; toast(error.message, 6000); return; }
     const x = (state.payouts||[]).find(q=>q.id===id); if(x){ x.status = 'refunded'; x.problemResolvedAt = now; }
-    toast(T('prob_nocharged')); render(); return;
+    toast(T('prob_nocharged')); notify('dispute_resolved', id); render(); return;
   }
   const rl = e.target.closest && e.target.closest('[data-prob-release]');
   if(rl){
@@ -6528,7 +6602,7 @@ document.addEventListener('click', async e=>{
     const id = rl.getAttribute('data-prob-release'); rl.disabled = true;
     const { error } = await sb.from('requests').update({ problemResolvedAt: new Date().toISOString() }).eq('id', id);
     if(error){ rl.disabled = false; toast(error.message, 6000); return; }
-    const x = (state.payouts||[]).find(q=>q.id===id); if(x) x.problemResolvedAt = new Date().toISOString(); toast(T('prob_released')); render();
+    const x = (state.payouts||[]).find(q=>q.id===id); if(x) x.problemResolvedAt = new Date().toISOString(); toast(T('prob_released')); notify('dispute_resolved', id); render();
   }
 });
 function ibReqCard(cur, iAmMentor, name){

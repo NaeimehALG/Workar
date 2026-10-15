@@ -7,6 +7,7 @@ process.env.SUPABASE_URL = String(process.env.SUPABASE_URL || 'https://jgbjhzhbd
 //   POST /api/agents { task: "match" }          AI mentor matching (public)
 //   POST /api/agents { task: "request_note" }   helps a client write their booking note
 //   POST /api/agents { task: "profile_review" } profile coach for mentors
+//   POST /api/agents { task: "dispute_info" | "dispute_statement" } a side's account after a reported problem
 //   POST /api/agents { task: "resume_read" }    reads an uploaded resume / LinkedIn PDF and pre-fills the sign-up form
 //   GET  /api/agents                            health check
 // Env vars: ANTHROPIC_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, RESEND_API_KEY (all already set)
@@ -661,6 +662,18 @@ async function resumeRead(req, res, b) {
   });
 }
 
+// =====================================================================
+// 9. Dispute form: the mentor / client give their side after a reported problem (api/_dispute.js)
+// =====================================================================
+async function dispute(req, res, b) {
+  const me = await M.userFromToken(bearer(req));
+  if (!me) return res.status(401).json({ error: 'Sign in first.' });
+  const D = require('./_dispute');
+  const out = b.task === 'dispute_info' ? await D.info(me, String(b.requestId || '')) : await D.statement(me, String(b.requestId || ''), b.text);
+  const { status } = out; delete out.status;
+  return res.status(status || 200).json(out);
+}
+
 module.exports = async (req, res) => {
   if (req.method === 'GET') {
     const ok = !!(process.env.ANTHROPIC_API_KEY && process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
@@ -675,6 +688,7 @@ module.exports = async (req, res) => {
     switch (b.task) {
       case 'onboard': return await onboard(req, res, b);
       case 'resume_read': return await resumeRead(req, res, b);
+      case 'dispute_info': case 'dispute_statement': return await dispute(req, res, b);
       case 'followup_draft': return await followupDraft(req, res, b);
       case 'followup_send': return await followupSend(req, res, b);
       case 'help': return await help(req, res, b);
