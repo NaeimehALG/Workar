@@ -44,8 +44,8 @@ module.exports = async (req, res) => {
         M.layout('Your report has been reviewed', [
           `Dear ${M.esc(fn(cName))},`,
           `Thank you for your patience while we reviewed your session with <b>${M.esc(mName)}</b> on <b>${M.esc(M.when(r))}</b>.`,
-          refunded ? 'We have carefully considered both accounts, and we have decided not to charge you for this session. The hold on your card has been released, and no payment will be taken.'
-                   : 'We have carefully considered both accounts together with the call record, which shows that the session took place. The session fee will therefore be charged as booked. We understand this may not be the outcome you hoped for, and we truly appreciate you raising it with us.',
+          refunded ? 'We have carefully considered what both of you told us, and we have decided not to charge you for this session. The hold on your card has been released, and no payment will be taken.'
+                   : 'We have carefully considered what both of you told us, together with the call record, which shows that the session took place. The session fee will therefore be charged as booked. We understand this may not be the outcome you hoped for, and we truly appreciate you raising it with us.',
           'If you have any questions or would like to share anything further, please simply reply to this email.',
           'Thank you for being part of Workar.<br>Kind regards,<br>The Workar team'
         ], { text: 'Open Workar', url: site + '/?go=messages' }));
@@ -53,8 +53,8 @@ module.exports = async (req, res) => {
         M.layout('The session review is complete', [
           `Dear ${M.esc(fn(mName))},`,
           `Thank you for your patience and for your help while we reviewed your session with <b>${M.esc(cName)}</b> on <b>${M.esc(M.when(r))}</b>.`,
-          refunded ? 'After carefully considering both accounts and the call record, we have decided that the client will not be charged for this session. As a result, no payout is due for it. We know this can be disappointing, and we are grateful for your understanding.'
-                   : 'After carefully considering both accounts and the call record, we have released the payment for this session. Your share will be paid out as usual.',
+          refunded ? 'After carefully considering what both of you told us and the call record, we have decided that the client will not be charged for this session. As a result, no payout is due for it. We know this can be disappointing, and we are grateful for your understanding.'
+                   : 'After carefully considering what both of you told us and the call record, we have released the payment for this session. Your share will be paid out as usual.',
           'If you have any questions, please simply reply to this email.',
           'Thank you for mentoring on Workar.<br>Kind regards,<br>The Workar team'
         ], { text: 'Open Workar', url: site + '/?go=dashboard' }));

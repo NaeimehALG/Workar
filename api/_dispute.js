@@ -106,14 +106,14 @@ async function open(r) {
       `Thank you for mentoring on Workar. ${M.esc(client.name)} has let us know that something did not go as expected with your session on <b>${M.esc(M.when(r, mentor.timezone))}</b>.`,
       r.problemNote ? `In their words: “${M.esc(String(r.problemNote).slice(0, 600))}”` : '',
       'This is not a judgement of you or your work. We simply want to understand what happened from both sides before anything is decided, so that the outcome is fair to everyone.',
-      `Could you please share your account of the session within the next ${STATEMENT_WAIT_HOURS} hours? It only takes a minute. While we review it, the payout for this session is on hold, and it will be released if the session took place.`,
+      `Could you please tell us your side of what happened within the next ${STATEMENT_WAIT_HOURS} hours? It only takes a minute. While we review it, the payout for this session is on hold, and it will be released if the session took place.`,
       'Thank you for your time and understanding.<br>Kind regards,<br>The Workar team'
     ], { text: 'Share my side', url }));
   if (toClient) await M.sendMail(toClient, `We are looking into your session with ${mentor.name}`,
     M.layout('Thank you for letting us know', [
       `Dear ${M.esc(firstOf(client.name))},`,
       `Thank you for taking the time to tell us about your session with <b>${M.esc(mentor.name)}</b> on <b>${M.esc(M.when(r, client.timezone))}</b>. We are sorry that it did not go as expected.`,
-      'Your card will not be charged while we look into this. We have also asked your mentor for their account, so that we can understand what happened from both sides.',
+      'Your card will not be charged while we look into this. We have also asked your mentor to tell us their side, so that we can understand what happened from both sides.',
       'If there is anything else you would like us to know, such as what you saw on your screen or when you tried to join, you are welcome to add it using the button below.',
       'We will email you as soon as the review is complete.<br>Kind regards,<br>The Workar team'
     ], { text: 'Add details', url }));
