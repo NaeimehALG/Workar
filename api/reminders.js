@@ -6,7 +6,8 @@ process.env.SUPABASE_URL = String(process.env.SUPABASE_URL || 'https://jgbjhzhbd
 //  3. Card holds (api/_holds.js): hold saved cards before sessions, charge after sessions happen,
 //     release holds for sessions that didn't happen.
 //  4. Mentor payouts: sends each mentor their share 2 days after the session (api/_payouts.js).
-//  5. Autopilot (api/_autopilot.js): handles applications, stuck bookings, reviews and sign-ups by itself,
+//  5. LinkedIn (api/_linkedin.js): sends the week's queued posts to Typefully for the Workar page.
+//  6. Autopilot (api/_autopilot.js): handles applications, stuck bookings, reviews and sign-ups by itself,
 //     then emails the admin a daily digest of what it did and what still needs her.
 // Protected with CRON_SECRET (Vercel sends it automatically when the env variable is set).
 const M = require('./_mail');
@@ -159,6 +160,8 @@ module.exports = async (req, res) => {
   } catch (e) { console.error('payouts-failed', e); problems.push('Mentor payouts failed: ' + (e.message || e)); }
   // Dispute agent: brief the admin on reported problems before the card hold runs out
   try { Object.assign(out, await require('./_dispute').runDue(problems)); } catch (e) { console.error('disputes-failed', e); problems.push('Dispute agent failed: ' + (e.message || e)); }
+  // LinkedIn: send this week's queued posts to Typefully (api/_linkedin.js)
+  try { Object.assign(out, await require('./_linkedin').run(problems)); } catch (e) { console.error('linkedin-failed', e); problems.push('LinkedIn posting failed: ' + (e.message || e)); }
   // Autopilot agents + the daily digest to the admin (always sent, even on a quiet day)
   try { Object.assign(out, await require('./_autopilot').run(problems)); } catch (e) { console.error('autopilot-failed', e); out.autopilotError = String(e.message || e); }
   res.status(200).json(out);
