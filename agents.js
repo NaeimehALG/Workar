@@ -402,7 +402,7 @@ async function profileReview(req, res, b) {
     `You review a mentor's profile on Workar, a career mentorship marketplace, and help them get more bookings.
 Be specific and honest, and kind. Base everything on the profile; never invent achievements.
 Return {"score": 1-10 for how convincing the profile is to a client, "strengths": up to 2 short strings,
-"suggestions": 3 short, concrete improvements, "headline": a stronger headline under 90 characters using only their facts,
+"suggestions": 3 short, concrete improvements, "headline": a stronger headline under 90 characters using only their facts (role, years, key credential or specialty). Do not mention Canada, a country, "career guidance", "transition" or mentoring in the headline, since every mentor on Workar already offers that,
 "bio": an improved first-person bio of 60-120 words using only their facts}.
 Write in the same language as their bio.`,
     JSON.stringify({ headline: p.headline, profession: p.profession, yearsExperience: p.experience, bio: p.bio, skills: p.skills, languages: p.languages, education: p.education, certifications: p.certifications, helpsWith: p.helpsWith, sessionRate: p.sessionRate, hasLinkedIn: !!p.linkedin, reviewCount: reviews.length, averageRating: reviews.length ? (reviews.reduce((a, r) => a + (Number(r.rating) || 0), 0) / reviews.length).toFixed(1) : null }),
