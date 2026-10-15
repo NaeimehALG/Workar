@@ -3906,6 +3906,7 @@ function wireFirstJob(){
 function readCurrentJob(inp){ if(!inp) return undefined; const cb = inp.closest('.field').querySelector('.first-job-cb'); return (cb && cb.checked) ? 'N/A' : inp.value.trim(); }
 // Saves a profile; if the database is missing a column, it drops that field and tries again,
 // so a missing SQL step can never block someone from creating their profile.
+function buildHeadline(prof, comp){ prof=(prof||'').trim(); comp=(comp||'').trim(); if(!comp || !prof || /[|·•]/.test(prof) || prof.length>40 || prof.toLowerCase().includes(comp.toLowerCase())) return prof; return `${prof} ${T('at_word')} ${comp}`; }
 async function saveProfileSafe(data, mode){
   let d = Object.assign({}, data);
   for(let i=0;i<15;i++){
@@ -8481,7 +8482,7 @@ function wire(){
     }
     if(state.role==='mentor'){
       doc.company = (fd.get('company')||'').trim();
-      doc.headline = doc.company ? `${doc.profession} ${T('at_word')} ${doc.company}` : doc.profession;
+      doc.headline = buildHeadline(doc.profession, doc.company);
       doc.experience = fd.get('experience')||'';
       doc.languages = (fd.get('languages')||'').split(',').map(s=>s.trim()).filter(Boolean);
       doc.sessionRate = Math.max(minRate(), Number(fd.get('sessionRate'))||minRate());
@@ -8647,7 +8648,7 @@ function wire(){
     if(skillsEl) patch.skills = skillsEl.value.split(',').map(s=>s.trim()).filter(Boolean);
     const companyEl = document.getElementById('edit-company');
     if(companyEl && !companyEl.value.trim()){ toast(T('toast_company_req')); companyEl.focus(); return; }
-    if(companyEl){ patch.company = companyEl.value.trim(); if(!myProfile.headline || patch.profession!==(myProfile.profession||'') || patch.company!==(myProfile.company||'')) patch.headline = patch.company ? `${patch.profession} ${T('at_word')} ${patch.company}` : patch.profession; }
+    if(companyEl){ patch.company = companyEl.value.trim(); if(!myProfile.headline || patch.profession!==(myProfile.profession||'') || patch.company!==(myProfile.company||'')) patch.headline = buildHeadline(patch.profession, patch.company); }
     const degEl = document.getElementById('edit-degree'), uniEl = document.getElementById('edit-university');
     if(degEl && uniEl){ patch.degree = degEl.value.trim(); patch.university = uniEl.value.trim(); patch.education = [patch.degree, patch.university].filter(Boolean).join(', '); }
     const certEl = document.getElementById('edit-certifications');
