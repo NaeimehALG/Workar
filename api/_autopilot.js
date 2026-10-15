@@ -14,7 +14,7 @@ process.env.SUPABASE_URL = String(process.env.SUPABASE_URL || 'https://jgbjhzhbd
 //   6. New sign-ups          people who never finished their profile, or never booked, get one helpful email.
 //
 // Settings (Vercel > Environment Variables), all optional:
-//   AUTO_APPROVE_MENTORS = off    to approve every mentor yourself
+//   AUTO_APPROVE_MENTORS = off    to approve every mentor yourself (otherwise the AI decides every application)
 //   AUTO_HIDE_REVIEWS    = off    to only flag suspicious reviews instead of hiding them
 //   DIGEST_TZ            = America/Vancouver  (time zone used in the digest)
 //
@@ -94,7 +94,7 @@ Return an array: [{"id": "...", "flag": true|false, "reason": "short reason, emp
 }
 
 // A profile is only auto-approved when the basics are really there, whatever the AI says.
-// Extra limits on what the AI may approve by itself; everything else waits for the admin:
+// Extra limits on what the AI may approve by itself; anything below them gets a polite question instead:
 //   at least AUTO_APPROVE_MIN_YEARS years of experience (default 3), a current workplace,
 //   and no more than AUTO_APPROVE_DAILY_MAX approvals per day (default 3).
 const MIN_YEARS = () => Number(process.env.AUTO_APPROVE_MIN_YEARS || 3);
@@ -108,24 +108,37 @@ function meetsAutoLimits(p) {
 }
 
 // ---------- 1. mentor applications ----------
+// Fully hands-off: the AI decides every application. Nothing waits for the admin; she only sees it in the digest.
+//   approve  → profile live + welcome email (within the quality bar and the daily cap; over the cap waits for tomorrow's run)
+//   ask      → one polite question (missing details, under the quality bar, or unclear); re-reviewed automatically when they update
+//   decline  → one polite "not at this time" email; the profile stays hidden
+// Applicants who never answer a question are sent a closing note after 7 days.
+const ASK_WAIT_DAYS = 7;
+function missingBasics(p) {
+  const miss = [];
+  if (!(p.headline || p.profession)) miss.push('your current role or headline');
+  if (String(p.bio || '').trim().length < 80) miss.push('a short bio (a few sentences about your experience and how you help people)');
+  if (!/linkedin\.com\//i.test(String(p.linkedin || ''))) miss.push('a link to your LinkedIn profile');
+  const years = parseFloat(String(p.experience || p.yearsExperience || '').replace(/[^0-9.]/g, '')) || 0;
+  if (years < MIN_YEARS()) miss.push(`your years of professional experience (Workar mentors have at least ${MIN_YEARS()})`);
+  if (!String(p.company || '').trim()) miss.push('where you currently work');
+  return miss;
+}
 async function mentorApplications(rep, ctx) {
-  const apps = await M.rows(`profiles?role=eq.mentor&approved=eq.false&select=*`);
+  const apps = (await M.rows(`profiles?role=eq.mentor&approved=eq.false&select=*`)).filter(p => !p.banned);
   ctx.apps = apps;
   if (!apps.length) return;
   const assess = await assessApplications(apps);
   const site = M.SITE();
   for (const p of apps) {
     const a = assess[p.id];
-    if (!a) { rep.needs.push({ kind: 'app', text: `Mentor application from <b>${M.esc(p.name || 'no name')}</b> (${M.esc(p.profession || 'no profession')}). The AI review was not available, so please check it.` }); continue; }
-    if (a.verdict === 'approve' && profileComplete(p) && on('AUTO_APPROVE_MENTORS') && !meetsAutoLimits(p)) {
-      rep.needs.push({ kind: 'app', text: `<b>${M.esc(p.name)}</b> (${M.esc(p.profession || '')}) looks good to the AI, but has under ${MIN_YEARS()} years of experience or no current workplace, so it waits for your approval. ${M.esc(a.summary || '')}` });
-      continue;
-    }
-    if (a.verdict === 'approve' && profileComplete(p) && on('AUTO_APPROVE_MENTORS') && (ctx.approvedNow || 0) >= DAILY_MAX()) {
-      rep.needs.push({ kind: 'app', text: `<b>${M.esc(p.name)}</b> (${M.esc(p.profession || '')}) looks good to the AI, but today's limit of ${DAILY_MAX()} automatic approvals was reached, so it waits for you (or tomorrow's run). ${M.esc(a.summary || '')}` });
-      continue;
-    }
-    if (a.verdict === 'approve' && profileComplete(p) && on('AUTO_APPROVE_MENTORS')) {
+    if (!a) { rep.done.push(`AI review of <b>${M.esc(p.name || 'a mentor applicant')}</b> was not available today; it will try again tomorrow.`); continue; }
+    const miss = missingBasics(p);
+    let verdict = a.verdict === 'approve' || a.verdict === 'decline' ? a.verdict : 'ask';
+    if (verdict === 'approve' && miss.length) verdict = 'ask';
+    if (verdict === 'approve' && !on('AUTO_APPROVE_MENTORS')) { rep.needs.push({ kind: 'app', text: `<b>${M.esc(p.name)}</b> looks ready to approve (automatic approval is switched off). ${M.esc(a.summary || '')}` }); continue; }
+    if (verdict === 'approve' && (ctx.approvedNow || 0) >= DAILY_MAX()) { rep.done.push(`<b>${M.esc(p.name)}</b> is ready; today's limit of ${DAILY_MAX()} approvals was reached, so tomorrow's run approves them.`); continue; }
+    if (verdict === 'approve') {
       if (!(await once('approve', p.id))) continue;
       const r = await M.patch(`profiles?id=eq.${encodeURIComponent(p.id)}`, { approved: true });
       if (!r.ok) { rep.errors.push(`Could not approve ${p.name}`); continue; }
@@ -134,17 +147,25 @@ async function mentorApplications(rep, ctx) {
           'Please make sure your weekly availability is up to date so clients can book you.'], { text: 'Open my profile', url: site + '/?go=dashboard' });
       ctx.approvedNow = (ctx.approvedNow || 0) + 1;
       rep.done.push(`Approved and welcomed mentor <b>${M.esc(p.name)}</b> (${M.esc(p.profession || '')}). ${M.esc(a.summary || '')}`);
-    } else if (a.verdict === 'ask' && a.askThem) {
+    } else if (verdict === 'decline') {
+      if (await once('decline', p.id)) {
+        await mail(rep, await M.emailOf(p.id), 'About your Workar mentor application', `Thank you for applying, ${first(p.name)}`,
+          ['Thank you for your interest in mentoring on Workar. After reviewing your profile, we are not able to list it at this time.',
+            'You are very welcome to update your profile with more detail about your experience, and we will review it again automatically.'], { text: 'Update my profile', url: site + '/?go=dashboard' });
+        rep.done.push(`Declined mentor applicant <b>${M.esc(p.name || '')}</b>. ${M.esc(a.summary || '')}${a.concerns && a.concerns.length ? ' (' + M.esc(a.concerns.join('; ')) + ')' : ''}`);
+      }
+    } else {
+      const q = miss.length ? `To finish your profile, please add ${miss.join(', ')}.` : (a.askThem || 'Could you add a little more detail about your experience and how you help people?');
       if (await once('ask', p.id)) {
         await mail(rep, await M.emailOf(p.id), 'A quick question about your Workar mentor profile', `Thank you for applying, ${first(p.name)}`,
-          ['We are reviewing your mentor profile and have one question before it goes live:', `<b>${M.esc(a.askThem)}</b>`,
-            'You can reply to this email, or update your profile on Workar. We will review it again right after.'], { text: 'Update my profile', url: site + '/?go=dashboard' });
-        rep.done.push(`Asked mentor applicant <b>${M.esc(p.name)}</b>: “${M.esc(a.askThem)}”`);
+          ['We are reviewing your mentor profile and have one request before it goes live:', `<b>${M.esc(q)}</b>`,
+            'Please update your profile on Workar. We review it again automatically every day.'], { text: 'Update my profile', url: site + '/?go=dashboard' });
+        rep.done.push(`Asked mentor applicant <b>${M.esc(p.name)}</b>: “${M.esc(q)}”`);
+      } else if (ms(p.createdAt) && Date.now() - ms(p.createdAt) > ASK_WAIT_DAYS * DAY && await once('ask_close', p.id)) {
+        await mail(rep, await M.emailOf(p.id), 'Your Workar mentor profile is still waiting', `Hello ${first(p.name)}`,
+          ['Your mentor profile is not live yet because a few details are still missing. Whenever you are ready, update your profile and we will review it again automatically.'], { text: 'Update my profile', url: site + '/?go=dashboard' });
+        rep.done.push(`Sent a closing reminder to mentor applicant <b>${M.esc(p.name)}</b>.`);
       }
-      // after the question, a still-unchanged profile older than 5 days comes to the admin
-      rep.needs.push({ kind: 'app', text: `<b>${M.esc(p.name)}</b> (${M.esc(p.profession || '')}) has a question pending: “${M.esc(a.askThem)}” If they reply to you by email, approve them in the admin panel.` });
-    } else {
-      rep.needs.push({ kind: 'app', text: `<b>${M.esc(p.name || 'No name')}</b> (${M.esc(p.profession || 'no profession')}). AI suggests: ${a.verdict === 'decline' ? 'decline' : 'check manually'}. ${M.esc(a.summary || '')}${a.concerns && a.concerns.length ? ' Concerns: ' + M.esc(a.concerns.join('; ')) + '.' : ''}` });
     }
   }
 }
@@ -354,4 +375,4 @@ async function run(extraErrors) {
   return Object.assign({ emails: rep.emails }, out);
 }
 
-module.exports = { run, profileComplete, once };
+module.exports = { run, profileComplete, once, missingBasics, mentorApplications };
