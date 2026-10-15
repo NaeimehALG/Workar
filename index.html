@@ -2091,6 +2091,21 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .sf-acts{display:flex;gap:10px;justify-content:flex-end;}
   .sf-blocked{padding:12px 16px;font-size:13.5px;color:var(--muted);border-top:1px solid var(--border);text-align:center;}
   .sf-row.done{opacity:.6;}
+  .av-d-btn{background:none;border:0;font:inherit;font-size:12.5px;font-weight:600;color:var(--text);text-align:start;cursor:pointer;padding:0 12px 0 0;border-radius:6px;}
+  .av-d-btn.cur{color:var(--accent);text-decoration:underline;text-underline-offset:4px;}
+  .av-cell2{display:block;height:30px;border-radius:8px;border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:background .15s,border-color .15s;}
+  .av-cell2:hover{border-color:var(--accent-2,var(--accent));}
+  .av-cell2.on{background:var(--accent);border-color:var(--accent);}
+  .av-cell2.part{background:repeating-linear-gradient(135deg,var(--accent) 0 6px,color-mix(in srgb,var(--accent) 35%,var(--surface)) 6px 12px);border-color:var(--accent);}
+  .av-exact{margin-top:8px;padding:14px;border:1px solid var(--border);border-radius:14px;background:var(--surface);max-width:620px;}
+  .av-day-head{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline;margin-bottom:10px;font-size:13.5px;}
+  .av-day-acts{margin-inline-start:auto;display:flex;gap:12px;}
+  .av-chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(82px,1fr));gap:6px;}
+  .av-chip{padding:7px 4px;border-radius:9px;border:1px solid var(--border);background:var(--bg,#fff);color:var(--text);font:inherit;font-size:12.5px;cursor:pointer;}
+  .av-chip.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink,#fff);}
+  .av-copy{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12.5px;margin-bottom:10px;}
+  .av-link{background:none;border:0;padding:0;font:inherit;font-size:12.5px;font-weight:600;color:var(--accent);cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
+  .av-copy-d{padding:4px 10px;border-radius:999px;border:1px solid var(--border);background:var(--bg,#fff);font:inherit;font-size:12px;cursor:pointer;}
 </style>
 </head>
 <body>
@@ -2251,6 +2266,8 @@ const I18N = {
     sf_adm_none:'No reports.', sf_adm_error:'Could not load reports. Has supabase-safety.sql been run?', sf_adm_by:'Reported by {n}', sf_adm_resolve:'Mark resolved', sf_adm_resolved:'Resolved',
     sf_adm_ban:'Ban user', sf_adm_unban:'Lift ban', sf_adm_banned:'banned', sf_adm_ban_q:'Ban this account? They will not be able to message, book or appear as a mentor.', sf_adm_unban_q:'Lift the ban on this account?',
     sf_adm_banned_t:'Account banned.', sf_adm_unbanned_t:'Ban lifted.',
+    av_hours_for:'Exact hours on {d}', av_n_slots:'{n} half-hour slots', av_all:'All day', av_none:'Clear', av_copy:'Copy to other days', av_copy_to:'Copy these hours to:', av_copied:'Copied to {d}.',
+    av_pick_day:'Show the exact hours for this day', av_exact_hint:'Tap a block to add or remove it. Tap a day to choose exact half-hour start times below; a striped block is partly available.',
     lbl_linkedin:'LinkedIn profile', ph_linkedin:'https://linkedin.com/in/yourname',
     lbl_rate:'Price per session', rate_hint:'(leave blank if free)', ph_rate:'e.g. $40 / session',
     lbl_profession_c:'Your current or target profession', ph_profession_c:'e.g. aspiring Data Analyst', lbl_current_job:'Current profession', ph_current_job:'e.g. Document Controller', first_job:'N/A — this will be my first job', lbl_target_job:'Target profession', ph_target_job:'e.g. Data Analyst', onboard_err:'Your profile could not be saved. Send this message to Workar support:',
@@ -2698,6 +2715,8 @@ const I18N = {
     sf_adm_none:'گزارشی نیست.', sf_adm_error:'گزارش‌ها بارگذاری نشد. آیا supabase-safety.sql اجرا شده است؟', sf_adm_by:'گزارش‌دهنده: {n}', sf_adm_resolve:'بستن گزارش', sf_adm_resolved:'بسته شد',
     sf_adm_ban:'مسدودسازی حساب', sf_adm_unban:'رفع مسدودسازی', sf_adm_banned:'مسدود', sf_adm_ban_q:'این حساب مسدود شود؟ دیگر نمی‌تواند پیام دهد، رزرو کند یا به‌عنوان منتور دیده شود.', sf_adm_unban_q:'مسدودسازی این حساب برداشته شود؟',
     sf_adm_banned_t:'حساب مسدود شد.', sf_adm_unbanned_t:'مسدودسازی برداشته شد.',
+    av_hours_for:'ساعت‌های دقیق {d}', av_n_slots:'{n} بازه‌ی نیم‌ساعته', av_all:'تمام روز', av_none:'پاک کردن', av_copy:'کپی برای روزهای دیگر', av_copy_to:'این ساعت‌ها کپی شود برای:', av_copied:'برای {d} کپی شد.',
+    av_pick_day:'نمایش ساعت‌های دقیق این روز', av_exact_hint:'با زدن هر بخش آن را اضافه یا حذف کنید. با زدن نام روز، ساعت‌های شروع نیم‌ساعته را در پایین انتخاب کنید؛ بخش راه‌راه یعنی بخشی از آن آزاد است.',
     lbl_linkedin:'پروفایل لینکدین', ph_linkedin:'https://linkedin.com/in/yourname',
     lbl_rate:'قیمت هر جلسه', rate_hint:'(اگر رایگان است خالی بگذارید)', ph_rate:'مثلاً ۴۰ دلار برای هر جلسه',
     lbl_profession_c:'شغل فعلی یا هدف شما', ph_profession_c:'مثلاً علاقه‌مند به تحلیل داده', lbl_current_job:'شغل فعلی', ph_current_job:'مثلاً کنترل مدارک', first_job:'ندارم؛ این اولین شغل من است', lbl_target_job:'شغل هدف', ph_target_job:'مثلاً تحلیل‌گر داده', onboard_err:'پروفایل ذخیره نشد. این پیام را برای پشتیبانی Workar بفرستید:',
@@ -3106,8 +3125,8 @@ function upcomingSlotsFor(mentorId, template){
   for(let i=0;i<14;i++){
     const d = new Date(now.getFullYear(), now.getMonth(), now.getDate()+i);
     const dayName = JSDAY_TO_NAME[d.getDay()];
-    for(const [blockKey, time, labelKey] of AVAIL_BLOCKS){
-      if(!tmpl.has(dayName+'-'+blockKey)) continue;
+    for(const time of availTimes(template, dayName)){
+      const h = Number(time.slice(0,2)), labelKey = h < 12 ? 'slot_morning' : h < 17 ? 'slot_afternoon' : 'slot_evening';
       const dateStr = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
       if(taken.has(dateStr+'|'+time)) continue;
       out.push({ date: dateStr, time, dayName, labelKey, dateObj: d });
@@ -3282,6 +3301,17 @@ function canReview(mentorId){
 // Every 30 minutes inside each availability block (sessions are 30 minutes long)
 const BLOCK_HOURS = { morning:['09:00','09:30','10:00','10:30','11:00','11:30'], afternoon:['13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30'], evening:['17:00','17:30','18:00','18:30','19:00','19:30','20:00','20:30'] };
 const SESSION_MIN = 30;
+// Weekly availability: exact half-hours ("Sat@09:30"); older profiles may still hold whole blocks ("Sat-morning").
+const AV_RANGE = (()=>{ const out = []; for(let m=7*60; m<=21*60+30; m+=30) out.push(String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')); return out; })();
+function availTimes(template, dayName){
+  const set = new Set();
+  (template||[]).forEach(k=>{
+    if(k.startsWith(dayName+'@')) set.add(k.slice(dayName.length+1));
+    else if(k.startsWith(dayName+'-')) (BLOCK_HOURS[k.slice(dayName.length+1)]||[]).forEach(t=>set.add(t));
+  });
+  return [...set].sort();
+}
+function availSet(template){ const out = new Set(); AVAIL_DAYS.forEach(d=>availTimes(template, d).forEach(t=>out.add(d+'@'+t))); return out; }
 // A date picker in Workar's own style (the browser's built-in one can't be styled).
 // The chosen date lives in a hidden input with the same id, so the rest of the code reads .value as before.
 function dpLocale(){ return state.lang==='fa' ? 'fa-IR-u-ca-gregory' : 'en-US'; }
@@ -3356,10 +3386,10 @@ function calDays(template, busy, mtz){
   for(let i=0;i<56;i++){
     const d = new Date(today[0], today[1]-1, today[2]+i, 12), date = ymd(d), dayName = JSDAY_TO_NAME[d.getDay()];
     const slots = [];
-    AVAIL_BLOCKS.forEach(([blockKey])=>{ if(tmpl.has(dayName+'-'+blockKey)) (BLOCK_HOURS[blockKey]||[]).forEach(t=>{
+    availTimes(template, dayName).forEach(t=>{
       const inst = zonedToUtc(date, t, mtz);
       if(inst.getTime() < cutoff) return;
-      slots.push({ time:t, inst, busy:isBusy(busy, date, t) }); }); });
+      slots.push({ time:t, inst, busy:isBusy(busy, date, t) }); });
     out.push({ d, date, dayName, slots, free: slots.filter(x=>!x.busy).length });
   }
   return out;
@@ -6403,6 +6433,48 @@ async function sendMsg(reqId, text){
   else notify('message', reqId);
 }
 
+// ---------- weekly availability editor (dashboard): quick blocks + exact half-hours per day ----------
+function avDraft(){ if(!state.avDraft) state.avDraft = availSet((myProfile && myProfile.availability) || []); return state.avDraft; }
+function avBlockState(day, block){ const d = avDraft(), hrs = BLOCK_HOURS[block]||[], n = hrs.filter(t=>d.has(day+'@'+t)).length; return n===0 ? '' : n===hrs.length ? 'on' : 'part'; }
+function avChipsHtml(){
+  const d = avDraft(), day = state.avDay || 'Sat', n = AV_RANGE.filter(t=>d.has(day+'@'+t)).length;
+  return `<div class="av-day-head"><b>${esc(T('av_hours_for').replace('{d}', T(AVAIL_DAY_KEYS[day])))}</b><span class="muted">${esc(T('av_n_slots').replace('{n}', n))}</span>
+      <span class="av-day-acts"><button type="button" class="av-link" data-av-all="${day}">${esc(T('av_all'))}</button><button type="button" class="av-link" data-av-none="${day}">${esc(T('av_none'))}</button>${state.avCopy ? '' : `<button type="button" class="av-link" data-av-copy="${day}">${esc(T('av_copy'))}</button>`}</span></div>
+    ${state.avCopy ? `<div class="av-copy">${esc(T('av_copy_to'))} ${AVAIL_DAYS.filter(x=>x!==day).map(x=>`<button type="button" class="av-copy-d" data-av-copy-to="${x}">${esc(T(AVAIL_DAY_KEYS[x]))}</button>`).join('')}<button type="button" class="av-link" data-av-copy-done="1">${esc(T('filter_done'))}</button></div>` : ''}
+    <div class="av-chips">${AV_RANGE.map(t=>`<button type="button" class="av-chip ${d.has(day+'@'+t)?'on':''}" data-av-t="${t}" aria-pressed="${d.has(day+'@'+t)}">${esc(fmtAvTime(t))}</button>`).join('')}</div>`;
+}
+function fmtAvTime(t){ try{ return new Date('2026-01-05T'+t+':00').toLocaleTimeString(state.lang==='fa'?'fa-IR':'en-US', { hour:'numeric', minute:'2-digit' }); }catch(e){ return t; } }
+function availEditor(){
+  const day = state.avDay || 'Sat';
+  return `<div class="av-grid">
+      <div></div>${AVAIL_BLOCKS.map(([,,lk])=>`<div class="av-h">${esc(T(lk))}</div>`).join('')}
+      ${AVAIL_DAYS.map(d=>`<button type="button" class="av-d av-d-btn ${d===day?'cur':''}" data-av-day="${d}" title="${esc(T('av_pick_day'))}">${esc(T(AVAIL_DAY_KEYS[d]))}</button>${AVAIL_BLOCKS.map(([b,,lk])=>{ const st = avBlockState(d, b);
+        return `<button type="button" class="av-cell2 ${st}" data-av-block="${d}|${b}" aria-pressed="${st==='on'}" aria-label="${esc(T(AVAIL_DAY_KEYS[d]))} ${esc(T(lk))}"></button>`; }).join('')}`).join('')}
+    </div>
+    <p class="muted df-hint" style="margin-top:4px;">${esc(T('av_exact_hint'))}</p>
+    <div class="av-exact" id="av-exact">${avChipsHtml()}</div>`;
+}
+function avRepaint(){
+  const box = document.getElementById('av-exact'); if(!box) return;
+  const wrap = box.parentNode; const tmp = document.createElement('div'); tmp.innerHTML = availEditor();
+  wrap.querySelector('.av-grid').replaceWith(tmp.querySelector('.av-grid')); box.innerHTML = tmp.querySelector('#av-exact').innerHTML;
+}
+document.addEventListener('click', e=>{
+  const t = e.target && e.target.closest ? e.target : null; if(!t || !t.closest('.av-grid, .av-exact')) return;
+  const d = avDraft(), day = state.avDay || 'Sat';
+  const bl = t.closest('[data-av-block]');
+  if(bl){ e.preventDefault(); const [dd, b] = bl.getAttribute('data-av-block').split('|'), on = avBlockState(dd, b)!=='on';
+    (BLOCK_HOURS[b]||[]).forEach(x=>{ on ? d.add(dd+'@'+x) : d.delete(dd+'@'+x); }); state.avDay = dd; state.avCopy = false; avRepaint(); return; }
+  const dy = t.closest('[data-av-day]'); if(dy){ e.preventDefault(); state.avDay = dy.getAttribute('data-av-day'); state.avCopy = false; avRepaint(); return; }
+  const ch = t.closest('[data-av-t]'); if(ch){ e.preventDefault(); const k = day+'@'+ch.getAttribute('data-av-t'); d.has(k) ? d.delete(k) : d.add(k); avRepaint(); return; }
+  const al = t.closest('[data-av-all]'); if(al){ e.preventDefault(); AV_RANGE.forEach(x=>d.add(day+'@'+x)); avRepaint(); return; }
+  const no = t.closest('[data-av-none]'); if(no){ e.preventDefault(); AV_RANGE.forEach(x=>d.delete(day+'@'+x)); avRepaint(); return; }
+  if(t.closest('[data-av-copy]')){ e.preventDefault(); state.avCopy = true; avRepaint(); return; }
+  const ct = t.closest('[data-av-copy-to]'); if(ct){ e.preventDefault(); const to = ct.getAttribute('data-av-copy-to');
+    AV_RANGE.forEach(x=>{ d.has(day+'@'+x) ? d.add(to+'@'+x) : d.delete(to+'@'+x); }); toast(T('av_copied').replace('{d}', T(AVAIL_DAY_KEYS[to]))); avRepaint(); return; }
+  if(t.closest('[data-av-copy-done]')){ e.preventDefault(); state.avCopy = false; avRepaint(); return; }
+});
+
 // ---------- safety: report, block, suspended accounts ----------
 const SF_CATS = ['harassment','inappropriate','discrimination','scam','safety','other'];
 state.blocked = state.blocked || [];
@@ -7558,8 +7630,8 @@ function timeCheck(r){
   const tmpl = new Set((myProfile && myProfile.availability) || []);
   if(tmpl.size){
     const mtz = (myProfile && myProfile.timezone) || MY_TZ, w = utcToZoned(inst, mtz), d = new Date(w.date+'T12:00:00');
-    const h = toMin(w.time)/60, block = h < 12.5 ? 'morning' : h < 17 ? 'afternoon' : 'evening';
-    if(!tmpl.has(JSDAY_TO_NAME[d.getDay()]+'-'+block)) return { k:'outside', warn:true };
+    const times = availTimes([...tmpl], JSDAY_TO_NAME[d.getDay()]), m = toMin(w.time);
+    if(!times.some(t=>Math.abs(toMin(t) - m) < SESSION_MIN)) return { k:'outside', warn:true };
   }
   return { k:'free' };
 }
@@ -7933,13 +8005,7 @@ function dashboardView(){
     </section>
     <section class="df-sec"><h3>${esc(T('lbl_availability'))}</h3>
       <p class="muted df-hint">${esc(T('availability_hint'))}</p>
-      <div class="av-grid">
-        <div></div>${AVAIL_BLOCKS.map(([,,lk])=>`<div class="av-h">${esc(T(lk))}</div>`).join('')}
-        ${AVAIL_DAYS.map(day=>`<div class="av-d">${esc(T(AVAIL_DAY_KEYS[day]))}</div>${AVAIL_BLOCKS.map(([blockKey,,lk])=>{
-          const key = day+'-'+blockKey, checked = (myProfile.availability||[]).includes(key);
-          return `<label class="av-cell"><input type="checkbox" class="avail-check" data-slotkey="${key}" ${checked?'checked':''}><span aria-label="${esc(T(AVAIL_DAY_KEYS[day]))} ${esc(T(lk))}"></span></label>`;
-        }).join('')}`).join('')}
-      </div>
+      ${availEditor()}
     </section>` : ''}
     <section class="df-sec"><h3>${esc(T('sec_links_only'))}</h3>
       <div class="field"><label>${esc(T('lbl_linkedin'))}</label><input id="edit-linkedin" type="text" value="${esc(myProfile.linkedin||'')}" placeholder="linkedin.com/in/…"></div>
@@ -8333,9 +8399,8 @@ function wire(){
     if(rateEl) patch.rate = rateEl.value;
     const priceEl = document.getElementById('edit-price-usd');
     if(priceEl) patch.priceUsd = priceEl.value==='' ? null : Math.max(0, Number(priceEl.value)||0);
-    const availChecks = document.querySelectorAll('.avail-check');
-    if(availChecks.length) patch.availability = Array.from(availChecks).filter(c=>c.checked).map(c=>c.getAttribute('data-slotkey'));
-    try{ await saveProfileSafe(patch, 'update'); myProfile = Object.assign({}, myProfile, patch); clearFormDrafts('dash'); toast(T('toast_saved')); render(); }
+    if(document.getElementById('av-exact')) patch.availability = [...avDraft()].sort((a,b)=>AVAIL_DAYS.indexOf(a.split('@')[0]) - AVAIL_DAYS.indexOf(b.split('@')[0]) || a.localeCompare(b));
+    try{ await saveProfileSafe(patch, 'update'); myProfile = Object.assign({}, myProfile, patch); state.avDraft = null; clearFormDrafts('dash'); toast(T('toast_saved')); render(); }
     catch(err){
       console.error('profile save failed:', err);
       toast(T('toast_save_fail'));
