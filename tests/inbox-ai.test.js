@@ -88,14 +88,3 @@ test('prep brief: mentor gets the full brief, client only their tips, strangers 
   } finally { h.done(); }
 });
 
-test('package notes: only mentors, and only for the packages asked', async () => {
-  const h = harness({ ai: { json: { notes: { single: 'One session on your interview answers.', resume: 'Two sessions of interview practice.', bogus: 'x' } } } });
-  const mailPath = require.resolve('../api/_mail');
-  const base = require.cache[mailPath].exports;
-  base.fullProfile = async id => ({ id, role: id === 'm1' ? 'mentor' : 'client', helpsWith: ['interview'] });
-  try {
-    const r = await h.call('m1', { task: 'package_notes', packages: [{ key: 'single', sessions: 1 }, { key: 'resume', sessions: 2 }] });
-    assert.equal(r.code, 200); assert.deepEqual(Object.keys(r.body.notes), ['single', 'resume']);
-    assert.equal((await h.call('c1', { task: 'package_notes', packages: [{ key: 'single', sessions: 1 }] })).code, 403);
-  } finally { h.done(); }
-});

@@ -13,7 +13,6 @@ process.env.SUPABASE_URL = String(process.env.SUPABASE_URL || 'https://jgbjhzhbd
 //   POST /api/agents { task: "prep_brief" }     the AI prep brief for a booking, shown in the inbox
 //   POST /api/agents { task: "translate" }      translates one chat message into the reader's language
 //   POST /api/agents { task: "msg_check" }      payment guard: flags messages that move payment outside Workar
-//   POST /api/agents { task: "package_notes" }  drafts what each package includes, from the mentor's own profile
 //   GET  /api/agents                            health check
 // Env vars: ANTHROPIC_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, RESEND_API_KEY (all already set)
 const crypto = require('crypto');
@@ -842,29 +841,6 @@ Return {"offPlatform": true or false, "confidence": a number from 0 to 1, "reaso
   return res.status(200).json({ flagged: true });
 }
 
-// Drafts what each package includes, from the mentor's own profile only. The mentor edits and saves it.
-async function packageNotes(req, res, b) {
-  const me = await M.userFromToken(bearer(req));
-  if (!me) return res.status(401).json({ error: 'Please sign in again.' });
-  const p = await M.fullProfile(me.id);
-  if (p.role !== 'mentor') return res.status(403).json({ error: 'This is for mentors.' });
-  if (await overUserLimit(me.id, 'ai_pkgnotes', 10)) return res.status(429).json({ error: 'Please try again in a little while.' });
-  const pks = (Array.isArray(b.packages) ? b.packages : []).filter(x => x && typeof x.key === 'string').slice(0, 6)
-    .map(x => ({ key: x.key.slice(0, 20), sessions: Math.max(1, Math.min(20, Number(x.sessions) || 1)) }));
-  if (!pks.length) return res.status(400).json({ error: 'No packages.' });
-  const lang = LANG_NAMES[b.lang] ? b.lang : 'en';
-  const out = await AI.askJSON(
-    `You help a mentor on Workar, a career mentorship platform, describe what clients get in each of their packages. Sessions are 30 minutes.
-Use ONLY what the mentor's profile shows they offer (their "helpsWith" services, skills, headline and bio). Never add a service they do not list (for example, do not mention resumes unless they offer resume help).
-For each package write one or two short sentences (under 200 characters) that fit the number of sessions, in ${LANG_NAMES[lang]}, written to the client ("you").
-Return {"notes": {"<package key>": "text", ...}}.`,
-    JSON.stringify({ packages: pks, mentor: { headline: p.headline, profession: p.profession, yearsExperience: p.experience, helpsWith: p.helpsWith, skills: p.skills, bio: String(p.bio || '').slice(0, 1200) } }),
-    { maxTokens: 700, timeoutMs: 20000 });
-  const notes = {};
-  pks.forEach(x => { const v = out && out.notes && out.notes[x.key]; if (v) notes[x.key] = String(v).slice(0, 300); });
-  return res.status(200).json({ notes });
-}
-
 module.exports = async (req, res) => {
   if (req.method === 'GET') {
     const ok = !!(process.env.ANTHROPIC_API_KEY && process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
@@ -892,7 +868,6 @@ module.exports = async (req, res) => {
       case 'prep_brief': return await prepBrief(req, res, b);
       case 'translate': return await translateMsg(req, res, b);
       case 'msg_check': return await msgCheck(req, res, b);
-      case 'package_notes': return await packageNotes(req, res, b);
       case 'delete_account': return await deleteAccount(req, res);
       case 'auth_signup': case 'auth_resend': case 'auth_recover': return await authEmail(req, res, b);
       default: return res.status(400).json({ error: 'Unknown task' });
