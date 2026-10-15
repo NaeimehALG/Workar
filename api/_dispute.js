@@ -99,18 +99,23 @@ async function open(r) {
   }
   const url = formUrl(r);
   const [toMentor, toClient] = await Promise.all([M.emailOf(r.mentorId), M.emailOf(r.clientId)]);
-  if (toMentor) await M.sendMail(toMentor, `${client.name} reported a problem with your session`,
-    M.layout('Please tell us what happened', [
-      `<b>${M.esc(client.name)}</b> reported a problem with your session on <b>${M.esc(M.when(r, mentor.timezone))}</b>.`,
-      r.problemNote ? `Their note: “${M.esc(String(r.problemNote).slice(0, 600))}”` : '',
-      'Before anything is decided, we would like to hear your side. It takes a minute, and it helps us be fair to both of you.',
-      `Your payment for this session is on hold until the Workar team has reviewed it. Please reply within ${STATEMENT_WAIT_HOURS} hours.`
-    ], { text: 'Give my side', url }));
-  if (toClient) await M.sendMail(toClient, 'We are looking into your session',
+  const firstOf = n => String(n || '').trim().split(/\s+/)[0] || 'there';
+  if (toMentor) await M.sendMail(toMentor, `Your session with ${client.name}: we would value your perspective`,
+    M.layout('We would value your perspective', [
+      `Dear ${M.esc(firstOf(mentor.name))},`,
+      `Thank you for mentoring on Workar. ${M.esc(client.name)} has let us know that something did not go as expected with your session on <b>${M.esc(M.when(r, mentor.timezone))}</b>.`,
+      r.problemNote ? `In their words: “${M.esc(String(r.problemNote).slice(0, 600))}”` : '',
+      'This is not a judgement of you or your work. We simply want to understand what happened from both sides before anything is decided, so that the outcome is fair to everyone.',
+      `Could you please share your account of the session within the next ${STATEMENT_WAIT_HOURS} hours? It only takes a minute. While we review it, the payout for this session is on hold, and it will be released if the session took place.`,
+      'Thank you for your time and understanding.<br>Kind regards,<br>The Workar team'
+    ], { text: 'Share my side', url }));
+  if (toClient) await M.sendMail(toClient, `We are looking into your session with ${mentor.name}`,
     M.layout('Thank you for letting us know', [
-      `We received your report about your session with <b>${M.esc(mentor.name)}</b> on <b>${M.esc(M.when(r, client.timezone))}</b>. Your card will not be charged while we review it.`,
-      'We have asked your mentor for their side as well. If there is anything you would like to add, you can do so here.',
-      'A member of the Workar team will email you with the outcome.'
+      `Dear ${M.esc(firstOf(client.name))},`,
+      `Thank you for taking the time to tell us about your session with <b>${M.esc(mentor.name)}</b> on <b>${M.esc(M.when(r, client.timezone))}</b>. We are sorry that it did not go as expected.`,
+      'Your card will not be charged while we look into this. We have also asked your mentor for their account, so that we can understand what happened from both sides.',
+      'If there is anything else you would like us to know, such as what you saw on your screen or when you tried to join, you are welcome to add it using the button below.',
+      'We will email you as soon as the review is complete.<br>Kind regards,<br>The Workar team'
     ], { text: 'Add details', url }));
   await M.sendMail(M.CONTACT_EMAIL(), `Problem reported: ${client.name} → ${mentor.name}`,
     M.layout('A client reported a problem with a session', [

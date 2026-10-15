@@ -39,19 +39,24 @@ module.exports = async (req, res) => {
       const refunded = r.status === 'refunded';
       const [toM, toC] = await Promise.all([M.emailOf(r.mentorId), M.emailOf(r.clientId)]);
       const mName = (await M.profile(r.mentorId)).name, cName = (await M.profile(r.clientId)).name;
-      if (toC) await M.sendMail(toC, 'The outcome of your session review',
+      const fn = n => String(n || '').trim().split(/\s+/)[0] || 'there';
+      if (toC) await M.sendMail(toC, `The outcome of your session review`,
         M.layout('Your report has been reviewed', [
+          `Dear ${M.esc(fn(cName))},`,
           `Thank you for your patience while we reviewed your session with <b>${M.esc(mName)}</b> on <b>${M.esc(M.when(r))}</b>.`,
-          refunded ? 'We have decided not to charge your card for this session. The hold on your card has been released and you will not be charged.'
-                   : 'After reviewing both accounts and the call record, we found that the session took place, so the session fee will be charged as booked.',
-          'If you have any questions, please reply to this email.'
+          refunded ? 'We have carefully considered both accounts, and we have decided not to charge you for this session. The hold on your card has been released, and no payment will be taken.'
+                   : 'We have carefully considered both accounts together with the call record, which shows that the session took place. The session fee will therefore be charged as booked. We understand this may not be the outcome you hoped for, and we truly appreciate you raising it with us.',
+          'If you have any questions or would like to share anything further, please simply reply to this email.',
+          'Thank you for being part of Workar.<br>Kind regards,<br>The Workar team'
         ], { text: 'Open Workar', url: site + '/?go=messages' }));
-      if (toM) await M.sendMail(toM, 'The outcome of the session review',
+      if (toM) await M.sendMail(toM, `The outcome of the review of your session with ${cName}`,
         M.layout('The session review is complete', [
-          `Thank you for sharing your side about your session with <b>${M.esc(cName)}</b> on <b>${M.esc(M.when(r))}</b>.`,
-          refunded ? 'After reviewing both accounts and the call record, we decided that the client will not be charged for this session, so no payout is due for it.'
-                   : 'After reviewing both accounts and the call record, we released the payment. Your share will be paid out as usual.',
-          'If you have any questions, please reply to this email.'
+          `Dear ${M.esc(fn(mName))},`,
+          `Thank you for your patience and for your help while we reviewed your session with <b>${M.esc(cName)}</b> on <b>${M.esc(M.when(r))}</b>.`,
+          refunded ? 'After carefully considering both accounts and the call record, we have decided that the client will not be charged for this session. As a result, no payout is due for it. We know this can be disappointing, and we are grateful for your understanding.'
+                   : 'After carefully considering both accounts and the call record, we have released the payment for this session. Your share will be paid out as usual.',
+          'If you have any questions, please simply reply to this email.',
+          'Thank you for mentoring on Workar.<br>Kind regards,<br>The Workar team'
         ], { text: 'Open Workar', url: site + '/?go=dashboard' }));
       res.status(200).json({ ok: true }); return;
     }
