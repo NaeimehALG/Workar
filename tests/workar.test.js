@@ -32,28 +32,30 @@ test('a coach sign-in redirect does not become an unavailable-coach reply', asyn
   assert.equal(result.signIn, true); assert.equal(result.text, null);
 });
 
-function apiHarness({ signedIn = true, credits = 2, text = 'Useful response', failure = false } = {}) {
-  const calls = [], patches = [];
+function apiHarness({ signedIn = true, usedToday = 0, text = 'Useful response', failure = false } = {}) {
+  const calls = [], patches = [], events = [];
+  const fetch = async (url, opts = {}) => { if (opts.method === 'POST') { events.push(JSON.parse(opts.body)); return { ok: true }; } return { ok: true, headers: { get: () => '*/' + usedToday } }; };
   const mail = {
     userFromToken: async token => signedIn && token === 'test-token' ? { id: 'test-user', email: 'client@example.test' } : null,
-    rows: async () => [{ aiCredits: credits }],
+    rows: async () => [{ id: 'test-user' }],
     patch: async (target, value) => { patches.push({ target, value }); }
   };
   const ai = { callClaude: async input => { calls.push(input); if (failure) throw new Error('temporary-failure'); return { text }; }, textOf: data => data.text };
-  const context = { module: { exports: {} }, process: { env: { ANTHROPIC_API_KEY: 'test-only-key', SUPABASE_URL: 'https://example.test' } }, require: name => name === './_mail' ? mail : ai, AbortController, setTimeout, clearTimeout };
+  const context = { module: { exports: {} }, process: { env: { ANTHROPIC_API_KEY: 'test-only-key', SUPABASE_URL: 'https://example.test' } }, require: name => name === './_mail' ? mail : ai, AbortController, setTimeout, clearTimeout, fetch };
   vm.createContext(context); vm.runInContext(fs.readFileSync(path.join(root, 'api/ai.js'), 'utf8'), context);
   const response = { statusCode: null, body: null, status(code) { this.statusCode = code; return this; }, json(body) { this.body = body; return this; } };
-  return { calls, patches, response, request: async body => { await context.module.exports({ method: 'POST', headers: { authorization: 'Bearer test-token' }, body }, response); return response; } };
+  return { calls, patches, events, response, request: async body => { await context.module.exports({ method: 'POST', headers: { authorization: 'Bearer test-token' }, body }, response); return response; } };
 }
 
-test('mock interview sends the target role as context and debits one credit after success', async () => {
+test('mock interview sends the target role as context and is free (no credit debit)', async () => {
   const h = apiHarness();
   await h.request({ mode: 'interview', interviewRole: 'Junior Project Coordinator', turns: [{ role: 'user', content: 'Begin the interview.' }] });
   assert.equal(h.response.statusCode, 200);
   assert.match(h.calls[0].system, /Junior Project Coordinator/);
   assert.match(h.calls[0].system, /Ask one question at a time/);
   assert.equal(h.calls[0].messages[0].content, 'Begin the interview.');
-  assert.equal(h.patches[0].value.aiCredits, 1);
+  assert.equal(h.patches.length, 0);
+  assert.equal(h.events[0].kind, 'coach'); assert.equal(h.events[0].ref, 'test-user');
 });
 
 test('resume mode asks for factual, concrete resume improvements', async () => {
@@ -62,8 +64,8 @@ test('resume mode asks for factual, concrete resume improvements', async () => {
   assert.match(h.calls[0].system, /Never invent achievements/);
 });
 
-test('signed-out users and users with zero credits do not call the AI', async () => {
-  for (const [options, code] of [[{ signedIn: false }, 401], [{ credits: 0 }, 402]]) {
+test('signed-out users and users over the daily free limit do not call the AI', async () => {
+  for (const [options, code] of [[{ signedIn: false }, 401], [{ usedToday: 60 }, 429]]) {
     const h = apiHarness(options); await h.request({ prompt: 'Help' });
     assert.equal(h.response.statusCode, code); assert.equal(h.calls.length, 0); assert.equal(h.patches.length, 0);
   }
