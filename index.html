@@ -829,6 +829,10 @@
   .mp-dl{display:grid;grid-template-columns:auto 1fr;gap:10px 22px;margin:0;font-size:14.5px;}
   .mp-dl dt{color:var(--muted);font-size:13.5px;}
   .mp-dl dd{margin:0;}
+  .rp-card{border:1px solid var(--border);border-radius:var(--radius-md);padding:14px 16px;margin-bottom:12px;font-size:13.5px;line-height:1.55;}
+  .rp-card.done{opacity:.75;} .rp-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:2px;}
+  .rp-chip{font-size:11.5px;padding:3px 9px;border-radius:999px;background:var(--surface-2);color:var(--muted);white-space:nowrap;} .rp-chip.open{background:#f8efe1;color:#8a5a2b;font-weight:700;}
+  .rp-sec{margin-top:10px;} .rp-list{margin:6px 0 0;padding-inline-start:18px;} .rp-list li{margin-bottom:6px;} .rp-act{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
   .pb-box{margin-top:10px;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface-2);font-size:13.5px;line-height:1.55;}
   .pb-box ul{margin:4px 0 10px;padding-inline-start:20px;} .pb-box p{margin:0 0 8px;} .pb-foot{font-size:12px;color:var(--muted);margin:6px 0 0 !important;}
   .tr-link{display:inline-block;background:none;border:0;padding:0;margin-top:4px;font:inherit;font-size:12px;color:var(--muted);cursor:pointer;text-decoration:underline;text-underline-offset:2px;}
@@ -2363,6 +2367,7 @@ const I18N = {
     pb_btn_m:'Prep brief', pb_btn_c:'How to prepare', pb_loading:'Preparing your brief…', pb_fail:'The brief could not be prepared. Please try again in a moment.', pb_goal:'What they want:', pb_context:'Good to know', pb_agenda:'Suggested agenda', pb_first:'A good first question:', pb_tips:'To get the most out of your session', pb_none:'No tips yet.', pb_note:'Written by Workar AI from the profile and messages. Please check it against what you hear in the session.',
     tr_btn:'Translate', tr_retry:'Try translating again', tr_loading:'Translating…', tr_ai:'Translated by AI', tr_orig:'Hide', tr_fail:'The message could not be translated. Please try again.',
     pg_send:'A friendly reminder: sessions and payments made outside Workar are not protected. Please keep bookings and payments on Workar.', pg_recv:'Workar tip: never pay outside Workar. Payments made elsewhere are not protected and cannot be refunded.',
+    rp_title:'Session problems', rp_hint:'Sessions a client reported, with the call record, every email the dispute agent sent, and what each side said.', rp_none:'No session problems reported.', rp_error:'Could not load reported sessions. Please refresh the page.', rp_st_open:'Waiting for your decision', rp_st_released:'Resolved: payout released', rp_st_nocharge:'Resolved: client not charged', rp_session:'Session:', rp_reported:'reported', rp_note:'Client\'s report:', rp_att_wait:'Not read yet. The agent reads it when the report is opened (at the latest in the next daily run).', rp_emails:'Emails sent', rp_emails_none:'None yet. The agent sends them when it opens the report.', rp_to_mentor:'To {n} (mentor)', rp_to_client:'To {n} (client)', rp_to_you:'To you', rp_to_both:'To both', rp_mail_mentor:'{c} reported a problem with your session. Their note was shown. Please give your side within 48 hours. Your payout is on hold until the Workar team reviews it.', rp_mail_client:'We received your report about your session with {m}. Your card will not be charged during the review. We asked the mentor for their side, and you can add details.', rp_mail_admin:'The report, the client\'s note and the call attendance.', rp_mail_review:'The AI summary and recommendation (below).', rp_mail_release:'Decision: the session counted. The client was charged and the mentor\'s payout was released.', rp_mail_nocharge:'Decision: the client was not charged and the card hold was released.', rp_replies:'What each side said', rp_wait_mentor:'{n} has not replied yet. The agent waits until {d}, then reviews without their side.',
     mem_title:'Members', dp_att:'Call attendance:', dp_att_na:'No attendance record', dp_att_none:'Nobody joined the call.', dp_att_min:'{n} min in the call', dp_att_late:'joined {n} min late', dp_att_early:'joined {n} min early', dp_att_ontime:'joined on time', adm_t_mentors:'Mentors', adm_t_clients:'Clients', adm_t_bookings:'Bookings & payouts', adm_t_reports:'Reports', adm_t_site:'Site settings', mem_hint_m:'Everyone who signed up as a mentor. Only you can see this list.', mem_hint_c:'Everyone who signed up as a client. Only you can see this list.', mem_count_m:'{n} mentors', mem_count_c:'{n} clients', mem_hint:'Everyone who has signed up to Workar. Only you can see this list.', mem_all:'All', mem_clients:'Clients', mem_mentors:'Mentors', mem_search:'Search by name or profession', mem_c_name:'Name', mem_c_role:'Role', mem_c_status:'Status', mem_c_sessions:'Sessions', mem_role_client:'Client', mem_role_mentor:'Mentor', mem_st_ok:'Active', mem_st_pending:'Waiting for approval', mem_st_banned:'Banned', mem_st_admin:'Admin', mem_none:'No members yet.', mem_error:'Could not load members. Please refresh the page.', mem_view:'View', mem_count:'{c} clients · {m} mentors · {b} bookings',
     bk_title:'All bookings', bk_hint:'Every session request on Workar, newest first.', bk_c_when:'Session time', bk_c_client:'Client', bk_c_mentor:'Mentor', bk_c_status:'Status', bk_c_paid:'Payment', bk_none:'No bookings yet.', bk_paid:'Paid', bk_unpaid:'Not paid', bk_st_pending:'Waiting for mentor', bk_st_accepted:'Accepted', bk_st_cancelled:'Cancelled', bk_st_declined:'Declined', bk_st_refunded:'Not charged', bk_st_completed:'Done', bk_more:'Showing the latest {n}.',
     apps_title:'Mentor applications', apps_hint:'New mentor profiles stay hidden until you approve them. The mentor gets an email when approved.', apps_none:'No applications waiting.', apps_error:'Could not load applications — run the latest Workar SQL.', apps_approve:'Approve', apps_view:'View profile', apps_done:'Mentor approved', apps_fail:'Could not approve — run the latest Workar SQL.',
@@ -2817,6 +2822,7 @@ const I18N = {
     pb_btn_m:'خلاصه‌ی آمادگی', pb_btn_c:'چطور آماده شوم', pb_loading:'در حال آماده کردن خلاصه…', pb_fail:'خلاصه آماده نشد. لطفاً کمی بعد دوباره امتحان کنید.', pb_goal:'هدف مراجع:', pb_context:'خوب است بدانید', pb_agenda:'برنامه‌ی پیشنهادی جلسه', pb_first:'یک سؤال خوب برای شروع:', pb_tips:'برای اینکه بیشترین استفاده را از جلسه ببرید', pb_none:'هنوز نکته‌ای نیست.', pb_note:'این متن را هوش مصنوعی Workar از روی پروفایل و پیام‌ها نوشته است. لطفاً با آنچه در جلسه می‌شنوید مقایسه کنید.',
     tr_btn:'ترجمه', tr_retry:'ترجمه‌ی دوباره', tr_loading:'در حال ترجمه…', tr_ai:'ترجمه با هوش مصنوعی', tr_orig:'پنهان کردن', tr_fail:'پیام ترجمه نشد. لطفاً دوباره امتحان کنید.',
     pg_send:'یادآوری: جلسه‌ها و پرداخت‌های خارج از Workar محافظت نمی‌شوند. لطفاً رزرو و پرداخت را داخل Workar انجام دهید.', pg_recv:'نکته‌ی Workar: هرگز خارج از Workar پرداخت نکنید. پرداخت‌های بیرون از سایت محافظت نمی‌شوند و قابل بازگشت نیستند.',
+    rp_title:'مشکلات جلسه‌ها', rp_hint:'جلسه‌هایی که مراجع گزارش داده، همراه با سابقه‌ی حضور در تماس، همه‌ی ایمیل‌هایی که ایجنت فرستاده و حرف هر دو طرف.', rp_none:'هیچ مشکلی گزارش نشده است.', rp_error:'گزارش‌ها بارگذاری نشد. صفحه را دوباره باز کنید.', rp_st_open:'منتظر تصمیم شما', rp_st_released:'بسته شد: پرداخت آزاد شد', rp_st_nocharge:'بسته شد: از مراجع کسر نشد', rp_session:'جلسه:', rp_reported:'گزارش در', rp_note:'گزارش مراجع:', rp_att_wait:'هنوز خوانده نشده. ایجنت هنگام باز کردن گزارش آن را می‌خواند (حداکثر در اجرای روزانه‌ی بعدی).', rp_emails:'ایمیل‌های ارسال‌شده', rp_emails_none:'هنوز ایمیلی ارسال نشده. ایجنت هنگام باز کردن گزارش ایمیل‌ها را می‌فرستد.', rp_to_mentor:'به {n} (منتور)', rp_to_client:'به {n} (مراجع)', rp_to_you:'به شما', rp_to_both:'به هر دو طرف', rp_mail_mentor:'{c} درباره‌ی جلسه‌ی شما مشکلی گزارش داده است. یادداشت او نشان داده شد. لطفاً تا ۴۸ ساعت توضیح خود را بنویسید. پرداخت شما تا بررسی تیم Workar متوقف است.', rp_mail_client:'گزارش شما درباره‌ی جلسه با {m} دریافت شد. در مدت بررسی از کارت شما چیزی کسر نمی‌شود. از منتور هم توضیح خواستیم و شما هم می‌توانید جزئیات اضافه کنید.', rp_mail_admin:'گزارش، یادداشت مراجع و سابقه‌ی حضور در تماس.', rp_mail_review:'خلاصه و پیشنهاد هوش مصنوعی (پایین).', rp_mail_release:'تصمیم: جلسه حساب شد. مبلغ از مراجع کسر و پرداخت منتور آزاد شد.', rp_mail_nocharge:'تصمیم: از مراجع چیزی کسر نشد و کارت آزاد شد.', rp_replies:'حرف هر دو طرف', rp_wait_mentor:'{n} هنوز جواب نداده است. ایجنت تا {d} صبر می‌کند و بعد بدون جواب او بررسی می‌کند.',
     mem_title:'اعضا', dp_att:'حضور در جلسه:', dp_att_na:'سابقه‌ی حضور موجود نیست', dp_att_none:'هیچ‌کس وارد جلسه نشد.', dp_att_min:'{n} دقیقه در جلسه', dp_att_late:'{n} دقیقه دیر وارد شد', dp_att_early:'{n} دقیقه زودتر وارد شد', dp_att_ontime:'سر وقت وارد شد', adm_t_mentors:'منتورها', adm_t_clients:'مراجعان', adm_t_bookings:'رزروها و پرداخت‌ها', adm_t_reports:'گزارش‌ها', adm_t_site:'تنظیمات سایت', mem_hint_m:'همه‌ی کسانی که به‌عنوان منتور ثبت‌نام کرده‌اند. این فهرست فقط برای شما نمایش داده می‌شود.', mem_hint_c:'همه‌ی کسانی که به‌عنوان مراجع ثبت‌نام کرده‌اند. این فهرست فقط برای شما نمایش داده می‌شود.', mem_count_m:'{n} منتور', mem_count_c:'{n} مراجع', mem_hint:'همه‌ی کسانی که در Workar ثبت‌نام کرده‌اند. این فهرست فقط برای شما نمایش داده می‌شود.', mem_all:'همه', mem_clients:'مراجعان', mem_mentors:'منتورها', mem_search:'جستجو با نام یا حرفه', mem_c_name:'نام', mem_c_role:'نقش', mem_c_status:'وضعیت', mem_c_sessions:'جلسه‌ها', mem_role_client:'مراجع', mem_role_mentor:'منتور', mem_st_ok:'فعال', mem_st_pending:'در انتظار تأیید', mem_st_banned:'مسدود', mem_st_admin:'ادمین', mem_none:'هنوز عضوی ثبت‌نام نکرده است.', mem_error:'فهرست اعضا بارگذاری نشد. صفحه را دوباره باز کنید.', mem_view:'دیدن', mem_count:'{c} مراجع · {m} منتور · {b} رزرو',
     bk_title:'همه‌ی رزروها', bk_hint:'همه‌ی درخواست‌های جلسه در Workar، از جدید به قدیم.', bk_c_when:'زمان جلسه', bk_c_client:'مراجع', bk_c_mentor:'منتور', bk_c_status:'وضعیت', bk_c_paid:'پرداخت', bk_none:'هنوز رزروی ثبت نشده است.', bk_paid:'پرداخت‌شده', bk_unpaid:'پرداخت‌نشده', bk_st_pending:'در انتظار منتور', bk_st_accepted:'پذیرفته‌شده', bk_st_cancelled:'لغوشده', bk_st_declined:'ردشده', bk_st_refunded:'کسر نشد', bk_st_completed:'انجام‌شده', bk_more:'{n} مورد آخر نمایش داده شده است.',
     apps_title:'درخواست‌های منتوری', apps_hint:'پروفایل منتورهای جدید تا تأیید شما پنهان می‌ماند. بعد از تأیید، به منتور ایمیل فرستاده می‌شود.', apps_none:'درخواستی در انتظار نیست.', apps_error:'بارگذاری نشد؛ SQL جدید Workar را اجرا کنید.', apps_approve:'تأیید', apps_view:'دیدن پروفایل', apps_done:'منتور تأیید شد', apps_fail:'تأیید نشد؛ SQL جدید Workar را اجرا کنید.',
@@ -4113,6 +4119,7 @@ function adminView(){
 ` : ''}
 
 
+  ${tab==='reports' ? adminProblemsPanel() : ''}
   ${tab==='reports' ? `  <div class="panel wide" style="margin-bottom:28px;">
     <h3 style="margin:0 0 4px;">${esc(T('sf_adm_title'))}</h3>
     <p class="muted" style="font-size:13px;margin:0 0 14px;">${esc(T('sf_adm_hint'))}</p>
@@ -4256,6 +4263,52 @@ function adminMembersPanel(role){
     <h3 style="margin:0 0 4px;">${esc(T(role==='mentor'?'mem_mentors':'mem_clients'))}</h3>
     <p class="muted" style="font-size:13px;margin:0 0 14px;">${esc(T(role==='mentor'?'mem_hint_m':'mem_hint_c'))}</p>${body}</div>`;
 }
+function adminProblemsPanel(){
+  const list = state.problems; let body;
+  const loc = state.lang==='fa' ? 'fa-IR' : undefined;
+  const dt = v=> v ? new Date(v).toLocaleString(loc,{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '';
+  if(list==null) body = `<div class="muted">${esc(T('pay_loading'))}</div>`;
+  else if(list==='error') body = `<div class="muted">${esc(T('rp_error'))}</div>`;
+  else if(!list.length) body = `<div class="empty">${esc(T('rp_none'))}</div>`;
+  else body = list.map(r=>{
+    const client = nameOf(r.clientId), mentor = nameOf(r.mentorId), inst = reqInstant(r);
+    const open = !r.problemResolvedAt, stmts = (state.problemStmts||{})[r.id] || [];
+    const replies = stmts.filter(x=>!String(x.id).endsWith('_report'));
+    const mentorReplied = replies.some(x=>x.role==='mentor');
+    const deadline = r.disputeOpenedAt ? new Date(Date.parse(r.disputeOpenedAt) + 48*3600e3) : null;
+    const state_ = !open ? (r.status==='refunded' ? T('rp_st_nocharge') : T('rp_st_released')) : T('rp_st_open');
+    const emails = r.disputeOpenedAt ? [
+      [T('rp_to_mentor').replace('{n}', mentor), dt(r.disputeOpenedAt), T('rp_mail_mentor').replace('{c}', client)],
+      [T('rp_to_client').replace('{n}', client), dt(r.disputeOpenedAt), T('rp_mail_client').replace('{m}', mentor)],
+      [T('rp_to_you'), dt(r.disputeOpenedAt), T('rp_mail_admin')]
+    ].concat(r.disputeAnalyzedAt ? [[T('rp_to_you'), dt(r.disputeAnalyzedAt), T('rp_mail_review')]] : [])
+     .concat(r.problemResolvedAt ? [[T('rp_to_both'), dt(r.problemResolvedAt), T(r.status==='refunded' ? 'rp_mail_nocharge' : 'rp_mail_release')]] : []) : [];
+    return `<div class="rp-card ${open?'':'done'}">
+      <div class="rp-head"><b>${esc(client)} → ${esc(mentor)}</b><span class="rp-chip ${open?'open':''}">${esc(state_)}</span></div>
+      <div class="muted" style="font-size:12.5px;">${inst ? esc(T('rp_session'))+' '+esc(inst.toLocaleString(loc,{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})) : ''}${Number(r.amountCents)>0 ? ' · '+fmtMoney(Number(r.amountCents)) : ''} · ${esc(T('rp_reported'))} ${esc(dt(r.problemReportedAt))}</div>
+      <div class="rp-sec"><b>${esc(T('rp_note'))}</b> ${r.problemNote ? `“${esc(r.problemNote)}”` : '—'}</div>
+      <div class="rp-sec"><b>${esc(T('dp_att'))}</b> ${r.disputeEvidence && r.disputeEvidence.attendance ? esc(attLine(r.disputeEvidence.attendance, r)) : esc(T('rp_att_wait'))}</div>
+      <div class="rp-sec"><b>${esc(T('rp_emails'))}</b>${emails.length ? `<ul class="rp-list">${emails.map(([to,when,what])=>`<li><b>${esc(to)}</b> <span class="muted">${esc(when)}</span><br>${esc(what)}</li>`).join('')}</ul>` : ` <span class="muted">${esc(T('rp_emails_none'))}</span>`}</div>
+      <div class="rp-sec"><b>${esc(T('rp_replies'))}</b>${replies.length ? `<ul class="rp-list">${replies.map(x=>`<li><b>${esc(x.role==='mentor' ? mentor : client)} (${esc(T('mem_role_'+(x.role==='mentor'?'mentor':'client')))})</b> <span class="muted">${esc(dt(x.createdAt))}</span><br>“${esc(x.text)}”</li>`).join('')}</ul>` : ''}
+        ${open && r.disputeOpenedAt && !mentorReplied ? `<div class="muted" style="font-size:12.5px;margin-top:4px;">${esc(T('rp_wait_mentor').replace('{n}', mentor).replace('{d}', dt(deadline)))}</div>` : ''}</div>
+      ${r.disputeSummary ? `<div class="rp-sec dp-ai"><b>${esc(T('dp_ai'))}</b> ${esc(r.disputeSummary)}<div class="dp-rec">${esc(T('dp_rec'))}: <b>${esc(T('dp_rec_'+(r.disputeRecommendation||'unclear')))}</b>${r.disputeEvidence && r.disputeEvidence.reason ? ' · '+esc(r.disputeEvidence.reason) : ''}</div></div>` : ''}
+      ${open ? `<div class="rp-act"><button type="button" class="btn btn-sm ${r.disputeRecommendation==='release'?'btn-primary':'btn-ghost'}" data-prob-release="${esc(r.id)}">${esc(T('prob_release'))}</button><button type="button" class="btn btn-sm ${r.disputeRecommendation==='refund'?'btn-primary':'btn-ghost'}" data-prob-nocharge="${esc(r.id)}">${esc(T('prob_nocharge'))}</button></div>` : ''}
+    </div>`; }).join('');
+  return `<div class="panel wide" style="margin-bottom:28px;">
+    <h3 style="margin:0 0 4px;">${esc(T('rp_title'))}</h3>
+    <p class="muted" style="font-size:13px;margin:0 0 14px;">${esc(T('rp_hint'))}</p>${body}</div>`;
+}
+async function loadProblems(){
+  try{
+    const { data, error } = await sb.from('requests').select('*').not('problemReportedAt','is',null).order('problemReportedAt',{ ascending:false }).limit(50);
+    if(error) throw error;
+    state.problems = data || [];
+    const ids = state.problems.map(r=>r.id); state.problemStmts = {};
+    if(ids.length){ const st = await sb.from('dispute_statements').select('*').in('requestId', ids).order('createdAt',{ ascending:true });
+      (st.data||[]).forEach(x=>{ (state.problemStmts[x.requestId] = state.problemStmts[x.requestId] || []).push(x); }); }
+  }catch(e){ console.error('problems load failed:', e); state.problems = 'error'; }
+  if(state.view==='admin') render();
+}
 function adminBookingsPanel(){
   const reqs = state.allReqs; const LIMIT = 100;
   let body;
@@ -4293,6 +4346,7 @@ async function loadMembers(){
   if(state.view==='admin') render();
 }
 function wireAdminMembers(){
+  if(state.problems==null && !state.problemsLoading){ state.problemsLoading = true; loadProblems().finally(()=>{ state.problemsLoading = false; }); }
   if(state.members==null && !state.membersLoading){ state.membersLoading = true; loadMembers().finally(()=>{ state.membersLoading = false; }); }
   const filter = ()=>{
     const q = ((document.getElementById('mem-q')||{}).value||'').trim().toLowerCase();
@@ -6961,6 +7015,7 @@ document.addEventListener('click', async e=>{
     const { error } = await sb.from('requests').update({ status:'refunded', problemResolvedAt: now }).eq('id', id);
     if(error){ nc.disabled = false; toast(error.message, 6000); return; }
     const x = (state.payouts||[]).find(q=>q.id===id); if(x){ x.status = 'refunded'; x.problemResolvedAt = now; }
+    const y = (Array.isArray(state.problems)?state.problems:[]).find(q=>q.id===id); if(y){ y.status = 'refunded'; y.problemResolvedAt = now; }
     toast(T('prob_nocharged')); notify('dispute_resolved', id); render(); return;
   }
   const rl = e.target.closest && e.target.closest('[data-prob-release]');
@@ -6969,7 +7024,8 @@ document.addEventListener('click', async e=>{
     const id = rl.getAttribute('data-prob-release'); rl.disabled = true;
     const { error } = await sb.from('requests').update({ problemResolvedAt: new Date().toISOString() }).eq('id', id);
     if(error){ rl.disabled = false; toast(error.message, 6000); return; }
-    const x = (state.payouts||[]).find(q=>q.id===id); if(x) x.problemResolvedAt = new Date().toISOString(); toast(T('prob_released')); notify('dispute_resolved', id); render();
+    const x = (state.payouts||[]).find(q=>q.id===id); if(x) x.problemResolvedAt = new Date().toISOString();
+    const y = (Array.isArray(state.problems)?state.problems:[]).find(q=>q.id===id); if(y) y.problemResolvedAt = new Date().toISOString(); toast(T('prob_released')); notify('dispute_resolved', id); render();
   }
 });
 // ---------- AI in the inbox: prep brief, translation, payment guard (api/agents.js) ----------
