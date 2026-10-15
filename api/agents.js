@@ -10,6 +10,9 @@ process.env.SUPABASE_URL = String(process.env.SUPABASE_URL || 'https://jgbjhzhbd
 //   POST /api/agents { task: "dispute_info" | "dispute_statement" } a side's account after a reported problem
 //   POST /api/agents { task: "safety_report" }  report someone's behaviour to the admin
 //   POST /api/agents { task: "resume_read" }    reads an uploaded resume / LinkedIn PDF and pre-fills the sign-up form
+//   POST /api/agents { task: "prep_brief" }     the AI prep brief for a booking, shown in the inbox
+//   POST /api/agents { task: "translate" }      translates one chat message into the reader's language
+//   POST /api/agents { task: "msg_check" }      payment guard: flags messages that move payment outside Workar
 //   GET  /api/agents                            health check
 // Env vars: ANTHROPIC_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, RESEND_API_KEY (all already set)
 const crypto = require('crypto');
@@ -722,6 +725,122 @@ async function safetyReport(req, res, b) {
   return res.status(200).json({ ok: true });
 }
 
+// =====================================================================
+// Inbox helpers: prep brief, message translation and the payment guard
+// =====================================================================
+const encQ = encodeURIComponent;
+const isAdminUser = me => String((me && me.email) || '').toLowerCase() === 'naeimeh.alaghehband@gmail.com';
+
+// Who belongs to a message thread: "dm_<a>_<b>" chats, or a booking's own thread.
+async function threadParties(threadId) {
+  const t = String(threadId || '');
+  if (t.startsWith('dm_')) { const ids = t.slice(3).split('_'); return ids.length === 2 ? { ids, request: null } : null; }
+  const r = (await M.rows(`requests?id=eq.${encQ(t)}&select=*`))[0];
+  return r ? { ids: [r.mentorId, r.clientId], request: r } : null;
+}
+
+// Per-person hourly cap for the inbox AI helpers (stops runaway use).
+async function overUserLimit(userId, kind, max) {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY, url = process.env.SUPABASE_URL;
+  if (!key || !url) return false;
+  const h = { apikey: key, Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' };
+  const since = new Date(Date.now() - 3600 * 1000).toISOString();
+  try {
+    const c = await fetch(`${url}/rest/v1/agent_events?kind=eq.${encQ(kind)}&ref=eq.${encQ(userId)}&createdAt=gte.${encQ(since)}&select=id`,
+      { method: 'HEAD', headers: Object.assign({ Prefer: 'count=exact' }, h) });
+    const used = Number(((c.headers.get('content-range') || '').split('/')[1]) || 0);
+    if (used >= max) return true;
+    await fetch(`${url}/rest/v1/agent_events`, { method: 'POST', headers: Object.assign({ Prefer: 'return=minimal' }, h),
+      body: JSON.stringify({ id: `${kind}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`, kind, ref: userId }) });
+  } catch (e) { console.error('user-limit', e.message); }
+  return false;
+}
+
+// 1. Prep brief in the app: the mentor sees the full brief, the client sees the tips meant for them.
+async function prepBrief(req, res, b) {
+  const me = await M.userFromToken(bearer(req));
+  if (!me) return res.status(401).json({ error: 'Please sign in again.' });
+  const r = (await M.rows(`requests?id=eq.${encQ(String(b.requestId || ''))}&select=*`))[0];
+  if (!r) return res.status(404).json({ error: 'Booking not found.' });
+  const isMentor = r.mentorId === me.id, isClient = r.clientId === me.id;
+  if (!isMentor && !isClient && !isAdminUser(me)) return res.status(403).json({ error: 'This booking is not yours.' });
+  let brief = r.prepBrief;
+  if (!brief || b.refresh) {
+    if (await overUserLimit(me.id, 'ai_brief', 10)) return res.status(429).json({ error: 'Please try again in a little while.' });
+    brief = await require('./_session').makePrepBrief(r);
+    await M.patch(`requests?id=eq.${encQ(r.id)}`, { prepBrief: brief }).catch(() => {});
+  }
+  if (isClient && !isMentor) return res.status(200).json({ clientTips: brief.clientTips || [] });
+  return res.status(200).json(brief);
+}
+
+// 2. Translate one message into the reader's language. Only the two people in the thread can ask.
+const LANG_NAMES = { en: 'English', fa: 'Persian (Farsi)', fr: 'French', ar: 'Arabic', es: 'Spanish', de: 'German', pt: 'Portuguese', tr: 'Turkish', ru: 'Russian', zh: 'Simplified Chinese', hi: 'Hindi', ur: 'Urdu' };
+async function translateMsg(req, res, b) {
+  const me = await M.userFromToken(bearer(req));
+  if (!me) return res.status(401).json({ error: 'Please sign in again.' });
+  const lang = LANG_NAMES[b.lang] ? b.lang : 'en';
+  const m = (await M.rows(`messages?id=eq.${encQ(String(b.messageId || ''))}&select=id,requestId,senderId,text`))[0];
+  if (!m) return res.status(404).json({ error: 'Message not found.' });
+  const t = await threadParties(m.requestId);
+  if (!t || !t.ids.includes(me.id)) return res.status(403).json({ error: 'This conversation is not yours.' });
+  if (await overUserLimit(me.id, 'ai_translate', 60)) return res.status(429).json({ error: 'Please try again in a little while.' });
+  const data = await AI.callClaude({
+    system: `You translate one chat message on Workar, a career mentorship platform, into ${LANG_NAMES[lang]}.
+Translate faithfully: keep the meaning, the sender's tone, names, numbers, dates, links and emojis exactly as they are. The voice guidance below does not apply to the translation itself.
+If the message is already in ${LANG_NAMES[lang]}, return it unchanged. Return only the translated message, with no notes or quotation marks.`,
+    messages: [{ role: 'user', content: String(m.text || '').slice(0, 2000) }],
+    maxTokens: 900, timeoutMs: 20000
+  });
+  return res.status(200).json({ text: AI.textOf(data).trim() });
+}
+
+// 3. Payment guard: a quick keyword check, then the AI decides whether a message moves payment
+//    (or contact meant to arrange payment) outside Workar. Flagged messages go to the admin's Reports tab.
+const PAY_HINT = /(e-?\s?transfer|interac|paypal|venmo|zelle|\bwise\b|western\s?union|money\s?gram|bank\s?(transfer|account|details)|wire\s?transfer|crypto|bitcoin|usdt|cash\s?app|\bcash\b|pay\s+(you|me)\s+directly|directly\s+to\s+me|outside\s+(of\s+)?workar|off\s+(the\s+)?(platform|site|workar)|skip\s+workar|avoid\s+(the\s+)?(fee|commission)|whats\s?app|telegram|signal|wechat|my\s+(number|phone|email)|@[a-z0-9-]+\.[a-z]{2,}|\+?\d[\d\s().-]{8,}\d|کارت\s?به\s?کارت|شماره\s?(کارت|حساب|شبا|تلفن|موبایل)|واتس\s?[آا]پ|واتساپ|تلگرام|خارج\s+از\s+(سایت|ورکار|workar)|مستقیم|پول\s?نقد|کمیسیون)/i;
+async function msgCheck(req, res, b) {
+  const me = await M.userFromToken(bearer(req));
+  if (!me) return res.status(401).json({ error: 'Please sign in again.' });
+  const m = (await M.rows(`messages?id=eq.${encQ(String(b.messageId || ''))}&select=id,requestId,senderId,text,createdAt`))[0];
+  if (!m || m.senderId !== me.id) return res.status(200).json({ flagged: false });
+  const text = String(m.text || '').slice(0, 2000);
+  if (!PAY_HINT.test(text)) return res.status(200).json({ flagged: false });
+  if (await overUserLimit(me.id, 'ai_guard', 30)) return res.status(200).json({ flagged: false });
+  const t = await threadParties(m.requestId);
+  if (!t) return res.status(200).json({ flagged: false });
+  let out;
+  try {
+    out = await AI.askJSON(
+      `You protect Workar, a career mentorship marketplace where every session must be booked and paid through Workar.
+Decide whether this chat message tries to move payment outside Workar (for example e-Transfer, PayPal, cash, bank or card-to-card transfers, paying the mentor directly, avoiding the fee),
+or shares or asks for phone numbers, emails or messaging apps in order to arrange sessions or payment outside Workar.
+Ordinary talk about prices on Workar, a job salary, bank jobs, or the client's career is NOT a problem.
+Return {"offPlatform": true or false, "confidence": a number from 0 to 1, "reason": one short sentence in English}.`,
+      text, { maxTokens: 200, timeoutMs: 15000 });
+  } catch (e) { console.error('msg-guard-ai', e.message); return res.status(200).json({ flagged: false }); }
+  if (!out || out.offPlatform !== true || Number(out.confidence) < 0.7) return res.status(200).json({ flagged: false });
+  const since = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
+  const dup = await M.rows(`safety_reports?reporterId=eq.workar-ai&reportedId=eq.${encQ(me.id)}&requestId=eq.${encQ(m.requestId)}&createdAt=gte.${encQ(since)}&select=id`).catch(() => []);
+  if (dup.length) return res.status(200).json({ flagged: true });
+  const other = t.ids.find(x => x !== me.id) || me.id;
+  const reason = String(out.reason || '').slice(0, 300);
+  const report = `Workar AI flagged a message that may move payment or contact outside Workar.\nMessage: “${text.slice(0, 600)}”\nWhy: ${reason}`;
+  const id = 'sr_' + Date.now().toString(36) + crypto.randomBytes(4).toString('hex');
+  const ins = await fetch(`${process.env.SUPABASE_URL}/rest/v1/safety_reports`, { method: 'POST',
+    headers: { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: 'Bearer ' + process.env.SUPABASE_SERVICE_ROLE_KEY, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+    body: JSON.stringify({ id, reporterId: 'workar-ai', reportedId: me.id, requestId: m.requestId, category: 'scam', text: report }) });
+  if (!ins.ok) console.error('msg-guard-save', ins.status, await ins.text());
+  const [sender, rec] = await Promise.all([M.profile(me.id), M.profile(other)]);
+  await M.sendMail(M.CONTACT_EMAIL(), `Payment outside Workar? ${sender.name} → ${rec.name}`,
+    M.layout('A message may take payment outside Workar', [
+      `<b>${M.esc(sender.name)}</b> (${M.esc(sender.role || 'member')}) wrote to <b>${M.esc(rec.name)}</b>:`,
+      `“${M.esc(text.slice(0, 600))}”`,
+      `<b>Why the AI flagged it:</b> ${M.esc(reason)}`,
+      'Nothing was blocked. You can review it, and ban the account if needed, in Admin → Reports.'
+    ], { text: 'Open Reports', url: M.SITE() + '/?go=admin' })).catch(e => console.error('msg-guard-mail', e.message));
+  return res.status(200).json({ flagged: true });
+}
+
 module.exports = async (req, res) => {
   if (req.method === 'GET') {
     const ok = !!(process.env.ANTHROPIC_API_KEY && process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
@@ -746,6 +865,9 @@ module.exports = async (req, res) => {
       case 'profile_review': return await profileReview(req, res, b);
       case 'price_recommend': return await priceRecommendation(req, res, b);
       case 'reply_draft': return await replyDraft(req, res, b);
+      case 'prep_brief': return await prepBrief(req, res, b);
+      case 'translate': return await translateMsg(req, res, b);
+      case 'msg_check': return await msgCheck(req, res, b);
       case 'delete_account': return await deleteAccount(req, res);
       case 'auth_signup': case 'auth_resend': case 'auth_recover': return await authEmail(req, res, b);
       default: return res.status(400).json({ error: 'Unknown task' });

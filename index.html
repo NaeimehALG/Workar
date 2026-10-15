@@ -829,6 +829,11 @@
   .mp-dl{display:grid;grid-template-columns:auto 1fr;gap:10px 22px;margin:0;font-size:14.5px;}
   .mp-dl dt{color:var(--muted);font-size:13.5px;}
   .mp-dl dd{margin:0;}
+  .pb-box{margin-top:10px;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface-2);font-size:13.5px;line-height:1.55;}
+  .pb-box ul{margin:4px 0 10px;padding-inline-start:20px;} .pb-box p{margin:0 0 8px;} .pb-foot{font-size:12px;color:var(--muted);margin:6px 0 0 !important;}
+  .tr-link{display:inline-block;background:none;border:0;padding:0;margin-top:4px;font:inherit;font-size:12px;color:var(--muted);cursor:pointer;text-decoration:underline;text-underline-offset:2px;}
+  .tr-out{margin-top:6px;padding-top:6px;border-top:1px dashed var(--border);font-style:italic;}
+  .pg-note{font-size:12px;color:#8a5a2b;background:#f8efe1;border-radius:8px;padding:6px 10px;margin:6px 0 0;max-width:420px;}
   .mp-admin{border:1px dashed #b3412c;border-radius:var(--radius-md);padding:20px;}
   .mp-review-form{background:var(--surface-2);border-radius:var(--radius-md);padding:18px 20px;margin-bottom:18px;}
   .mp-empty{font-size:14px;margin:0;}
@@ -2355,6 +2360,9 @@ const I18N = {
     cal_tz_same:'Times are in your time zone ({z}).', cal_tz_diff:'Times are shown in your time zone ({z}). The mentor is in {m}.', cal_tz_own:'Enter the date and time in your own time zone ({z}).', cal_past:'That time has already passed — please choose a later one.',
     mp_tz:'Mentor\'s time zone: {z}', mentor_not_available:'This mentor profile isn\'t available yet.', pending_review:'Your mentor profile is being set up. Workar will email you as soon as it\'s live in Find a mentor.',
     review_after_session:'You can leave a review after your first session with {n}.', review_done:'Thank you, you have already reviewed {n}.',
+    pb_btn_m:'Prep brief', pb_btn_c:'How to prepare', pb_loading:'Preparing your brief…', pb_fail:'The brief could not be prepared. Please try again in a moment.', pb_goal:'What they want:', pb_context:'Good to know', pb_agenda:'Suggested agenda', pb_first:'A good first question:', pb_tips:'To get the most out of your session', pb_none:'No tips yet.', pb_note:'Written by Workar AI from the profile and messages. Please check it against what you hear in the session.',
+    tr_btn:'Translate', tr_retry:'Try translating again', tr_loading:'Translating…', tr_ai:'Translated by AI', tr_orig:'Hide', tr_fail:'The message could not be translated. Please try again.',
+    pg_send:'A friendly reminder: sessions and payments made outside Workar are not protected. Please keep bookings and payments on Workar.', pg_recv:'Workar tip: never pay outside Workar. Payments made elsewhere are not protected and cannot be refunded.',
     mem_title:'Members', dp_att:'Call attendance:', dp_att_na:'No attendance record', dp_att_none:'Nobody joined the call.', dp_att_min:'{n} min in the call', dp_att_late:'joined {n} min late', dp_att_early:'joined {n} min early', dp_att_ontime:'joined on time', adm_t_mentors:'Mentors', adm_t_clients:'Clients', adm_t_bookings:'Bookings & payouts', adm_t_reports:'Reports', adm_t_site:'Site settings', mem_hint_m:'Everyone who signed up as a mentor. Only you can see this list.', mem_hint_c:'Everyone who signed up as a client. Only you can see this list.', mem_count_m:'{n} mentors', mem_count_c:'{n} clients', mem_hint:'Everyone who has signed up to Workar. Only you can see this list.', mem_all:'All', mem_clients:'Clients', mem_mentors:'Mentors', mem_search:'Search by name or profession', mem_c_name:'Name', mem_c_role:'Role', mem_c_status:'Status', mem_c_sessions:'Sessions', mem_role_client:'Client', mem_role_mentor:'Mentor', mem_st_ok:'Active', mem_st_pending:'Waiting for approval', mem_st_banned:'Banned', mem_st_admin:'Admin', mem_none:'No members yet.', mem_error:'Could not load members. Please refresh the page.', mem_view:'View', mem_count:'{c} clients · {m} mentors · {b} bookings',
     bk_title:'All bookings', bk_hint:'Every session request on Workar, newest first.', bk_c_when:'Session time', bk_c_client:'Client', bk_c_mentor:'Mentor', bk_c_status:'Status', bk_c_paid:'Payment', bk_none:'No bookings yet.', bk_paid:'Paid', bk_unpaid:'Not paid', bk_st_pending:'Waiting for mentor', bk_st_accepted:'Accepted', bk_st_cancelled:'Cancelled', bk_st_declined:'Declined', bk_st_refunded:'Not charged', bk_st_completed:'Done', bk_more:'Showing the latest {n}.',
     apps_title:'Mentor applications', apps_hint:'New mentor profiles stay hidden until you approve them. The mentor gets an email when approved.', apps_none:'No applications waiting.', apps_error:'Could not load applications — run the latest Workar SQL.', apps_approve:'Approve', apps_view:'View profile', apps_done:'Mentor approved', apps_fail:'Could not approve — run the latest Workar SQL.',
@@ -2806,6 +2814,9 @@ const I18N = {
     cal_tz_same:'زمان‌ها به وقت شماست ({z}).', cal_tz_diff:'زمان‌ها به وقت شما ({z}) نمایش داده می‌شوند. منتور در {m} است.', cal_tz_own:'تاریخ و ساعت را به وقت خودتان ({z}) وارد کنید.', cal_past:'این زمان گذشته است — زمان دیرتری انتخاب کنید.',
     mp_tz:'منطقه‌ی زمانی منتور: {z}', mentor_not_available:'این پروفایل منتور هنوز در دسترس نیست.', pending_review:'پروفایل منتوری شما در حال آماده‌سازی است. به محض اینکه در فهرست منتورها نمایش داده شود، Workar به شما ایمیل می‌زند.',
     review_after_session:'بعد از اولین جلسه با {n} می‌توانید نظر بنویسید.', review_done:'ممنون، شما قبلاً برای {n} نظر نوشته‌اید.',
+    pb_btn_m:'خلاصه‌ی آمادگی', pb_btn_c:'چطور آماده شوم', pb_loading:'در حال آماده کردن خلاصه…', pb_fail:'خلاصه آماده نشد. لطفاً کمی بعد دوباره امتحان کنید.', pb_goal:'هدف مراجع:', pb_context:'خوب است بدانید', pb_agenda:'برنامه‌ی پیشنهادی جلسه', pb_first:'یک سؤال خوب برای شروع:', pb_tips:'برای اینکه بیشترین استفاده را از جلسه ببرید', pb_none:'هنوز نکته‌ای نیست.', pb_note:'این متن را هوش مصنوعی Workar از روی پروفایل و پیام‌ها نوشته است. لطفاً با آنچه در جلسه می‌شنوید مقایسه کنید.',
+    tr_btn:'ترجمه', tr_retry:'ترجمه‌ی دوباره', tr_loading:'در حال ترجمه…', tr_ai:'ترجمه با هوش مصنوعی', tr_orig:'پنهان کردن', tr_fail:'پیام ترجمه نشد. لطفاً دوباره امتحان کنید.',
+    pg_send:'یادآوری: جلسه‌ها و پرداخت‌های خارج از Workar محافظت نمی‌شوند. لطفاً رزرو و پرداخت را داخل Workar انجام دهید.', pg_recv:'نکته‌ی Workar: هرگز خارج از Workar پرداخت نکنید. پرداخت‌های بیرون از سایت محافظت نمی‌شوند و قابل بازگشت نیستند.',
     mem_title:'اعضا', dp_att:'حضور در جلسه:', dp_att_na:'سابقه‌ی حضور موجود نیست', dp_att_none:'هیچ‌کس وارد جلسه نشد.', dp_att_min:'{n} دقیقه در جلسه', dp_att_late:'{n} دقیقه دیر وارد شد', dp_att_early:'{n} دقیقه زودتر وارد شد', dp_att_ontime:'سر وقت وارد شد', adm_t_mentors:'منتورها', adm_t_clients:'مراجعان', adm_t_bookings:'رزروها و پرداخت‌ها', adm_t_reports:'گزارش‌ها', adm_t_site:'تنظیمات سایت', mem_hint_m:'همه‌ی کسانی که به‌عنوان منتور ثبت‌نام کرده‌اند. این فهرست فقط برای شما نمایش داده می‌شود.', mem_hint_c:'همه‌ی کسانی که به‌عنوان مراجع ثبت‌نام کرده‌اند. این فهرست فقط برای شما نمایش داده می‌شود.', mem_count_m:'{n} منتور', mem_count_c:'{n} مراجع', mem_hint:'همه‌ی کسانی که در Workar ثبت‌نام کرده‌اند. این فهرست فقط برای شما نمایش داده می‌شود.', mem_all:'همه', mem_clients:'مراجعان', mem_mentors:'منتورها', mem_search:'جستجو با نام یا حرفه', mem_c_name:'نام', mem_c_role:'نقش', mem_c_status:'وضعیت', mem_c_sessions:'جلسه‌ها', mem_role_client:'مراجع', mem_role_mentor:'منتور', mem_st_ok:'فعال', mem_st_pending:'در انتظار تأیید', mem_st_banned:'مسدود', mem_st_admin:'ادمین', mem_none:'هنوز عضوی ثبت‌نام نکرده است.', mem_error:'فهرست اعضا بارگذاری نشد. صفحه را دوباره باز کنید.', mem_view:'دیدن', mem_count:'{c} مراجع · {m} منتور · {b} رزرو',
     bk_title:'همه‌ی رزروها', bk_hint:'همه‌ی درخواست‌های جلسه در Workar، از جدید به قدیم.', bk_c_when:'زمان جلسه', bk_c_client:'مراجع', bk_c_mentor:'منتور', bk_c_status:'وضعیت', bk_c_paid:'پرداخت', bk_none:'هنوز رزروی ثبت نشده است.', bk_paid:'پرداخت‌شده', bk_unpaid:'پرداخت‌نشده', bk_st_pending:'در انتظار منتور', bk_st_accepted:'پذیرفته‌شده', bk_st_cancelled:'لغوشده', bk_st_declined:'ردشده', bk_st_refunded:'کسر نشد', bk_st_completed:'انجام‌شده', bk_more:'{n} مورد آخر نمایش داده شده است.',
     apps_title:'درخواست‌های منتوری', apps_hint:'پروفایل منتورهای جدید تا تأیید شما پنهان می‌ماند. بعد از تأیید، به منتور ایمیل فرستاده می‌شود.', apps_none:'درخواستی در انتظار نیست.', apps_error:'بارگذاری نشد؛ SQL جدید Workar را اجرا کنید.', apps_approve:'تأیید', apps_view:'دیدن پروفایل', apps_done:'منتور تأیید شد', apps_fail:'تأیید نشد؛ SQL جدید Workar را اجرا کنید.',
@@ -4313,7 +4324,7 @@ async function loadSafety(){
     const ids = [...new Set((data||[]).flatMap(r=>[r.reporterId, r.reportedId]))];
     const { data: ps } = ids.length ? await sb.from('profiles').select('id,name,banned').in('id', ids) : { data: [] };
     const by = {}; (ps||[]).forEach(p=>{ by[p.id] = p; });
-    state.sfReports = (data||[]).map(r=>Object.assign({}, r, { reporterName:(by[r.reporterId]||{}).name, reportedName:(by[r.reportedId]||{}).name, reportedBanned: !!(by[r.reportedId]||{}).banned }));
+    state.sfReports = (data||[]).map(r=>Object.assign({}, r, { reporterName: r.reporterId==='workar-ai' ? 'Workar AI' : (by[r.reporterId]||{}).name, reportedName:(by[r.reportedId]||{}).name, reportedBanned: !!(by[r.reportedId]||{}).banned }));
   }catch(e){ state.sfReports = 'error'; }
   if(state.view==='admin') render();
 }
@@ -6543,7 +6554,7 @@ async function sendMsg(reqId, text){
   (cache.msgs[reqId] = cache.msgs[reqId] || []).push(row); state.chatDraft = ''; markChatSeen(reqId); render();
   const { error } = await sb.from('messages').insert(row);
   if(error){ cache.msgs[reqId] = cache.msgs[reqId].filter(m=>m!==row); state.chatDraft = text; render(); toast(T('chat_err'), 5000); console.error(error); }
-  else notify('message', reqId);
+  else { notify('message', reqId); guardMsg(row); }
 }
 
 // ---------- weekly availability editor (dashboard): quick blocks + exact half-hours per day ----------
@@ -6847,6 +6858,7 @@ async function sendDm(o, text){
   (cache.dms[t] = cache.dms[t] || []).push(row); state.inboxDraft = ''; setHiddenConv(o, false); markConvSeen(o); render();
   const { error } = await sb.from('messages').insert(row);
   if(error){ cache.dms[t] = cache.dms[t].filter(m=>m!==row); state.inboxDraft = text; render(); toast(T('chat_err'), 5000); console.error(error); }
+  else guardMsg(row);
 }
 async function deleteMyMsg(id){
   const { error } = await sb.from('messages').delete().eq('id', id).eq('senderId', uid);
@@ -6960,6 +6972,69 @@ document.addEventListener('click', async e=>{
     const x = (state.payouts||[]).find(q=>q.id===id); if(x) x.problemResolvedAt = new Date().toISOString(); toast(T('prob_released')); notify('dispute_resolved', id); render();
   }
 });
+// ---------- AI in the inbox: prep brief, translation, payment guard (api/agents.js) ----------
+const PAY_RX = /(e-?\s?transfer|interac|paypal|venmo|zelle|western\s?union|wire\s?transfer|bank\s?transfer|crypto|bitcoin|usdt|cash\s?app|pay\s+(you|me)\s+directly|outside\s+(of\s+)?workar|off\s+(the\s+)?(platform|site)|skip\s+workar|avoid\s+(the\s+)?(fee|commission)|کارت\s?به\s?کارت|شماره\s?(کارت|حساب|شبا)|خارج\s+از\s+(سایت|ورکار|workar)|پول\s?نقد)/i;
+const CONTACT_RX = /(whats\s?app|telegram|wechat|@[a-z0-9-]+\.[a-z]{2,}|\+?\d[\d\s().-]{8,}\d|واتس\s?[آا]پ|واتساپ|تلگرام|مستقیم|کمیسیون|\bcash\b|\bbank\b)/i;
+state.pb = state.pb || {}; state.tr = state.tr || {};
+function guardMsg(row){
+  const t = String(row && row.text || '');
+  if(!t || row.attachment || !(PAY_RX.test(t) || CONTACT_RX.test(t))) return;
+  if(PAY_RX.test(t) && !state.pgTipShown){ state.pgTipShown = true; toast(T('pg_send'), 9000); }
+  disputeApi({ task:'msg_check', messageId: row.id }).catch(()=>{});
+}
+function pbBox(cur, iAmMentor){
+  const pb = state.pb[cur.id]; if(!pb || !pb.open) return '';
+  if(pb.loading) return `<div class="pb-box muted">${esc(T('pb_loading'))}</div>`;
+  if(pb.error) return `<div class="pb-box muted">${esc(pb.error)}</div>`;
+  const d = pb.data || {}, li = a=>(a||[]).length ? `<ul>${a.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>` : '';
+  if(!iAmMentor) return `<div class="pb-box"><b>${esc(T('pb_tips'))}</b>${li(d.clientTips) || `<p class="muted">${esc(T('pb_none'))}</p>`}<p class="pb-foot">${esc(T('pb_note'))}</p></div>`;
+  return `<div class="pb-box">
+    ${d.goal ? `<p><b>${esc(T('pb_goal'))}</b> ${esc(d.goal)}</p>` : ''}
+    ${(d.context||[]).length ? `<b>${esc(T('pb_context'))}</b>${li(d.context)}` : ''}
+    ${(d.agenda||[]).length ? `<b>${esc(T('pb_agenda'))}</b>${li(d.agenda)}` : ''}
+    ${d.firstQuestion ? `<p><b>${esc(T('pb_first'))}</b> “${esc(d.firstQuestion)}”</p>` : ''}
+    <p class="pb-foot">${esc(T('pb_note'))}</p></div>`;
+}
+function trNeeded(text){
+  const t = String(text||''); if(t.trim().split(/\s+/).length < 2 && t.length < 12) return false;
+  const L = state.lang || 'en';
+  const has = { arab:/[؀-ۿ]/.test(t), cyr:/[Ѐ-ӿ]/.test(t), cjk:/[぀-ヿ㐀-鿿]/.test(t), dev:/[ऀ-ॿ]/.test(t) };
+  const want = ['fa','ar','ur'].includes(L) ? 'arab' : L==='ru' ? 'cyr' : L==='zh' ? 'cjk' : L==='hi' ? 'dev' : 'latin';
+  if(want!=='latin') return !has[want];
+  if(has.arab || has.cyr || has.cjk || has.dev) return true;
+  if(L!=='en') return true;
+  return !/\b(the|and|you|is|are|to|for|my|your|thanks|thank|hi|hello|can|will|what|how)\b/i.test(t);
+}
+function trBlock(m){
+  const tr = state.tr[m.id];
+  if(tr && tr.text && !tr.hide) return `<div class="tr-out">${esc(tr.text)}</div><button type="button" class="tr-link" data-tr-hide="${esc(m.id)}">${esc(T('tr_ai'))} · ${esc(T('tr_orig'))}</button>`;
+  if(tr && tr.loading) return `<span class="tr-link muted">${esc(T('tr_loading'))}</span>`;
+  if(!trNeeded(m.text)) return '';
+  return `<button type="button" class="tr-link" data-tr-msg="${esc(m.id)}">${esc(T(tr && tr.error ? 'tr_retry' : 'tr_btn'))}</button>`;
+}
+document.addEventListener('click', async e=>{
+  const pbB = e.target.closest && e.target.closest('[data-pb]');
+  if(pbB){
+    const id = pbB.getAttribute('data-pb'), cur = state.pb[id];
+    if(cur && cur.open){ cur.open = false; render(); return; }
+    if(cur && cur.data){ cur.open = true; render(); return; }
+    state.pb[id] = { open:true, loading:true }; render();
+    try{ state.pb[id] = { open:true, data: await disputeApi({ task:'prep_brief', requestId:id }) }; }
+    catch(err){ state.pb[id] = { open:true, error: T('pb_fail') }; }
+    render(); return;
+  }
+  const trH = e.target.closest && e.target.closest('[data-tr-hide]');
+  if(trH){ const x = state.tr[trH.getAttribute('data-tr-hide')]; if(x){ x.hide = true; render(); } return; }
+  const trB = e.target.closest && e.target.closest('[data-tr-msg]');
+  if(trB){
+    const id = trB.getAttribute('data-tr-msg'), old = state.tr[id];
+    if(old && old.text){ old.hide = false; render(); return; }
+    state.tr[id] = { loading:true }; render();
+    try{ const d = await disputeApi({ task:'translate', messageId:id, lang: state.lang||'en' }); state.tr[id] = { text: d.text }; }
+    catch(err){ state.tr[id] = { error:true }; toast(T('tr_fail'), 5000); }
+    render();
+  }
+});
 function ibReqCard(cur, iAmMentor, name){
   const inst = reqInstant(cur), st = reqStage(cur);
   const proposed = (cur.proposedTimes||[]).map(x=>new Date(x)).filter(i=>i.getTime() > Date.now()).sort((a,b)=>a-b);
@@ -7007,6 +7082,8 @@ function ibReqCard(cur, iAmMentor, name){
     const soon = inst && inst - Date.now() < 15*60000 && inst - Date.now() > -90*60000;
     title = T('ibr_confirmed') + (soon ? ` <span class="iv-live">${esc(T('iv_starting'))}</span>` : '');
     act = `<button type="button" class="iv-pill solid" data-call="${esc(cur.id)}" data-url="${esc(cur.meetingUrl||'')}" data-mode="video">${HUB_IC.video}${esc(T('iv_join'))}</button>${bookingCalendarActions(cur)}`;
+    act += `<button type="button" class="iv-link" data-pb="${esc(cur.id)}">${esc(T(iAmMentor ? 'pb_btn_m' : 'pb_btn_c'))}</button>`;
+    extra += pbBox(cur, iAmMentor);
   } else if(st===3 && !iAmMentor && canReport(cur)){
     title = T('sess_completed');
   } else return '';
@@ -7133,7 +7210,7 @@ function inboxThread(o){
       lastDay = day; prev = m;
       return `${sep}<div class="ib-msg ${mine?'me':''} ${cont?'cont':''}">
         ${mine ? '' : `<button type="button" class="ib-av sm ib-av-btn" data-ib-profile="${esc(o)}" aria-label="${esc(T('inbox_profile'))}">${av(o)}</button>`}
-        <div class="ib-bub">${m.attachment ? attHtml(m.attachment) : `<div class="ib-text">${linkify(m.text)}</div>`}<time>${esc(inboxTime(m.createdAt))}${mine?(m.readAt?`<span class="ib-tick read" aria-label="${esc(T('ib_seen'))}">✓✓</span>`:'<span class="ib-tick" aria-label="sent">✓</span>'):''}</time>
+        <div class="ib-bub">${m.attachment ? attHtml(m.attachment) : `<div class="ib-text">${linkify(m.text)}</div>${mine ? '' : trBlock(m) + (PAY_RX.test(String(m.text||'')) ? `<div class="pg-note">${esc(T('pg_recv'))}</div>` : '')}`}<time>${esc(inboxTime(m.createdAt))}${mine?(m.readAt?`<span class="ib-tick read" aria-label="${esc(T('ib_seen'))}">✓✓</span>`:'<span class="ib-tick" aria-label="sent">✓</span>'):''}</time>
           ${mine ? `<button type="button" class="ib-del" data-del-msg="${esc(m.id)}" title="${esc(T('inbox_delete_msg'))}" aria-label="${esc(T('inbox_delete_msg'))}">${IB_IC.trash}</button>` : ''}</div>
       </div>`; }).join('') + (()=>{ const last = msgs[msgs.length-1];
         return last && last.senderId===uid && last.readAt ? `<div class="ib-seen">${esc(T('ib_seen'))} · ${esc(inboxTime(last.readAt))}</div>` : ''; })()
