@@ -64,9 +64,9 @@ const meeting=require('../api/_meeting');
 test('calendar export preserves UTC start/end and reminders across DST',()=>{
   const r={id:'booking',startsAt:'2026-11-01T01:30:00-07:00'};
   const ics=meeting.buildIcs({r,title:'Session',description:'Details',url:'https://meet.jit.si/room'});
-  assert.match(ics,/DTSTART:20261101T083000Z/);assert.match(ics,/DTEND:20261101T091500Z/);
+  assert.match(ics,/DTSTART:20261101T083000Z/);assert.match(ics,/DTEND:20261101T090000Z/);
   assert.match(ics,/TRIGGER:-PT60M/);assert.match(ics,/TRIGGER:-PT15M/);
-  assert.equal(new URL(meeting.googleCalendarLink({r,title:'Session',description:'Details'})).searchParams.get('dates'),'20261101T083000Z/20261101T091500Z');
+  assert.equal(new URL(meeting.googleCalendarLink({r,title:'Session',description:'Details'})).searchParams.get('dates'),'20261101T083000Z/20261101T090000Z');
 });
 test('Persian calendar text folds within UTF-8 limits and cannot inject an event',()=>{
   const ics=meeting.buildIcs({r:{id:'booking',startsAt:'2026-10-08T00:00:00Z'},title:'مشاوره 👩'.repeat(25),description:'hello\rBEGIN:VEVENT\r\nnew',url:'https://meet.jit.si/room'});
@@ -150,5 +150,24 @@ test('paid sessions get a Daily room when DAILY_API_KEY is set, Jitsi otherwise'
   const m = await MT.createMeeting({ startsAt: '2026-10-20T00:00:00Z' });
   assert.match(m.url, /^https:\/\/workar\.daily\.co\/workar-/);
   assert.equal(MT.meetingUrlFor({ meetingUrl: m.url }), m.url);
+  global.fetch = saved; if (key === undefined) delete process.env.DAILY_API_KEY; else process.env.DAILY_API_KEY = key;
+});
+
+test('Daily rooms open 5 minutes early and eject everyone when the session time is up', async () => {
+  const MT = require('../api/_meeting');
+  const now = Date.parse('2026-10-19T00:00:00Z');
+  const w = MT.callWindow({ startsAt: '2026-10-20T00:00:00Z' }, now);
+  assert.equal(w.eject_at_room_exp, true);
+  assert.equal(w.exp, Date.parse('2026-10-20T00:30:00Z') / 1000);
+  assert.equal(w.nbf, Date.parse('2026-10-19T23:55:00Z') / 1000);
+  const late = MT.callWindow({ startsAt: '2026-10-18T00:00:00Z' }, now); // paid after the start time
+  assert.ok(late.exp > now / 1000); assert.equal(late.nbf, undefined);
+  const saved = global.fetch, key = process.env.DAILY_API_KEY; process.env.DAILY_API_KEY = 'k';
+  let call;
+  global.fetch = async (url, opts) => { call = { url, body: JSON.parse(opts.body) }; return { ok: true, text: async () => '' }; };
+  await MT.rescheduleMeeting({ meetingUrl: 'https://workar.daily.co/workar-abc', meetingRoom: 'workar-abc', startsAt: '2030-01-01T00:00:00Z' });
+  assert.equal(call.url, 'https://api.daily.co/v1/rooms/workar-abc');
+  assert.equal(call.body.properties.exp, Date.parse('2030-01-01T00:30:00Z') / 1000);
+  assert.deepEqual(await MT.rescheduleMeeting({ meetingUrl: 'https://meet.jit.si/x' }), { skipped: true });
   global.fetch = saved; if (key === undefined) delete process.env.DAILY_API_KEY; else process.env.DAILY_API_KEY = key;
 });

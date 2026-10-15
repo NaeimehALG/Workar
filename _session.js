@@ -34,6 +34,7 @@ async function confirmPaidSession(requestId) {
 }
 
 async function sendConfirmation(r, opts = {}) {
+  if (opts.updated) await MT.rescheduleMeeting(r); // keep the call window in step with the new time
   const url = MT.meetingUrlFor(r);
   const [mentor, client] = await Promise.all([M.profile(r.mentorId), M.profile(r.clientId)]);
   const site = M.SITE();

@@ -10,7 +10,7 @@
       "maxDuration": 60
     },
     "api/agents.js": {
-      "maxDuration": 30
+      "maxDuration": 60
     },
     "api/stripe-webhook.js": {
       "maxDuration": 30

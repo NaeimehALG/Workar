@@ -8,18 +8,30 @@ const SESSION_MINUTES = () => Number(process.env.SESSION_MINUTES) || 30; // matc
 // A private, hard-to-guess room for each paid booking.
 // With DAILY_API_KEY set, calls run on Daily (inside Workar, no sign-in); otherwise Jitsi.
 const isDaily = url => /\.daily\.co\//i.test(String(url || ''));
+const EARLY_JOIN_MIN = () => Number(process.env.EARLY_JOIN_MINUTES) || 5;
+
+// The call opens a few minutes before the booked start and everyone is removed
+// when the session length (SESSION_MINUTES, default 30) is up.
+function callWindow(r, now = Date.now()) {
+  const booked = r && r.startsAt ? new Date(r.startsAt).getTime() : NaN;
+  const start = Number.isFinite(booked) ? booked : now;
+  const sec = t => Math.floor(t / 1000);
+  const end = Math.max(start + SESSION_MINUTES() * 60000, now + 5 * 60000); // never create an already-expired room
+  const props = { exp: sec(end), eject_at_room_exp: true };
+  if (Number.isFinite(booked) && booked - EARLY_JOIN_MIN() * 60000 > now) props.nbf = sec(booked - EARLY_JOIN_MIN() * 60000);
+  return props;
+}
+
 async function createMeeting(r) {
   const room = 'Workar-' + crypto.randomBytes(12).toString('base64url');
   const key = process.env.DAILY_API_KEY;
   if (key) {
     try {
-      const start = r && r.startsAt ? new Date(r.startsAt).getTime() : Date.now();
-      const exp = Math.floor(Math.max(start, Date.now()) / 1000) + 7 * 24 * 3600; // room lives until a week after the session
       const res = await fetch('https://api.daily.co/v1/rooms', {
         method: 'POST',
         headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: room.toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 40), privacy: 'public',
-          properties: { exp, max_participants: 4, enable_chat: true, enable_screenshare: true, enable_prejoin_ui: false, lang: 'en' } })
+          properties: Object.assign({ max_participants: 4, enable_chat: true, enable_screenshare: true, enable_prejoin_ui: false, lang: 'en' }, callWindow(r)) })
       });
       const d = await res.json().catch(() => ({}));
       if (res.ok && d.url) return { room: d.name, url: d.url };
@@ -27,6 +39,24 @@ async function createMeeting(r) {
     } catch (e) { console.error('daily-room-failed', e.message); }
   }
   return { room, url: 'https://meet.jit.si/' + room };
+}
+
+// When a paid session is moved, move the Daily room's open/close times with it.
+async function rescheduleMeeting(r) {
+  const key = process.env.DAILY_API_KEY;
+  if (!key || !isDaily(r && r.meetingUrl)) return { skipped: true };
+  const name = r.meetingRoom || String(r.meetingUrl).split('/').pop().split('?')[0];
+  const props = callWindow(r);
+  if (!props.nbf) props.nbf = null; // clear an old opening time if the new start is now or past
+  try {
+    const res = await fetch('https://api.daily.co/v1/rooms/' + encodeURIComponent(name), {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ properties: props })
+    });
+    if (!res.ok) console.error('daily-room-update-failed', res.status, (await res.text()).slice(0, 300));
+    return { ok: res.ok };
+  } catch (e) { console.error('daily-room-update-failed', e.message); return { ok: false }; }
 }
 
 // Older bookings (paid before this update) used a room named after the request id.
@@ -89,4 +119,4 @@ function googleCalendarLink({ r, title, description, url }) {
   return 'https://calendar.google.com/calendar/render?' + p.toString();
 }
 
-module.exports = { SESSION_MINUTES, isDaily, createMeeting, meetingUrlFor, buildIcs, icsAttachment, googleCalendarLink };
+module.exports = { SESSION_MINUTES, isDaily, callWindow, createMeeting, rescheduleMeeting, meetingUrlFor, buildIcs, icsAttachment, googleCalendarLink };

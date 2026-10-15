@@ -2053,6 +2053,27 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   html[dir="rtl"] .ew-k{letter-spacing:0;text-transform:none;font-size:12.5px;}
   @media (max-width:640px){ .ew{grid-template-columns:1fr;} .ew-hero{border-inline-end:0;border-bottom:1px solid var(--border);padding:22px;} .ew-break{padding:20px 22px;} .ew-big{font-size:40px;} }
   html{overflow-y:scroll;scrollbar-gutter:stable;overflow-x:clip;}
+  /* resumes + chat attachments */
+  .rs-card{display:flex;align-items:center;gap:14px;padding:14px 16px;margin:0 0 18px;border:1.5px dashed var(--border);border-radius:16px;background:var(--surface);}
+  .rs-card.busy{border-style:solid;border-color:var(--accent);}
+  .rs-ic{flex:none;width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:var(--accent);color:var(--accent-ink,#fff);}
+  .rs-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;}
+  .rs-txt b{font-size:15px;color:var(--text);}
+  .rs-txt span{font-size:13px;color:var(--muted);line-height:1.45;overflow-wrap:anywhere;}
+  .rs-txt small{font-size:12px;color:var(--muted);opacity:.85;}
+  .rs-acts{flex:none;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;}
+  .rs-sug{margin:-6px 0 18px;padding:14px 16px;border-radius:14px;background:var(--surface);border:1px solid var(--border);}
+  .rs-sug h4{margin:0 0 6px;font-size:13.5px;}
+  .rs-sug p{margin:0 0 10px;font-size:14px;line-height:1.55;white-space:pre-wrap;}
+  @media (max-width:560px){ .rs-card{flex-wrap:wrap;} .rs-acts{width:100%;justify-content:flex-start;} }
+  .att-chip{display:inline-flex;align-items:center;gap:10px;max-width:100%;padding:8px 12px;border-radius:12px;border:1px solid var(--border);background:var(--bg,#fff);color:var(--text);cursor:pointer;font:inherit;text-align:start;}
+  .att-chip:hover{border-color:var(--accent);}
+  .att-chip svg{flex:none;color:var(--accent);}
+  .att-chip span{display:flex;flex-direction:column;min-width:0;}
+  .att-chip b{font-size:13.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px;}
+  .att-chip small{font-size:11.5px;color:var(--muted);}
+  .iv-note + .att-chip, .att-chip.req{margin-top:8px;}
+  .rc-att{flex:none;padding-inline:10px;}
 </style>
 </head>
 <body>
@@ -2181,6 +2202,15 @@ const I18N = {
     lbl_skills:'Skills / topics (comma-separated)', ph_skills:'resume review, interview prep, career switching',
     lbl_experience:'Years of experience', ph_experience:'e.g. 8',
     lbl_languages:'Languages (comma-separated)', ph_languages:'e.g. English, Farsi',
+    rs_title:'Start with your resume', rs_dash_title:'Resume',
+    rs_sub_m:'Upload your resume or LinkedIn profile (PDF or Word). Our assistant fills in the form and writes a recommended bio for you to review.',
+    rs_sub_c:'Upload your resume or LinkedIn profile (PDF or Word). We fill in your background, and your mentor can read it before your session.',
+    rs_li_tip:'No resume at hand? On LinkedIn, open your profile, choose More, then Save to PDF.',
+    rs_btn:'Upload resume', rs_replace:'Replace', rs_view:'View', rs_uploading:'Uploading your file...', rs_reading:'Reading your resume...',
+    rs_done_c:'Your background was filled in from your resume. Please review it.', rs_done_m:'Your form was filled in from your resume. Please review it.',
+    rs_err_type:'Please upload a PDF or Word (.docx) file.', rs_err_size:'Please upload a file under 9 MB.', rs_err:'The upload did not work. Please try again.',
+    rs_bio_sug:'Recommended bio from your resume', rs_use:'Use this bio', rs_saved:'Your resume was saved.', rs_client_resume:'Resume',
+    att_btn:'Attach a file', att_uploading:'Sending your file...', att_open_err:'This file could not be opened.',
     lbl_linkedin:'LinkedIn profile', ph_linkedin:'https://linkedin.com/in/yourname',
     lbl_rate:'Price per session', rate_hint:'(leave blank if free)', ph_rate:'e.g. $40 / session',
     lbl_profession_c:'Your current or target profession', ph_profession_c:'e.g. aspiring Data Analyst', lbl_current_job:'Current profession', ph_current_job:'e.g. Document Controller', first_job:'N/A — this will be my first job', lbl_target_job:'Target profession', ph_target_job:'e.g. Data Analyst', onboard_err:'Your profile could not be saved. Send this message to Workar support:',
@@ -2596,6 +2626,15 @@ const I18N = {
     lbl_skills:'مهارت‌ها / موضوعات (با کاما جدا کنید)', ph_skills:'بازبینی رزومه، آماده‌سازی مصاحبه، تغییر مسیر شغلی',
     lbl_experience:'سال‌های تجربه', ph_experience:'مثلاً ۸',
     lbl_languages:'زبان‌ها (با کاما جدا کنید)', ph_languages:'مثلاً فارسی، انگلیسی',
+    rs_title:'با رزومه‌ی خود شروع کنید', rs_dash_title:'رزومه',
+    rs_sub_m:'رزومه یا پروفایل لینکدین خود را بارگذاری کنید (PDF یا Word). دستیار، فرم را پر می‌کند و یک بیوگرافی پیشنهادی برای بررسی شما می‌نویسد.',
+    rs_sub_c:'رزومه یا پروفایل لینکدین خود را بارگذاری کنید (PDF یا Word). سوابق شما در فرم پر می‌شود و منتور می‌تواند پیش از جلسه آن را بخواند.',
+    rs_li_tip:'رزومه در دسترس ندارید؟ در لینکدین، پروفایل خود را باز کنید، More و سپس Save to PDF را بزنید.',
+    rs_btn:'بارگذاری رزومه', rs_replace:'جایگزینی', rs_view:'مشاهده', rs_uploading:'در حال بارگذاری فایل...', rs_reading:'در حال خواندن رزومه...',
+    rs_done_c:'سوابق شما از روی رزومه پر شد. لطفاً آن را بررسی کنید.', rs_done_m:'فرم شما از روی رزومه پر شد. لطفاً آن را بررسی کنید.',
+    rs_err_type:'لطفاً فایل PDF یا Word (.docx) بارگذاری کنید.', rs_err_size:'لطفاً فایلی کمتر از ۹ مگابایت بارگذاری کنید.', rs_err:'بارگذاری انجام نشد. لطفاً دوباره تلاش کنید.',
+    rs_bio_sug:'بیوگرافی پیشنهادی از روی رزومه‌ی شما', rs_use:'استفاده از این بیوگرافی', rs_saved:'رزومه‌ی شما ذخیره شد.', rs_client_resume:'رزومه',
+    att_btn:'پیوست فایل', att_uploading:'در حال ارسال فایل...', att_open_err:'این فایل باز نشد.',
     lbl_linkedin:'پروفایل لینکدین', ph_linkedin:'https://linkedin.com/in/yourname',
     lbl_rate:'قیمت هر جلسه', rate_hint:'(اگر رایگان است خالی بگذارید)', ph_rate:'مثلاً ۴۰ دلار برای هر جلسه',
     lbl_profession_c:'شغل فعلی یا هدف شما', ph_profession_c:'مثلاً علاقه‌مند به تحلیل داده', lbl_current_job:'شغل فعلی', ph_current_job:'مثلاً کنترل مدارک', first_job:'ندارم؛ این اولین شغل من است', lbl_target_job:'شغل هدف', ph_target_job:'مثلاً تحلیل‌گر داده', onboard_err:'پروفایل ذخیره نشد. این پیام را برای پشتیبانی Workar بفرستید:',
@@ -2961,7 +3000,8 @@ async function resolveNames(ids){
   if(!sb) return;
   const need = [...new Set((ids||[]).filter(id=>id && id!==uid && !(cache.profiles[id] && cache.profiles[id].name) && !cache.people[id]))];
   if(!need.length) return;
-  const { data } = await sb.from('profiles').select('id,name,profession,role,avatarUrl,headline,currentProfession').in('id', need);
+  let { data, error } = await sb.from('profiles').select('id,name,profession,role,avatarUrl,headline,currentProfession,resumePath,resumeName').in('id', need);
+  if(error) ({ data } = await sb.from('profiles').select('id,name,profession,role,avatarUrl,headline,currentProfession').in('id', need)); // resume columns not added yet
   (data||[]).forEach(p=>{ cache.people[p.id] = p; if(p.name) cache.names[p.id] = p.name; });
 }
 // Client profiles are private; reviews show the reviewer's first name and last initial instead
@@ -5810,9 +5850,10 @@ function onboardView(){
     <div class="role-opt ${preset==='mentor'?'selected':''}" data-role="mentor"><span class="role-ic">${ICON_GUIDE}</span><b>${esc(T('role_mentor_t'))}</b><span>${esc(T('role_mentor_s'))}</span></div>
   </div>
   ${preset ? `
-  ${preset==='mentor' ? '<div id="ob-ai"></div>' : ''}
+  ${preset==='mentor' ? resumeCard('ob') + '<div id="ob-ai"></div>' : ''}
   <div class="ob-grid">
     <form id="onboard-form" class="panel wide ob-form">
+      ${preset==='client' ? resumeCard('ob') : ''}
       ${preset==='mentor' ? `
         ${obSection(1,'ob_s_about')}
         <div class="field"><label>${esc(T('lbl_name'))}</label><input name="name" required autocomplete="name" placeholder="${esc(T('ph_name'))}"></div>
@@ -6192,12 +6233,13 @@ function chatPanel(r, isMentor, other){
   const list = cache.msgs[r.id] || [];
   return `<div class="rchat">
     <div class="rc-list" id="rc-list">
-      ${list.length ? list.map(m=>`<div class="bub ${m.senderId===uid?'me':''}"><div>${esc(m.text)}</div><span>${esc(new Date(m.createdAt).toLocaleString(state.lang==='fa'?'fa-IR':'en-CA',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}))}</span></div>`).join('')
+      ${list.length ? list.map(m=>`<div class="bub ${m.senderId===uid?'me':''}">${m.attachment ? attHtml(m.attachment) : `<div>${esc(m.text)}</div>`}<span>${esc(new Date(m.createdAt).toLocaleString(state.lang==='fa'?'fa-IR':'en-CA',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}))}</span></div>`).join('')
         : `<p class="rc-empty">${esc(T('chat_empty').replace('{n}', other))}</p>`}
     </div>
     ${cache.msgsError ? `<p class="rc-err">${esc(T('chat_err'))}</p>` : ''}
     <div class="rc-quick">${['chat_q1','chat_q2','chat_q3'].map(k=>`<button type="button" class="rc-q" data-q="${esc(T(k))}">${esc(T(k))}</button>`).join('')}</div>
     <div class="rc-send">
+      <button type="button" class="btn btn-ghost btn-sm rc-att" data-rc-attach="${r.id}" title="${esc(T('att_btn'))}" aria-label="${esc(T('att_btn'))}">${CLIP_IC}</button>
       <textarea id="rc-input" rows="1" placeholder="${esc(T('chat_ph').replace('{n}', other))}">${esc(state.chatDraft||'')}</textarea>
       <button class="btn btn-primary btn-sm" id="rc-send" data-req-id="${r.id}">${esc(T('chat_send'))}</button>
     </div>
@@ -6228,6 +6270,97 @@ async function sendMsg(reqId, text){
   if(error){ cache.msgs[reqId] = cache.msgs[reqId].filter(m=>m!==row); state.chatDraft = text; render(); toast(T('chat_err'), 5000); console.error(error); }
   else notify('message', reqId);
 }
+
+// ---------- files: resumes and chat attachments (private Supabase bucket "files") ----------
+const FILE_TYPES = { pdf:'application/pdf', docx:'application/vnd.openxmlformats-officedocument.wordprocessingml.document', doc:'application/msword', txt:'text/plain', png:'image/png', jpg:'image/jpeg', jpeg:'image/jpeg', webp:'image/webp' };
+const RESUME_EXT = ['pdf','docx','txt'];
+const FILE_MAX = 9*1024*1024;
+const FILE_IC = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>';
+const CLIP_IC = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5l-8.6 8.6a5 5 0 0 1-7.1-7.1l8.6-8.6a3.4 3.4 0 0 1 4.8 4.8l-8.6 8.6a1.7 1.7 0 0 1-2.4-2.4l7.9-7.9"/></svg>';
+function fileExt(n){ return String(n||'').split('.').pop().toLowerCase(); }
+function fileSize(b){ b = Number(b)||0; return b>=1048576 ? (b/1048576).toFixed(1)+' MB' : Math.max(1, Math.round(b/1024))+' KB'; }
+async function uploadFile(file, allowed){
+  const ext = fileExt(file.name);
+  if(!(allowed || Object.keys(FILE_TYPES)).includes(ext)) throw new Error(T('rs_err_type'));
+  if(file.size > FILE_MAX) throw new Error(T('rs_err_size'));
+  if(!sb || !uid) throw new Error(T('rs_err'));
+  const safe = (file.name.normalize('NFKD').replace(/[^\w.\-]+/g, '_').replace(/_+/g, '_').slice(-80)) || ('file.'+ext);
+  const path = uid + '/' + Date.now().toString(36) + Math.random().toString(36).slice(2,6) + '-' + safe;
+  const { error } = await sb.storage.from('files').upload(path, file, { contentType: FILE_TYPES[ext], upsert:false });
+  if(error){ console.error('upload failed', error); throw new Error(T('rs_err')); }
+  return { path, name: String(file.name).slice(0,120), size: file.size, type: FILE_TYPES[ext] };
+}
+async function openFile(path){
+  const w = window.open('', '_blank'); // open right away so the browser does not block it as a pop-up
+  try{
+    const { data, error } = await sb.storage.from('files').createSignedUrl(path, 600);
+    if(error || !data || !data.signedUrl) throw error || new Error('no-url');
+    if(w) w.location.href = data.signedUrl; else location.href = data.signedUrl;
+  }catch(e){ if(w) w.close(); toast(T('att_open_err'), 4500); console.error('open file failed', e); }
+}
+function pickFile(accept, cb){
+  const i = document.createElement('input'); i.type = 'file'; i.accept = accept; i.style.display = 'none';
+  document.body.appendChild(i);
+  i.addEventListener('change', ()=>{ const f = i.files && i.files[0]; i.remove(); if(f) cb(f); });
+  i.click();
+}
+function attHtml(a, cls){ return a && a.path ? `<button type="button" class="att-chip ${cls||''}" data-file-open="${esc(a.path)}" title="${esc(a.name||'')}">${FILE_IC}<span><b>${esc(a.name||T('rs_client_resume'))}</b>${a.size?`<small>${esc(fileSize(a.size))}</small>`:''}</span></button>` : ''; }
+async function sendAttachment(threadId, file, isDm){
+  toast(T('att_uploading'), 2500);
+  let a; try{ a = await uploadFile(file); }catch(e){ toast(e.message, 5000); return; }
+  const row = { id:'m_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7), requestId:threadId, senderId:uid, text:'📎 '+a.name, attachment:a, createdAt:new Date().toISOString() };
+  const store = isDm ? cache.dms : cache.msgs;
+  (store[threadId] = store[threadId] || []).push(row); render();
+  const { error } = await sb.from('messages').insert(row);
+  if(error){ store[threadId] = store[threadId].filter(m=>m!==row); render(); toast(T('chat_err'), 5000); console.error(error); return; }
+  if(!isDm) notify('message', threadId);
+}
+// Resume card: on the sign-up form ('ob') and in the dashboard profile editor ('dash').
+function resumeCard(where){
+  const role = where==='ob' ? state.role : (myProfile && myProfile.role);
+  const cur = where==='ob' ? state.obResume : (myProfile && myProfile.resumePath ? { path:myProfile.resumePath, name:myProfile.resumeName } : null);
+  const busy = state.resumeBusy && state.resumeBusy.where===where ? state.resumeBusy.key : '';
+  const sug = where==='dash' && state.resumeBio ? `<div class="rs-sug"><h4>${esc(T('rs_bio_sug'))}</h4><p>${esc(state.resumeBio)}</p><button type="button" class="btn btn-outline btn-sm" data-resume-bio="1">${esc(T('rs_use'))}</button></div>` : '';
+  return `<div class="rs-card ${busy?'busy':''}">
+    <span class="rs-ic">${FILE_IC}</span>
+    <div class="rs-txt"><b>${esc(T(where==='ob'?'rs_title':'rs_dash_title'))}</b>
+      <span>${esc(busy ? T(busy) : cur ? (cur.name||'') : T(role==='mentor'?'rs_sub_m':'rs_sub_c'))}</span>
+      ${!busy && !cur && where==='ob' ? `<small>${esc(T('rs_li_tip'))}</small>` : ''}
+    </div>
+    <div class="rs-acts">
+      ${cur && !busy ? `<button type="button" class="btn btn-ghost btn-sm" data-file-open="${esc(cur.path)}">${esc(T('rs_view'))}</button>` : ''}
+      <button type="button" class="btn ${cur?'btn-outline':'btn-primary'} btn-sm" data-resume-up="${where}" ${busy?'disabled':''}>${esc(T(cur?'rs_replace':'rs_btn'))}</button>
+    </div>
+  </div>${sug}`;
+}
+async function handleResume(where, file){
+  const role = where==='ob' ? state.role : (myProfile && myProfile.role);
+  state.resumeBusy = { where, key:'rs_uploading' }; render();
+  let a;
+  try{ a = await uploadFile(file, RESUME_EXT); }
+  catch(e){ state.resumeBusy = null; render(); toast(e.message, 5000); return; }
+  if(where==='ob') state.obResume = { path:a.path, name:a.name };
+  else {
+    try{ await saveProfileSafe({ resumePath:a.path, resumeName:a.name }, 'update'); myProfile.resumePath = a.path; myProfile.resumeName = a.name; toast(T('rs_saved')); }
+    catch(e){ console.error('resume save failed', e); }
+  }
+  state.resumeBusy = { where, key:'rs_reading' }; render();
+  try{
+    const d = window.WorkarAgents && WorkarAgents.readResume ? await WorkarAgents.readResume(a, role, where) : null;
+    if(where==='dash' && role==='mentor' && d && d.draft && d.draft.bio) state.resumeBio = d.draft.bio;
+  }catch(e){ toast(e.message, 6000); }
+  state.resumeBusy = null; render();
+}
+document.addEventListener('click', e=>{
+  const t = e.target && e.target.closest ? e.target : null; if(!t) return;
+  const f = t.closest('[data-file-open]'); if(f){ e.preventDefault(); e.stopPropagation(); openFile(f.getAttribute('data-file-open')); return; }
+  const up = t.closest('[data-resume-up]'); if(up){ e.preventDefault(); const where = up.getAttribute('data-resume-up'); pickFile('.pdf,.docx,.txt', file=>handleResume(where, file)); return; }
+  const ia = t.closest('[data-ib-attach]'); if(ia){ e.preventDefault(); const o = ia.getAttribute('data-ib-attach'); pickFile('.pdf,.docx,.doc,.txt,.png,.jpg,.jpeg,.webp', file=>{ setHiddenConv(o, false); sendAttachment(dmId(uid, o), file, true); }); return; }
+  const ra = t.closest('[data-rc-attach]'); if(ra){ e.preventDefault(); const id = ra.getAttribute('data-rc-attach'); pickFile('.pdf,.docx,.doc,.txt,.png,.jpg,.jpeg,.webp', file=>sendAttachment(id, file, false)); return; }
+  const ub = t.closest('[data-resume-bio]'); if(ub){ e.preventDefault(); const inp = document.getElementById('edit-bio');
+    if(inp){ inp.value = state.resumeBio; inp.dispatchEvent(new Event('input', { bubbles:true })); inp.focus(); }
+    state.resumeBio = ''; render(); toast(T('ag_pc_applied')); return; }
+}, true);
 
 // ---------- Messages inbox (LinkedIn-style): one conversation per person ----------
 // A conversation joins the chat of every booking between two people with their direct-message
@@ -6407,7 +6540,8 @@ function ibReqCard(cur, iAmMentor, name){
   if(iAmMentor && cur.status==='pending' && !proposed.length){
     const c = timeCheck(cur);
     title = T('ibr_new').replace('{n}', name);
-    extra = (cur.message ? `<p class="iv-note"><span>“${esc(cur.message)}”</span></p>` : '') + checkChip(c);
+    const cp = personOf(cur.clientId);
+    extra = (cur.message ? `<p class="iv-note"><span>“${esc(cur.message)}”</span></p>` : '') + (cp.resumePath ? attHtml({ path:cp.resumePath, name:cp.resumeName||T('rs_client_resume') }, 'req') : '') + checkChip(c);
     act = `<button type="button" class="iv-ignore" data-iv-ignore="${esc(cur.id)}">${esc(T('iv_ignore'))}</button>`
       + (c.bad ? `<button type="button" class="iv-pill solid" data-propose="${esc(cur.id)}">${esc(T('iv_suggest'))}</button>${c.k!=='past' ? `<button type="button" class="iv-link" data-iv-accept="${esc(cur.id)}" data-force="1">${esc(T('iv_accept_anyway'))}</button>` : ''}`
                : `<button type="button" class="iv-pill" data-propose="${esc(cur.id)}">${esc(T('iv_suggest_other'))}</button><button type="button" class="iv-pill solid" data-iv-accept="${esc(cur.id)}">${esc(T('accept'))}</button>`);
@@ -6570,7 +6704,7 @@ function inboxThread(o){
       lastDay = day; prev = m;
       return `${sep}<div class="ib-msg ${mine?'me':''} ${cont?'cont':''}">
         ${mine ? '' : `<button type="button" class="ib-av sm ib-av-btn" data-ib-profile="${esc(o)}" aria-label="${esc(T('inbox_profile'))}">${av(o)}</button>`}
-        <div class="ib-bub"><div class="ib-text">${linkify(m.text)}</div><time>${esc(inboxTime(m.createdAt))}${mine?(m.readAt?`<span class="ib-tick read" aria-label="${esc(T('ib_seen'))}">✓✓</span>`:'<span class="ib-tick" aria-label="sent">✓</span>'):''}</time>
+        <div class="ib-bub">${m.attachment ? attHtml(m.attachment) : `<div class="ib-text">${linkify(m.text)}</div>`}<time>${esc(inboxTime(m.createdAt))}${mine?(m.readAt?`<span class="ib-tick read" aria-label="${esc(T('ib_seen'))}">✓✓</span>`:'<span class="ib-tick" aria-label="sent">✓</span>'):''}</time>
           ${mine ? `<button type="button" class="ib-del" data-del-msg="${esc(m.id)}" title="${esc(T('inbox_delete_msg'))}" aria-label="${esc(T('inbox_delete_msg'))}">${IB_IC.trash}</button>` : ''}</div>
       </div>`; }).join('') + (()=>{ const last = msgs[msgs.length-1];
         return last && last.senderId===uid && last.readAt ? `<div class="ib-seen">${esc(T('ib_seen'))} · ${esc(inboxTime(last.readAt))}</div>` : ''; })()
@@ -6605,6 +6739,7 @@ function inboxThread(o){
     <div class="ib-thread" id="ib-thread">${msgs.length ? bubbles : `<div class="ib-start"><span class="ib-av lg">${av(o)}</span><b>${esc(name)}</b><span>${esc(p.headline||p.profession||'')}</span><p>${esc(T('inbox_no_msgs').replace('{n}', name))}</p></div>`}</div>
     <form class="ib-compose" id="ib-compose" data-to="${esc(o)}">
       <button type="button" class="ib-ic ib-ai" data-ib-ai="${esc(o)}" title="${esc(T('ib_ai'))}" aria-label="${esc(T('ib_ai'))}"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 2.5l1.9 5.2a3 3 0 0 0 1.8 1.8L21 11.4l-5.3 1.9a3 3 0 0 0-1.8 1.8L12 20.4l-1.9-5.3a3 3 0 0 0-1.8-1.8L3 11.4l5.3-1.9a3 3 0 0 0 1.8-1.8L12 2.5z"/></svg></button>
+      <button type="button" class="ib-ic ib-att" data-ib-attach="${esc(o)}" title="${esc(T('att_btn'))}" aria-label="${esc(T('att_btn'))}">${CLIP_IC}</button>
       <textarea id="ib-input" rows="1" placeholder="${esc(T('inbox_ph'))}">${esc(state.inboxDraft||'')}</textarea>
       <button class="ib-send" type="submit" aria-label="${esc(T('inbox_send'))}">${IB_IC.send}</button>
     </form>`;
@@ -6679,6 +6814,7 @@ function personSheetHtml(id, p, loading){
     ${body || `<p class="pv-empty">${esc(T(loading ? 'pv_loading' : 'pv_empty'))}</p>`}
     <div class="pv-acts">
       ${li ? `<a class="btn btn-outline btn-sm" href="${esc(li)}" target="_blank" rel="noopener noreferrer">${esc(T('pv_li'))}</a>` : ''}
+      ${p.resumePath ? `<button type="button" class="btn btn-outline btn-sm" data-file-open="${esc(p.resumePath)}">${esc(T('rs_client_resume'))}</button>` : ''}
       ${isM && cache.profiles[id] ? `<button type="button" class="btn btn-primary btn-sm" data-pv-mentor="${esc(id)}">${esc(T('pv_full'))}</button>` : ''}
     </div>
   </div>`;
@@ -7518,6 +7654,7 @@ function dashboardView(){
   <details class="dash-edit" ${state.dashEditOpen?'open':''}>
   <summary><span class="de-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></span><span class="de-t"><span>${esc(T('dash_edit'))}</span><span class="muted">${esc(T('dash_edit_sub'))}</span></span></summary>
   <div class="dash-form">
+    ${resumeCard('dash')}
     <section class="df-sec"><h3>${esc(T('ob_s_about'))}</h3>
       <div class="field-row">
         <div class="field"><label>${esc(T('lbl_name'))}</label><input id="edit-name" value="${esc(myProfile.name||'')}"></div>
@@ -7761,6 +7898,7 @@ function wire(){
     doc.education = [doc.degree, doc.university].filter(Boolean).join(', ');
     doc.certifications = splitList(fd.get('certifications'));
     doc.formats = checkedVals(form, 'formats');
+    if(state.obResume){ doc.resumePath = state.obResume.path; doc.resumeName = state.obResume.name; }
     if(state.role==='client'){
       doc.currentProfession = readCurrentJob(form.querySelector('.cur-job'));
       doc.goals = checkedVals(form, 'goals');
@@ -8531,6 +8669,7 @@ init();
     if(!ob.messages) ob.messages = [{ role:'assistant', content:t('ag_ob_hello') }];
     const pct = Math.round(100*(8-ob.missing.length)/8);
     const chips = ob.messages.length<=1 ? `<div class="ag-chips">
+        <button type="button" class="ag-chip" data-resume-up="ob">${h(t('rs_btn'))}</button>
         <button type="button" class="ag-chip" data-ag-chip="__paste">${h(t('ag_ob_chip_cv'))}</button>
         <button type="button" class="ag-chip" data-ag-chip="${h(t('ag_ob_chip_q_text'))}">${h(t('ag_ob_chip_q'))}</button></div>` : '';
     box.innerHTML = `<section class="ag-card" aria-label="${h(t('ag_ob_title'))}">${head(t('ag_ob_title'), t('ag_ob_sub'))}
@@ -8765,6 +8904,26 @@ init();
     if(!hd.busy) ta.focus();
   }
 
+  /* ---------- 5b. Resume reader (sign-up form and dashboard) ---------- */
+  async function readResume(file, role, where){
+    const lang = (typeof state!=='undefined' && state.lang) || 'en';
+    const d = await api({ task:'resume_read', path:file.path, role, lang, draft: role==='mentor' ? ob.draft : undefined }, true);
+    if(where!=='ob') return d;
+    if(role==='mentor'){
+      if(!ob.messages) ob.messages = [{ role:'assistant', content:t('ag_ob_hello') }];
+      ob.messages.push({ role:'user', content:'📎 ' + file.name }, { role:'assistant', content:d.reply || t('rs_done_m') });
+      ob.draft = d.draft || ob.draft; ob.missing = d.missing || ob.missing;
+      fillForm(false);
+      return d;
+    }
+    const form = document.getElementById('onboard-form'); if(!form) return d;
+    const put = (sel, v)=>{ const el = form.querySelector(sel); if(!el || !v || el.disabled) return; el.value = Array.isArray(v) ? v.join(', ') : v; el.dispatchEvent(new Event('input', { bubbles:true })); el.dispatchEvent(new Event('change', { bubbles:true })); };
+    put('[name="currentProfession"]', d.currentProfession); put('[name="careerStage"]', d.careerStage); put('[name="targetField"]', d.targetField);
+    put('[name="degree"]', d.degree); put('[name="university"]', d.university); put('[name="certifications"]', d.certifications);
+    if(typeof toast==='function') toast(t('rs_done_c'), 5000);
+    return d;
+  }
+
   /* ---------- hook called after every render ---------- */
   function afterRender(){
     ensureStyle();
@@ -8777,7 +8936,7 @@ init();
     mountFuBanner();
     mountHelp();
   }
-  window.WorkarAgents = { afterRender, extraProfileFields };
+  window.WorkarAgents = { afterRender, extraProfileFields, readResume };
   if(document.readyState !== 'loading') afterRender(); else document.addEventListener('DOMContentLoaded', afterRender);
 })();
 </script>
