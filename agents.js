@@ -8,6 +8,7 @@ process.env.SUPABASE_URL = String(process.env.SUPABASE_URL || 'https://jgbjhzhbd
 //   POST /api/agents { task: "request_note" }   helps a client write their booking note
 //   POST /api/agents { task: "profile_review" } profile coach for mentors
 //   POST /api/agents { task: "dispute_info" | "dispute_statement" } a side's account after a reported problem
+//   POST /api/agents { task: "safety_report" }  report someone's behaviour to the admin
 //   POST /api/agents { task: "resume_read" }    reads an uploaded resume / LinkedIn PDF and pre-fills the sign-up form
 //   GET  /api/agents                            health check
 // Env vars: ANTHROPIC_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, RESEND_API_KEY (all already set)
@@ -674,6 +675,51 @@ async function dispute(req, res, b) {
   return res.status(status || 200).json(out);
 }
 
+// =====================================================================
+// 10. Safety report: behaviour in a session or in messages, sent to the admin with the recent chat
+// =====================================================================
+const SAFETY_CATS = ['harassment', 'inappropriate', 'discrimination', 'scam', 'safety', 'other'];
+async function safetyReport(req, res, b) {
+  const me = await M.userFromToken(bearer(req));
+  if (!me) return res.status(401).json({ error: 'Sign in first.' });
+  const other = String(b.reportedId || '').slice(0, 80), text = String(b.text || '').trim().slice(0, 3000);
+  const category = SAFETY_CATS.includes(b.category) ? b.category : 'other';
+  if (!other || other === me.id) return res.status(400).json({ error: 'Please choose who you are reporting.' });
+  if (text.length < 5) return res.status(400).json({ error: 'Please describe what happened in a few words.' });
+  // Only people you have a booking or a conversation with can be reported (stops spam reports).
+  const enc = encodeURIComponent;
+  const pair = [me.id, other].sort();
+  const [reqs, dms] = await Promise.all([
+    M.rows(`requests?or=(and(mentorId.eq.${enc(me.id)},clientId.eq.${enc(other)}),and(mentorId.eq.${enc(other)},clientId.eq.${enc(me.id)}))&select=id,startsAt,date,time&order=createdAt.desc&limit=10`).catch(() => []),
+    M.rows(`messages?requestId=eq.${enc('dm_' + pair[0] + '_' + pair[1])}&select=id&limit=1`).catch(() => [])
+  ]);
+  if (!reqs.length && !dms.length) return res.status(403).json({ error: 'You can only report someone you have a booking or a conversation with.' });
+  const since = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
+  const recent = await M.rows(`safety_reports?reporterId=eq.${enc(me.id)}&createdAt=gte.${enc(since)}&select=id`).catch(() => []);
+  if (recent.length >= 5) return res.status(429).json({ error: 'You have sent several reports today. The Workar team will review them.' });
+  const id = 'sr_' + Date.now().toString(36) + crypto.randomBytes(4).toString('hex');
+  const requestId = reqs.some(r => r.id === b.requestId) ? b.requestId : (reqs[0] && reqs[0].id) || null;
+  const ins = await fetch(`${process.env.SUPABASE_URL}/rest/v1/safety_reports`, { method: 'POST',
+    headers: { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: 'Bearer ' + process.env.SUPABASE_SERVICE_ROLE_KEY, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+    body: JSON.stringify({ id, reporterId: me.id, reportedId: other, requestId, category, text }) });
+  if (!ins.ok) { console.error('safety-report-save', ins.status, await ins.text()); return res.status(500).json({ error: 'The report could not be saved. Please email us instead.' }); }
+  // Context for the admin: the latest messages between the two (their chat and booking threads).
+  const threads = ['dm_' + pair[0] + '_' + pair[1]].concat(reqs.map(r => r.id)).map(enc).join(',');
+  const msgs = await M.rows(`messages?requestId=in.(${threads})&select=senderId,text,createdAt&order=createdAt.desc&limit=15`).catch(() => []);
+  const [rp, rd] = await Promise.all([M.profile(me.id), M.profile(other)]);
+  const nm = id2 => id2 === me.id ? rp.name : rd.name;
+  const labels = { harassment: 'Harassment or threats', inappropriate: 'Sexual or offensive behaviour', discrimination: 'Discrimination', scam: 'Asked for payment or details outside Workar', safety: 'Feels unsafe', other: 'Something else' };
+  await M.sendMail(M.CONTACT_EMAIL(), `${category === 'safety' ? 'URGENT safety report' : 'Safety report'}: ${rp.name} reported ${rd.name}`,
+    M.layout('A user reported someone', [
+      `<b>${M.esc(rp.name)}</b> (${M.esc(me.email || '')}) reported <b>${M.esc(rd.name)}</b> (${M.esc((await M.emailOf(other)) || '')}).`,
+      `<b>Category:</b> ${M.esc(labels[category])}`,
+      `<b>What happened:</b> “${M.esc(text)}”`,
+      msgs.length ? `<b>Latest messages between them</b> (newest first):` + M.list(msgs.map(m => `${M.esc(nm(m.senderId))}, ${M.esc(new Date(m.createdAt).toUTCString())}: ${M.esc(String(m.text || '').slice(0, 300))}`)) : 'They have no messages with each other.',
+      'Sessions are not recorded. In Admin → Safety reports you can mark the report resolved or ban the account.'
+    ], { text: 'Open admin', url: M.SITE() + '/?go=admin' }), [], { replyTo: me.email || undefined });
+  return res.status(200).json({ ok: true });
+}
+
 module.exports = async (req, res) => {
   if (req.method === 'GET') {
     const ok = !!(process.env.ANTHROPIC_API_KEY && process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
@@ -689,6 +735,7 @@ module.exports = async (req, res) => {
       case 'onboard': return await onboard(req, res, b);
       case 'resume_read': return await resumeRead(req, res, b);
       case 'dispute_info': case 'dispute_statement': return await dispute(req, res, b);
+      case 'safety_report': return await safetyReport(req, res, b);
       case 'followup_draft': return await followupDraft(req, res, b);
       case 'followup_send': return await followupSend(req, res, b);
       case 'help': return await help(req, res, b);

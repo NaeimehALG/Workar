@@ -48,8 +48,10 @@ module.exports = async (req, res) => {
 
   const adminEmail = (process.env.ADMIN_EMAIL || 'naeimeh.alaghehband@gmail.com').toLowerCase();
   const isAdmin = (me.email || '').toLowerCase() === adminEmail;
-  const prof = (await M.rows(`profiles?id=eq.${encodeURIComponent(me.id)}&select=id`))[0];
+  const pq = `profiles?id=eq.${encodeURIComponent(me.id)}&select=`;
+  const prof = (await M.rows(pq + 'id,banned'))[0] || (await M.rows(pq + 'id'))[0]; // second read: before supabase-safety.sql adds "banned"
   if (!prof && !isAdmin) { res.status(401).json({ error: 'profile-required' }); return; }
+  if (prof && prof.banned && !isAdmin) { res.status(403).json({ error: 'account-suspended' }); return; }
   // The AI coach is free. A daily fair-use limit per account keeps the Anthropic bill predictable.
   if (!isAdmin && await overDailyLimit(me.id)) { res.status(429).json({ error: 'daily-limit' }); return; }
 

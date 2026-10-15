@@ -2080,6 +2080,17 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .dp-done{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--border);font-size:14.5px;}
   .dp-ai{margin:6px 0;font-size:12.5px;line-height:1.5;color:var(--text);}
   .dp-rec{margin-top:4px;}
+  .call-report{background:transparent;color:#F5EDE3;border:1px solid rgba(245,237,227,.35);border-radius:999px;padding:7px 14px;font:inherit;font-size:13px;cursor:pointer;margin-inline-start:auto;margin-inline-end:8px;}
+  .call-report:hover{background:rgba(245,237,227,.1);}
+  .sf-back{position:fixed;inset:0;z-index:2147483000;background:rgba(20,15,11,.55);display:flex;align-items:center;justify-content:center;padding:16px;}
+  .sf-card{width:min(480px,100%);max-height:calc(100vh - 32px);overflow:auto;background:var(--surface,#fff);color:var(--text);border-radius:18px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+  .sf-card h3{margin:0 0 6px;font-size:18px;}
+  .sf-card select{width:100%;}
+  .sf-also{display:flex;gap:8px;align-items:center;font-size:13.5px;margin:4px 0 10px;}
+  .sf-911{font-size:12.5px;color:var(--muted);margin:0 0 14px;}
+  .sf-acts{display:flex;gap:10px;justify-content:flex-end;}
+  .sf-blocked{padding:12px 16px;font-size:13.5px;color:var(--muted);border-top:1px solid var(--border);text-align:center;}
+  .sf-row.done{opacity:.6;}
 </style>
 </head>
 <body>
@@ -2227,6 +2238,19 @@ const I18N = {
     dp_ai:'AI review:', dp_ai_wait:'AI review: waiting for the mentor\'s side.', dp_ai_none:'AI review: not started yet.', dp_rec:'Recommendation',
     dp_rec_release:'release the payment', dp_rec_refund:'do not charge the client', dp_rec_unclear:'unclear, please look into it',
     dp_approve_release:'Approve: release payout', dp_approve_refund:'Approve: don\'t charge',
+    ft_conduct:'Code of Conduct',
+    sf_report:'Report', sf_block:'Block', sf_unblock:'Unblock', sf_block_q:'Block {n}? They will not be able to message you or book you, and you will not see their messages.',
+    sf_blocked:'Blocked. They can no longer message or book you.', sf_unblocked:'Unblocked.', sf_blocked_note:'You blocked this person.',
+    sf_title:'Report {n}', sf_sub:'Your report is confidential. The Workar team reviews every report and may contact you for details.',
+    sf_cat:'What happened?', sf_what:'Please describe it', sf_ph:'What was said or done, and when. Include anything that helps us understand.',
+    sf_c_harassment:'Harassment or threats', sf_c_inappropriate:'Sexual or offensive behaviour', sf_c_discrimination:'Discrimination', sf_c_scam:'Asked for payment or details outside Workar', sf_c_safety:'I feel unsafe', sf_c_other:'Something else',
+    sf_also_block:'Also block this person', sf_911:'If you or someone else is in immediate danger, leave the call and call 911 first.',
+    sf_cancel:'Cancel', sf_send:'Send report', sf_short:'Please describe what happened in a few words.', sf_thanks:'Thank you. Your report was sent to the Workar team.',
+    sf_susp_t:'Your account is suspended', sf_susp_s:'Your account has been suspended after a review of a report. If you believe this is a mistake, please contact us.',
+    sf_adm_title:'Safety reports', sf_adm_hint:'Reports about behaviour in sessions and messages. A ban hides the account, blocks messages and bookings, and removes a mentor from the listings.',
+    sf_adm_none:'No reports.', sf_adm_error:'Could not load reports. Has supabase-safety.sql been run?', sf_adm_by:'Reported by {n}', sf_adm_resolve:'Mark resolved', sf_adm_resolved:'Resolved',
+    sf_adm_ban:'Ban user', sf_adm_unban:'Lift ban', sf_adm_banned:'banned', sf_adm_ban_q:'Ban this account? They will not be able to message, book or appear as a mentor.', sf_adm_unban_q:'Lift the ban on this account?',
+    sf_adm_banned_t:'Account banned.', sf_adm_unbanned_t:'Ban lifted.',
     lbl_linkedin:'LinkedIn profile', ph_linkedin:'https://linkedin.com/in/yourname',
     lbl_rate:'Price per session', rate_hint:'(leave blank if free)', ph_rate:'e.g. $40 / session',
     lbl_profession_c:'Your current or target profession', ph_profession_c:'e.g. aspiring Data Analyst', lbl_current_job:'Current profession', ph_current_job:'e.g. Document Controller', first_job:'N/A — this will be my first job', lbl_target_job:'Target profession', ph_target_job:'e.g. Data Analyst', onboard_err:'Your profile could not be saved. Send this message to Workar support:',
@@ -2310,7 +2334,7 @@ const I18N = {
     pj_cam_is_off:'Your camera is off', pj_mute:'Mute microphone', pj_unmute:'Unmute microphone', pj_cam_off:'Turn camera off', pj_cam_on:'Turn camera on', pj_join:'Join now', dt_btn:'Test camera & mic', dt_title:'Test your camera, mic and connection', dt_sub:'A 30-second check with the same video system your sessions use. Nobody else can see or hear you.', dt_dev_ok:'Camera and microphone are working. Say something: the bars should move.', dt_dev_fail:'We could not use your camera or microphone. Allow access in your browser settings, close other apps that use the camera, and try again.', dt_net_checking:'Checking your connection… (about 30 seconds)', dt_net_good:'Your connection is good. You are ready for your session.', dt_net_warning:'Your connection is OK, but video may be choppy. Try moving closer to Wi-Fi or closing other apps.', dt_net_bad:'Your connection is weak. Try another network, or use a voice call instead of video.', dt_net_failed:'We could not reach the video service. Check your internet, or try another network or browser.', dt_again:'Test again', dt_done:'Done', pj_note_daily:'Your call opens right here in Workar. No app or sign-in needed.', call_end:'Leave call', call_loading:'Connecting your call…', call_with:'Call with {n}', pj_note:'Your Jitsi session opens in a new tab. Keep the link confidential and enable the lobby to admit only your mentor or client. The first participant may need to sign in to Jitsi.',
     cal_free:'Free', cal_booked:'Booked', cal_na:'Not available', cal_off:'No times on this day. Pick a highlighted date.', cal_picked:'Selected: {d} at {t}', cal_busy_on:'Already booked that day: {t}', cal_none_busy:'Nothing booked that day yet.', cal_clash:'That time is already booked — please pick another.', cal_taken:'Someone just booked that time. Please pick another.',
     ft_privacy:'Privacy', ft_terms:'Terms', ft_refunds:'Refunds', legal_back:'← Back to Workar', legal_updated:'Last updated: {d}',
-    auth_agree:'I agree to the {t} and {p}.', lbl_timezone:'Your time zone', tz_hint:'Your weekly availability is in this time zone. Clients see times converted to their own zone.',
+    auth_agree:'I agree to the {t}, the {p} and the {c}.', lbl_timezone:'Your time zone', tz_hint:'Your weekly availability is in this time zone. Clients see times converted to their own zone.',
     cal_tz_same:'Times are in your time zone ({z}).', cal_tz_diff:'Times are shown in your time zone ({z}). The mentor is in {m}.', cal_tz_own:'Enter the date and time in your own time zone ({z}).', cal_past:'That time has already passed — please choose a later one.',
     mp_tz:'Mentor\'s time zone: {z}', mentor_not_available:'This mentor profile isn\'t available yet.', pending_review:'Your mentor profile is being set up. Workar will email you as soon as it\'s live in Find a mentor.',
     review_after_session:'You can leave a review after your first session with {n}.', review_done:'Thank you, you have already reviewed {n}.',
@@ -2661,6 +2685,19 @@ const I18N = {
     dp_ai:'بررسی هوش مصنوعی:', dp_ai_wait:'بررسی هوش مصنوعی: در انتظار روایت منتور.', dp_ai_none:'بررسی هوش مصنوعی: هنوز شروع نشده است.', dp_rec:'پیشنهاد',
     dp_rec_release:'آزاد کردن پرداخت', dp_rec_refund:'عدم برداشت از کارت مراجع', dp_rec_unclear:'نامشخص؛ لطفاً بررسی کنید',
     dp_approve_release:'تأیید: آزاد کردن پرداخت', dp_approve_refund:'تأیید: عدم برداشت',
+    ft_conduct:'منشور رفتاری',
+    sf_report:'گزارش', sf_block:'مسدود کردن', sf_unblock:'رفع مسدودی', sf_block_q:'{n} مسدود شود؟ دیگر نمی‌تواند به شما پیام دهد یا جلسه رزرو کند و پیام‌های او را نمی‌بینید.',
+    sf_blocked:'مسدود شد. دیگر نمی‌تواند به شما پیام دهد یا جلسه رزرو کند.', sf_unblocked:'مسدودی برداشته شد.', sf_blocked_note:'این فرد را مسدود کرده‌اید.',
+    sf_title:'گزارش {n}', sf_sub:'گزارش شما محرمانه است. تیم Workar همه‌ی گزارش‌ها را بررسی می‌کند و ممکن است برای جزئیات با شما تماس بگیرد.',
+    sf_cat:'چه اتفاقی افتاد؟', sf_what:'لطفاً توضیح دهید', sf_ph:'چه گفته یا انجام شد و چه زمانی. هر چیزی که به درک موضوع کمک می‌کند بنویسید.',
+    sf_c_harassment:'آزار یا تهدید', sf_c_inappropriate:'رفتار جنسی یا توهین‌آمیز', sf_c_discrimination:'تبعیض', sf_c_scam:'درخواست پول یا اطلاعات بیرون از Workar', sf_c_safety:'احساس ناامنی می‌کنم', sf_c_other:'موضوع دیگر',
+    sf_also_block:'این فرد را هم مسدود کن', sf_911:'اگر شما یا کس دیگری در خطر فوری هستید، تماس را ترک کنید و ابتدا با ۹۱۱ تماس بگیرید.',
+    sf_cancel:'انصراف', sf_send:'ارسال گزارش', sf_short:'لطفاً در چند کلمه توضیح دهید چه اتفاقی افتاد.', sf_thanks:'سپاسگزاریم. گزارش شما برای تیم Workar ارسال شد.',
+    sf_susp_t:'حساب شما تعلیق شده است', sf_susp_s:'حساب شما پس از بررسی یک گزارش تعلیق شده است. اگر فکر می‌کنید اشتباهی رخ داده، لطفاً با ما تماس بگیرید.',
+    sf_adm_title:'گزارش‌های رفتاری', sf_adm_hint:'گزارش‌ها درباره‌ی رفتار در جلسات و پیام‌ها. مسدودسازی حساب را پنهان می‌کند، پیام و رزرو را می‌بندد و منتور را از فهرست حذف می‌کند.',
+    sf_adm_none:'گزارشی نیست.', sf_adm_error:'گزارش‌ها بارگذاری نشد. آیا supabase-safety.sql اجرا شده است؟', sf_adm_by:'گزارش‌دهنده: {n}', sf_adm_resolve:'بستن گزارش', sf_adm_resolved:'بسته شد',
+    sf_adm_ban:'مسدودسازی حساب', sf_adm_unban:'رفع مسدودسازی', sf_adm_banned:'مسدود', sf_adm_ban_q:'این حساب مسدود شود؟ دیگر نمی‌تواند پیام دهد، رزرو کند یا به‌عنوان منتور دیده شود.', sf_adm_unban_q:'مسدودسازی این حساب برداشته شود؟',
+    sf_adm_banned_t:'حساب مسدود شد.', sf_adm_unbanned_t:'مسدودسازی برداشته شد.',
     lbl_linkedin:'پروفایل لینکدین', ph_linkedin:'https://linkedin.com/in/yourname',
     lbl_rate:'قیمت هر جلسه', rate_hint:'(اگر رایگان است خالی بگذارید)', ph_rate:'مثلاً ۴۰ دلار برای هر جلسه',
     lbl_profession_c:'شغل فعلی یا هدف شما', ph_profession_c:'مثلاً علاقه‌مند به تحلیل داده', lbl_current_job:'شغل فعلی', ph_current_job:'مثلاً کنترل مدارک', first_job:'ندارم؛ این اولین شغل من است', lbl_target_job:'شغل هدف', ph_target_job:'مثلاً تحلیل‌گر داده', onboard_err:'پروفایل ذخیره نشد. این پیام را برای پشتیبانی Workar بفرستید:',
@@ -2744,7 +2781,7 @@ const I18N = {
     pj_cam_is_off:'دوربین شما خاموش است', pj_mute:'قطع میکروفون', pj_unmute:'وصل میکروفون', pj_cam_off:'خاموش کردن دوربین', pj_cam_on:'روشن کردن دوربین', pj_join:'ورود به جلسه', dt_btn:'تست دوربین و میکروفون', dt_title:'تست دوربین، میکروفون و اینترنت', dt_sub:'یک بررسی ۳۰ ثانیه‌ای با همان سیستم تصویری جلسه‌ها. کسی شما را نمی‌بیند و صدایتان را نمی‌شنود.', dt_dev_ok:'دوربین و میکروفون کار می‌کنند. چیزی بگویید: خط‌ها باید حرکت کنند.', dt_dev_fail:'نتوانستیم از دوربین یا میکروفون استفاده کنیم. در تنظیمات مرورگر اجازه بدهید، برنامه‌های دیگری را که از دوربین استفاده می‌کنند ببندید و دوباره امتحان کنید.', dt_net_checking:'در حال بررسی اینترنت… (حدود ۳۰ ثانیه)', dt_net_good:'اینترنت شما خوب است. برای جلسه آماده‌اید.', dt_net_warning:'اینترنت قابل قبول است، اما ممکن است تصویر قطع‌ووصل شود. به Wi-Fi نزدیک‌تر شوید یا برنامه‌های دیگر را ببندید.', dt_net_bad:'اینترنت ضعیف است. شبکه‌ی دیگری را امتحان کنید، یا به جای تصویری، تماس صوتی بگیرید.', dt_net_failed:'به سرویس تصویری وصل نشدیم. اینترنت را بررسی کنید یا شبکه یا مرورگر دیگری را امتحان کنید.', dt_again:'تست دوباره', dt_done:'تمام', pj_note_daily:'تماس همین‌جا داخل Workar باز می‌شود؛ بدون نصب برنامه یا ورود به حساب.', call_end:'خروج از تماس', call_loading:'در حال اتصال تماس…', call_with:'تماس با {n}', pj_note:'جلسه در یک زبانه‌ی جدید Jitsi باز می‌شود. لینک را به کسی ندهید و لابی را برای تأیید ورود روشن کنید. ممکن است نفر اول لازم باشد وارد حساب Jitsi شود.',
     cal_free:'آزاد', cal_booked:'رزرو شده', cal_na:'در دسترس نیست', cal_off:'در این روز زمان آزادی نیست. یکی از تاریخ‌های رنگی را انتخاب کنید.', cal_picked:'انتخاب شد: {d} ساعت {t}', cal_busy_on:'در این روز رزرو شده: {t}', cal_none_busy:'هنوز رزروی برای این روز نیست.', cal_clash:'این زمان قبلاً رزرو شده است. زمان دیگری انتخاب کنید.', cal_taken:'همین الان کسی این زمان را رزرو کرد. زمان دیگری انتخاب کنید.',
     ft_privacy:'حریم خصوصی', ft_terms:'شرایط استفاده', ft_refunds:'بازپرداخت', legal_back:'→ بازگشت به Workar', legal_updated:'آخرین به‌روزرسانی: {d}',
-    auth_agree:'{t} و {p} را می‌پذیرم.', lbl_timezone:'منطقه‌ی زمانی شما', tz_hint:'زمان‌های آزاد هفتگی شما به این منطقه‌ی زمانی است. مراجعان زمان را به وقت خودشان می‌بینند.',
+    auth_agree:'{t}، {p} و {c} را می‌پذیرم.', lbl_timezone:'منطقه‌ی زمانی شما', tz_hint:'زمان‌های آزاد هفتگی شما به این منطقه‌ی زمانی است. مراجعان زمان را به وقت خودشان می‌بینند.',
     cal_tz_same:'زمان‌ها به وقت شماست ({z}).', cal_tz_diff:'زمان‌ها به وقت شما ({z}) نمایش داده می‌شوند. منتور در {m} است.', cal_tz_own:'تاریخ و ساعت را به وقت خودتان ({z}) وارد کنید.', cal_past:'این زمان گذشته است — زمان دیرتری انتخاب کنید.',
     mp_tz:'منطقه‌ی زمانی منتور: {z}', mentor_not_available:'این پروفایل منتور هنوز در دسترس نیست.', pending_review:'پروفایل منتوری شما در حال آماده‌سازی است. به محض اینکه در فهرست منتورها نمایش داده شود، Workar به شما ایمیل می‌زند.',
     review_after_session:'بعد از اولین جلسه با {n} می‌توانید نظر بنویسید.', review_done:'ممنون، شما قبلاً برای {n} نظر نوشته‌اید.',
@@ -2991,7 +3028,7 @@ let state = { view:'home', mentorId:null, coachMode:'resume', chatMsgs:[], sendi
   authMode:'login', authError:'', authCheckEmail:false, authBusy:false,
   lang:'en', query:'', role:null, voiceMode:false, listening:false, outOfCredits:false };
 try{ const __qs = new URLSearchParams(location.search), __dr = __qs.get('r'); if(__qs.get('go')==='dispute' && __dr){ state.view = 'dispute'; state.disputeReq = __dr.slice(0,120); history.replaceState(null, '', location.pathname + location.hash); } }catch(e){}
-try{ const __go = new URLSearchParams(location.search).get('go'); if(__go && ['dashboard','admin','privacy','terms','refunds','browse','coach','prep','requests','messages'].includes(__go)){ if(__go==='requests'){ state.ibPreferAction = true; } state.view = __go==='requests' ? 'messages' : __go; history.replaceState(null, '', location.pathname + location.hash); } }catch(e){}
+try{ const __go = new URLSearchParams(location.search).get('go'); if(__go && ['dashboard','admin','privacy','terms','refunds','conduct','browse','coach','prep','requests','messages'].includes(__go)){ if(__go==='requests'){ state.ibPreferAction = true; } state.view = __go==='requests' ? 'messages' : __go; history.replaceState(null, '', location.pathname + location.hash); } }catch(e){}
 state.ciSkip = state.ciSkip || {}; state.ciStars = state.ciStars || {};
 let cache = { profiles:{}, reviews:{}, requests:[], names:{}, people:{}, msgs:{}, busy:{}, busyLoaded:{} };
 
@@ -3160,13 +3197,35 @@ refunds: { title:'سیاست لغو و بازپرداخت', sections:[
  ['سهم منتور','برای جلسه‌ی بازپرداخت‌شده، سهمی به منتور پرداخت نمی‌شود.']
 ]}
 }};
+LEGAL.en.conduct = { title:'Code of Conduct', sections:[
+ ['Respect','Treat everyone on Workar with courtesy and respect. Disagreement is fine; insults, threats, intimidation and personal attacks are not.'],
+ ['No harassment or discrimination','No harassment, bullying, sexual comments or advances, or discrimination based on race, ethnicity, national origin, religion, gender, gender identity, sexual orientation, age, disability or any other protected ground.'],
+ ['Keep it professional','Sessions are for career mentoring. Dress and behave as you would in a professional meeting, choose a suitable place to join from, and keep the conversation on the purpose of the session.'],
+ ['Stay on Workar','Book and pay only through Workar. Do not ask for payment, bank details or passwords outside Workar. Never share another person\'s personal information without their permission.'],
+ ['Honesty','Describe your experience, qualifications and goals truthfully. Mentors give honest guidance and do not promise jobs or guaranteed results.'],
+ ['Recording','Sessions are not recorded by Workar. Do not record a session without the clear permission of the other person.'],
+ ['Reporting','If someone breaks these rules, use Report in the call, in your messages or on their profile. Reports are confidential and are reviewed by the Workar team. You can also block a person at any time.'],
+ ['Consequences','Depending on what happened, we may warn, suspend or permanently remove an account, and withhold or refund payments for the session concerned. Where someone may be in danger, we may contact the authorities.'],
+ ['Emergencies','If you feel unsafe or someone is in immediate danger, leave the call and contact local emergency services (911 in Canada) first.']
+]};
+LEGAL.fa.conduct = { title:'منشور رفتاری', sections:[
+ ['احترام','با همه در Workar با ادب و احترام رفتار کنید. اختلاف نظر اشکالی ندارد؛ توهین، تهدید، ارعاب و حمله‌ی شخصی پذیرفته نیست.'],
+ ['بدون آزار و تبعیض','هیچ‌گونه آزار، قلدری، اظهار نظر یا پیشنهاد جنسی، یا تبعیض بر اساس نژاد، قومیت، ملیت، مذهب، جنسیت، هویت جنسیتی، گرایش جنسی، سن، معلولیت یا هر زمینه‌ی حمایت‌شده‌ی دیگر مجاز نیست.'],
+ ['رفتار حرفه‌ای','جلسات برای مشاوره‌ی شغلی است. مانند یک جلسه‌ی کاری رفتار کنید، از جای مناسبی وارد شوید و گفت‌وگو را در مسیر هدف جلسه نگه دارید.'],
+ ['ماندن در Workar','رزرو و پرداخت را فقط از طریق Workar انجام دهید. بیرون از Workar درخواست پول، اطلاعات بانکی یا رمز عبور نکنید و اطلاعات شخصی دیگران را بدون اجازه منتشر نکنید.'],
+ ['صداقت','تجربه، مدارک و اهداف خود را صادقانه بیان کنید. منتورها راهنمایی صادقانه می‌دهند و استخدام یا نتیجه‌ی تضمینی وعده نمی‌دهند.'],
+ ['ضبط جلسه','Workar جلسات را ضبط نمی‌کند. بدون اجازه‌ی روشن طرف مقابل، جلسه را ضبط نکنید.'],
+ ['گزارش','اگر کسی این قوانین را رعایت نکند، از گزینه‌ی «گزارش» در تماس، پیام‌ها یا پروفایل او استفاده کنید. گزارش‌ها محرمانه‌اند و تیم Workar آن‌ها را بررسی می‌کند. هر زمان می‌توانید فردی را مسدود کنید.'],
+ ['پیامدها','بسته به آنچه رخ داده، ممکن است حساب کاربری را هشدار دهیم، تعلیق کنیم یا برای همیشه حذف کنیم و پرداخت آن جلسه را نگه داریم یا بازپرداخت کنیم. اگر کسی در خطر باشد، ممکن است با مقامات تماس بگیریم.'],
+ ['شرایط اضطراری','اگر احساس ناامنی می‌کنید یا کسی در خطر فوری است، تماس را ترک کنید و ابتدا با خدمات اضطراری محلی (۹۱۱ در کانادا) تماس بگیرید.']
+]};
 function legalView(page){
   const L = (LEGAL[state.lang] || LEGAL.en)[page] || LEGAL.en[page];
   return `<article class="legal">
     <a class="mp-back" data-nav="home">${esc(T('legal_back'))}</a>
     <h1>${esc(L.title)}</h1>
     <p class="legal-date">${esc(T('legal_updated').replace('{d}', LEGAL_UPDATED))}</p>
-    <nav class="legal-tabs">${['privacy','terms','refunds'].map(k=>`<a data-nav="${k}" class="${k===page?'on':''}">${esc(((LEGAL[state.lang]||LEGAL.en)[k]).title)}</a>`).join('')}</nav>
+    <nav class="legal-tabs">${['privacy','terms','refunds','conduct'].map(k=>`<a data-nav="${k}" class="${k===page?'on':''}">${esc(((LEGAL[state.lang]||LEGAL.en)[k]).title)}</a>`).join('')}</nav>
     ${L.sections.map(([h,t],i)=>`<section><h2>${i+1}. ${esc(h)}</h2><p>${esc(t)}</p></section>`).join('')}
   </article>`;
 }
@@ -3686,6 +3745,8 @@ function render(){
     body = resetPasswordView();
   } else if(showAuthScreen){
     body = authView();
+  } else if(myProfile && myProfile.banned && ['dashboard','messages','requests','coach','dispute'].includes(state.view)){
+    body = suspendedView();
   } else if(!myProfile && wantsAccount){
     body = onboardView();
   } else {
@@ -3702,7 +3763,7 @@ function render(){
       case 'prep': body = prepVisible() ? prepView() : homeView(); break;
       case 'prepAdmin': body = isAdmin() ? prepAdminView() : homeView(); break;
       case 'admin': body = isAdmin() ? adminView() : homeView(); break;
-      case 'privacy': case 'terms': case 'refunds': body = legalView(state.view); break;
+      case 'privacy': case 'terms': case 'refunds': case 'conduct': body = legalView(state.view); break;
       default: body = homeView();
     }
   }
@@ -3712,7 +3773,7 @@ function render(){
   if(__focusKey){ const f = [...document.querySelectorAll('#onboard-form input, #onboard-form select, #onboard-form textarea, .dash-form input, .dash-form select, .dash-form textarea')].find(e=>draftKey(e)===__focusKey);
     if(f){ f.focus({ preventScroll:true }); try{ if(__sel && __sel[0]!=null) f.setSelectionRange(__sel[0], __sel[1]); }catch(e){} } }
   if(state.langPrompt) app.appendChild(el(langPromptHtml()));
-  app.appendChild(el(`<footer class="site-foot"><div class="sf-top"><div class="sf-brand"><b>Workar</b> &middot; ${esc(T('footer_tag'))}</div><p class="foot-disc">${esc(T('disclaimer'))}</p></div><div class="sf-bottom"><span class="sf-copy" dir="ltr">&copy; ${new Date().getFullYear()} Workar</span><span class="foot-links"><a data-nav="privacy">${esc(T('ft_privacy'))}</a><a data-nav="terms">${esc(T('ft_terms'))}</a><a data-nav="refunds">${esc(T('ft_refunds'))}</a></span><span class="sf-social"><a href="${INSTAGRAM_URL}" target="_blank" rel="noopener noreferrer" aria-label="Workar on Instagram" title="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a><a href="${LINKEDIN_URL}" target="_blank" rel="noopener noreferrer" aria-label="Workar on LinkedIn" title="LinkedIn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 3a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM3 9h4v12H3V9Zm6 0h4v1.6C13.7 9.5 14.8 9 16.2 9 19 9 21 10.7 21 14v7h-4v-6.3c0-1.7-.7-2.7-2-2.7s-2 1-2 2.7V21H9V9Z"/></svg></a><a href="${YOUTUBE_URL}" target="_blank" rel="noopener noreferrer" aria-label="Workar on YouTube" title="YouTube"><svg width="18" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 7s-.2-1.5-.8-2.1C20.4 4.1 19.5 4 19 4c-2.9-.2-7-.2-7-.2s-4.1 0-7 .2c-.5 0-1.4.1-2.2.9C2.2 5.5 2 7 2 7s-.2 1.8-.2 3.5v3c0 1.7.2 3.5.2 3.5s.2 1.5.8 2.1c.8.8 1.8.8 2.4.9 1.7.2 6.8.2 6.8.2s4.1 0 7-.2c.5 0 1.4-.1 2.2-.9.6-.6.8-2.1.8-2.1s.2-1.8.2-3.5v-3C22.2 8.8 22 7 22 7ZM10 15.5v-7l6 3.5-6 3.5Z"/></svg></a></span></div></footer>`));
+  app.appendChild(el(`<footer class="site-foot"><div class="sf-top"><div class="sf-brand"><b>Workar</b> &middot; ${esc(T('footer_tag'))}</div><p class="foot-disc">${esc(T('disclaimer'))}</p></div><div class="sf-bottom"><span class="sf-copy" dir="ltr">&copy; ${new Date().getFullYear()} Workar</span><span class="foot-links"><a data-nav="privacy">${esc(T('ft_privacy'))}</a><a data-nav="terms">${esc(T('ft_terms'))}</a><a data-nav="refunds">${esc(T('ft_refunds'))}</a><a data-nav="conduct">${esc(T('ft_conduct'))}</a></span><span class="sf-social"><a href="${INSTAGRAM_URL}" target="_blank" rel="noopener noreferrer" aria-label="Workar on Instagram" title="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a><a href="${LINKEDIN_URL}" target="_blank" rel="noopener noreferrer" aria-label="Workar on LinkedIn" title="LinkedIn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 3a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM3 9h4v12H3V9Zm6 0h4v1.6C13.7 9.5 14.8 9 16.2 9 19 9 21 10.7 21 14v7h-4v-6.3c0-1.7-.7-2.7-2-2.7s-2 1-2 2.7V21H9V9Z"/></svg></a><a href="${YOUTUBE_URL}" target="_blank" rel="noopener noreferrer" aria-label="Workar on YouTube" title="YouTube"><svg width="18" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 7s-.2-1.5-.8-2.1C20.4 4.1 19.5 4 19 4c-2.9-.2-7-.2-7-.2s-4.1 0-7 .2c-.5 0-1.4.1-2.2.9C2.2 5.5 2 7 2 7s-.2 1.8-.2 3.5v3c0 1.7.2 3.5.2 3.5s.2 1.5.8 2.1c.8.8 1.8.8 2.4.9 1.7.2 6.8.2 6.8.2s4.1 0 7-.2c.5 0 1.4-.1 2.2-.9.6-.6.8-2.1.8-2.1s.2-1.8.2-3.5v-3C22.2 8.8 22 7 22 7ZM10 15.5v-7l6 3.5-6 3.5Z"/></svg></a></span></div></footer>`));
   wire();
   if(state.view==='messages' || state.view==='requests') wireInbox();
   if(window.WorkarAgents) WorkarAgents.afterRender();
@@ -3993,6 +4054,20 @@ function adminView(){
   </div>
 
   <div class="panel wide" style="margin-bottom:28px;">
+    <h3 style="margin:0 0 4px;">${esc(T('sf_adm_title'))}</h3>
+    <p class="muted" style="font-size:13px;margin:0 0 14px;">${esc(T('sf_adm_hint'))}</p>
+    ${state.sfReports==null ? `<div class="muted">${esc(T('pay_loading'))}</div>` : state.sfReports==='error' ? `<div class="muted">${esc(T('sf_adm_error'))}</div>` : !state.sfReports.length ? `<div class="empty">${esc(T('sf_adm_none'))}</div>` :
+      `<div class="apps">${state.sfReports.map(r=>`<div class="app-row sf-row ${r.status!=='open'?'done':''}">
+        <div class="avatar">${av(r.reportedId, r.reportedName||'?')}</div>
+        <div class="app-info"><b>${esc(T('sf_c_'+r.category)||r.category)} · ${esc(r.reportedName||r.reportedId)}</b>
+          <span class="muted">${esc(T('sf_adm_by').replace('{n}', r.reporterName||r.reporterId))} · ${esc(new Date(r.createdAt).toLocaleString())}${r.reportedBanned ? ' · '+esc(T('sf_adm_banned')) : ''}</span>
+          <p>${esc(r.text)}</p></div>
+        <div class="app-btns">${r.status==='open' ? `<button class="btn btn-sm btn-ghost" data-sf-resolve="${esc(r.id)}">${esc(T('sf_adm_resolve'))}</button>` : `<span class="muted" style="font-size:12.5px;">${esc(T('sf_adm_resolved'))}</span>`}
+          <button class="btn btn-sm ${r.reportedBanned?'btn-outline':'btn-primary'}" data-sf-ban="${esc(r.reportedId)}" data-on="${r.reportedBanned?'0':'1'}">${esc(T(r.reportedBanned?'sf_adm_unban':'sf_adm_ban'))}</button></div>
+      </div>`).join('')}</div>`}
+  </div>
+
+  <div class="panel wide" style="margin-bottom:28px;">
     <h3 style="margin:0 0 4px;">${esc(T('adm_prices'))}</h3>
     <p class="muted" style="font-size:13px;margin:0 0 16px;">${esc(T('adm_prices_hint'))}</p>
     <div style="overflow-x:auto;">
@@ -4083,7 +4158,29 @@ async function loadApps(){
   state.apps = error ? 'error' : (data||[]);
   if(state.view==='admin') render();
 }
+async function loadSafety(){
+  try{
+    const { data, error } = await sb.from('safety_reports').select('*').order('createdAt', { ascending:false }).limit(50);
+    if(error) throw error;
+    const ids = [...new Set((data||[]).flatMap(r=>[r.reporterId, r.reportedId]))];
+    const { data: ps } = ids.length ? await sb.from('profiles').select('id,name,banned').in('id', ids) : { data: [] };
+    const by = {}; (ps||[]).forEach(p=>{ by[p.id] = p; });
+    state.sfReports = (data||[]).map(r=>Object.assign({}, r, { reporterName:(by[r.reporterId]||{}).name, reportedName:(by[r.reportedId]||{}).name, reportedBanned: !!(by[r.reportedId]||{}).banned }));
+  }catch(e){ state.sfReports = 'error'; }
+  if(state.view==='admin') render();
+}
 function wireAdmin(){
+  if(state.sfReports==null && !state.sfLoading){ state.sfLoading = true; loadSafety().finally(()=>{ state.sfLoading = false; }); }
+  document.querySelectorAll('[data-sf-resolve]').forEach(b=>b.addEventListener('click', async ()=>{
+    b.disabled = true; const { error } = await sb.from('safety_reports').update({ status:'resolved', resolvedAt:new Date().toISOString() }).eq('id', b.getAttribute('data-sf-resolve'));
+    if(error){ b.disabled = false; toast(error.message, 6000); return; } state.sfReports = null; render(); }));
+  document.querySelectorAll('[data-sf-ban]').forEach(b=>b.addEventListener('click', async ()=>{
+    const id = b.getAttribute('data-sf-ban'), on = b.getAttribute('data-on')==='1';
+    if(!confirm(T(on ? 'sf_adm_ban_q' : 'sf_adm_unban_q'))) return;
+    b.disabled = true; const patch = on ? { banned:true, approved:false } : { banned:false };
+    const { error } = await sb.from('profiles').update(patch).eq('id', id);
+    if(error){ b.disabled = false; toast(error.message, 6000); return; }
+    toast(T(on ? 'sf_adm_banned_t' : 'sf_adm_unbanned_t')); state.sfReports = null; render(); }));
   if(state.apps==null && !state.appsLoading){ state.appsLoading = true; loadApps().finally(()=>{ state.appsLoading = false; }); }
   document.querySelectorAll('[data-approve]').forEach(b=>b.addEventListener('click', async ()=>{
     const id = b.getAttribute('data-approve'); b.disabled = true;
@@ -5549,7 +5646,7 @@ function proFooterHtml(){
       <div class="pro-foot-brand"><svg class="pro-foot-logo" viewBox="0 0 556 410" role="img" aria-label="Workar"><use href="#wkMark" x="125" y="0" width="306" height="294"/><use href="#wkWord" x="0" y="312" width="556" height="94"/></svg><p>${esc(T('footer_tag'))}</p>
         <a class="ig-link" href="${INSTAGRAM_URL}" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>@workarmentoring</a><a class="ig-link" href="${LINKEDIN_URL}" target="_blank" rel="noopener noreferrer" aria-label="Workar on LinkedIn"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 3a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM3 9h4v12H3V9Zm6 0h4v1.6C13.7 9.5 14.8 9 16.2 9 19 9 21 10.7 21 14v7h-4v-6.3c0-1.7-.7-2.7-2-2.7s-2 1-2 2.7V21H9V9Z"/></svg>LinkedIn</a><a class="ig-link" href="${YOUTUBE_URL}" target="_blank" rel="noopener noreferrer" aria-label="Workar on YouTube" style="margin-inline-start:18px"><svg width="16" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 7s-.2-1.5-.8-2.1C20.4 4.1 19.5 4 19 4c-2.9-.2-7-.2-7-.2s-4.1 0-7 .2c-.5 0-1.4.1-2.2.9C2.2 5.5 2 7 2 7s-.2 1.8-.2 3.5v3c0 1.7.2 3.5.2 3.5s.2 1.5.8 2.1c.8.8 1.8.8 2.4.9 1.7.2 6.8.2 6.8.2s4.1 0 7-.2c.5 0 1.4-.1 2.2-.9.6-.6.8-2.1.8-2.1s.2-1.8.2-3.5v-3C22.2 8.8 22 7 22 7ZM10 15.5v-7l6 3.5-6 3.5Z"/></svg> YouTube</a></div>
       <div><h4>${esc(T('ft_platform'))}</h4><a data-nav="browse">${esc(T('nav_browse'))}</a><a data-nav="coach">${esc(T('nav_coach'))}</a><a data-nav="onboard" data-role="mentor">${esc(T('cta_become'))}</a></div>
-      <div><h4>${esc(T('ft_company'))}</h4><a data-nav="privacy">${esc(T('ft_privacy'))}</a><a data-nav="terms">${esc(T('ft_terms'))}</a><a data-nav="refunds">${esc(T('ft_refunds'))}</a></div>
+      <div><h4>${esc(T('ft_company'))}</h4><a data-nav="privacy">${esc(T('ft_privacy'))}</a><a data-nav="terms">${esc(T('ft_terms'))}</a><a data-nav="refunds">${esc(T('ft_refunds'))}</a><a data-nav="conduct">${esc(T('ft_conduct'))}</a></div>
     </div>
     <p class="pro-disclaimer">${esc(T('disclaimer'))}</p>
     <div class="pro-foot-bot"><span>© ${new Date().getFullYear()} Workar</span><span>${esc(T('ft_secure'))}</span></div>
@@ -5674,7 +5771,7 @@ function authView(){
         ${pwField('password','lbl_password','ph_password', mode==='signup'?'new-password':'current-password')}
         ${mode==='signup' ? pwField('password2','lbl_confirm_password_signup','ph_confirm_password','new-password') : ''}
         ${mode==='login' ? `<div class="auth-forgot"><a href="#" id="auth-forgot">${esc(T('forgot_link'))}</a></div>` : ''}`}
-        ${mode==='signup' ? `<label class="auth-agree"><input type="checkbox" id="auth-agree" required> <span>${T('auth_agree').replace('{t}', `<a data-nav="terms">${esc(T('ft_terms'))}</a>`).replace('{p}', `<a data-nav="privacy">${esc(T('ft_privacy'))}</a>`)}</span></label>` : ''}
+        ${mode==='signup' ? `<label class="auth-agree"><input type="checkbox" id="auth-agree" required> <span>${T('auth_agree').replace('{t}', `<a data-nav="terms">${esc(T('ft_terms'))}</a>`).replace('{p}', `<a data-nav="privacy">${esc(T('ft_privacy'))}</a>`).replace('{c}', `<a data-nav="conduct">${esc(T('ft_conduct'))}</a>`)}</span></label>` : ''}
         ${state.authError ? `<div class="form-err">${esc(state.authError)}</div>` : ''}
         <button class="btn btn-primary auth-submit" type="submit" ${state.authBusy?'disabled':''}>${esc(mode==='signup' ? T('btn_signup') : mode==='forgot' ? T('btn_send_reset') : T('btn_login'))}</button>
       </form>
@@ -6049,7 +6146,8 @@ function mentorView(){
   const reviews = cache.reviews[id] || [];
   const avg = avgRating(id);
   const isSelf = id===uid;
-  const iAmClient = myProfile && myProfile.role==='client';
+  // A mentor who books another mentor is that mentor's client for the booking, and can review it too
+  const iAmClient = !!(myProfile && (myProfile.role==='client' || (cache.requests||[]).some(r=>r.clientId===uid && r.mentorId===id)));
   const langs = mentorLangs(p);
   const formats = ((p.formats&&p.formats.length)?p.formats:['video','voice']).filter(f=>FORMAT_KEYS.includes(f));
   const bookingBlock = isSelf ? `
@@ -6299,6 +6397,63 @@ async function sendMsg(reqId, text){
   else notify('message', reqId);
 }
 
+// ---------- safety: report, block, suspended accounts ----------
+const SF_CATS = ['harassment','inappropriate','discrimination','scam','safety','other'];
+state.blocked = state.blocked || [];
+function isBlocked(o){ return (state.blocked||[]).includes(o); }
+async function loadBlocks(){
+  if(!sb || !uid) return;
+  try{ const { data, error } = await sb.from('blocks').select('blockedId').eq('blockerId', uid); if(!error){ state.blocked = (data||[]).map(b=>b.blockedId); render(); } }catch(e){}
+}
+async function toggleBlock(o){
+  if(!o || o===uid) return;
+  const on = !isBlocked(o);
+  if(on && !confirm(T('sf_block_q').replace('{n}', nameOf(o)))) return;
+  const q = on ? sb.from('blocks').insert({ blockerId:uid, blockedId:o }) : sb.from('blocks').delete().eq('blockerId', uid).eq('blockedId', o);
+  const { error } = await q;
+  if(error){ toast(T('toast_update_fail'), 5000); console.error(error); return; }
+  state.blocked = on ? state.blocked.concat(o) : state.blocked.filter(x=>x!==o);
+  state.inboxMenu = false; toast(T(on ? 'sf_blocked' : 'sf_unblocked'), 4500); render();
+}
+function openReport(o, reqId){
+  closeReport();
+  const w = document.createElement('div'); w.id = 'sf-modal'; w.className = 'sf-back'; w.setAttribute('role','dialog'); w.setAttribute('aria-modal','true');
+  w.setAttribute('dir', state.lang==='fa' ? 'rtl' : 'ltr');
+  w.innerHTML = `<div class="sf-card">
+    <h3>${esc(T('sf_title').replace('{n}', nameOf(o)))}</h3>
+    <p class="muted">${esc(T('sf_sub'))}</p>
+    <div class="field"><label for="sf-cat">${esc(T('sf_cat'))}</label><select id="sf-cat">${SF_CATS.map(c=>`<option value="${c}">${esc(T('sf_c_'+c))}</option>`).join('')}</select></div>
+    <div class="field"><label for="sf-text">${esc(T('sf_what'))}</label><textarea id="sf-text" rows="5" maxlength="3000" placeholder="${esc(T('sf_ph'))}"></textarea></div>
+    <label class="sf-also"><input type="checkbox" id="sf-block" ${isBlocked(o)?'checked disabled':''}> ${esc(T('sf_also_block'))}</label>
+    <p class="sf-911">${esc(T('sf_911'))}</p>
+    <div class="sf-acts"><button type="button" class="btn btn-ghost" data-sf-close="1">${esc(T('sf_cancel'))}</button><button type="button" class="btn btn-primary" id="sf-send">${esc(T('sf_send'))}</button></div>
+  </div>`;
+  document.body.appendChild(w);
+  w.addEventListener('click', e=>{ if(e.target===w || e.target.closest('[data-sf-close]')) closeReport(); });
+  document.getElementById('sf-send').onclick = async ()=>{
+    const btn = document.getElementById('sf-send'), text = document.getElementById('sf-text').value.trim(), category = document.getElementById('sf-cat').value;
+    if(text.length < 5){ toast(T('sf_short')); return; }
+    btn.disabled = true; btn.textContent = T('dp_sending');
+    try{
+      const { data } = await sb.auth.getSession(); const tok = data && data.session && data.session.access_token;
+      const r = await fetch('/api/agents', { method:'POST', headers:{ 'Content-Type':'application/json', Authorization:'Bearer '+(tok||'') }, body: JSON.stringify({ task:'safety_report', reportedId:o, requestId:reqId||'', category, text }) });
+      const d = await r.json().catch(()=>({})); if(!r.ok) throw new Error(d.error || ('Error '+r.status));
+      const blk = document.getElementById('sf-block'); const wantBlock = blk && blk.checked && !blk.disabled;
+      closeReport(); toast(T('sf_thanks'), 6000);
+      if(wantBlock){ const { error } = await sb.from('blocks').insert({ blockerId:uid, blockedId:o }); if(!error){ state.blocked = state.blocked.concat(o); render(); } }
+    }catch(err){ btn.disabled = false; btn.textContent = T('sf_send'); toast(err.message, 6000); }
+  };
+  setTimeout(()=>{ const t = document.getElementById('sf-text'); if(t) t.focus(); }, 30);
+}
+function closeReport(){ const el = document.getElementById('sf-modal'); if(el) el.remove(); }
+document.addEventListener('keydown', e=>{ if(e.key==='Escape' && document.getElementById('sf-modal')) closeReport(); });
+document.addEventListener('click', e=>{
+  const t = e.target && e.target.closest ? e.target : null; if(!t) return;
+  const rp = t.closest('[data-report]'); if(rp){ e.preventDefault(); e.stopPropagation(); if(state.inboxMenu){ state.inboxMenu = false; render(); } openReport(rp.getAttribute('data-report'), rp.getAttribute('data-report-req') || ''); return; }
+  const bk = t.closest('[data-block]'); if(bk){ e.preventDefault(); e.stopPropagation(); toggleBlock(bk.getAttribute('data-block')); return; }
+}, true);
+function suspendedView(){ return `<div class="panel dp-card"><h2>${esc(T('sf_susp_t'))}</h2><p class="muted">${esc(T('sf_susp_s'))}</p><p><a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a></p></div>`; }
+
 // ---------- dispute form: a side's account after a reported problem (api/_dispute.js) ----------
 async function disputeApi(payload){
   const { data } = await sb.auth.getSession(); const tok = data && data.session && data.session.access_token;
@@ -6463,7 +6618,7 @@ function conversations(){
     let seen = 0; try{ seen = Number(localStorage.getItem(convSeenKey(o)))||0; }catch(e){}
     const unread = msgs.filter(m=>m.senderId!==uid && new Date(m.createdAt).getTime() > seen).length;
     return { o, last, lastT, unread, reqs };
-  }).filter(c=>!hid[c.o] || c.lastT > hid[c.o] || c.o===state.inboxWith)
+  }).filter(c=>(!hid[c.o] || c.lastT > hid[c.o] || c.o===state.inboxWith) && (!isBlocked(c.o) || c.o===state.inboxWith))
     .sort((a,b)=>b.lastT-a.lastT);
 }
 function inboxUnreadTotal(){ try{ return conversations().reduce((n,c)=>n+c.unread,0); }catch(e){ return 0; } }
@@ -6805,13 +6960,16 @@ function inboxThread(o){
         ${state.inboxMenu ? `<div class="ib-menu">
           <button data-ib-profile="${esc(o)}">${esc(T('inbox_profile'))}</button>
           <button data-inbox-unread="${esc(o)}">${esc(T('inbox_mark_unread'))}</button>
+          <button data-report="${esc(o)}">${esc(T('sf_report'))}</button>
+          <button data-block="${esc(o)}">${esc(T(isBlocked(o) ? 'sf_unblock' : 'sf_block'))}</button>
           <button class="danger" data-inbox-hide="${esc(o)}">${esc(T('inbox_delete_conv'))}</button>
         </div>` : ''}</span>
       </div>
     </div>
     ${ctx}
     <div class="ib-thread" id="ib-thread">${msgs.length ? bubbles : `<div class="ib-start"><span class="ib-av lg">${av(o)}</span><b>${esc(name)}</b><span>${esc(p.headline||p.profession||'')}</span><p>${esc(T('inbox_no_msgs').replace('{n}', name))}</p></div>`}</div>
-    <form class="ib-compose" id="ib-compose" data-to="${esc(o)}">
+    ${isBlocked(o) ? `<div class="sf-blocked">${esc(T('sf_blocked_note'))} <button type="button" class="ib-link" data-block="${esc(o)}">${esc(T('sf_unblock'))}</button></div>` : ''}
+    <form class="ib-compose" id="ib-compose" data-to="${esc(o)}" ${isBlocked(o)?'hidden':''}>
       <button type="button" class="ib-ic ib-ai" data-ib-ai="${esc(o)}" title="${esc(T('ib_ai'))}" aria-label="${esc(T('ib_ai'))}"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 2.5l1.9 5.2a3 3 0 0 0 1.8 1.8L21 11.4l-5.3 1.9a3 3 0 0 0-1.8 1.8L12 20.4l-1.9-5.3a3 3 0 0 0-1.8-1.8L3 11.4l5.3-1.9a3 3 0 0 0 1.8-1.8L12 2.5z"/></svg></button>
       <button type="button" class="ib-ic ib-att" data-ib-attach="${esc(o)}" title="${esc(T('att_btn'))}" aria-label="${esc(T('att_btn'))}">${CLIP_IC}</button>
       <textarea id="ib-input" rows="1" placeholder="${esc(T('inbox_ph'))}">${esc(state.inboxDraft||'')}</textarea>
@@ -6889,6 +7047,7 @@ function personSheetHtml(id, p, loading){
     <div class="pv-acts">
       ${li ? `<a class="btn btn-outline btn-sm" href="${esc(li)}" target="_blank" rel="noopener noreferrer">${esc(T('pv_li'))}</a>` : ''}
       ${p.resumePath ? `<button type="button" class="btn btn-outline btn-sm" data-file-open="${esc(p.resumePath)}">${esc(T('rs_client_resume'))}</button>` : ''}
+      ${id!==uid ? `<button type="button" class="btn btn-ghost btn-sm" data-report="${esc(id)}">${esc(T('sf_report'))}</button>` : ''}
       ${isM && cache.profiles[id] ? `<button type="button" class="btn btn-primary btn-sm" data-pv-mentor="${esc(id)}">${esc(T('pv_full'))}</button>` : ''}
     </div>
   </div>`;
@@ -7000,7 +7159,7 @@ async function openInAppCall(url, o){
   closeInAppCall();
   const el = document.createElement('div');
   el.id = 'call-back'; el.className = 'call-back'; el.setAttribute('role','dialog'); el.setAttribute('aria-modal','true'); el.setAttribute('aria-label', T('call_with').replace('{n}', o.other||''));
-  el.innerHTML = `<div class="call-top"><span class="call-title">${esc(T('call_with').replace('{n}', o.other||''))}</span><button type="button" class="call-end" id="call-end">${esc(T('call_end'))}</button></div>
+  el.innerHTML = `<div class="call-top"><span class="call-title">${esc(T('call_with').replace('{n}', o.other||''))}</span>${o.otherId ? `<button type="button" class="call-report" data-report="${esc(o.otherId)}" data-report-req="${esc(o.reqId||'')}">${esc(T('sf_report'))}</button>` : ''}<button type="button" class="call-end" id="call-end">${esc(T('call_end'))}</button></div>
     <div class="call-stage" id="call-stage"><p class="call-wait">${esc(T('call_loading'))}</p></div>`;
   document.body.appendChild(el); document.body.classList.add('in-call');
   document.getElementById('call-end').onclick = async ()=>{ if(__callFrame){ try{ await __callFrame.leave(); }catch(e){} } closeInAppCall(); };
@@ -7150,7 +7309,7 @@ async function openPrejoin(reqId, url, mode){
     }
     pjRender(); };
   document.getElementById('pj-join').onclick = ()=>{
-    if(isDailyUrl(pj.url)){ const u = pj.url, mic = pj.mic, cam = pj.cam; pjClose(); openInAppCall(u, { name: myName || 'Workar user', other: oname, mic, cam }); return; }
+    if(isDailyUrl(pj.url)){ const u = pj.url, mic = pj.mic, cam = pj.cam; pjClose(); const cr = (cache.requests||[]).find(x=>x.id===pj.reqId); openInAppCall(u, { name: myName || 'Workar user', other: oname, mic, cam, reqId: pj.reqId, otherId: cr ? (cr.mentorId===uid ? cr.clientId : cr.mentorId) : '' }); return; }
     let cfg = '#config.prejoinPageEnabled=false&config.disableDeepLinking=true'
       + '&config.defaultLanguage=' + encodeURIComponent('"'+(state.lang==='fa'?'fa':'en')+'"')
       + '&config.subject=' + encodeURIComponent('"Workar · '+oname+'"')
@@ -8594,7 +8753,7 @@ function loadReviews(mentorId){
 function loadRequests(){
   if(!window.__db || !myProfile || __subscribed.requests) return;
   __subscribed.requests = true;
-  loadDms(); watchDms();
+  loadDms(); watchDms(); loadBlocks();
   // Mentors can also book other mentors, so they follow both sides: requests they receive and requests they send.
   const parts = { mentorId: [], clientId: [] };
   const fields = myProfile.role==='mentor' ? ['mentorId','clientId'] : ['clientId'];
