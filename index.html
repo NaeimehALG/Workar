@@ -3951,7 +3951,7 @@ function rateWidget(current, years, nameAttr, selected){
   const m=minRate(), max=Math.max(m*10,300), val=Math.max(m,Math.round(Number(current)||m));
   const chosen=WorkarPricing.services(selected);
   return `<div class="rate-w" data-min="${m}" data-years="${Number(years)||0}">
-    <fieldset class="rate-services"><legend>${esc(pricingText('What can you help with?','در چه زمینه‌هایی کمک می‌کنید؟'))}</legend>
+    <fieldset class="rate-services" hidden><legend>${esc(pricingText('What can you help with?','در چه زمینه‌هایی کمک می‌کنید؟'))}</legend>
       <p class="hint">${esc(pricingText('Choose your session focus areas. Career guidance is included; these are not extra sessions.','موضوعات جلسه را انتخاب کنید. راهنمایی شغلی در جلسه وجود دارد؛ این گزینه‌ها جلسه اضافه نیستند.'))}</p>
       <div class="rate-service-list">${WorkarPricing.SERVICES.map(([k,en,fa])=>`<label><input type="checkbox" name="helpsWith" value="${k}" ${chosen.includes(k)?'checked':''}><span>${esc(pricingText(en,fa))}</span></label>`).join('')}</div>
     </fieldset>
