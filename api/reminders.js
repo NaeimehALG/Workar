@@ -135,6 +135,14 @@ async function holdMail(kind, r) {
 }
 
 module.exports = async (req, res) => {
+  // Public health check for uptime monitors: GET /api/reminders?health=1 → 200 "ok" when the database answers
+  if (req.query && req.query.health) {
+    try {
+      const r = await fetch(`${process.env.SUPABASE_URL}/rest/v1/site_settings?select=*&limit=1`, { headers: { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: 'Bearer ' + process.env.SUPABASE_SERVICE_ROLE_KEY } });
+      res.status(r.ok ? 200 : 503).send(r.ok ? 'ok' : 'database-down');
+    } catch (e) { res.status(503).send('database-down'); }
+    return;
+  }
   const secret = process.env.CRON_SECRET;
   if (secret && req.headers.authorization !== 'Bearer ' + secret) { res.status(401).end(); return; }
   const out = {}, problems = [];
@@ -162,6 +170,8 @@ module.exports = async (req, res) => {
   try { Object.assign(out, await require('./_dispute').runDue(problems)); } catch (e) { console.error('disputes-failed', e); problems.push('Dispute agent failed: ' + (e.message || e)); }
   // LinkedIn: send this week's queued posts to Typefully (api/_linkedin.js)
   try { Object.assign(out, await require('./_linkedin').run(problems)); } catch (e) { console.error('linkedin-failed', e); problems.push('LinkedIn posting failed: ' + (e.message || e)); }
+  // Weekly off-site backup emailed to the admin (Sundays, api/_backup.js)
+  try { Object.assign(out, await require('./_backup').run(problems)); } catch (e) { console.error('backup-failed', e); problems.push('Weekly backup failed: ' + (e.message || e)); }
   // Autopilot agents + the daily digest to the admin (always sent, even on a quiet day)
   try { Object.assign(out, await require('./_autopilot').run(problems)); } catch (e) { console.error('autopilot-failed', e); out.autopilotError = String(e.message || e); }
   res.status(200).json(out);
