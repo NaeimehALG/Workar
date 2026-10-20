@@ -658,7 +658,8 @@ async function resumeRead(req, res, b) {
   const data = await AI.callClaude({
     system: 'You read a job seeker\'s resume (or LinkedIn PDF) for Workar, a career mentorship platform, and pre-fill their sign-up form. Use only facts in the document; leave a field empty when it is not clear. ' +
       'careerStage must be one of: ' + STAGES.join(', ') + ' (student = still studying, entry = under 3 years, mid = 3 to 9 years, senior = 10+ years, switch = clearly changing fields). ' +
-      'summary: 2 or 3 first-person sentences describing their background (not their goals), 50 words maximum.\n\nRespond with valid JSON only: {"currentProfession":"","careerStage":"","targetField":"","degree":"","university":"","certifications":[],"summary":""}',
+      'company: the organization they work at now, if any. ' +
+      'summary: 2 or 3 first-person sentences describing their background (not their goals), 50 words maximum.\n\nRespond with valid JSON only: {"currentProfession":"","company":"","careerStage":"","targetField":"","degree":"","university":"","certifications":[],"summary":""}',
     messages: [{ role: 'user', content: [doc, { type: 'text', text: 'Please read this and return the JSON.' }] }],
     maxTokens: 600, timeoutMs: 45000
   });
@@ -666,7 +667,7 @@ async function resumeRead(req, res, b) {
   let j = {};
   try { j = JSON.parse(raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1)); } catch (e) { j = {}; }
   return res.status(200).json({
-    currentProfession: str(j.currentProfession, 80) || '', careerStage: STAGES.includes(j.careerStage) ? j.careerStage : '',
+    currentProfession: str(j.currentProfession, 80) || '', company: str(j.company, 120) || '', careerStage: STAGES.includes(j.careerStage) ? j.careerStage : '',
     targetField: str(j.targetField, 80) || '', degree: str(j.degree, 120) || '', university: str(j.university, 120) || '',
     certifications: strArr(j.certifications, 8, 80) || [], summary: str(j.summary, 400) || ''
   });

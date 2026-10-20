@@ -6247,6 +6247,7 @@ function onboardView(){
           ${currentJobField('currentProfession', '')}
           <div class="field"><label>${esc(T('lbl_target_job'))}</label><input name="profession" required placeholder="${esc(T('ph_target_job'))}"></div>
         </div>
+        <div class="field"><label>${esc(T('lbl_company'))} <span class="hint" style="display:inline;">${esc(T('opt_label'))}</span></label><input name="company" placeholder="${esc(T('ph_company'))}"></div>
         <div class="field-row">
           <div class="field"><label>${esc(T('lbl_stage_c'))}</label>${stageSelect('name="careerStage"', '')}</div>
           <div class="field"><label>${esc(T('lbl_field_c'))}</label><input name="targetField" placeholder="${esc(T('ph_field_c'))}"></div>
@@ -7378,7 +7379,7 @@ function personSheetHtml(id, p, loading){
   const sessions = (cache.requests||[]).filter(r=>((r.mentorId===uid && r.clientId===id) || (r.clientId===uid && r.mentorId===id)) && reqStage(r)>=2).length;
   const row = (k, v)=> v ? `<div class="pv-row"><span>${esc(T(k))}</span><b>${esc(v)}</b></div>` : '';
   const facts = [
-    isM ? row('pv_now', [p.profession, p.company].filter(Boolean).join(' · ')) : row('pv_now', p.currentProfession),
+    isM ? row('pv_now', [p.profession, p.company].filter(Boolean).join(' · ')) : row('pv_now', [p.currentProfession==='N/A'?'':p.currentProfession, p.company].filter(Boolean).join(' · ') || p.currentProfession),
     isM ? '' : row('pv_wants', p.profession),
     row('pv_field', p.targetField),
     row('pv_stage', stage),
@@ -8250,7 +8251,7 @@ function dashboardView(){
         <div class="field"><label>${esc(T('lbl_name'))}</label><input id="edit-name" value="${esc(myProfile.name||'')}"></div>
         <div class="field"><label>${esc(T(isMentor?'lbl_title_m':'lbl_target_job'))}</label><input id="edit-profession" value="${esc(myProfile.profession||'')}"></div>
       </div>
-      ${isMentor ? `<div class="field"><label>${esc(T('lbl_company'))}</label><input id="edit-company" required value="${esc(myProfile.company||'')}" placeholder="${esc(T('ph_company'))}"></div>` : currentJobField('#edit-current-job', myProfile.currentProfession||'')}
+      ${isMentor ? `<div class="field"><label>${esc(T('lbl_company'))}</label><input id="edit-company" required value="${esc(myProfile.company||'')}" placeholder="${esc(T('ph_company'))}"></div>` : currentJobField('#edit-current-job', myProfile.currentProfession||'') + `<div class="field"><label>${esc(T('lbl_company'))} <span class="hint" style="display:inline;">${esc(T('opt_label'))}</span></label><input id="edit-client-company" value="${esc(myProfile.company||'')}" placeholder="${esc(T('ph_company'))}"></div>`}
       ${!isMentor ? `
       <div class="field-row">
         <div class="field"><label>${esc(T('lbl_stage_c'))}</label>${stageSelect('id="edit-stage"', myProfile.careerStage||'')}</div>
@@ -8493,6 +8494,7 @@ function wire(){
     if(state.obResume){ doc.resumePath = state.obResume.path; doc.resumeName = state.obResume.name; }
     if(state.role==='client'){
       doc.currentProfession = readCurrentJob(form.querySelector('.cur-job'));
+      doc.company = doc.currentProfession==='N/A' ? '' : (fd.get('company')||'').trim();
       doc.goals = checkedVals(form, 'goals');
       doc.careerStage = fd.get('careerStage')||'';
       doc.targetField = (fd.get('targetField')||'').trim();
@@ -8683,6 +8685,8 @@ function wire(){
     if(stageEl) patch.careerStage = stageEl.value;
     const cjEl = document.getElementById('edit-current-job');
     if(cjEl) patch.currentProfession = readCurrentJob(cjEl);
+    const ccEl = document.getElementById('edit-client-company');
+    if(ccEl) patch.company = patch.currentProfession==='N/A' ? '' : ccEl.value.trim();
     const tfEl = document.getElementById('edit-target-field');
     if(tfEl) patch.targetField = tfEl.value.trim();
     const srEl = document.getElementById('edit-session-rate');
@@ -9523,7 +9527,7 @@ init();
     }
     const form = document.getElementById('onboard-form'); if(!form) return d;
     const put = (sel, v)=>{ const el = form.querySelector(sel); if(!el || !v || el.disabled) return; el.value = Array.isArray(v) ? v.join(', ') : v; el.dispatchEvent(new Event('input', { bubbles:true })); el.dispatchEvent(new Event('change', { bubbles:true })); };
-    put('[name="currentProfession"]', d.currentProfession); put('[name="careerStage"]', d.careerStage); put('[name="targetField"]', d.targetField);
+    put('[name="currentProfession"]', d.currentProfession); put('[name="company"]', d.company); put('[name="careerStage"]', d.careerStage); put('[name="targetField"]', d.targetField);
     put('[name="degree"]', d.degree); put('[name="university"]', d.university); put('[name="certifications"]', d.certifications);
     if(typeof toast==='function') toast(t('rs_done_c'), 5000);
     return d;
@@ -9545,7 +9549,7 @@ init();
       if(Array.isArray(r.helpsWith) && r.helpsWith.length){ f.querySelectorAll('[name="helpsWith"]').forEach(c=>{ c.checked = r.helpsWith.includes(c.value); c.dispatchEvent(new Event('change', { bubbles:true })); }); n++; }
       Object.assign(ob.draft, r);
     } else {
-      put('#edit-current-job', d.currentProfession); put('#edit-stage', d.careerStage); put('#edit-target-field', d.targetField);
+      put('#edit-current-job', d.currentProfession); put('#edit-client-company', d.company); put('#edit-stage', d.careerStage); put('#edit-target-field', d.targetField);
       put('#edit-degree', d.degree); put('#edit-university', d.university); put('#edit-certifications', d.certifications);
       if(d.summary){ const b = f.querySelector('#edit-bio'); if(b && !b.value.trim()) put('#edit-bio', d.summary); }
     }
