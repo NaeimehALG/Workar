@@ -158,7 +158,13 @@ const missingOf = d => REQUIRED.filter(k => { const v = d[k]; return Array.isArr
 async function runOnboard(messages, draft, opts = {}) {
   let reply = '';
   for (let round = 0; round < (opts.rounds || 5); round++) {
-    const data = await AI.callClaude({ system: onboardSystem(draft, missingOf(draft)), messages, tools: [ONBOARD_TOOL], maxTokens: 1500, timeoutMs: opts.timeoutMs || 25000 });
+    let data;
+    try { data = await AI.callClaude({ system: onboardSystem(draft, missingOf(draft)), messages, tools: [ONBOARD_TOOL], maxTokens: 1500, timeoutMs: opts.timeoutMs || 25000 }); }
+    catch (e) {
+      // A later round failed (usually a timeout) after the form was already filled: keep that work.
+      if (round > 0 && Object.keys(draft).length) break;
+      throw e;
+    }
     const uses = data.content.filter(x => x.type === 'tool_use');
     const text = AI.textOf(data);
     if (data.stop_reason !== 'tool_use' || !uses.length) { reply = text; break; }
@@ -650,7 +656,7 @@ async function resumeRead(req, res, b) {
   if (b.role === 'mentor') {
     const ask = 'This is my resume or my LinkedIn profile saved as a PDF. Please fill in my mentor profile from it with update_profile_draft, including a recommended first-person bio, then ask me only about what is still missing. ' +
       'Use only facts that appear in the document.' + (b.lang === 'fa' ? ' Please chat with me in Persian.' : '');
-    const out = await runOnboard([{ role: 'user', content: [doc, { type: 'text', text: ask }] }], applyDraft({}, b.draft || {}), { rounds: 2, timeoutMs: 28000 });
+    const out = await runOnboard([{ role: 'user', content: [doc, { type: 'text', text: ask }] }], applyDraft({}, b.draft || {}), { rounds: 2, timeoutMs: 26000 });
     return res.status(200).json(out);
   }
 

@@ -2075,6 +2075,7 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   /* resumes + chat attachments */
   .rs-card{display:flex;align-items:center;gap:14px;padding:14px 16px;margin:0 0 18px;border:1.5px dashed var(--border);border-radius:16px;background:var(--surface);}
   .rs-card.busy{border-style:solid;border-color:var(--accent);}
+  #ob-ai .rs-card{margin:0 0 16px;background:var(--surface-2);}
   .rs-ic{flex:none;width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:var(--accent);color:var(--accent-ink,#fff);}
   .rs-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;}
   .rs-txt b{font-size:15px;color:var(--text);}
@@ -2428,7 +2429,7 @@ const I18N = {
     call_after_accept:'Call options appear once the mentor accepts.', call_tip:'Opens in a new tab. The first person to join may be asked to sign in with Google or GitHub to start the room.',
     toast_email_confirmed:'Email confirmed — welcome to Workar!',
     ag_coach_signin:"Please create a free account or log in to use the AI coach. The AI coach is free for every account.",
-    ag_ob_paste_ph:'Paste your CV or LinkedIn "About" here', ag_ob_chip_cv:"I will paste my CV", ag_ob_chip_q:"Please ask me questions", ag_ob_chip_q_text:"I would prefer to answer a few questions, please.", ag_ob_progress:'Profile {p}% filled in',
+    ag_ob_paste_ph:'Paste your CV or LinkedIn "About" here', ag_ob_chip_cv:"I will paste my CV", ag_ob_chip_q:"Please ask me questions", ag_ob_chip_q_text:"I would prefer to answer a few questions, please.", ag_ob_progress:'Profile {p}% filled in', ag_ob_chip_fill:'Fill my profile from my resume', ag_ob_reading:'I am reading your resume and filling in your profile. This usually takes 20 to 40 seconds.', ag_ob_retry:'Try reading my resume again', ag_ob_read_fail:'I could not finish reading your resume.',
     ag_note_btn:"Help me write this note", ag_note_btn_again:"Suggest another version",
     ag_pc_title:"Profile review", ag_pc_sub:"A considered second opinion on how your profile reads to clients.", ag_pc_intro:"Receive a score, the strengths of your profile, and a refined headline and bio written only from your own details.", ag_pc_run:'Review my profile', ag_pc_again:'Review again', ag_pc_busy:'Reading your profile…', ag_pc_good:"Strengths", ag_pc_try:"Recommended improvements", ag_pc_headline:'Suggested headline', ag_pc_bio:'Suggested bio', ag_pc_use:"Use this text", ag_pc_applied:"Saved to your profile.", ag_pc_used:"Applied ✓", ag_pc_note:'Suggestions only. Nothing changes until you tap "Use this text".',
     ag_fu_title:'Follow-up plan', ag_fu_title2:'Review before sending',
@@ -2436,7 +2437,7 @@ const I18N = {
     ag_help_sub:"Booking, payments, calls and refunds", ag_help_q1:'How does booking work?', ag_help_q2:'How do refunds work?', ag_help_q3:'How do I become a mentor?', ag_help_q4:'Is my video call private?',
     ag_help_q5:'I need help with my booking', ag_tk_title:'Support request {id} created', ag_tk_sub:'A confirmation has been sent to your email. Our team will reply within one business day.',
     ag_signin:"Please sign in to continue.", ag_writing:"Preparing a response…", ag_sending:'Sending…', ag_send:'Send', ag_reset:'Start over', ag_cancel:'Cancel',
-    ag_ob_title:"Complete your profile with our assistant", ag_ob_sub:"Answer a few questions or paste your CV or LinkedIn summary. The assistant completes the form below for you to review before submitting.",
+    ag_ob_title:"Complete your profile with our assistant", ag_ob_sub:"Upload your resume or LinkedIn PDF and the assistant will complete the form below for you, or answer a few questions instead. You will review everything before submitting.",
     ag_ob_hello:"Hello, and welcome to Workar. I would be glad to help you complete your mentor profile. Could you tell me about your current role and how long you have worked in your field? If you prefer, you may paste your CV or LinkedIn summary instead.",
     ag_ob_ph:'Type your answer or paste your CV', ag_ob_foot:'Everything stays editable in the form.', ag_ob_ready:"Thank you. The main details are complete. Please review the form, add your name, LinkedIn and session rate, and submit.",
     ag_fu_btn:"Send a follow-up plan", ag_fu_again:'Send another follow-up', ag_fu_notes_lbl:"Please add brief notes from the session. The assistant will turn them into a clear plan that you can edit before sending.", ag_fu_notes_ph:'e.g. worked on her resume summary, practice 2 STAR stories, apply to 5 PM roles, next session in 2 weeks',
@@ -2884,7 +2885,7 @@ const I18N = {
     call_after_accept:'گزینه‌های تماس بعد از تأیید منتور نمایش داده می‌شوند.', call_tip:'در زبانه‌ی جدید باز می‌شود. ممکن است از اولین نفری که وارد می‌شود بخواهند با گوگل یا گیت‌هاب وارد شود تا اتاق شروع شود.',
     toast_email_confirmed:'ایمیلتان تأیید شد؛ به Workar خوش آمدید!',
     ag_coach_signin:'برای استفاده از مربی هوش مصنوعی، وارد شوید یا یک حساب رایگان بسازید. مربی هوش مصنوعی برای همه‌ی حساب‌ها رایگان است.',
-    ag_ob_paste_ph:'رزومه یا بخش «About» لینکدین‌تان را اینجا بگذارید', ag_ob_chip_cv:'رزومه‌ام را می‌گذارم', ag_ob_chip_q:'از من سؤال بپرسید', ag_ob_chip_q_text:'ترجیح می‌دهم به چند سؤال جواب بدهم.', ag_ob_progress:'{p}٪ از پروفایل کامل شده',
+    ag_ob_paste_ph:'رزومه یا بخش «About» لینکدین‌تان را اینجا بگذارید', ag_ob_chip_cv:'رزومه‌ام را می‌گذارم', ag_ob_chip_q:'از من سؤال بپرسید', ag_ob_chip_q_text:'ترجیح می‌دهم به چند سؤال جواب بدهم.', ag_ob_progress:'{p}٪ از پروفایل کامل شده', ag_ob_chip_fill:'پروفایلم را از روی رزومه پر کن', ag_ob_reading:'در حال خواندن رزومه و پر کردن پروفایل شما هستم. معمولاً ۲۰ تا ۴۰ ثانیه طول می‌کشد.', ag_ob_retry:'دوباره رزومه‌ام را بخوان', ag_ob_read_fail:'نتوانستم خواندن رزومه را تمام کنم.',
     ag_note_btn:'کمکم کن این پیام را بنویسم', ag_note_btn_again:'یک نسخه‌ی دیگر پیشنهاد بده',
     ag_pc_title:"بررسی پروفایل", ag_pc_sub:'نظری صادقانه درباره‌ی اینکه مراجعان پروفایل شما را چطور می‌بینند.', ag_pc_intro:'یک امتیاز، نقاط قوت پروفایل، و عنوان و معرفی بهتری بگیرید که فقط بر اساس اطلاعات خودتان نوشته شده است.', ag_pc_run:"بررسی پروفایل من", ag_pc_again:"بررسی دوباره", ag_pc_busy:"در حال بررسی پروفایل…", ag_pc_good:"نقاط قوت", ag_pc_try:"پیشنهادهای بهبود", ag_pc_headline:'عنوان پیشنهادی', ag_pc_bio:"معرفی پیشنهادی", ag_pc_use:"استفاده از این متن", ag_pc_applied:'در پروفایل شما ذخیره شد.', ag_pc_used:'اعمال شد ✓', ag_pc_note:'این‌ها فقط پیشنهاد هستند و تا روی «استفاده از این متن» نزنید چیزی تغییر نمی‌کند.',
     ag_fu_title:'برنامه‌ی پیگیری', ag_fu_title2:'قبل از ارسال بررسی کنید',
@@ -2892,7 +2893,7 @@ const I18N = {
     ag_help_sub:"رزرو، پرداخت، تماس و بازپرداخت", ag_help_q1:'چطور جلسه رزرو کنم؟', ag_help_q2:"شرایط بازپرداخت چیست؟", ag_help_q3:'چطور منتور شوم؟', ag_help_q4:'تماس تصویری خصوصی است؟',
     ag_help_q5:'درباره‌ی رزرو خودم کمک لازم دارم', ag_tk_title:'درخواست پشتیبانی {id} ثبت شد', ag_tk_sub:'تأییدیه به ایمیلتان فرستاده شد. تیم ما ظرف یک روز کاری جواب می‌دهد.',
     ag_signin:'برای ادامه وارد حسابتان شوید.', ag_writing:'در حال نوشتن جواب…', ag_sending:'در حال ارسال…', ag_send:'ارسال', ag_reset:'شروع دوباره', ag_cancel:"انصراف",
-    ag_ob_title:"تکمیل پروفایل با کمک دستیار", ag_ob_sub:'به چند سؤال جواب بدهید یا رزومه یا خلاصه‌ی لینکدین‌تان را بگذارید. دستیار فرم پایین را پر می‌کند تا قبل از ارسال آن را بررسی کنید.',
+    ag_ob_title:"تکمیل پروفایل با کمک دستیار", ag_ob_sub:'رزومه یا PDF پروفایل لینکدین خود را بارگذاری کنید تا دستیار فرم پایین را برایتان پر کند، یا به چند سؤال پاسخ دهید. پیش از ارسال، همه‌چیز را بررسی خواهید کرد.',
     ag_ob_hello:'سلام، به Workar خوش آمدید. خوشحال می‌شوم در تکمیل پروفایل منتوری کمکتان کنم. الان در چه سمتی کار می‌کنید و چند سال سابقه دارید؟ اگر بخواهید، می‌توانید رزومه یا خلاصه‌ی لینکدین‌تان را هم اینجا بگذارید.',
     ag_ob_ph:'جوابتان را بنویسید یا رزومه را بگذارید', ag_ob_foot:'همه‌چیز در فرم قابل ویرایش است.', ag_ob_ready:'ممنون! اطلاعات اصلی کامل شد. فرم را بررسی کنید، نام، لینکدین و نرخ جلسه را وارد کنید و بفرستید.',
     ag_fu_btn:'ارسال برنامه‌ی پیگیری', ag_fu_again:"ارسال پیگیری دیگر", ag_fu_notes_lbl:'چند یادداشت کوتاه از جلسه بنویسید. دستیار آن را به یک برنامه‌ی روشن تبدیل می‌کند که قبل از ارسال می‌توانید ویرایشش کنید.', ag_fu_notes_ph:'مثلاً: خلاصه‌ی رزومه را بررسی کردیم، دو جواب به روش STAR تمرین شود، درخواست برای ۵ موقعیت، جلسه‌ی بعد دو هفته‌ی دیگر',
@@ -6213,7 +6214,7 @@ function onboardView(){
     <div class="role-opt ${preset==='mentor'?'selected':''}" data-role="mentor"><span class="role-ic">${ICON_GUIDE}</span><b>${esc(T('role_mentor_t'))}</b><span>${esc(T('role_mentor_s'))}</span></div>
   </div>
   ${preset ? `
-  ${preset==='mentor' ? resumeCard('ob') + '<div id="ob-ai"></div>' : ''}
+  ${preset==='mentor' ? '<div id="ob-ai"></div>' : ''}
   <div class="ob-grid">
     <form id="onboard-form" class="panel wide ob-form">
       ${preset==='client' ? resumeCard('ob') : ''}
@@ -9270,22 +9271,26 @@ init();
   function mountOb(box){
     if(!ob.messages) ob.messages = [{ role:'assistant', content:t('ag_ob_hello') }];
     const pct = Math.round(100*(8-ob.missing.length)/8);
-    const chips = ob.messages.length<=1 ? `<div class="ag-chips">
-        <button type="button" class="ag-chip" data-resume-up="ob">${h(t('rs_btn'))}</button>
+    const hasRs = typeof state!=='undefined' && state.obResume;
+    const retry = ob.failed && hasRs && !ob.busy ? `<div class="ag-chips"><button type="button" class="ag-chip" data-ag-ob-read>${h(t('ag_ob_retry'))}</button></div>` : '';
+    const chips = ob.messages.length<=1 && !ob.busy ? `<div class="ag-chips">
+        ${hasRs && ob.readFor!==hasRs.path ? `<button type="button" class="ag-chip" data-ag-ob-read>${h(t('ag_ob_chip_fill'))}</button>` : ''}
         <button type="button" class="ag-chip" data-ag-chip="__paste">${h(t('ag_ob_chip_cv'))}</button>
         <button type="button" class="ag-chip" data-ag-chip="${h(t('ag_ob_chip_q_text'))}">${h(t('ag_ob_chip_q'))}</button></div>` : '';
     box.innerHTML = `<section class="ag-card" aria-label="${h(t('ag_ob_title'))}">${head(t('ag_ob_title'), t('ag_ob_sub'))}
       <div class="ag-card-body">
+        ${typeof resumeCard==='function' ? resumeCard('ob') : ''}
         <div class="ag-log" aria-live="polite">${logHtml(ob.messages, ob.busy, ob.error)}</div>
-        ${chips}
+        ${chips}${retry}
         <div class="ag-row"><textarea rows="1" aria-label="${h(t('ag_ob_ph'))}" placeholder="${h(t('ag_ob_ph'))}"></textarea>
         <button type="button" class="btn btn-primary btn-sm" ${ob.busy?'disabled':''}>${h(t('ag_send'))}</button></div>
         <div class="ag-foot"><span class="ag-progress"><span class="ag-bar"><b style="width:${pct}%"></b></span>${h(ob.missing.length ? t('ag_ob_progress').replace('{p}', pct) : t('ag_ob_ready'))}</span>
         ${ob.messages.length>1?`<button type="button" class="ag-link" data-ag-ob-reset>${h(t('ag_reset'))}</button>`:''}</div>
       </div></section>`;
     chat(box, { busy:()=>ob.busy, send:v=>sendOb(v) });
+    box.querySelectorAll('[data-ag-ob-read]').forEach(b=>b.addEventListener('click', ()=>{ if(!ob.busy && state.obResume) readResume(state.obResume, 'mentor', 'ob'); }));
     const rs = box.querySelector('[data-ag-ob-reset]');
-    if(rs) rs.addEventListener('click', ()=>{ ob.messages=null; ob.draft={}; ob.missing=Object.keys(FORM_MAP).slice(0,0).concat(['headline','profession','company','yearsExperience','bio','languages','skills','helpsWith']); ob.error=''; mountOb(box); });
+    if(rs) rs.addEventListener('click', ()=>{ ob.messages=null; ob.draft={}; ob.missing=['headline','profession','company','yearsExperience','bio','languages','skills','helpsWith']; ob.error=''; ob.failed=false; ob.readFor=''; mountOb(box); });
   }
   async function sendOb(text){
     ob.error=''; ob.messages.push({ role:'user', content:text }); ob.busy=true;
@@ -9514,17 +9519,35 @@ init();
   }
 
   /* ---------- 5b. Resume reader (sign-up form and dashboard) ---------- */
+  function remountOb(){ const b = document.getElementById('ob-ai'); if(b) mountOb(b); }
   async function readResume(file, role, where){
     const lang = (typeof state!=='undefined' && state.lang) || 'en';
+    if(role==='mentor' && where!=='dash'){
+      // Sign-up: the resume card and the assistant are one flow. The chat shows the upload, a
+      // "reading" message while the AI works, then what it filled in and what is still missing.
+      if(ob.busy) return;
+      if(!ob.messages) ob.messages = [{ role:'assistant', content:t('ag_ob_hello') }];
+      ob.messages = ob.messages.filter(m=>!m.reading);
+      if(!ob.messages.some(m=>m.role==='user' && m.content==='📎 ' + file.name)) ob.messages.push({ role:'user', content:'📎 ' + file.name });
+      ob.messages.push({ role:'assistant', content:t('ag_ob_reading'), reading:true });
+      ob.busy = true; ob.error = ''; ob.failed = false; ob.readFor = file.path; remountOb();
+      try{
+        const d = await api({ task:'resume_read', path:file.path, role, lang, draft: ob.draft }, true);
+        ob.messages = ob.messages.filter(m=>!m.reading);
+        ob.messages.push({ role:'assistant', content:d.reply || t('rs_done_m') });
+        ob.draft = d.draft || ob.draft; ob.missing = d.missing || ob.missing;
+        ob.busy = false; remountOb(); fillForm(false);
+        return d;
+      }catch(e){
+        ob.messages = ob.messages.filter(m=>!m.reading);
+        ob.busy = false; ob.failed = true; ob.error = t('ag_ob_read_fail') + ' ' + (e.message || '');
+        remountOb();
+        return null;
+      }
+    }
     const d = await api({ task:'resume_read', path:file.path, role, lang, draft: role==='mentor' ? ob.draft : undefined }, true);
     if(where==='dash'){ fillDash(d, role); return d; }
-    if(role==='mentor'){
-      if(!ob.messages) ob.messages = [{ role:'assistant', content:t('ag_ob_hello') }];
-      ob.messages.push({ role:'user', content:'📎 ' + file.name }, { role:'assistant', content:d.reply || t('rs_done_m') });
-      ob.draft = d.draft || ob.draft; ob.missing = d.missing || ob.missing;
-      fillForm(false);
-      return d;
-    }
+    if(role==='mentor'){ ob.draft = d.draft || ob.draft; ob.missing = d.missing || ob.missing; fillForm(false); return d; }
     const form = document.getElementById('onboard-form'); if(!form) return d;
     const put = (sel, v)=>{ const el = form.querySelector(sel); if(!el || !v || el.disabled) return; el.value = Array.isArray(v) ? v.join(', ') : v; el.dispatchEvent(new Event('input', { bubbles:true })); el.dispatchEvent(new Event('change', { bubbles:true })); };
     put('[name="currentProfession"]', d.currentProfession); put('[name="company"]', d.company); put('[name="careerStage"]', d.careerStage); put('[name="targetField"]', d.targetField);
@@ -9561,7 +9584,9 @@ init();
     ensureStyle();
     if(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) document.querySelectorAll('svg.ar').forEach(v=>{ try{ v.pauseAnimations(); }catch(e){} });
     const box = document.getElementById('ob-ai');
-    if(box){ mountOb(box); if(Object.keys(ob.draft).length) fillForm(true); }
+    if(box){ mountOb(box); if(Object.keys(ob.draft).length) fillForm(true);
+      const rs = typeof state!=='undefined' && state.obResume;
+      if(rs && rs.path && ob.readFor!==rs.path && !ob.busy && !(state.resumeBusy && state.resumeBusy.where==='ob')) setTimeout(()=>readResume(rs, 'mentor', 'ob'), 0); }
     mountNoteHelper();
     mountProfileCoach();
     Object.keys(fu).forEach(placeFu);
