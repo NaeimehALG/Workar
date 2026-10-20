@@ -2075,6 +2075,7 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   /* resumes + chat attachments */
   .rs-card{display:flex;align-items:center;gap:14px;padding:14px 16px;margin:0 0 18px;border:1.5px dashed var(--border);border-radius:16px;background:var(--surface);}
   .rs-card.busy{border-style:solid;border-color:var(--accent);}
+  #ob-ai .rs-card{margin:0 0 16px;background:var(--surface-2);}
   .rs-ic{flex:none;width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:var(--accent);color:var(--accent-ink,#fff);}
   .rs-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;}
   .rs-txt b{font-size:15px;color:var(--text);}
@@ -2436,7 +2437,7 @@ const I18N = {
     ag_help_sub:"Booking, payments, calls and refunds", ag_help_q1:'How does booking work?', ag_help_q2:'How do refunds work?', ag_help_q3:'How do I become a mentor?', ag_help_q4:'Is my video call private?',
     ag_help_q5:'I need help with my booking', ag_tk_title:'Support request {id} created', ag_tk_sub:'A confirmation has been sent to your email. Our team will reply within one business day.',
     ag_signin:"Please sign in to continue.", ag_writing:"Preparing a response…", ag_sending:'Sending…', ag_send:'Send', ag_reset:'Start over', ag_cancel:'Cancel',
-    ag_ob_title:"Complete your profile with our assistant", ag_ob_sub:"Answer a few questions or paste your CV or LinkedIn summary. The assistant completes the form below for you to review before submitting.",
+    ag_ob_title:"Complete your profile with our assistant", ag_ob_sub:"Upload your resume or LinkedIn PDF and the assistant will complete the form below for you, or answer a few questions instead. You will review everything before submitting.",
     ag_ob_hello:"Hello, and welcome to Workar. I would be glad to help you complete your mentor profile. Could you tell me about your current role and how long you have worked in your field? If you prefer, you may paste your CV or LinkedIn summary instead.",
     ag_ob_ph:'Type your answer or paste your CV', ag_ob_foot:'Everything stays editable in the form.', ag_ob_ready:"Thank you. The main details are complete. Please review the form, add your name, LinkedIn and session rate, and submit.",
     ag_fu_btn:"Send a follow-up plan", ag_fu_again:'Send another follow-up', ag_fu_notes_lbl:"Please add brief notes from the session. The assistant will turn them into a clear plan that you can edit before sending.", ag_fu_notes_ph:'e.g. worked on her resume summary, practice 2 STAR stories, apply to 5 PM roles, next session in 2 weeks',
@@ -2892,7 +2893,7 @@ const I18N = {
     ag_help_sub:"رزرو، پرداخت، تماس و بازپرداخت", ag_help_q1:'چطور جلسه رزرو کنم؟', ag_help_q2:"شرایط بازپرداخت چیست؟", ag_help_q3:'چطور منتور شوم؟', ag_help_q4:'تماس تصویری خصوصی است؟',
     ag_help_q5:'درباره‌ی رزرو خودم کمک لازم دارم', ag_tk_title:'درخواست پشتیبانی {id} ثبت شد', ag_tk_sub:'تأییدیه به ایمیلتان فرستاده شد. تیم ما ظرف یک روز کاری جواب می‌دهد.',
     ag_signin:'برای ادامه وارد حسابتان شوید.', ag_writing:'در حال نوشتن جواب…', ag_sending:'در حال ارسال…', ag_send:'ارسال', ag_reset:'شروع دوباره', ag_cancel:"انصراف",
-    ag_ob_title:"تکمیل پروفایل با کمک دستیار", ag_ob_sub:'به چند سؤال جواب بدهید یا رزومه یا خلاصه‌ی لینکدین‌تان را بگذارید. دستیار فرم پایین را پر می‌کند تا قبل از ارسال آن را بررسی کنید.',
+    ag_ob_title:"تکمیل پروفایل با کمک دستیار", ag_ob_sub:'رزومه یا PDF پروفایل لینکدین خود را بارگذاری کنید تا دستیار فرم پایین را برایتان پر کند، یا به چند سؤال پاسخ دهید. پیش از ارسال، همه‌چیز را بررسی خواهید کرد.',
     ag_ob_hello:'سلام، به Workar خوش آمدید. خوشحال می‌شوم در تکمیل پروفایل منتوری کمکتان کنم. الان در چه سمتی کار می‌کنید و چند سال سابقه دارید؟ اگر بخواهید، می‌توانید رزومه یا خلاصه‌ی لینکدین‌تان را هم اینجا بگذارید.',
     ag_ob_ph:'جوابتان را بنویسید یا رزومه را بگذارید', ag_ob_foot:'همه‌چیز در فرم قابل ویرایش است.', ag_ob_ready:'ممنون! اطلاعات اصلی کامل شد. فرم را بررسی کنید، نام، لینکدین و نرخ جلسه را وارد کنید و بفرستید.',
     ag_fu_btn:'ارسال برنامه‌ی پیگیری', ag_fu_again:"ارسال پیگیری دیگر", ag_fu_notes_lbl:'چند یادداشت کوتاه از جلسه بنویسید. دستیار آن را به یک برنامه‌ی روشن تبدیل می‌کند که قبل از ارسال می‌توانید ویرایشش کنید.', ag_fu_notes_ph:'مثلاً: خلاصه‌ی رزومه را بررسی کردیم، دو جواب به روش STAR تمرین شود، درخواست برای ۵ موقعیت، جلسه‌ی بعد دو هفته‌ی دیگر',
@@ -6213,7 +6214,7 @@ function onboardView(){
     <div class="role-opt ${preset==='mentor'?'selected':''}" data-role="mentor"><span class="role-ic">${ICON_GUIDE}</span><b>${esc(T('role_mentor_t'))}</b><span>${esc(T('role_mentor_s'))}</span></div>
   </div>
   ${preset ? `
-  ${preset==='mentor' ? resumeCard('ob') + '<div id="ob-ai"></div>' : ''}
+  ${preset==='mentor' ? '<div id="ob-ai"></div>' : ''}
   <div class="ob-grid">
     <form id="onboard-form" class="panel wide ob-form">
       ${preset==='client' ? resumeCard('ob') : ''}
@@ -9273,11 +9274,12 @@ init();
     const hasRs = typeof state!=='undefined' && state.obResume;
     const retry = ob.failed && hasRs && !ob.busy ? `<div class="ag-chips"><button type="button" class="ag-chip" data-ag-ob-read>${h(t('ag_ob_retry'))}</button></div>` : '';
     const chips = ob.messages.length<=1 && !ob.busy ? `<div class="ag-chips">
-        ${hasRs ? `<button type="button" class="ag-chip" data-ag-ob-read>${h(t('ag_ob_chip_fill'))}</button>` : `<button type="button" class="ag-chip" data-resume-up="ob">${h(t('rs_btn'))}</button>`}
+        ${hasRs && ob.readFor!==hasRs.path ? `<button type="button" class="ag-chip" data-ag-ob-read>${h(t('ag_ob_chip_fill'))}</button>` : ''}
         <button type="button" class="ag-chip" data-ag-chip="__paste">${h(t('ag_ob_chip_cv'))}</button>
         <button type="button" class="ag-chip" data-ag-chip="${h(t('ag_ob_chip_q_text'))}">${h(t('ag_ob_chip_q'))}</button></div>` : '';
     box.innerHTML = `<section class="ag-card" aria-label="${h(t('ag_ob_title'))}">${head(t('ag_ob_title'), t('ag_ob_sub'))}
       <div class="ag-card-body">
+        ${typeof resumeCard==='function' ? resumeCard('ob') : ''}
         <div class="ag-log" aria-live="polite">${logHtml(ob.messages, ob.busy, ob.error)}</div>
         ${chips}${retry}
         <div class="ag-row"><textarea rows="1" aria-label="${h(t('ag_ob_ph'))}" placeholder="${h(t('ag_ob_ph'))}"></textarea>
