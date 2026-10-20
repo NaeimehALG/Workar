@@ -74,6 +74,7 @@ const ONBOARD_TOOL = {
   input_schema: {
     type: 'object', additionalProperties: false,
     properties: {
+      name: { type: 'string', description: 'The mentor\'s full name exactly as they wrote it, in any script (e.g. "Samira Ahmadi" or "سمیرا احمدی"). Save it whenever they tell you their name.' },
       headline: { type: 'string', description: 'One line, max 90 characters, e.g. "Senior data analyst helping career switchers break into analytics".' },
       profession: { type: 'string', description: 'Current job title, e.g. "Data Analyst".' },
       company: { type: 'string', description: 'Name of the organization they currently work at, e.g. "Stantec". Required: always ask if not given.' },
@@ -101,10 +102,11 @@ How to run the chat:
 - Cover: what they do and for how long, education and certifications, what they can help mentees with, who they help best, which languages they can mentor in, and their key skills.
 - If they paste a CV or LinkedIn summary, extract everything you can, save it immediately, then ask only about what's missing.
 - Call update_profile_draft whenever you learn something. Choose the categories yourself; don't read category lists to them.
+- Save the mentor's name and current workplace with the tool as soon as they give them, in whatever language or script they write them. Never ask again for something already in the current form values.
 - Never invent facts: no employers, degrees, certifications, numbers or achievements they didn't give you. Ask when unsure.
 - Chat in the language the mentor writes in. Write the profile fields in English unless the mentor asks for another language.
 - The bio is first person, warm and specific, 60 to 120 words.
-- When nothing required is missing, thank them, and politely ask them to review the form, add their name and LinkedIn, choose their session rate, and submit it. Offer to change anything; apply changes with the tool.
+- When nothing required is missing, thank them, and politely ask them to review the form, add their LinkedIn (and their name, if you haven't saved it), choose their session rate, and submit it. Offer to change anything; apply changes with the tool.
 
 Rules:
 - Each mentor sets their own session rate in the rate section of the form, with a Workar minimum. Don't suggest a specific price.
@@ -133,7 +135,9 @@ function applyDraft(draft, input) {
   if (!input || typeof input !== 'object') return next;
   const set = (k, v) => { if (v !== undefined && v !== '') next[k] = v; };
   set('headline', str(input.headline, 90));
+  set('name', str(input.name, 80));
   set('profession', str(input.profession, 80));
+  set('company', str(input.company, 120));
   if (Number.isInteger(input.yearsExperience) && input.yearsExperience >= 0 && input.yearsExperience <= 60) next.yearsExperience = input.yearsExperience;
   set('bio', str(input.bio, 1500));
   set('languages', strArr(input.languages, 6, 30));

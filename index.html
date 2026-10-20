@@ -9249,7 +9249,7 @@ init();
 
   /* ---------- 1. Mentor onboarding assistant ---------- */
   const ob = { messages:null, draft:{}, missing:['headline','profession','company','yearsExperience','bio','languages','skills','helpsWith'], busy:false, error:'' };
-  const FORM_MAP = { company:'company', profession:'profession', yearsExperience:'experience', bio:'bio', languages:'languages', education:'degree', university:'university', certifications:'certifications', skills:'skills' };
+  const FORM_MAP = { name:'name', company:'company', profession:'profession', yearsExperience:'experience', bio:'bio', languages:'languages', education:'degree', university:'university', certifications:'certifications', skills:'skills' };
   function fillForm(onlyEmpty){
     const form = document.getElementById('onboard-form'); if(!form) return;
     Object.entries(FORM_MAP).forEach(([k,name])=>{
