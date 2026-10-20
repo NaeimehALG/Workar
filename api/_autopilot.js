@@ -99,8 +99,16 @@ Return an array: [{"id": "...", "flag": true|false, "reason": "short reason, emp
 //   and no more than AUTO_APPROVE_DAILY_MAX approvals per day (default 3).
 const MIN_YEARS = () => Number(process.env.AUTO_APPROVE_MIN_YEARS || 3);
 const DAILY_MAX = () => Number(process.env.AUTO_APPROVE_DAILY_MAX || 3);
+// Mentors must link a personal LinkedIn profile (linkedin.com/in/<name>); company pages or other links don't count.
+function linkedInSlug(v) {
+  let t = String(v || '').trim(); if (!t) return '';
+  if (!/^https?:\/\//i.test(t)) t = 'https://' + t.replace(/^\/+/, '');
+  const m = /^https?:\/\/(?:[a-z]{2,3}\.|www\.)?linkedin\.com\/in\/([^\/?#\s]{3,100})\/?(?:[?#].*)?$/i.exec(t);
+  if (!m) return '';
+  try { return decodeURIComponent(m[1]).toLowerCase(); } catch (e) { return m[1].toLowerCase(); }
+}
 function profileComplete(p) {
-  return !!(p.name && (p.headline || p.profession) && String(p.bio || '').trim().length >= 80 && /linkedin\.com\//i.test(String(p.linkedin || '')));
+  return !!(p.name && (p.headline || p.profession) && String(p.bio || '').trim().length >= 80 && linkedInSlug(p.linkedin));
 }
 function meetsAutoLimits(p) {
   const years = parseFloat(String(p.experience || p.yearsExperience || '').replace(/[^0-9.]/g, '')) || 0;
@@ -114,11 +122,13 @@ function meetsAutoLimits(p) {
 //   decline  → one polite "not at this time" email; the profile stays hidden
 // Applicants who never answer a question are sent a closing note after 7 days.
 const ASK_WAIT_DAYS = 7;
-function missingBasics(p) {
+function missingBasics(p, others = []) {
   const miss = [];
   if (!(p.headline || p.profession)) miss.push('your current role or headline');
   if (String(p.bio || '').trim().length < 80) miss.push('a short bio (a few sentences about your experience and how you help people)');
-  if (!/linkedin\.com\//i.test(String(p.linkedin || ''))) miss.push('a link to your LinkedIn profile');
+  const slug = linkedInSlug(p.linkedin);
+  if (!slug) miss.push('a link to your personal LinkedIn profile (for example linkedin.com/in/yourname); it is required for every Workar mentor');
+  else if (others.some(o => o.id !== p.id && o.role === 'mentor' && linkedInSlug(o.linkedin) === slug)) miss.push('your own LinkedIn profile link (the one on your profile is already used by another Workar mentor)');
   const years = parseFloat(String(p.experience || p.yearsExperience || '').replace(/[^0-9.]/g, '')) || 0;
   if (years < MIN_YEARS()) miss.push(`your years of professional experience (Workar mentors have at least ${MIN_YEARS()})`);
   if (!String(p.company || '').trim()) miss.push('where you currently work');
@@ -128,12 +138,15 @@ async function mentorApplications(rep, ctx) {
   const apps = (await M.rows(`profiles?role=eq.mentor&approved=eq.false&select=*`)).filter(p => !p.banned);
   ctx.apps = apps;
   if (!apps.length) return;
+  // every mentor's LinkedIn, so one profile can't be used by two applicants
+  let others = apps;
+  try { const all = await M.rows(`profiles?role=eq.mentor&select=id,role,linkedin`); if (Array.isArray(all)) others = all.concat(apps.filter(a => !all.some(x => x.id === a.id))); } catch (e) { console.error('mentor-linkedin-list', e.message); }
   const assess = await assessApplications(apps);
   const site = M.SITE();
   for (const p of apps) {
     const a = assess[p.id];
     if (!a) { rep.done.push(`AI review of <b>${M.esc(p.name || 'a mentor applicant')}</b> was not available today; it will try again tomorrow.`); continue; }
-    const miss = missingBasics(p);
+    const miss = missingBasics(p, others);
     let verdict = a.verdict === 'approve' || a.verdict === 'decline' ? a.verdict : 'ask';
     if (verdict === 'approve' && miss.length) verdict = 'ask';
     if (verdict === 'approve' && !on('AUTO_APPROVE_MENTORS')) { rep.needs.push({ kind: 'app', text: `<b>${M.esc(p.name)}</b> looks ready to approve (automatic approval is switched off). ${M.esc(a.summary || '')}` }); continue; }
@@ -375,4 +388,4 @@ async function run(extraErrors) {
   return Object.assign({ emails: rep.emails }, out);
 }
 
-module.exports = { run, profileComplete, once, missingBasics, mentorApplications };
+module.exports = { run, profileComplete, once, missingBasics, mentorApplications, linkedInSlug };

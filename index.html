@@ -2287,7 +2287,7 @@ const I18N = {
     sf_adm_banned_t:'Account banned.', sf_adm_unbanned_t:'Ban lifted.',
     av_hours_for:'Exact hours on {d}', av_n_slots:'{n} half-hour slots', av_all:'All day', av_none:'Clear', av_copy:'Copy to other days', av_copy_to:'Copy these hours to:', av_copied:'Copied to {d}.',
     av_pick_day:'Show the exact hours for this day', av_exact_hint:'Tap a block to add or remove it. Tap a day to choose exact half-hour start times below; a striped block is partly available.',
-    lbl_linkedin:'LinkedIn profile', ph_linkedin:'https://linkedin.com/in/yourname',
+    lbl_linkedin:'LinkedIn profile', ph_linkedin:'https://linkedin.com/in/yourname', lbl_linkedin_req:'LinkedIn profile (required)', hint_linkedin_m:'Required for every mentor. Clients use it to see your real experience.', err_linkedin_req:'Please add your LinkedIn profile link. It is required for mentors.', err_linkedin_bad:'Please enter a personal LinkedIn profile link, like linkedin.com/in/yourname.',
     lbl_rate:'Price per session', rate_hint:'(leave blank if free)', ph_rate:'e.g. $40 / session',
     lbl_profession_c:'Your current or target profession', ph_profession_c:'e.g. aspiring Data Analyst', lbl_current_job:'Current profession', ph_current_job:'e.g. Document Controller', first_job:'N/A — this will be my first job', lbl_target_job:'Target profession', ph_target_job:'e.g. Data Analyst', onboard_err:'Your profile could not be saved. Send this message to Workar support:',
     lbl_goal_c:"What's your goal?", ph_goal_c:'What are you working toward, and by when?',
@@ -2743,7 +2743,7 @@ const I18N = {
     sf_adm_banned_t:'حساب مسدود شد.', sf_adm_unbanned_t:'مسدودسازی برداشته شد.',
     av_hours_for:'ساعت‌های دقیق {d}', av_n_slots:'{n} بازه‌ی نیم‌ساعته', av_all:'تمام روز', av_none:'پاک کردن', av_copy:'کپی برای روزهای دیگر', av_copy_to:'این ساعت‌ها کپی شود برای:', av_copied:'برای {d} کپی شد.',
     av_pick_day:'نمایش ساعت‌های دقیق این روز', av_exact_hint:'با زدن هر بخش آن را اضافه یا حذف کنید. با زدن نام روز، ساعت‌های شروع نیم‌ساعته را در پایین انتخاب کنید؛ بخش راه‌راه یعنی بخشی از آن آزاد است.',
-    lbl_linkedin:'پروفایل لینکدین', ph_linkedin:'https://linkedin.com/in/yourname',
+    lbl_linkedin:'پروفایل لینکدین', ph_linkedin:'https://linkedin.com/in/yourname', lbl_linkedin_req:'پروفایل لینکدین (الزامی)', hint_linkedin_m:'برای همه‌ی منتورها الزامی است. مراجعان با آن سابقه‌ی واقعی شما را می‌بینند.', err_linkedin_req:'لطفاً لینک پروفایل لینکدین‌تان را وارد کنید. برای منتورها الزامی است.', err_linkedin_bad:'لطفاً لینک پروفایل شخصی لینکدین را وارد کنید، مثل linkedin.com/in/yourname',
     lbl_rate:'قیمت هر جلسه', rate_hint:'(اگر رایگان است خالی بگذارید)', ph_rate:'مثلاً ۴۰ دلار برای هر جلسه',
     lbl_profession_c:'شغل فعلی یا هدف شما', ph_profession_c:'مثلاً علاقه‌مند به تحلیل داده', lbl_current_job:'شغل فعلی', ph_current_job:'مثلاً کنترل مدارک', first_job:'ندارم؛ این اولین شغل من است', lbl_target_job:'شغل هدف', ph_target_job:'مثلاً تحلیل‌گر داده', onboard_err:'پروفایل ذخیره نشد. این پیام را برای پشتیبانی Workar بفرستید:',
     lbl_goal_c:'هدفتان چیست؟', ph_goal_c:'به چه سمتی می‌روید و تا چه زمانی؟',
@@ -6166,6 +6166,13 @@ function stageSelect(attrs, current){
   return `<select ${attrs}><option value="">${esc(T('stage_pick'))}</option>${STAGE_KEYS.map(k=>`<option value="${k}" ${current===k?'selected':''}>${esc(T('stage_'+k))}</option>`).join('')}</select>`;
 }
 function splitList(v){ return (v||'').split(',').map(x=>x.trim()).filter(Boolean); }
+// Mentors must give a personal LinkedIn profile (linkedin.com/in/…). Returns the cleaned link, or '' if it is not one.
+function normLinkedIn(v){
+  let t = String(v||'').trim(); if(!t) return '';
+  if(!/^https?:\/\//i.test(t)) t = 'https://'+t.replace(/^\/+/,'');
+  const m = /^https?:\/\/(?:[a-z]{2,3}\.|www\.)?linkedin\.com\/in\/([^\/?#\s]{3,100})\/?(?:[?#].*)?$/i.exec(t);
+  return m ? 'https://www.linkedin.com/in/'+m[1] : '';
+}
 function checkedVals(root, name){ return Array.from(root.querySelectorAll('input[name="'+name+'"]:checked')).map(c=>c.value); }
 
 const ICON_SEEK = '<svg viewBox="0 0 32 32" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="14" cy="14" r="8"/><path d="M20 20l7 7"/><path d="M11 14h6M14 11v6"/></svg>';
@@ -6232,7 +6239,7 @@ function onboardView(){
         ${obSection(4,'sec_rate')}
         <div class="field">${rateWidget(minRate(), 0, 'name="sessionRate"')}</div>
         ${obSection(5,'sec_links_only')}
-        <div class="field"><label>${esc(T('lbl_linkedin'))}</label><input name="linkedin" type="text" placeholder="${esc(T('ph_linkedin'))}"></div>
+        <div class="field"><label>${esc(T('lbl_linkedin_req'))}</label><input name="linkedin" type="text" required autocomplete="url" placeholder="${esc(T('ph_linkedin'))}"><div class="hint">${esc(T('hint_linkedin_m'))}</div></div>
       ` : `
         ${obSection(1,'ob_s_about')}
         <div class="field"><label>${esc(T('lbl_name'))}</label><input name="name" required autocomplete="name" placeholder="${esc(T('ph_name'))}"></div>
@@ -8280,7 +8287,7 @@ function dashboardView(){
       ${availEditor()}
     </section>` : ''}
     <section class="df-sec"><h3>${esc(T('sec_links_only'))}</h3>
-      <div class="field"><label>${esc(T('lbl_linkedin'))}</label><input id="edit-linkedin" type="text" value="${esc(myProfile.linkedin||'')}" placeholder="linkedin.com/in/…"></div>
+      <div class="field"><label>${esc(T(myProfile.role==='mentor' ? 'lbl_linkedin_req' : 'lbl_linkedin'))}</label><input id="edit-linkedin" type="text" value="${esc(myProfile.linkedin||'')}" placeholder="linkedin.com/in/…"${myProfile.role==='mentor' ? ' required' : ''}></div>
     </section>
     <div class="df-actions"><button class="btn btn-primary" id="save-profile">${esc(T('save_changes'))}</button></div>
   </div>
@@ -8467,6 +8474,16 @@ function wire(){
     const fd = new FormData(form);
     let linkedinVal = (fd.get('linkedin')||'').trim();
     if(linkedinVal && !/^https?:\/\//i.test(linkedinVal)) linkedinVal = 'https://'+linkedinVal;
+    if(state.role==='mentor'){
+      const li = normLinkedIn(linkedinVal);
+      if(!li){
+        const msg = T(linkedinVal ? 'err_linkedin_bad' : 'err_linkedin_req'); toast(msg);
+        const box = document.getElementById('onboard-err'); if(box){ box.textContent = msg; box.style.display = 'block'; }
+        const inp = form.querySelector('input[name="linkedin"]'); if(inp){ inp.scrollIntoView({block:'center'}); inp.focus(); }
+        return;
+      }
+      linkedinVal = li;
+    }
     const doc = { role: state.role, name: fd.get('name')||'', profession: fd.get('profession')||'', bio: fd.get('bio')||'', linkedin: linkedinVal, aiCredits: 5, timezone: MY_TZ };
     doc.skills = (fd.get('skills')||'').split(',').map(s=>s.trim()).filter(Boolean);
     doc.degree = (fd.get('degree')||'').trim(); doc.university = (fd.get('university')||'').trim();
@@ -8648,6 +8665,11 @@ function wire(){
     if(skillsEl) patch.skills = skillsEl.value.split(',').map(s=>s.trim()).filter(Boolean);
     const companyEl = document.getElementById('edit-company');
     if(companyEl && !companyEl.value.trim()){ toast(T('toast_company_req')); companyEl.focus(); return; }
+    if(myProfile.role==='mentor'){
+      const liEl = document.getElementById('edit-linkedin'), li = normLinkedIn(patch.linkedin);
+      if(!li){ toast(T(patch.linkedin ? 'err_linkedin_bad' : 'err_linkedin_req')); if(liEl) liEl.focus(); return; }
+      patch.linkedin = li;
+    }
     if(companyEl){ patch.company = companyEl.value.trim(); if(!myProfile.headline || patch.profession!==(myProfile.profession||'') || patch.company!==(myProfile.company||'')) patch.headline = buildHeadline(patch.profession, patch.company); }
     const degEl = document.getElementById('edit-degree'), uniEl = document.getElementById('edit-university');
     if(degEl && uniEl){ patch.degree = degEl.value.trim(); patch.university = uniEl.value.trim(); patch.education = [patch.degree, patch.university].filter(Boolean).join(', '); }

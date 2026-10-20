@@ -5,10 +5,10 @@ const assert = require('node:assert/strict');
 test('every AI verdict ends in an action, never an admin to-do', async () => {
   const mailPath = require.resolve('../api/_mail'), aiPath = require.resolve('../api/_ai'), apPath = require.resolve('../api/_autopilot');
   const realM = require('../api/_mail'), realAi = require('../api/_ai');
-  const good = { id: 'g', name: 'Good Mentor', role: 'mentor', approved: false, headline: 'Senior PM', bio: 'x'.repeat(120), linkedin: 'https://linkedin.com/in/g', experience: '8', company: 'Acme' };
+  const good = { id: 'g', name: 'Good Mentor', role: 'mentor', approved: false, headline: 'Senior PM', bio: 'x'.repeat(120), linkedin: 'https://linkedin.com/in/good-mentor', experience: '8', company: 'Acme' };
   const thin = { id: 't', name: 'Thin Mentor', role: 'mentor', approved: false, headline: 'PM', bio: 'short', linkedin: '', experience: '1' };
-  const bad = { id: 'b', name: 'Bad Mentor', role: 'mentor', approved: false, headline: 'x', bio: 'y'.repeat(100), linkedin: 'https://linkedin.com/in/b', experience: '5', company: 'Z' };
-  const banned = Object.assign({}, good, { id: 'x', banned: true });
+  const bad = { id: 'b', name: 'Bad Mentor', role: 'mentor', approved: false, headline: 'x', bio: 'y'.repeat(100), linkedin: 'https://linkedin.com/in/bad-mentor', experience: '5', company: 'Z' };
+  const banned = Object.assign({}, good, { id: 'x', banned: true, linkedin: 'https://linkedin.com/in/banned-one' });
   const patched = [], sent = [];
   require.cache[mailPath].exports = Object.assign({}, realM, {
     rows: async () => [good, thin, bad, banned], patch: async (p, b) => { patched.push({ p, b }); return { ok: true }; },
@@ -33,4 +33,19 @@ test('every AI verdict ends in an action, never an admin to-do', async () => {
     assert.ok(sent.some(m => m.to === 'b@x.test' && /application/.test(m.subject))); // declined politely
     assert.ok(!sent.some(m => m.to === 'x@x.test'));                              // banned accounts are skipped
   } finally { global.fetch = savedFetch; delete require.cache[apPath]; delete require.cache[mailPath]; delete require.cache[aiPath]; }
+});
+
+test('mentors need their own personal LinkedIn profile', () => {
+  const AP = require('../api/_autopilot');
+  assert.equal(AP.linkedInSlug('linkedin.com/in/Jane-Doe/'), 'jane-doe');
+  assert.equal(AP.linkedInSlug('https://ca.linkedin.com/in/jane-doe?trk=x'), 'jane-doe');
+  assert.equal(AP.linkedInSlug('https://www.linkedin.com/company/workarmentoring/'), '');
+  assert.equal(AP.linkedInSlug('https://linkedin.com/'), '');
+  assert.equal(AP.linkedInSlug('https://notlinkedin.com/in/jane'), '');
+  const base = { name: 'A', role: 'mentor', headline: 'PM', bio: 'x'.repeat(100), experience: '6', company: 'Acme' };
+  const a = { ...base, id: 'a', linkedin: 'https://www.linkedin.com/in/jane-doe' };
+  const b = { ...base, id: 'b', linkedin: 'linkedin.com/in/JANE-DOE/' };
+  assert.deepEqual(AP.missingBasics(a, [a]), []);
+  assert.ok(AP.missingBasics(b, [a, b]).some(m => /already used/.test(m)));
+  assert.ok(AP.missingBasics({ ...base, id: 'c', linkedin: 'https://linkedin.com/company/acme' }).some(m => /LinkedIn/.test(m)));
 });
