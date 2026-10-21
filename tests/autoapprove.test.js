@@ -29,7 +29,7 @@ test('every AI verdict ends in an action, never an admin to-do', async () => {
     assert.equal(rep.needs.length, 0);
     assert.deepEqual(patched.map(x => x.b), [{ approved: true }]);              // only the good one goes live
     assert.ok(patched[0].p.includes('id=eq.g'));
-    assert.ok(sent.some(m => m.to === 't@x.test' && /question/.test(m.subject))); // thin profile is asked for details
+    assert.ok(sent.some(m => m.to === 't@x.test' && /One last step/.test(m.subject))); // thin profile is asked for details
     assert.ok(sent.some(m => m.to === 'b@x.test' && /application/.test(m.subject))); // declined politely
     assert.ok(!sent.some(m => m.to === 'x@x.test'));                              // banned accounts are skipped
   } finally { global.fetch = savedFetch; delete require.cache[apPath]; delete require.cache[mailPath]; delete require.cache[aiPath]; }
@@ -72,6 +72,6 @@ test('a new application is reviewed right away and only that applicant is touche
     assert.equal(out.verdict, 'ask');                       // the AI liked it, but a missing LinkedIn always blocks approval
     assert.match(out.question, /LinkedIn/);
     assert.deepEqual(patched, []);
-    assert.ok(sent.some(m => m.to === 'n@x.test' && /question/.test(m.subject)));
+    assert.ok(sent.some(m => m.to === 'n@x.test' && /One last step/.test(m.subject)));
   } finally { global.fetch = savedFetch; delete require.cache[apPath]; delete require.cache[mailPath]; delete require.cache[aiPath]; }
 });

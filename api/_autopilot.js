@@ -49,6 +49,13 @@ async function checkMemory() {
   return r.ok;
 }
 
+// Greeting that matches the recipient's local time ("Good morning Samira,").
+function greeting(tz) {
+  let h = new Date().getUTCHours();
+  try { h = Number(new Intl.DateTimeFormat('en-US', { hour: 'numeric', hourCycle: 'h23', timeZone: tz || 'America/Toronto' }).format(new Date())); } catch (e) {}
+  return h >= 5 && h < 12 ? 'Good morning' : h >= 12 && h < 17 ? 'Good afternoon' : 'Good evening';
+}
+
 // ---------- run report ----------
 function newReport() { return { done: [], needs: [], emails: 0, errors: [] }; }
 async function mail(rep, to, subject, title, paras, cta) {
@@ -127,7 +134,7 @@ function missingBasics(p, others = []) {
   if (!(p.headline || p.profession)) miss.push('your current role or headline');
   if (String(p.bio || '').trim().length < 80) miss.push('a short bio (a few sentences about your experience and how you help people)');
   const slug = linkedInSlug(p.linkedin);
-  if (!slug) miss.push('a link to your personal LinkedIn profile (for example linkedin.com/in/yourname); it is required for every Workar mentor');
+  if (!slug) miss.push('A link to your personal LinkedIn profile (for example linkedin.com/in/yourname). Every Workar mentor includes one, so clients can learn more about your experience.');
   else if (others.some(o => o.id !== p.id && o.role === 'mentor' && linkedInSlug(o.linkedin) === slug)) miss.push('your own LinkedIn profile link (the one on your profile is already used by another Workar mentor)');
   const years = parseFloat(String(p.experience || p.yearsExperience || '').replace(/[^0-9.]/g, '')) || 0;
   if (years < MIN_YEARS()) miss.push(`your years of professional experience (Workar mentors have at least ${MIN_YEARS()})`);
@@ -176,15 +183,20 @@ async function mentorApplications(rep, ctx, onlyId) {
         rep.done.push(`Declined mentor applicant <b>${M.esc(p.name || '')}</b>. ${M.esc(a.summary || '')}${a.concerns && a.concerns.length ? ' (' + M.esc(a.concerns.join('; ')) + ')' : ''}`);
       }
     } else {
-      const q = miss.length ? `To finish your profile, please add ${miss.join(', ')}.` : (a.askThem || 'Could you add a little more detail about your experience and how you help people?');
+      const q = miss.length ? `Please add ${miss.join('; ')}` : (a.askThem || 'Could you add a little more detail about your experience and how you help people?');
       if (await once('ask', p.id)) {
-        const askParas = ['We are reviewing your mentor profile and have one request before it goes live:', `<b>${M.esc(q)}</b>`,
-            'Please update your profile on Workar. As soon as you save it, we review it again automatically.'];
+        const askParas = [`${greeting(p.timezone)} ${M.esc(first(p.name))},`,
+          'Thank you for joining Workar as a mentor. Your profile is almost ready to be shown to people looking for guidance.',
+          miss.length ? 'Before it goes live, we need one more detail from you:' : 'Before it goes live, we have one question for you:',
+          miss.length ? M.list(miss) : `<b>${M.esc(q)}</b>`,
+          'It takes about a minute: open your profile, add this and save. We review your profile again as soon as you save it, and you will receive an email once it is live.',
+          'If you have any questions, simply reply to this email.',
+          'Kind regards,<br>The Workar team'];
         const to = await M.emailOf(p.id);
-        await mail(rep, to, 'A quick question about your Workar mentor profile', `Thank you for applying, ${first(p.name)}`, askParas, { text: 'Update my profile', url: site + '/?go=dashboard' });
+        await mail(rep, to, 'One last step to publish your Workar mentor profile', 'Your profile is almost ready', askParas, { text: 'Complete my profile', url: site + '/?go=dashboard' });
         // The admin gets a copy of exactly what was sent, so she knows without having to do anything.
         await mail(rep, (process.env.ADMIN_EMAIL || 'naeimeh.alaghehband@gmail.com'), `Copy: we asked ${p.name} to complete their mentor profile`, `Sent to ${M.esc(p.name)}${to ? ' (' + M.esc(to) + ')' : ''}`,
-          ['This is a copy of the email Workar sent. Nothing is needed from you; the profile goes live by itself once it is complete.', '<hr style="border:0;border-top:1px solid #EAE0D2;margin:16px 0">', `<b>Thank you for applying, ${M.esc(first(p.name))}</b>`].concat(askParas));
+          ['This is a copy of the email Workar sent. Nothing is needed from you; the profile goes live by itself once it is complete.', '<hr style="border:0;border-top:1px solid #EAE0D2;margin:16px 0">', '<b>Your profile is almost ready</b>'].concat(askParas));
         rep.done.push(`Asked mentor applicant <b>${M.esc(p.name)}</b>: “${M.esc(q)}”`);
       } else if (ms(p.createdAt) && Date.now() - ms(p.createdAt) > ASK_WAIT_DAYS * DAY && await once('ask_close', p.id)) {
         await mail(rep, await M.emailOf(p.id), 'Your Workar mentor profile is still waiting', `Hello ${first(p.name)}`,
