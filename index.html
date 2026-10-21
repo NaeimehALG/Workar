@@ -2283,6 +2283,14 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
     .pf-hero .pf-facts .pf-f-lang{grid-column:1/-1 !important;order:9 !important;border-bottom:0 !important;}
     .pf-hero .pf-facts div:not(.pf-f-lang):nth-last-child(-n+1){border-bottom:0 !important;}
   }
+  /* header polish 2: hairline icons in the facts row, refined initials avatar, warm light behind the mark */
+  .pf-hero .pf-facts div{display:grid;grid-template-columns:auto 1fr;column-gap:12px;align-items:start;}
+  .pf-hero .pf-facts div > svg{grid-row:1 / span 2;width:20px;height:20px;margin-top:1px;color:#B8936A;stroke-width:1.4;}
+  .pf-hero .pf-facts dt, .pf-hero .pf-facts dd{grid-column:2;}
+  .pf-hero .pf-avatar:not(:has(img)){background:radial-gradient(circle at 35% 30%,#FFFDF9 0%,#F4EADC 55%,#E8D7C0 100%);color:#7A5A3E;font-weight:600;letter-spacing:-.02em;}
+  .pf-hero .pf-avatar:not(:has(img))::after{content:"";position:absolute;inset:9px;border-radius:50%;border:1px solid rgba(184,147,106,.35);pointer-events:none;}
+  .pf-hero .pf-avatar{position:relative;}
+  .pf-hero{background:radial-gradient(60% 120% at 92% 40%, #F7EFE4 0%, rgba(247,239,228,0) 70%), #FCFAF6 !important;}
 </style>
 </head>
 <body>
@@ -6543,6 +6551,7 @@ const MP_ICONS = (()=>{ const s = (d, w=18)=>`<svg viewBox="0 0 24 24" width="${
     target: s('<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/>', 20),
     brief: s('<rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3 12.5h18"/>', 20),
     video: s('<rect x="2.5" y="6" width="13" height="12" rx="2.5"/><path d="m15.5 10.5 6-3.5v10l-6-3.5"/>', 20),
+    star: s('<path d="m12 3.6 2.5 5.2 5.7.8-4.1 4 1 5.6L12 16.6l-5.1 2.6 1-5.6-4.1-4 5.7-.8L12 3.6Z"/>'),
     cert: s('<circle cx="12" cy="9" r="5.5"/><path d="m9.2 13.8-1.4 7.2 4.2-2.2 4.2 2.2-1.4-7.2"/>', 20),
     li: '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg>'
   }; })();
@@ -6647,11 +6656,11 @@ function mentorView(){
       </div>
     </div>
     <dl class="pf-facts">
-      ${(()=>{ const yrs = String(p.experience||'').trim(); return yrs ? `<div><dt>${esc(T('mp_f_exp'))}</dt><dd>${esc(T('mp_h_exp_v').replace('{n}', yrs))}</dd></div>` : ''; })()}
-      ${avg ? `<div><dt>${esc(T('mp_f_rate'))}</dt><dd>${avg.toFixed(1)} <span class="pf-star">★</span> <small>(${reviews.length})</small></dd></div>` : ''}
-      ${langs.length ? `<div class="pf-f-lang"><dt>${esc(T('mp_f_lang'))}</dt><dd>${esc(langs.join(', '))}</dd></div>` : ''}
-      <div><dt>${esc(T('mp_f_sess'))}</dt><dd>${esc(T(formats.length>1 ? 'mp_f_sess_both' : (formats[0]==='voice' ? 'mp_f_sess_voice' : 'mp_f_sess_video')).replace('{m}', SESSION_MIN))}</dd></div>
-      <div><dt>${esc(T('mp_f_tz'))}</dt><dd>${esc(tzCity(mentorTz(id)))} (${esc(tzAbbr(mentorTz(id)))})</dd></div>
+      ${(()=>{ const yrs = String(p.experience||'').trim(); return yrs ? `<div>${MP_ICONS.brief}<dt>${esc(T('mp_f_exp'))}</dt><dd>${esc(T('mp_h_exp_v').replace('{n}', yrs))}</dd></div>` : ''; })()}
+      ${avg ? `<div>${MP_ICONS.star}<dt>${esc(T('mp_f_rate'))}</dt><dd>${avg.toFixed(1)} <span class="pf-star">★</span> <small>(${reviews.length})</small></dd></div>` : ''}
+      ${langs.length ? `<div class="pf-f-lang">${MP_ICONS.globe}<dt>${esc(T('mp_f_lang'))}</dt><dd>${esc(langs.join(', '))}</dd></div>` : ''}
+      <div>${MP_ICONS.video}<dt>${esc(T('mp_f_sess'))}</dt><dd>${esc(T(formats.length>1 ? 'mp_f_sess_both' : (formats[0]==='voice' ? 'mp_f_sess_voice' : 'mp_f_sess_video')).replace('{m}', SESSION_MIN))}</dd></div>
+      <div>${MP_ICONS.clock}<dt>${esc(T('mp_f_tz'))}</dt><dd>${esc(tzCity(mentorTz(id)))} (${esc(tzAbbr(mentorTz(id)))})</dd></div>
     </dl>
   </header>
   ${isSelf ? `<div class="banner">${esc(T(p.approved===false ? 'pending_review' : 'this_is_profile'))}</div>` : ''}
