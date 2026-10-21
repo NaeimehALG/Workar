@@ -2223,6 +2223,24 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .app-state{font-size:12px;font-weight:600;color:var(--muted);padding:5px 10px;border-radius:999px;background:var(--surface-2);text-align:center;white-space:nowrap;}
   .pf-hero::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
   .pf-top, .pf-facts{position:relative;z-index:1;} .pf-top{isolation:isolate;}
+  /* profile hero: light background artwork (profile-hero.jpg) */
+  .pf-hero{background:#FBF7F1;color:#4A3526;border:1px solid #EDE2D3;box-shadow:0 30px 60px -46px rgba(74,53,38,.5);}
+  .pf-hero::before{content:"";position:absolute;inset:0;background:url("profile-hero.jpg") right center / cover no-repeat;pointer-events:none;}
+  html[dir="rtl"] .pf-hero::before{transform:scaleX(-1);}
+  .pf-hero::after{display:none;}
+  .pf-avatar{box-shadow:0 0 0 6px #fff,0 0 0 7px #E2CDB0,0 22px 40px -22px rgba(74,53,38,.55);}
+  .pf-id h1{color:#4A3526;}
+  .pf-headline{color:#8B6A4C;}
+  .pf-li{color:#4A3526;border-color:rgba(74,53,38,.22);background:rgba(255,255,255,.6);}
+  .pf-li:hover{background:#fff;}
+  .pf-li:focus-visible{outline-color:#8B6A4C;}
+  .pf-facts{background:rgba(255,255,255,.55);border-top-color:#EDE2D3;backdrop-filter:blur(2px);}
+  .pf-facts div{border-color:#EDE2D3 !important;}
+  .pf-facts dt{color:#A68A6D;}
+  .pf-facts dd{color:#4A3526;}
+  .pf-facts dd small{color:#A68A6D;} .pf-star{color:#C99B6C;}
+  @media (max-width:700px){.pf-hero::before{background-image:url("profile-hero-sm.jpg");background-position:72% top;background-size:auto 100%;opacity:.55;}}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pf-hero{border-color:transparent;}}
 </style>
 </head>
 <body>
