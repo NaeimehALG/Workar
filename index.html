@@ -2126,6 +2126,87 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .av-copy{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12.5px;margin-bottom:10px;}
   .av-link{background:none;border:0;padding:0;font:inherit;font-size:12.5px;font-weight:600;color:var(--accent);cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
   .av-copy-d{padding:4px 10px;border-radius:999px;border:1px solid var(--border);background:var(--bg,#fff);font:inherit;font-size:12px;cursor:pointer;}
+
+  /* ===== mentor profile v2 (applies to every mentor) ===== */
+  .mp-hero{display:block;position:relative;padding:0;margin:0 0 34px;border:1px solid var(--border);border-bottom:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface);overflow:hidden;box-shadow:0 30px 60px -48px rgba(74,53,38,.55);}
+  .mp-cover{height:132px;background:
+      radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--accent) 22%, transparent) 0%, transparent 55%),
+      radial-gradient(90% 120% at 100% 100%, color-mix(in srgb, var(--accent) 16%, transparent) 0%, transparent 60%),
+      linear-gradient(135deg, var(--surface-2), color-mix(in srgb, var(--surface-2) 70%, var(--accent) 12%));
+    position:relative;}
+  .mp-cover::after{content:"";position:absolute;inset:0;opacity:.35;background-image:radial-gradient(color-mix(in srgb, var(--accent) 40%, transparent) 1px, transparent 1.2px);background-size:18px 18px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 40%,#000 70%,transparent);mask-image:linear-gradient(90deg,transparent,#000 40%,#000 70%,transparent);}
+  .mp-hero-body{display:flex;gap:26px;align-items:flex-start;padding:0 32px 26px;margin-top:-58px;position:relative;}
+  .mp-avatar{width:132px;height:132px;font-size:46px;font-weight:700;flex:none;border:5px solid var(--surface);box-shadow:0 0 0 1px var(--border),0 14px 30px -18px rgba(74,53,38,.6);}
+  .mp-id{min-width:0;padding-top:74px;}
+  .mp-id h1{font-size:36px;line-height:1.1;margin:0 0 6px;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .mp-li{display:inline-flex;color:var(--accent);opacity:.85;transition:opacity .15s,transform .15s;}
+  .mp-li:hover{opacity:1;transform:translateY(-1px);}
+  .mp-headline{font-size:17px;color:var(--accent);font-weight:600;margin:0 0 14px;line-height:1.4;}
+  .mp-langs{display:flex;flex-wrap:wrap;align-items:center;gap:6px;}
+  .mp-langs-lbl{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);margin-inline-end:4px;}
+  .mp-lang{font-size:12.5px;font-weight:600;padding:4px 11px;border-radius:999px;background:var(--surface-2);border:1px solid var(--border);color:var(--text);}
+  .mp-stats{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);border-top:1px solid var(--border);background:color-mix(in srgb, var(--surface-2) 45%, var(--surface));}
+  .mp-stats div{padding:16px 24px;border-inline-start:1px solid var(--border);}
+  .mp-stats div:first-child{border-inline-start:0;}
+  .mp-stats b{display:block;font-size:22px;font-weight:700;line-height:1.15;letter-spacing:-.01em;color:var(--text);}
+  .mp-stats b i{font-style:normal;font-size:16px;color:var(--accent);}
+  .mp-stats b.mp-new{color:var(--accent);}
+  .mp-stats span{font-size:12.5px;color:var(--muted);}
+  .mp-grid{gap:48px;}
+  .mp-sec{margin-bottom:38px;}
+  .mp-sec h3{font-size:13px;font-weight:700;margin:0 0 16px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);display:flex;align-items:center;gap:12px;}
+  .mp-sec h3::after{content:"";flex:1;height:1px;background:var(--border);}
+  html[dir="rtl"] .mp-sec h3{letter-spacing:normal;text-transform:none;font-size:15px;}
+  .mp-lead{font-size:20px;line-height:1.55;font-weight:600;color:var(--text);margin:0 0 14px;max-width:60ch;letter-spacing:-.005em;}
+  .mp-bio{font-size:16px;line-height:1.8;margin:0;max-width:64ch;white-space:pre-line;color:var(--text);opacity:.92;}
+  .mp-bio-wrap.clamp{position:relative;max-height:340px;overflow:hidden;transition:max-height .3s;}
+  .mp-bio-wrap.clamp::after{content:"";position:absolute;inset:auto 0 0 0;height:80px;background:linear-gradient(transparent,var(--bg));pointer-events:none;}
+  .mp-bio-wrap.clamp.open{max-height:none;} .mp-bio-wrap.clamp.open::after{display:none;}
+  .mp-more{margin-top:10px;background:none;border:0;padding:0;font:inherit;font-size:14px;font-weight:700;color:var(--accent);cursor:pointer;}
+  .mp-more .ls, .mp-more.open .mo{display:none;} .mp-more.open .ls{display:inline;}
+  .mp-skills{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;}
+  .mp-skills li{display:flex;align-items:flex-start;gap:10px;padding:13px 16px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface);font-size:14.5px;font-weight:600;line-height:1.4;transition:border-color .15s,transform .15s;}
+  .mp-skills li:hover{border-color:color-mix(in srgb, var(--accent) 45%, var(--border));transform:translateY(-1px);}
+  .mp-skills svg{color:var(--accent);flex:none;margin-top:-1px;}
+  .mp-bg{display:grid;gap:10px;}
+  .mp-bg-item{display:flex;gap:14px;align-items:flex-start;padding:16px 18px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface);}
+  .mp-bg-ic{width:40px;height:40px;border-radius:12px;background:var(--surface-2);color:var(--accent);display:grid;place-items:center;flex:none;}
+  .mp-bg-item small{display:block;font-size:12px;color:var(--muted);margin-bottom:3px;}
+  .mp-bg-item b{font-size:15px;font-weight:600;line-height:1.45;}
+  .mp-certs{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+  .mp-certs span{font-size:13px;font-weight:600;padding:4px 11px;border-radius:8px;background:var(--surface-2);}
+  .mp-card{padding:28px;}
+  .mp-card-top{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+  .mp-price b{font-size:40px;}
+  .mp-tier{margin:0;font-size:12px;font-weight:700;padding:5px 11px;border-radius:999px;background:var(--surface-2);border:1px solid var(--border);color:var(--accent);white-space:nowrap;}
+  .mp-per{font-size:13.5px;color:var(--muted);margin:6px 0 18px;}
+  .mp-formats{gap:12px;padding:16px 0;}
+  .mp-formats li{font-size:14px;line-height:1.35;align-items:flex-start;}
+  .mp-formats svg{margin-top:1px;}
+  .mp-book{border-radius:999px;padding:14px 20px;font-size:15.5px;box-shadow:0 12px 24px -14px rgba(74,53,38,.7);}
+  .mp-msg{display:block;width:100%;margin:10px 0 0 !important;border-radius:999px;padding:12px 20px;font-size:15px;}
+  .mp-how{text-align:center;}
+  .review{padding:18px 0;}
+  .mp-best{display:flex;gap:16px;align-items:flex-start;padding:20px 22px;border-radius:var(--radius-md);background:var(--surface-2);border:1px solid var(--border);border-inline-start:4px solid var(--accent);}
+  .mp-best small{display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:4px;}
+  html[dir="rtl"] .mp-best small{letter-spacing:normal;}
+  .mp-best p{margin:0;font-size:15.5px;line-height:1.65;}
+  .mp-best .mp-bg-ic{background:var(--surface);}
+  .mp-tags{display:flex;flex-wrap:wrap;gap:8px;}
+  .mp-tags span{font-size:13.5px;font-weight:600;padding:7px 14px;border-radius:999px;background:var(--surface);border:1px solid var(--border);color:var(--text);}
+  @media (max-width:900px){.mp-grid{gap:10px;}}
+  @media (max-width:700px){
+    .mp-cover{height:96px;}
+    .mp-hero-body{flex-direction:column;align-items:flex-start;gap:14px;padding:0 20px 22px;margin-top:-52px;}
+    .mp-avatar{width:104px;height:104px;font-size:36px;}
+    .mp-id{padding-top:0;}
+    .mp-id h1{font-size:28px;}
+    .mp-lead{font-size:18px;}
+    .mp-stats{grid-auto-flow:row;grid-template-columns:repeat(2,minmax(0,1fr));}
+    .mp-stats div{padding:14px 20px;}
+    .mp-stats div:nth-child(odd){border-inline-start:0;}
+    .mp-stats div:nth-child(n+3){border-top:1px solid var(--border);}
+  }
 </style>
 </head>
 <body>
@@ -2350,6 +2431,7 @@ const I18N = {
     pay_c_mentor:'Mentor', pay_c_n:'Paid bookings', pay_c_collected:'Collected', pay_c_share:'Mentor share', pay_c_owed:'Owed now', pay_mark:'Mark as paid', pay_settled:'Settled', pay_confirm:'Record that you paid {a} to {n}?', pay_done:'Payout recorded', pay_fail:'Could not record the payout — check that the payouts SQL has been run',
     auth_side_h:'Every step of your career, with someone who knows the way.', auth_side_p:'From a stronger resume to a confident interview to the offer, your mentor walks each step with you.', map_you:'You', map_1:'Resume', map_2:'Interview', map_3:'Offer', map_goal:'Next role', auth_f1_t:'Experienced professionals', auth_f1_s:'Real experience in the roles you are targeting.', auth_f2_t:'Structured sessions', auth_f2_s:'30-minute video or voice sessions, arranged by message.', auth_f3_t:'Secure payment', auth_f3_s:'Charged only after your session takes place.', auth_pt1:'Book a 30-minute video or voice session in a few clicks', auth_pt2:'Chat with your mentor before you meet', auth_pt3:'Charged only after your session takes place', auth_tab_signup:'Sign up', auth_h_login:'Welcome back', auth_h_signup:'Create your account', auth_sub_login:'Log in to manage your sessions and messages.', auth_sub_signup:'Create your account with an email and password. You will set up your profile next.', auth_forgot_h:'Reset your password', auth_fine_login:'New to Workar? Choose Sign up above.', auth_fine_signup:'Free to join — no card needed.', pw_show:'Show password', pw_hide:'Hide password',
     ob_sub:'Tell us who you are. It takes about two minutes and you can change everything later.', ob_s_about:'About you', ob_preview:'How clients will see you', ob_preview_note:'This card appears in Find a mentor. A clear headline and a bio written to a mentee get the most bookings.', ob_pv_name:'Your name', ob_pv_head:'Your title and company', ob_pv_bio:'Your bio will appear here.', ob_next:'What happens next', ob_next1_t:'Finish your profile', ob_next1_s:'So your mentor knows where you are and where you want to go.', ob_next2_t:'Pick a mentor and a time', ob_next2_s:'Choose a package and a slot that suits you.', ob_next3_t:'Meet on Workar', ob_next3_s:'Once the mentor accepts, join by video or voice right here.', ob_submit_book:'Save and pick a time',
+    mp_s_exp:'Years of experience', mp_s_reviews:'{n} reviews', mp_s_new_v:'New', mp_s_new_l:'Recently joined Workar', mp_s_min:'Minutes per session', mp_s_lang:'Languages', mp_more:'Read more', mp_less:'Show less', mp_best:'Best for', mp_skills:'Skills & expertise', mp_industries:'Industries',
     mp_back:'← All mentors', mp_back_chat:'← Back to chat', mp_speaks:'Speaks', mp_about:'About', mp_help:'Can help you with', mp_per:'per 30-min session', mp_per_short:'/ session', mp_tier_suffix:'mentor',
     dash_aiming:'Working toward {p}', dash_view_public:'View public profile', dash_edit:'Edit profile', dash_edit_sub:'Name, job, education, certifications, skills, languages, rate and availability', acct_title:'Account', df_lang_tz:'Languages & time zone', df_prefs:'Session preferences', acct_sub:'Permanently delete your profile and sign-in account.',
     flag_new:'New request', flag_action:'Action needed', st_requested:'Requested', st_accepted:'Accepted', st_paid:'Paid', st_session:'Session', st_declined:'Declined',
@@ -2806,6 +2888,7 @@ const I18N = {
     pay_c_mentor:'منتور', pay_c_n:'رزروهای پرداخت‌شده', pay_c_collected:'دریافتی', pay_c_share:'سهم منتور', pay_c_owed:'بدهی فعلی', pay_mark:'ثبت پرداخت', pay_settled:'تسویه‌شده', pay_confirm:'ثبت شود که {a} به {n} پرداخت کرده‌اید؟', pay_done:'پرداخت ثبت شد', pay_fail:'ثبت نشد؛ مطمئن شوید SQL پرداخت منتورها اجرا شده است',
     auth_side_h:'هر قدم مسیر شغلی‌تان، کنار کسی که راه را می‌شناسد.', auth_side_p:'از رزومه‌ای قوی‌تر تا مصاحبه‌ای مطمئن و پیشنهاد کاری، منتورتان در هر قدم کنار شماست.', map_you:'شما', map_1:'رزومه', map_2:'مصاحبه', map_3:'پیشنهاد کاری', map_goal:'شغل بعدی', auth_f1_t:'متخصصان باتجربه', auth_f1_s:'تجربه‌ی واقعی در نقش‌هایی که هدف شماست.', auth_f2_t:'جلسات ساختارمند', auth_f2_s:'جلسه‌های ۳۰ دقیقه‌ای تصویری یا صوتی، با هماهنگی از طریق پیام.', auth_f3_t:'پرداخت امن', auth_f3_s:'پرداخت فقط بعد از برگزاری جلسه.', auth_pt1:'با چند کلیک یک جلسه‌ی ۳۰ دقیقه‌ای تصویری یا صوتی رزرو کنید', auth_pt2:'قبل از جلسه به منتورتان پیام بدهید', auth_pt3:'پرداخت فقط بعد از برگزاری جلسه', auth_tab_signup:'ثبت‌نام', auth_h_login:'خوشحالیم که برگشتید', auth_h_signup:'حسابتان را بسازید', auth_sub_login:'برای مدیریت جلسه‌ها و پیام‌هایتان وارد شوید.', auth_sub_signup:'با ایمیل و رمز عبور حساب بسازید. در قدم بعد پروفایلتان را کامل می‌کنید.', auth_forgot_h:'بازیابی رمز عبور', auth_fine_login:'تازه وارد هستید؟ بالای صفحه «ثبت‌نام» را بزنید.', auth_fine_signup:'عضویت رایگان است و کارت بانکی لازم نیست.', pw_show:'نمایش رمز', pw_hide:'پنهان کردن رمز',
     ob_sub:'خودتان را معرفی کنید. حدود دو دقیقه طول می‌کشد و بعداً می‌توانید همه‌چیز را تغییر دهید.', ob_s_about:'درباره‌ی شما', ob_preview:'مراجعان شما را این‌طور می‌بینند', ob_preview_note:'این کارت در صفحه‌ی پیدا کردن منتور نمایش داده می‌شود. عنوانی واضح و معرفی‌ای که خطاب به مراجع نوشته شده باشد، بیشترین رزرو را می‌گیرد.', ob_pv_name:'نام شما', ob_pv_head:'عنوان شغلی و شرکت', ob_pv_bio:'معرفی شما اینجا نمایش داده می‌شود.', ob_next:'قدم‌های بعدی', ob_next1_t:'پروفایلتان را کامل کنید', ob_next1_s:'تا منتور بداند الان کجا هستید و می‌خواهید به کجا برسید.', ob_next2_t:'منتور و زمان را انتخاب کنید', ob_next2_s:'پکیج و زمانی را که برایتان مناسب است انتخاب کنید.', ob_next3_t:'جلسه را در Workar برگزار کنید', ob_next3_s:'بعد از تأیید منتور، همین‌جا با تماس تصویری یا صوتی وصل شوید.', ob_submit_book:'ذخیره و انتخاب زمان',
+    mp_s_exp:'سال سابقه‌ی کار', mp_s_reviews:'{n} نظر', mp_s_new_v:'جدید', mp_s_new_l:'به‌تازگی به Workar پیوسته', mp_s_min:'دقیقه در هر جلسه', mp_s_lang:'زبان', mp_more:'ادامه‌ی متن', mp_less:'نمایش کمتر', mp_best:'مناسب برای', mp_skills:'مهارت‌ها و تخصص', mp_industries:'صنایع',
     mp_back:'→ همه‌ی منتورها', mp_back_chat:'→ برگشت به گفتگو', mp_speaks:'زبان‌ها:', mp_about:'درباره', mp_help:'زمینه‌های کمک', mp_per:'برای هر جلسه‌ی ۳۰ دقیقه‌ای', mp_per_short:'/ جلسه', mp_tier_suffix:'',
     dash_aiming:'هدف: {p}', dash_view_public:'دیدن پروفایل عمومی', dash_edit:'ویرایش پروفایل', dash_edit_sub:'اسم، شغل، تحصیلات، مدارک، مهارت‌ها، زبان‌ها، نرخ و زمان‌های آزاد', acct_title:'حساب کاربری', df_lang_tz:'زبان‌ها و منطقه‌ی زمانی', df_prefs:'ترجیحات جلسه', acct_sub:'حذف دائمی پروفایل و حساب ورود شما.',
     flag_new:'درخواست جدید', flag_action:'نیاز به اقدام', st_requested:'درخواست', st_accepted:'تأیید', st_paid:'پرداخت', st_session:'جلسه', st_declined:'رد شد',
@@ -6378,6 +6461,22 @@ const FMT_ICONS = { video:'<svg viewBox="0 0 20 20" width="16" height="16" fill=
   voice:'<svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="7" y="2.5" width="6" height="10" rx="3"/><path d="M4 10a6 6 0 0012 0M10 16v2"/></svg>',
   chat:'<svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M3 4h14v9H8l-4 3v-3H3z"/></svg>',
   ai:'<svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M10 2v3M10 15v3M2 10h3M15 10h3M4.5 4.5l2 2M13.5 13.5l2 2M4.5 15.5l2-2M13.5 6.5l2-2"/></svg>' };
+const MP_ICONS = (()=>{ const s = (d, w=18)=>`<svg viewBox="0 0 24 24" width="${w}" height="${w}" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+  return {
+    check: s('<circle cx="12" cy="12" r="9.5"/><path d="m8 12.4 2.6 2.6L16.2 9.4"/>', 20),
+    clock: s('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/>'),
+    globe: s('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.9 5.6 3.9 9s-1.3 6.4-3.9 9c-2.6-2.6-3.9-5.6-3.9-9S9.4 5.6 12 3Z"/>', 16),
+    edu: s('<path d="m2.5 9.5 9.5-5 9.5 5-9.5 5-9.5-5Z"/><path d="M6.5 11.6v4.6c1.6 1.5 3.4 2.3 5.5 2.3s3.9-.8 5.5-2.3v-4.6M21.5 9.5v5"/>', 20),
+    target: s('<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/>', 20),
+    brief: s('<rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M3 12.5h18"/>', 20),
+    cert: s('<circle cx="12" cy="9" r="5.5"/><path d="m9.2 13.8-1.4 7.2 4.2-2.2 4.2 2.2-1.4-7.2"/>', 20),
+    li: '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg>'
+  }; })();
+document.addEventListener('click', e=>{
+  const b = e.target.closest && e.target.closest('[data-bio-toggle]'); if(!b) return;
+  const w = b.parentElement && b.parentElement.querySelector('.mp-bio-wrap'); if(!w) return;
+  w.classList.toggle('open'); b.classList.toggle('open');
+});
 function mentorView(){
   const id = state.mentorId;
   const p = cache.profiles[id];
@@ -6426,29 +6525,43 @@ function mentorView(){
     })() : `<button class="btn btn-primary mp-book" id="request-btn">${esc(T('book_session'))}</button><button class="btn btn-outline mp-msg" data-dm="${id}">${esc(T('msg_btn'))}</button>`));
   return `
   ${state.mentorFrom==='messages' ? `<a class="mp-back" data-nav="messages">${esc(T('mp_back_chat'))}</a>` : `<a class="mp-back" data-nav="browse">${esc(T('mp_back'))}</a>`}
-  <div class="mp-hero">
-    <div class="avatar avatar-xl">${av(id)}</div>
-    <div class="mp-id">
-      <h1>${esc(nameOf(id))}</h1>
-      <div class="mp-headline">${esc(p.headline||p.profession||'')}</div>
-      <div class="mp-facts">
-        ${p.experience ? `<span>${esc(p.experience)} ${esc(T('yrs_exp'))}</span>` : ''}
-        ${langs.length ? `<span>${esc(T('mp_speaks'))} ${esc(langs.join(', '))}</span>` : ''}
-        ${avg ? `<span><b>${avg.toFixed(1)}</b> <span class="stars">★</span> · ${reviews.length} ${esc(T('reviews_title').toLowerCase())}</span>` : `<span>${esc(T('new_mentor'))}</span>`}
-        ${p.linkedin ? `<a href="${esc(p.linkedin)}" target="_blank" rel="noopener">${esc(T('linkedin_link'))}</a>` : ''}
+  <header class="mp-hero">
+    <div class="mp-cover" aria-hidden="true"></div>
+    <div class="mp-hero-body">
+      <div class="avatar mp-avatar">${av(id)}</div>
+      <div class="mp-id">
+        <h1>${esc(nameOf(id))}${p.linkedin ? `<a class="mp-li" href="${esc(p.linkedin)}" target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn">${MP_ICONS.li}</a>` : ''}</h1>
+        ${(p.headline||p.profession) ? `<div class="mp-headline">${esc(p.headline||p.profession)}</div>` : ''}
+        ${langs.length ? `<div class="mp-langs"><span class="mp-langs-lbl">${MP_ICONS.globe}${esc(T('mp_speaks'))}</span>${langs.map(l=>`<span class="mp-lang">${esc(l)}</span>`).join('')}</div>` : ''}
       </div>
     </div>
-  </div>
+    <div class="mp-stats">
+      ${p.experience ? `<div><b>${esc(String(p.experience))}${/^\d+$/.test(String(p.experience).trim())?'+':''}</b><span>${esc(T('mp_s_exp'))}</span></div>` : ''}
+      ${avg ? `<div><b>${avg.toFixed(1)} <i class="stars">★</i></b><span>${esc(T('mp_s_reviews').replace('{n}', reviews.length))}</span></div>`
+            : `<div><b class="mp-new">${esc(T('mp_s_new_v'))}</b><span>${esc(T('mp_s_new_l'))}</span></div>`}
+      <div><b>${SESSION_MIN}</b><span>${esc(T('mp_s_min'))}</span></div>
+      ${langs.length ? `<div><b>${langs.length}</b><span>${esc(T('mp_s_lang'))}</span></div>` : ''}
+    </div>
+  </header>
   ${isSelf ? `<div class="banner">${esc(T(p.approved===false ? 'pending_review' : 'this_is_profile'))}</div>` : ''}
   <div class="mp-grid">
     <div class="mp-main">
-      ${p.bio ? `<section class="mp-sec"><h3>${esc(T('mp_about'))}</h3><p class="mp-bio">${esc(p.bio)}</p></section>` : ''}
-      ${(p.skills||[]).length ? `<section class="mp-sec"><h3>${esc(T('mp_help'))}</h3><div>${p.skills.map(x=>`<span class="chip chip-lg">${esc(x)}</span>`).join('')}</div></section>` : ''}
-      ${(p.education || (p.certifications||[]).length) ? `<section class="mp-sec"><h3>${esc(T('sec_background'))}</h3>
-        <dl class="mp-dl">
-          ${p.education ? `<dt>${esc(T('detail_education'))}</dt><dd>${esc(p.education)}</dd>` : ''}
-          ${(p.certifications||[]).length ? `<dt>${esc(T('detail_certs'))}</dt><dd>${esc(p.certifications.join(' · '))}</dd>` : ''}
-        </dl></section>` : ''}
+      ${p.bio ? (()=>{ const bio = String(p.bio).trim(); const m = bio.match(/^([\s\S]{20,240}?[.!?؟])\s+([\s\S]+)$/);
+        const lead = m ? m[1] : bio, rest = m ? m[2] : '', long = bio.length > 950;
+        return `<section class="mp-sec mp-about"><h3>${esc(T('mp_about'))}</h3>
+          <div class="mp-bio-wrap ${long?'clamp':''}"><p class="mp-lead" dir="auto">${esc(lead)}</p>${rest ? `<p class="mp-bio" dir="auto">${esc(rest)}</p>` : ''}</div>
+          ${long ? `<button type="button" class="mp-more" data-bio-toggle><span class="mo">${esc(T('mp_more'))}</span><span class="ls">${esc(T('mp_less'))}</span></button>` : ''}
+        </section>`; })() : ''}
+      ${p.idealMentee ? `<section class="mp-sec"><div class="mp-best"><span class="mp-bg-ic">${MP_ICONS.target}</span><div><small>${esc(T('mp_best'))}</small><p dir="auto">${esc(p.idealMentee)}</p></div></div></section>` : ''}
+      ${(()=>{ const topics = (typeof WorkarPricing!=='undefined' ? WorkarPricing.services(p.helpsWith) : []).map(k=>WorkarPricing.SERVICES.find(s=>s[0]===k)).filter(Boolean);
+        return topics.length ? `<section class="mp-sec"><h3>${esc(T('mp_help'))}</h3><ul class="mp-skills">${topics.map(([k,en,fa])=>`<li>${MP_ICONS.check}<span>${esc(pricingText(en,fa))}</span></li>`).join('')}</ul></section>` : ''; })()}
+      ${(p.skills||[]).length ? `<section class="mp-sec"><h3>${esc(T('mp_skills'))}</h3><div class="mp-tags">${p.skills.map(x=>`<span>${esc(x)}</span>`).join('')}</div></section>` : ''}
+      ${(p.education || (p.certifications||[]).length || (p.industries||[]).length) ? `<section class="mp-sec"><h3>${esc(T('sec_background'))}</h3>
+        <div class="mp-bg">
+          ${(p.industries||[]).length ? `<div class="mp-bg-item"><span class="mp-bg-ic">${MP_ICONS.brief}</span><div><small>${esc(T('mp_industries'))}</small><div class="mp-certs">${p.industries.map(c=>`<span>${esc(c)}</span>`).join('')}</div></div></div>` : ''}
+          ${p.education ? `<div class="mp-bg-item"><span class="mp-bg-ic">${MP_ICONS.edu}</span><div><small>${esc(T('detail_education'))}</small><b>${esc(p.education)}</b></div></div>` : ''}
+          ${(p.certifications||[]).length ? `<div class="mp-bg-item"><span class="mp-bg-ic">${MP_ICONS.cert}</span><div><small>${esc(T('detail_certs'))}</small><div class="mp-certs">${p.certifications.map(c=>`<span>${esc(c)}</span>`).join('')}</div></div></div>` : ''}
+        </div></section>` : ''}
       ${(isAdmin() && !isSelf) ? `
       <section class="mp-sec mp-admin">
         <h3>${esc(T('admin_tools'))}</h3>
@@ -6479,10 +6592,16 @@ function mentorView(){
     </div>
     <aside class="mp-side">
       <div class="mp-card">
-        <div class="mp-price"><b>$${mentorRate(p)}</b><span>CAD · ${esc(T('mp_per'))}</span></div>
-        <div class="mp-tier">${esc(T(rateTierKey(p)))} ${esc(T('mp_tier_suffix'))}</div>
-        <div class="mp-tzline">${esc(T('mp_tz').replace('{z}', tzCity(mentorTz(id)) + ' (' + tzAbbr(mentorTz(id)) + ')'))}</div>
-        <ul class="mp-formats">${formats.map(f=>`<li>${FMT_ICONS[f]||''}<span>${esc(T('fmt_'+f))}</span></li>`).join('')}</ul>
+        <div class="mp-card-top">
+          <div class="mp-price"><b>$${mentorRate(p)}</b><span>CAD</span></div>
+          <span class="mp-tier">${esc(T(rateTierKey(p)))} ${esc(T('mp_tier_suffix'))}</span>
+        </div>
+        <div class="mp-per">${esc(T('mp_per'))}</div>
+        <ul class="mp-formats">
+          <li>${MP_ICONS.clock}<span>${esc(T('rate_per_session'))}</span></li>
+          ${formats.map(f=>`<li>${FMT_ICONS[f]||''}<span>${esc(T('fmt_'+f))}</span></li>`).join('')}
+          <li>${MP_ICONS.globe}<span>${esc(T('mp_tz').replace('{z}', tzCity(mentorTz(id)) + ' (' + tzAbbr(mentorTz(id)) + ')'))}</span></li>
+        </ul>
         ${bookingBlock}
         <p class="mp-how">${esc(T('session_how'))}</p>
       </div>
