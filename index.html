@@ -2249,8 +2249,8 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .pf-hero .pf-top, .pf-hero .pf-facts{position:relative;z-index:1;}
   .pf-shake{position:absolute;z-index:0;top:-22%;inset-inline-end:-9%;height:150%;width:auto;pointer-events:none;}
   html[dir="rtl"] .pf-shake{transform:scaleX(-1);}
-  .pf-shake-base{fill:none;stroke:#B39068;stroke-width:.6;stroke-opacity:.6;vector-effect:non-scaling-stroke;}
-  .pf-shake-lit path{fill:none;stroke:#C49B63;stroke-width:1;stroke-opacity:.9;vector-effect:non-scaling-stroke;}
+  .pf-shake-base{fill:url(#pf-band);stroke:url(#pf-foil);stroke-width:.9;stroke-opacity:1;vector-effect:non-scaling-stroke;}
+  .pf-shake-lit path{fill:#FBF3E6;stroke:url(#pf-foil);stroke-width:1.6;stroke-opacity:1;vector-effect:non-scaling-stroke;}
   .pf-shake-spark{mix-blend-mode:multiply;}
   .pf-hero .pf-facts{background:rgba(252,250,246,.82) !important;border-top-color:#EFE6DA !important;}
   .pf-hero .pf-facts div{border-color:#EFE6DA !important;}
@@ -2290,7 +2290,7 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .pf-hero .pf-avatar:not(:has(img)){background:radial-gradient(circle at 35% 30%,#FFFDF9 0%,#F4EADC 55%,#E8D7C0 100%);color:#7A5A3E;font-weight:600;letter-spacing:-.02em;}
   .pf-hero .pf-avatar:not(:has(img))::after{content:"";position:absolute;inset:9px;border-radius:50%;border:1px solid rgba(184,147,106,.35);pointer-events:none;}
   .pf-hero .pf-avatar{position:relative;}
-  .pf-hero{background:#FCFAF6 !important;}
+  .pf-hero{background:linear-gradient(115deg,#FFFEFC 0%,#FBF7F1 55%,#F6EFE5 100%) !important;}
 </style>
 </head>
 <body>
@@ -6642,8 +6642,16 @@ function mentorView(){
         <linearGradient id="pf-litg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EAD6B8"/><stop offset="1" stop-color="#DCC29E"/></linearGradient>
         <radialGradient id="pf-haze" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#F3E7D6" stop-opacity=".55"/><stop offset=".6" stop-color="#F7EFE4" stop-opacity=".25"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/></radialGradient>
       </defs>
-      <ellipse cx="96" cy="232" rx="118" ry="104" fill="#F3ECE2" opacity=".5"/>
-      <path class="pf-shake-base" d="${WK_MARK_SMOOTH}" fill-rule="evenodd"/>
+      <defs>
+        <linearGradient id="pf-foil" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#B8925F"/><stop offset=".35" stop-color="#E9D3A9"/><stop offset=".55" stop-color="#C59D63"/><stop offset=".8" stop-color="#EBD7B2"/><stop offset="1" stop-color="#A97F4C"/></linearGradient>
+        <linearGradient id="pf-band" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFEFB"/><stop offset="1" stop-color="#F6EEE2"/></linearGradient>
+        <radialGradient id="pf-blob1" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#EEDFCB" stop-opacity=".75"/><stop offset="1" stop-color="#EEDFCB" stop-opacity="0"/></radialGradient>
+        <radialGradient id="pf-blob2" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#F2E2D8" stop-opacity=".7"/><stop offset="1" stop-color="#F2E2D8" stop-opacity="0"/></radialGradient>
+        <filter id="pf-lift" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy="1.6" stdDeviation="1.8" flood-color="#7A5A3E" flood-opacity=".12"/></filter>
+      </defs>
+      <ellipse cx="70" cy="215" rx="140" ry="120" fill="url(#pf-blob1)"/>
+      <ellipse cx="250" cy="70" rx="120" ry="100" fill="url(#pf-blob2)"/>
+      <path class="pf-shake-base" d="${WK_MARK_SMOOTH}" fill-rule="evenodd" filter="url(#pf-lift)"/>
       <g class="pf-shake-lit"><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.15;.6;1" begin=".3s" dur="3.2s" fill="freeze"/><path d="${WK_MARK_SMOOTH}" fill-rule="evenodd" clip-path="url(#pf-cl)"/><path d="${WK_MARK_SMOOTH}" fill-rule="evenodd" clip-path="url(#pf-cr)"/></g>
     </svg>
     <div class="pf-top">
