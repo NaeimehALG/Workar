@@ -51,12 +51,6 @@ async function checkMemory() {
 
 const PHOTO_TIP = 'We also recommend adding a professional photo; profiles with a photo receive more bookings.';
 
-// Greeting that matches the recipient's local time ("Good morning Samira,").
-function greeting(tz) {
-  let h = new Date().getUTCHours();
-  try { h = Number(new Intl.DateTimeFormat('en-US', { hour: 'numeric', hourCycle: 'h23', timeZone: tz || 'America/Toronto' }).format(new Date())); } catch (e) {}
-  return h >= 5 && h < 12 ? 'Good morning' : h >= 12 && h < 17 ? 'Good afternoon' : 'Good evening';
-}
 
 // ---------- run report ----------
 function newReport() { return { done: [], needs: [], emails: 0, errors: [] }; }
@@ -190,7 +184,7 @@ async function mentorApplications(rep, ctx, onlyId) {
     } else {
       const q = miss.length ? `Please add ${miss.join('; ')}` : (a.askThem || 'Could you add a little more detail about your experience and how you help people?');
       if (await once('ask', p.id)) {
-        const askParas = [`${greeting(p.timezone)} ${M.esc(first(p.name))},`,
+        const askParas = [`Hello ${M.esc(first(p.name))},`,
           'Thank you for joining Workar as a mentor. Your profile is almost ready to go live.',
           miss.length === 1 ? `To publish it, please add ${M.esc(miss[0])}.` : miss.length ? 'To publish it, please add:' : M.esc(q),
           miss.length > 1 ? M.list(miss) : '',
@@ -206,7 +200,7 @@ async function mentorApplications(rep, ctx, onlyId) {
       } else if (await askedLongAgo(p.id) && await once('ask_close', p.id)) {
         // One friendly reminder a week after the first request, then nothing more.
         await mail(rep, await M.emailOf(p.id), 'A reminder about your Workar mentor profile', 'Your profile is almost ready',
-          [`${greeting(p.timezone)} ${M.esc(first(p.name))},`,
+          [`Hello ${M.esc(first(p.name))},`,
             miss.length === 1 ? `A quick reminder: your mentor profile will go live as soon as you add ${M.esc(miss[0])}.` : 'A quick reminder: your mentor profile will go live as soon as a few missing details are added.',
             'Once you save your profile, we will review it right away and let you know when it is live.',
             'Kind regards,<br>The Workar team'], { text: 'Complete my profile', url: site + '/?go=dashboard' });
