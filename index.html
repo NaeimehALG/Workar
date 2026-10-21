@@ -4129,7 +4129,7 @@ function wireRateWidgets(){
     const show=()=>{
       w.querySelector('.rate-rec-amount').textContent='$'+rec.amount+' CAD';
       w.querySelector('.rate-rec-range').textContent=pricingText(`Suggested range: $${rec.low}–$${rec.high}`,`بازه پیشنهادی: ${rec.low} تا ${rec.high} دلار`);
-      w.querySelector('.rate-rec-source').textContent=rec.source==='comparable-listings'?pricingText(`Based on ${rec.comparableCount} comparable mentor listings, your services and experience.`,`بر اساس ${rec.comparableCount} پروفایل منتور مشابه، خدمات و سابقه شما.`):pricingText('Starting guidance based on services and experience. Not enough comparable listings yet.','پیشنهاد اولیه بر اساس خدمات و سابقه شما؛ هنوز پروفایل مشابه کافی نداریم.');
+      w.querySelector('.rate-rec-source').textContent=rec.source==='comparable-listings'?pricingText(`Based on ${rec.comparableCount} comparable mentor listings and your experience.`,`بر اساس ${rec.comparableCount} پروفایل منتور مشابه و سابقه‌ی شما.`):pricingText('Starting guidance based on your experience. Not enough comparable listings yet.','پیشنهاد اولیه بر اساس سابقه‌ی شما؛ هنوز پروفایل مشابه کافی نداریم.');
     };
     const refresh=()=>{revision++;rec=WorkarPricing.recommend(read(),Object.values(cache.profiles));w.querySelector('.rate-ai-explanation').textContent='';show();};
     range.addEventListener('input',()=>upd(range.value));number.addEventListener('input',()=>{if(number.value!==''&&Number(number.value)>=m)upd(number.value);});number.addEventListener('change',()=>upd(number.value));
@@ -9057,7 +9057,7 @@ function wire(){
   if(matchBtn) matchBtn.addEventListener('click', async ()=>{
     const val = document.getElementById('match-input').value.trim();
     if(!val) return;
-    const mentorList = Object.entries(cache.profiles).filter(([,p])=>p.role!=='client' && p.approved!==false).map(([id,p])=>({ id, profession:p.profession||'', headline:p.headline||'', bio:(p.bio||'').slice(0,300), skills:p.skills||[], yearsExperience:p.experience||'', languages:mentorLangs(p), helpsWith:p.helpsWith||[], field:p.field||'', seniority:p.seniority||'', bestFor:p.idealMentee||'' }));
+    const mentorList = Object.entries(cache.profiles).filter(([,p])=>p.role!=='client' && p.approved!==false).map(([id,p])=>({ id, profession:p.profession||'', headline:p.headline||'', bio:(p.bio||'').slice(0,300), skills:p.skills||[], yearsExperience:p.experience||'', languages:mentorLangs(p), field:p.field||'', seniority:p.seniority||'', bestFor:p.idealMentee||'' }));
     if(!mentorList.length){ toast(T('toast_no_mentors')); return; }
     state.matchQuery = val; state.matching = true; state.matchResults = null; render();
     try{
@@ -9439,7 +9439,7 @@ init();
   }
 
   /* ---------- 1. Mentor onboarding assistant ---------- */
-  const ob = { messages:null, draft:{}, missing:['headline','profession','company','yearsExperience','bio','languages','skills','helpsWith'], busy:false, error:'' };
+  const ob = { messages:null, draft:{}, missing:['headline','profession','company','yearsExperience','bio','languages','skills'], busy:false, error:'' };
   const FORM_MAP = { name:'name', company:'company', profession:'profession', yearsExperience:'experience', bio:'bio', languages:'languages', education:'degree', university:'university', certifications:'certifications', skills:'skills' };
   function fillForm(onlyEmpty){
     const form = document.getElementById('onboard-form'); if(!form) return;
@@ -9476,7 +9476,7 @@ init();
     chat(box, { busy:()=>ob.busy, send:v=>sendOb(v) });
     box.querySelectorAll('[data-ag-ob-read]').forEach(b=>b.addEventListener('click', ()=>{ if(!ob.busy && state.obResume) readResume(state.obResume, 'mentor', 'ob'); }));
     const rs = box.querySelector('[data-ag-ob-reset]');
-    if(rs) rs.addEventListener('click', ()=>{ ob.messages=null; ob.draft={}; ob.missing=['headline','profession','company','yearsExperience','bio','languages','skills','helpsWith']; ob.error=''; ob.failed=false; ob.readFor=''; mountOb(box); });
+    if(rs) rs.addEventListener('click', ()=>{ ob.messages=null; ob.draft={}; ob.missing=['headline','profession','company','yearsExperience','bio','languages','skills']; ob.error=''; ob.failed=false; ob.readFor=''; mountOb(box); });
   }
   async function sendOb(text){
     ob.error=''; ob.messages.push({ role:'user', content:text }); ob.busy=true;

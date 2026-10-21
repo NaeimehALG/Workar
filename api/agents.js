@@ -66,7 +66,7 @@ const bearer = req => (req.headers.authorization || '').replace(/^Bearer\s+/i, '
 const FIELDS = ['Technology & Data', 'Business & Management', 'Finance & Accounting', 'Engineering', 'Healthcare & Life Sciences', 'Marketing & Sales', 'Design & Creative', 'Education & Research', 'Law & Public Sector', 'Operations & Trades', 'Other'];
 const SENIORITY = ['early-career', 'mid-level', 'senior', 'lead-or-manager', 'executive'];
 const HELPS_WITH = ['resume_review', 'interview_prep', 'career_switch', 'job_search_strategy', 'salary_negotiation', 'promotion_and_growth', 'leadership', 'newcomer_career_start', 'certification_prep', 'portfolio_review', 'linkedin_and_networking'];
-const REQUIRED = ['headline', 'profession', 'company', 'yearsExperience', 'bio', 'languages', 'skills', 'helpsWith'];
+const REQUIRED = ['headline', 'profession', 'company', 'yearsExperience', 'bio', 'languages', 'skills'];
 
 const ONBOARD_TOOL = {
   name: 'update_profile_draft',
@@ -85,7 +85,6 @@ const ONBOARD_TOOL = {
       university: { type: 'string', description: 'The school for that degree, e.g. "University of Southern California".' },
       certifications: { type: 'array', items: { type: 'string' }, maxItems: 8 },
       skills: { type: 'array', items: { type: 'string' }, maxItems: 10, description: 'Concrete skills, tools or specialties.' },
-      helpsWith: { type: 'array', items: { type: 'string', enum: HELPS_WITH }, maxItems: 6 },
       field: { type: 'string', enum: FIELDS },
       seniority: { type: 'string', enum: SENIORITY },
       industries: { type: 'array', items: { type: 'string' }, maxItems: 5 },
@@ -99,7 +98,7 @@ function onboardSystem(draft, missing) {
 
 How to run the chat:
 - Ask one or two questions at a time. Keep each reply under 70 words. Plain text only: no markdown, no asterisks, no bullet symbols.
-- Cover: what they do and for how long, education and certifications, what they can help mentees with, who they help best, which languages they can mentor in, and their key skills.
+- Cover: what they do and for how long, education and certifications, who they help best, which languages they can mentor in, and their key skills.
 - If they paste a CV or LinkedIn summary, extract everything you can, save it immediately, then ask only about what's missing.
 - Call update_profile_draft whenever you learn something. Choose the categories yourself; don't read category lists to them.
 - Save the mentor's name and current workplace with the tool as soon as they give them, in whatever language or script they write them. Never ask again for something already in the current form values.
@@ -145,7 +144,6 @@ function applyDraft(draft, input) {
   set('university', str(input.university, 160));
   set('certifications', strArr(input.certifications, 8, 80));
   set('skills', strArr(input.skills, 10, 50));
-  set('helpsWith', strArr(input.helpsWith, 6, 40, HELPS_WITH));
   if (FIELDS.includes(input.field)) next.field = input.field;
   if (SENIORITY.includes(input.seniority)) next.seniority = input.seniority;
   set('industries', strArr(input.industries, 5, 50));
@@ -364,13 +362,13 @@ async function match(req, res, b) {
   const all = await M.rows('profiles?role=eq.mentor&select=*');
   const mentors = all.filter(p => p.approved !== false).slice(0, 300).map(p => ({
     id: p.id, profession: p.profession || '', headline: p.headline || '', yearsExperience: p.experience || '',
-    skills: (p.skills || []).slice(0, 8), languages: p.languages || [], helpsWith: p.helpsWith || [],
+    skills: (p.skills || []).slice(0, 8), languages: p.languages || [],
     field: p.field || '', seniority: p.seniority || '', bestFor: p.idealMentee || '', bio: String(p.bio || '').slice(0, 260)
   }));
   if (!mentors.length) return res.status(200).json({ matches: [] });
   const out = await AI.askJSON(
     `You match people with career mentors on Workar. Pick up to 3 mentors who best fit the person's situation.
-Prefer mentors whose experience, "helpsWith" and languages fit. If the person writes in a language a mentor speaks, that's a plus.
+Prefer mentors whose experience, skills, "bestFor" and languages fit. If the person writes in a language a mentor speaks, that's a plus.
 For each pick, give one short sentence (max 25 words) explaining the fit, written to the person ("They...").
 Write the reasons in the same language the person wrote in. Never invent facts about mentors.
 Return: [{"id":"...","reason":"..."}]. Return [] if nobody fits.`,
@@ -415,7 +413,7 @@ Return {"score": 1-10 for how convincing the profile is to a client, "strengths"
 "suggestions": 3 short, concrete improvements, "headline": a stronger headline under 90 characters using only their facts (role, years, key credential or specialty). Do not mention Canada, a country, "career guidance", "transition" or mentoring in the headline, since every mentor on Workar already offers that,
 "bio": an improved first-person bio of 60-120 words using only their facts}.
 Write in the same language as their bio.`,
-    JSON.stringify({ headline: p.headline, profession: p.profession, yearsExperience: p.experience, bio: p.bio, skills: p.skills, languages: p.languages, education: p.education, certifications: p.certifications, helpsWith: p.helpsWith, sessionRate: p.sessionRate, hasLinkedIn: !!p.linkedin, reviewCount: reviews.length, averageRating: reviews.length ? (reviews.reduce((a, r) => a + (Number(r.rating) || 0), 0) / reviews.length).toFixed(1) : null }),
+    JSON.stringify({ headline: p.headline, profession: p.profession, yearsExperience: p.experience, bio: p.bio, skills: p.skills, languages: p.languages, education: p.education, certifications: p.certifications, bestFor: p.idealMentee, sessionRate: p.sessionRate, hasLinkedIn: !!p.linkedin, reviewCount: reviews.length, averageRating: reviews.length ? (reviews.reduce((a, r) => a + (Number(r.rating) || 0), 0) / reviews.length).toFixed(1) : null }),
     { maxTokens: 900, timeoutMs: 25000 });
   return res.status(200).json({
     score: Math.max(1, Math.min(10, Number(out.score) || 5)),
