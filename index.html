@@ -2221,14 +2221,8 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   @keyframes pnIn{from{opacity:0}to{opacity:1}}
   @media (prefers-reduced-motion:reduce){.pn-wrap{animation:none;}}
   .app-state{font-size:12px;font-weight:600;color:var(--muted);padding:5px 10px;border-radius:999px;background:var(--surface-2);text-align:center;white-space:nowrap;}
-  .pf-mark{position:absolute;top:50%;inset-inline-end:8px;height:118%;width:auto;transform:translateY(-50%);pointer-events:none;z-index:-1;}
-  html[dir="rtl"] .pf-mark{transform:translateY(-50%) scaleX(-1);}
-  .pf-mark-f{fill:url(#pf-gold);opacity:.22;}
-  .pf-ring{fill:none;stroke:#E9CDA5;stroke-opacity:.16;stroke-width:1;vector-effect:non-scaling-stroke;}
-  .pf-ring2{stroke-opacity:.09;stroke-dasharray:2 6;}
   .pf-hero::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
   .pf-top, .pf-facts{position:relative;z-index:1;} .pf-top{isolation:isolate;}
-  @media (max-width:700px){.pf-mark{height:190px;top:4px;transform:none;inset-inline-end:-56px;opacity:.6;} html[dir="rtl"] .pf-mark{transform:scaleX(-1);} .pf-ring2{display:none;}}
 </style>
 </head>
 <body>
@@ -6551,13 +6545,6 @@ function mentorView(){
   ${state.mentorFrom==='messages' ? `<a class="mp-back" data-nav="messages">${esc(T('mp_back_chat'))}</a>` : `<a class="mp-back" data-nav="browse">${esc(T('mp_back'))}</a>`}
   <header class="pf-hero">
     <div class="pf-top">
-      <svg class="pf-mark" viewBox="-70 -60 447 414" aria-hidden="true" focusable="false">
-      <defs><linearGradient id="pf-gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F3DDB8"/><stop offset=".55" stop-color="#D9B98A"/><stop offset="1" stop-color="#A9805A"/></linearGradient>
-        <radialGradient id="pf-glow"><stop offset="0" stop-color="#E9C48F" stop-opacity=".30"/><stop offset="1" stop-color="#E9C48F" stop-opacity="0"/></radialGradient></defs>
-      <circle cx="153" cy="147" r="250" fill="url(#pf-glow)"/>
-      <circle class="pf-ring" cx="153" cy="147" r="196"/><circle class="pf-ring pf-ring2" cx="153" cy="147" r="246"/>
-      <path class="pf-mark-f" d="${WK_MARK}" fill-rule="evenodd"/>
-    </svg>
       <div class="avatar pf-avatar">${av(id)}</div>
       <div class="pf-id">
         <h1>${esc(nameOf(id))}</h1>
