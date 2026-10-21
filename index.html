@@ -2225,8 +2225,9 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .pf-top, .pf-facts{position:relative;z-index:1;} .pf-top{isolation:isolate;}
   /* profile hero: light background artwork (profile-hero.jpg) */
   .pf-hero{background:#FBF7F1;color:#4A3526;border:1px solid #EDE2D3;box-shadow:0 30px 60px -46px rgba(74,53,38,.5);}
-  .pf-hero::before{content:"";position:absolute;inset:0;background:url("profile-hero.jpg") right center / cover no-repeat;pointer-events:none;}
-  html[dir="rtl"] .pf-hero::before{transform:scaleX(-1);}
+  .pf-hero{background:linear-gradient(100deg,#FCF9F4 0%,#FAF5EE 55%,#F6EEE3 100%);}
+  .pf-art{position:absolute;inset-inline-end:-3%;top:-24%;height:140%;width:auto;pointer-events:none;-webkit-mask-image:linear-gradient(to left,#000 50%,transparent 92%);mask-image:linear-gradient(to left,#000 50%,transparent 92%);}
+  html[dir="rtl"] .pf-art{transform:scaleX(-1);}
   .pf-hero::after{display:none;}
   .pf-avatar{box-shadow:0 0 0 6px #fff,0 0 0 7px #E2CDB0,0 22px 40px -22px rgba(74,53,38,.55);}
   .pf-id h1{color:#4A3526;}
@@ -2239,7 +2240,7 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .pf-facts dt{color:#A68A6D;}
   .pf-facts dd{color:#4A3526;}
   .pf-facts dd small{color:#A68A6D;} .pf-star{color:#C99B6C;}
-  @media (max-width:700px){.pf-hero::before{background-image:url("profile-hero-sm.jpg");background-position:72% top;background-size:auto 100%;opacity:.55;}}
+  @media (max-width:700px){.pf-art{height:300px;top:-60px;inset-inline-end:-110px;opacity:.55;}}
   @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pf-hero{border-color:transparent;}}
 </style>
 </head>
@@ -6425,7 +6426,6 @@ function browseView(){
 
   <div class="panel wide" style="margin-bottom:28px;">
     <div class="section-head" style="margin-bottom:12px;"><h2 style="font-size:17px;">${esc(T('ai_match_title'))}</h2></div>
-    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">${ROUTES.map(r=>`<button type="button" class="btn btn-outline btn-sm" data-route-q="${esc(T(r.q))}">${esc(T(r.title))}</button>`).join('')}</div>
     <div class="field"><textarea id="match-input" placeholder="${esc(T('ph_match'))}" style="min-height:70px;">${esc(state.matchQuery||'')}</textarea></div>
     <button class="btn btn-primary btn-sm" id="match-btn" ${state.matching?'disabled':''}>${state.matching?esc(T('finding')):esc(T('find_matches'))}</button>
     ${state.matchResults ? (state.matchResults.length ? `
@@ -6562,6 +6562,11 @@ function mentorView(){
   return `
   ${state.mentorFrom==='messages' ? `<a class="mp-back" data-nav="messages">${esc(T('mp_back_chat'))}</a>` : `<a class="mp-back" data-nav="browse">${esc(T('mp_back'))}</a>`}
   <header class="pf-hero">
+    <svg class="pf-art" viewBox="5 7 297 280" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
+      <circle cx="120" cy="190" r="118" fill="#EFE3D3" opacity=".4"/>
+      <path d="${WK_MARK}" fill="#F3EADD" fill-rule="evenodd" opacity=".9"/>
+      <path d="${WK_MARK}" fill="none" stroke="#B48C5E" stroke-width=".9" stroke-opacity=".85" vector-effect="non-scaling-stroke"/>
+    </svg>
     <div class="pf-top">
       <div class="avatar pf-avatar">${av(id)}</div>
       <div class="pf-id">
