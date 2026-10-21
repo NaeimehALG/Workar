@@ -49,7 +49,7 @@ async function checkMemory() {
   return r.ok;
 }
 
-const PHOTO_TIP = 'We also recommend adding a professional photo, as it helps clients feel more comfortable booking a session with you.';
+const PHOTO_TIP = 'We also recommend adding a profile photo. A friendly, professional photo helps clients feel confident choosing you.';
 
 
 // ---------- run report ----------
@@ -130,7 +130,7 @@ function missingBasics(p, others = []) {
   if (!(p.headline || p.profession)) miss.push('your current role or headline');
   if (String(p.bio || '').trim().length < 80) miss.push('a short bio (a few sentences about your experience and how you help people)');
   const slug = linkedInSlug(p.linkedin);
-  if (!slug) miss.push('a link to your LinkedIn profile, so clients can learn more about your experience');
+  if (!slug) miss.push('your LinkedIn profile link, so clients can learn more about your background');
   else if (others.some(o => o.id !== p.id && o.role === 'mentor' && linkedInSlug(o.linkedin) === slug)) miss.push('your own LinkedIn profile link (the one on your profile is already used by another Workar mentor)');
   const years = parseFloat(String(p.experience || p.yearsExperience || '').replace(/[^0-9.]/g, '')) || 0;
   if (years < MIN_YEARS()) miss.push(`your years of professional experience (Workar mentors have at least ${MIN_YEARS()})`);
@@ -185,17 +185,17 @@ async function mentorApplications(rep, ctx, onlyId) {
       const q = miss.length ? `Please add ${miss.join('; ')}` : (a.askThem || 'Could you add a little more detail about your experience and how you help people?');
       if (await once('ask', p.id)) {
         const askParas = [`Hi ${M.esc(first(p.name))},`,
-          'Welcome to Workar, and thank you for joining us as a mentor. Your profile is almost ready to go live.',
-          miss.length === 1 ? `To publish it, please add ${M.esc(miss[0])}.` : miss.length ? 'To publish it, please add:' : M.esc(q),
+          'Welcome to Workar, and thank you for joining us as a mentor.',
+          miss.length === 1 ? `Your profile is almost ready to go live. To publish it, please add ${M.esc(miss[0])}.` : miss.length ? 'Your profile is almost ready to go live. To publish it, please add:' : `Your profile is almost ready to go live. ${M.esc(q)}`,
           miss.length > 1 ? M.list(miss) : '',
           p.avatarUrl ? '' : PHOTO_TIP,
-          'Once you save your profile, we will review it right away and let you know when it is live.',
-          'Kind regards,<br>The Workar team'];
+          'As soon as you save your changes, we will review your profile and let you know when it is live.',
+          'We are glad to have you with us.<br>The Workar team'];
         const to = await M.emailOf(p.id);
-        await mail(rep, to, 'One last step to publish your Workar mentor profile', 'Your profile is almost ready', askParas, { text: 'Complete my profile', url: site + '/?go=dashboard' });
+        await mail(rep, to, 'Your Workar mentor profile is almost ready', 'One last step', askParas, { text: 'Complete my profile', url: site + '/?go=dashboard' });
         // The admin gets a copy of exactly what was sent, so she knows without having to do anything.
         await mail(rep, (process.env.ADMIN_EMAIL || 'naeimeh.alaghehband@gmail.com'), `Copy: we asked ${p.name} to complete their mentor profile`, `Sent to ${M.esc(p.name)}${to ? ' (' + M.esc(to) + ')' : ''}`,
-          ['This is a copy of the email Workar sent. Nothing is needed from you; the profile goes live by itself once it is complete.', '<hr style="border:0;border-top:1px solid #EAE0D2;margin:16px 0">', '<b>Your profile is almost ready</b>'].concat(askParas));
+          ['This is a copy of the email Workar sent. Nothing is needed from you; the profile goes live by itself once it is complete.', '<hr style="border:0;border-top:1px solid #EAE0D2;margin:16px 0">', '<b>One last step</b>'].concat(askParas));
         rep.done.push(`Asked mentor applicant <b>${M.esc(p.name)}</b>: “${M.esc(q)}”`);
       } else if (await askedLongAgo(p.id) && await once('ask_close', p.id)) {
         // One friendly reminder a week after the first request, then nothing more.
