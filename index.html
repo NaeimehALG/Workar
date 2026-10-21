@@ -2226,7 +2226,7 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   /* profile hero: light background artwork (profile-hero.jpg) */
   .pf-hero{background:#FBF7F1;color:#4A3526;border:1px solid #EDE2D3;box-shadow:0 30px 60px -46px rgba(74,53,38,.5);}
   .pf-hero{background:linear-gradient(100deg,#FCF9F4 0%,#FAF5EE 55%,#F6EEE3 100%);}
-  .pf-art{position:absolute;inset-inline-end:-3%;top:-24%;height:140%;width:auto;pointer-events:none;-webkit-mask-image:linear-gradient(to left,#000 50%,transparent 92%);mask-image:linear-gradient(to left,#000 50%,transparent 92%);}
+  .pf-art{position:absolute;inset-inline-end:2%;top:-6%;height:118%;width:auto;pointer-events:none;-webkit-mask-image:linear-gradient(to left,#000 50%,transparent 92%);mask-image:linear-gradient(to left,#000 50%,transparent 92%);}
   html[dir="rtl"] .pf-art{transform:scaleX(-1);}
   .pf-hero::after{display:none;}
   .pf-avatar{box-shadow:0 0 0 6px #fff,0 0 0 7px #E2CDB0,0 22px 40px -22px rgba(74,53,38,.55);}
@@ -2240,7 +2240,7 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .pf-facts dt{color:#A68A6D;}
   .pf-facts dd{color:#4A3526;}
   .pf-facts dd small{color:#A68A6D;} .pf-star{color:#C99B6C;}
-  @media (max-width:700px){.pf-art{height:300px;top:-60px;inset-inline-end:-110px;opacity:.55;}}
+  @media (max-width:700px){.pf-art{height:240px;top:-20px;inset-inline-end:-90px;opacity:.6;}}
   @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pf-hero{border-color:transparent;}}
 </style>
 </head>
@@ -6562,10 +6562,16 @@ function mentorView(){
   return `
   ${state.mentorFrom==='messages' ? `<a class="mp-back" data-nav="messages">${esc(T('mp_back_chat'))}</a>` : `<a class="mp-back" data-nav="browse">${esc(T('mp_back'))}</a>`}
   <header class="pf-hero">
-    <svg class="pf-art" viewBox="5 7 297 280" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
-      <circle cx="120" cy="190" r="118" fill="#EFE3D3" opacity=".4"/>
-      <path d="${WK_MARK}" fill="#F3EADD" fill-rule="evenodd" opacity=".9"/>
-      <path d="${WK_MARK}" fill="none" stroke="#B48C5E" stroke-width=".9" stroke-opacity=".85" vector-effect="non-scaling-stroke"/>
+    <svg class="pf-art" viewBox="0 0 400 340" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
+      <circle cx="210" cy="230" r="150" fill="#F1E6D7" opacity=".45"/>
+      <g fill="none" stroke-linecap="butt">
+        <path d="M190 380V215a80 80 0 0 1 160 0V380" stroke="#C7A479" stroke-width="24"/>
+        <path d="M190 380V215a80 80 0 0 1 160 0V380" stroke="#FBF7F1" stroke-width="22"/>
+        <path d="M70 380V190a80 80 0 0 1 160 0V380" stroke="#C7A479" stroke-width="24"/>
+        <path d="M70 380V190a80 80 0 0 1 160 0V380" stroke="#FBF7F1" stroke-width="22"/>
+      </g>
+      <circle cx="150" cy="62" r="19" fill="#FBF7F1" stroke="#C7A479" stroke-width="1"/>
+      <circle cx="270" cy="87" r="19" fill="#FBF7F1" stroke="#C7A479" stroke-width="1"/>
     </svg>
     <div class="pf-top">
       <div class="avatar pf-avatar">${av(id)}</div>
