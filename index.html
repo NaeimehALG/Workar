@@ -2282,6 +2282,17 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
     .pf-hero .pf-facts{column-gap:18px;border-top:0 !important;}
     .pf-hero .pf-facts div, .pf-hero .pf-facts div:first-child{border:0 !important;border-top:1px solid var(--border) !important;padding:14px 0 !important;}
   }
+  /* header on white: the handshake mark lights up in warm gold over a haze that fades into white */
+  .pf-hero::before{display:none !important;}
+  .pf-hero .pf-top{margin-top:0 !important;padding:30px 0 6px !important;align-items:center !important;}
+  .pf-hero .pf-id{padding-top:0 !important;}
+  .pf-hero .pf-avatar{box-shadow:0 0 0 6px #fff,0 0 0 7px #EADBC6,0 22px 40px -24px rgba(74,53,38,.55) !important;}
+  .pf-shake{top:-28px;transform:none;height:262px;inset-inline-end:0;z-index:0;}
+  .pf-hero .pf-top, .pf-hero .pf-facts{position:relative;z-index:1;}
+  .pf-shake-base{fill:#F5EFE6;opacity:.8;}
+  .pf-shake-lit path{fill:url(#pf-litg);}
+  html[dir="rtl"] .pf-shake{transform:scaleX(-1);}
+  @media (max-width:700px){.pf-shake{top:-10px;transform:none;height:200px;inset-inline-end:-60px;} html[dir="rtl"] .pf-shake{transform:scaleX(-1);} .pf-hero .pf-top{padding-top:8px !important;}}
 </style>
 </head>
 <body>
@@ -6624,12 +6635,15 @@ function mentorView(){
   return `
   ${state.mentorFrom==='messages' ? `<a class="mp-back" data-nav="messages">${esc(T('mp_back_chat'))}</a>` : `<a class="mp-back" data-nav="browse">${esc(T('mp_back'))}</a>`}
   <header class="pf-hero">
-    <svg class="pf-shake" viewBox="0 0 304 286" aria-hidden="true" focusable="false">
+    <svg class="pf-shake" viewBox="-110 -60 524 406" aria-hidden="true" focusable="false">
       <defs>
         <clipPath id="pf-cl"><rect x="0" y="0" width="0" height="286"><animate attributeName="width" from="0" to="153" begin=".35s" dur="1.1s" fill="freeze" calcMode="spline" keySplines=".45 0 .2 1" keyTimes="0;1"/></rect></clipPath>
         <clipPath id="pf-cr"><rect x="304" y="0" width="0" height="286"><animate attributeName="x" from="304" to="151" begin=".35s" dur="1.1s" fill="freeze" calcMode="spline" keySplines=".45 0 .2 1" keyTimes="0;1"/><animate attributeName="width" from="0" to="153" begin=".35s" dur="1.1s" fill="freeze" calcMode="spline" keySplines=".45 0 .2 1" keyTimes="0;1"/></rect></clipPath>
-        <radialGradient id="pf-spark"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".95"/><stop offset=".4" stop-color="#FFF4E2" stop-opacity=".6"/><stop offset="1" stop-color="#FFF4E2" stop-opacity="0"/></radialGradient>
+        <radialGradient id="pf-spark"><stop offset="0" stop-color="#F8E7CC" stop-opacity=".85"/><stop offset=".45" stop-color="#F6EAD7" stop-opacity=".4"/><stop offset="1" stop-color="#F3E1C4" stop-opacity="0"/></radialGradient>
+        <linearGradient id="pf-litg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EFE0C9"/><stop offset="1" stop-color="#E3CDAE"/></linearGradient>
+        <radialGradient id="pf-haze" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#F7EEE2" stop-opacity=".8"/><stop offset=".6" stop-color="#FAF4EC" stop-opacity=".4"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/></radialGradient>
       </defs>
+      <ellipse cx="152" cy="150" rx="250" ry="190" fill="url(#pf-haze)"/>
       <path class="pf-shake-base" d="${WK_MARK_SMOOTH}" fill-rule="evenodd"/>
       <g class="pf-shake-lit"><path d="${WK_MARK_SMOOTH}" fill-rule="evenodd" clip-path="url(#pf-cl)"/><path d="${WK_MARK_SMOOTH}" fill-rule="evenodd" clip-path="url(#pf-cr)"/></g>
       <circle class="pf-shake-spark" cx="152" cy="132" r="70" fill="url(#pf-spark)" opacity="0"><animate attributeName="opacity" values="0;1;.35" keyTimes="0;.35;1" begin="1.35s" dur="1.2s" fill="freeze"/></circle>
