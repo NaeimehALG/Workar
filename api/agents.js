@@ -66,7 +66,7 @@ const bearer = req => (req.headers.authorization || '').replace(/^Bearer\s+/i, '
 const FIELDS = ['Technology & Data', 'Business & Management', 'Finance & Accounting', 'Engineering', 'Healthcare & Life Sciences', 'Marketing & Sales', 'Design & Creative', 'Education & Research', 'Law & Public Sector', 'Operations & Trades', 'Other'];
 const SENIORITY = ['early-career', 'mid-level', 'senior', 'lead-or-manager', 'executive'];
 const HELPS_WITH = ['resume_review', 'interview_prep', 'career_switch', 'job_search_strategy', 'salary_negotiation', 'promotion_and_growth', 'leadership', 'newcomer_career_start', 'certification_prep', 'portfolio_review', 'linkedin_and_networking'];
-const REQUIRED = ['headline', 'profession', 'company', 'yearsExperience', 'bio', 'languages', 'skills'];
+const REQUIRED = ['headline', 'profession', 'company', 'yearsExperience', 'bio', 'languages'];
 
 const ONBOARD_TOOL = {
   name: 'update_profile_draft',
@@ -84,7 +84,6 @@ const ONBOARD_TOOL = {
       education: { type: 'string', description: 'Highest or most relevant degree, without the school, e.g. "M.Sc. Construction Management".' },
       university: { type: 'string', description: 'The school for that degree, e.g. "University of Southern California".' },
       certifications: { type: 'array', items: { type: 'string' }, maxItems: 8 },
-      skills: { type: 'array', items: { type: 'string' }, maxItems: 10, description: 'Concrete skills, tools or specialties.' },
       field: { type: 'string', enum: FIELDS },
       seniority: { type: 'string', enum: SENIORITY },
       industries: { type: 'array', items: { type: 'string' }, maxItems: 5 },
@@ -98,7 +97,7 @@ function onboardSystem(draft, missing) {
 
 How to run the chat:
 - Ask one or two questions at a time. Keep each reply under 70 words. Plain text only: no markdown, no asterisks, no bullet symbols.
-- Cover: what they do and for how long, education and certifications, who they help best, which languages they can mentor in, and their key skills.
+- Cover: what they do and for how long, education and certifications, who they help best, and which languages they can mentor in.
 - If they paste a CV or LinkedIn summary, extract everything you can, save it immediately, then ask only about what's missing.
 - Call update_profile_draft whenever you learn something. Choose the categories yourself; don't read category lists to them.
 - Save the mentor's name and current workplace with the tool as soon as they give them, in whatever language or script they write them. Never ask again for something already in the current form values.
@@ -143,7 +142,6 @@ function applyDraft(draft, input) {
   set('education', str(input.education, 200));
   set('university', str(input.university, 160));
   set('certifications', strArr(input.certifications, 8, 80));
-  set('skills', strArr(input.skills, 10, 50));
   if (FIELDS.includes(input.field)) next.field = input.field;
   if (SENIORITY.includes(input.seniority)) next.seniority = input.seniority;
   set('industries', strArr(input.industries, 5, 50));
@@ -368,7 +366,7 @@ async function match(req, res, b) {
   if (!mentors.length) return res.status(200).json({ matches: [] });
   const out = await AI.askJSON(
     `You match people with career mentors on Workar. Pick up to 3 mentors who best fit the person's situation.
-Prefer mentors whose experience, skills, "bestFor" and languages fit. If the person writes in a language a mentor speaks, that's a plus.
+Prefer mentors whose experience, "bestFor" and languages fit. If the person writes in a language a mentor speaks, that's a plus.
 For each pick, give one short sentence (max 25 words) explaining the fit, written to the person ("They...").
 Write the reasons in the same language the person wrote in. Never invent facts about mentors.
 Return: [{"id":"...","reason":"..."}]. Return [] if nobody fits.`,

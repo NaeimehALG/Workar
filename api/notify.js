@@ -18,9 +18,19 @@ module.exports = async (req, res) => {
     if (event === 'mentor_applied') {
       const p = await M.profile(me.id);
       if (p.role !== 'mentor') { res.status(403).end(); return; }
-      await M.sendMail(M.CONTACT_EMAIL(), `New mentor application: ${p.name}`,
-        M.layout('A new mentor wants to join Workar', [`<b>${M.esc(p.name)}</b> (${M.esc(me.email)}) just created a mentor profile. It stays hidden until you approve it.`], { text: 'Review applications', url: site + '/?go=admin' }));
-      res.status(200).json({ ok: true }); return;
+      if (p.approved !== false) { res.status(200).json({ ok: true, verdict: 'live' }); return; }
+      // The AI reviews the application right away. Approvals need nothing from the admin (they appear in the
+      // daily digest); she gets an email only when an application needs attention.
+      let out = { verdict: 'pending' };
+      try { out = await require('./_autopilot').reviewOne(me.id); } catch (e) { console.error('review-one-failed', e.message); out = { verdict: 'pending', errors: [e.message] }; }
+      if (out.verdict !== 'approve' && out.verdict !== 'waiting') {
+        const what = out.verdict === 'ask' ? `The profile is not live yet. We emailed ${M.esc(p.name)} to ask for: <b>${M.esc(out.question || 'more detail')}</b>`
+          : out.verdict === 'decline' ? `The AI did not approve this profile and sent a polite "not at this time" email. ${M.esc(out.summary || '')}`
+          : 'The automatic review could not run just now; it will try again in the next daily run. Nothing is needed from you.';
+        await M.sendMail(adminEmail, `Mentor application needs attention: ${p.name}`,
+          M.layout(`About ${M.esc(p.name)}'s mentor application`, [what].concat((out.concerns || []).length ? [`Notes: ${M.esc(out.concerns.join('; '))}`] : []), { text: 'Open the admin panel', url: site + '/?go=admin' }));
+      }
+      res.status(200).json({ ok: true, verdict: out.verdict }); return;
     }
     if (event === 'mentor_approved') {
       if ((me.email || '').toLowerCase() !== adminEmail || !targetId) { res.status(403).end(); return; }

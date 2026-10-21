@@ -809,7 +809,7 @@
   .card-meta{font-size:12.5px;color:var(--muted);margin:-4px 0 4px;display:flex;align-items:center;flex-wrap:wrap;gap:0 8px;}
   .card-meta i{width:3px;height:3px;border-radius:50%;background:currentColor;display:inline-block;}
   .card-chips{margin-top:auto;}
-  .card-foot{border-top:1px solid var(--border);padding-top:12px;}
+  .card-foot{border-top:1px solid var(--border);padding-top:12px;margin-top:auto;}
   .card-price b{font-size:16px;color:var(--text);}
   .chip-lg{font-size:13px;padding:5px 13px;color:var(--text);}
 
@@ -2207,6 +2207,19 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
     .pf-lead{font-size:20px;}
     .pf-sec{margin-bottom:40px;}
   }
+  .pf-list b + b{margin-top:6px;}
+  .pf-uni{display:block;font-style:normal;font-size:14.5px;color:var(--muted);line-height:1.5;margin-top:6px;}
+  .pn-wrap{position:fixed;inset:0;z-index:2000;background:rgba(40,28,20,.5);display:grid;place-items:center;padding:16px;animation:pnIn .2s ease-out;}
+  .pn-card{width:min(400px,100%);background:var(--surface);border-radius:24px;padding:34px 30px 22px;text-align:center;box-shadow:0 40px 80px -30px rgba(40,28,20,.6);}
+  .pn-av{position:relative;width:96px;height:96px;margin:0 auto 18px;border-radius:50%;display:grid;place-items:center;font-size:34px;font-weight:700;color:#6B4F3A;background:linear-gradient(145deg,#FBF4EA,#E7D3B8);box-shadow:0 0 0 1px var(--border);}
+  .pn-av span{position:absolute;inset-inline-end:-2px;bottom:-2px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:#fff;border:3px solid var(--surface);}
+  .pn-card h3{margin:0 0 8px;font-size:21px;font-weight:700;color:var(--text);}
+  .pn-card p{margin:0 0 22px;font-size:14.5px;line-height:1.6;color:var(--muted);}
+  .pn-up{width:100%;border-radius:999px;padding:13px 20px;font-size:15px;}
+  .pn-later{margin-top:8px;width:100%;background:none;border:0;padding:10px;font:inherit;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;}
+  .pn-later:hover{color:var(--text);}
+  @keyframes pnIn{from{opacity:0}to{opacity:1}}
+  @media (prefers-reduced-motion:reduce){.pn-wrap{animation:none;}}
 </style>
 </head>
 <body>
@@ -2403,7 +2416,7 @@ const I18N = {
     ph_chat_resume:'Paste your resume text here…', ph_chat_career:'Type your question…', ph_chat_interview:'Type your answer…',
     send:'Send', thinking:'Thinking…',
     footer_tag:'a place for every career to find its guide',
-    toast_profile_created:'Profile created', toast_save_fail:'Could not save — try again', toast_saved:'Saved',
+    pn_title:'Add a profile photo', pn_body:'Profiles with a clear, professional photo get noticeably more bookings. Clients like to see who they will be talking to.', pn_upload:'Upload photo', pn_later:'Not now', toast_profile_created:'Profile created', toast_save_fail:'Could not save — try again', toast_saved:'Saved',
     toast_request_sent:'Request sent', toast_request_fail:'Could not send request', toast_request_rls:'Booking is blocked by a database permission — run the latest Workar SQL', toast_pick_datetime:'Pick a date and time',
     toast_review_posted:'Review posted', toast_review_fail:'Could not post review', toast_update_fail:'Could not update',
     toast_no_mentors:'No mentors on Workar yet', toast_match_fail:'Could not find matches right now',
@@ -2433,7 +2446,7 @@ const I18N = {
     ob_sub:'Tell us who you are. It takes about two minutes and you can change everything later.', ob_s_about:'About you', ob_preview:'How clients will see you', ob_preview_note:'This card appears in Find a mentor. A clear headline and a bio written to a mentee get the most bookings.', ob_pv_name:'Your name', ob_pv_head:'Your title and company', ob_pv_bio:'Your bio will appear here.', ob_next:'What happens next', ob_next1_t:'Finish your profile', ob_next1_s:'So your mentor knows where you are and where you want to go.', ob_next2_t:'Pick a mentor and a time', ob_next2_s:'Choose a package and a slot that suits you.', ob_next3_t:'Meet on Workar', ob_next3_s:'Once the mentor accepts, join by video or voice right here.', ob_submit_book:'Save and pick a time',
     mp_s_exp:'Years of experience', mp_s_reviews:'{n} reviews', mp_s_new_v:'New', mp_s_new_l:'Recently joined Workar', mp_s_min:'Minutes per session', mp_s_lang:'Languages', mp_more:'Read more', mp_less:'Show less', mp_best:'Best for', mp_li_view:'LinkedIn profile', mp_about_n:'About {n}', mp_best_n:'Works best with', mp_f_exp:'Experience', mp_f_rate:'Rating', mp_f_lang:'Languages', mp_f_sess:'Sessions', mp_f_sess_both:'{m} min, video or voice', mp_f_sess_video:'{m} min, video', mp_f_sess_voice:'{m} min, voice', mp_f_tz:'Time zone', mp_h_exp_v:'{n}+ years', mp_h_exp_l:'Professional experience', mp_h_lang_v:'{n} languages', mp_h_lang1:'{n} language', mp_h_fmt_v:'Video & voice', mp_h_fmt_l:'Private 30-minute sessions', mp_h_tz_l:'Mentor\'s time zone', mp_how_t:'How booking works', mp_how1:'Choose a package and a time that suits you', mp_how2:'{n} confirms your request', mp_how3:'Meet online. Your card is charged only after the session', mp_best_t:'Is this mentor right for you?', mp_skills:'Skills and expertise', mp_industries:'Industries',
     mp_back:'← All mentors', mp_back_chat:'← Back to chat', mp_speaks:'Speaks', mp_about:'About', mp_help:'Can help you with', mp_per:'per 30-min session', mp_per_short:'/ session', mp_tier_suffix:'mentor',
-    dash_aiming:'Working toward {p}', dash_view_public:'View public profile', dash_edit:'Edit profile', dash_edit_sub:'Name, job, education, certifications, skills, languages, rate and availability', acct_title:'Account', df_lang_tz:'Languages & time zone', df_prefs:'Session preferences', acct_sub:'Permanently delete your profile and sign-in account.',
+    dash_aiming:'Working toward {p}', dash_view_public:'View public profile', dash_edit:'Edit profile', dash_edit_sub:'Name, job, education, certifications, languages, rate and availability', acct_title:'Account', df_lang_tz:'Languages & time zone', df_prefs:'Session preferences', acct_sub:'Permanently delete your profile and sign-in account.',
     flag_new:'New request', flag_action:'Action needed', st_requested:'Requested', st_accepted:'Accepted', st_paid:'Paid', st_session:'Session', st_declined:'Declined',
     nx_pending_m:'Accept to confirm this time. If it doesn\'t suit you, message {n} to agree on another one first.', nx_pending_c:'Waiting for {n} to accept. You can message them in the meantime.',
     nx_pay_m:'Accepted. Waiting for {n} to confirm with their card — the call link unlocks right after.', nx_pay_c:"{n} accepted. Confirm with your card to book — you're charged only after the session takes place.",
@@ -2860,7 +2873,7 @@ const I18N = {
     ph_chat_resume:'متن رزومه‌تان را اینجا بگذارید…', ph_chat_career:'سؤالتان را بنویسید…', ph_chat_interview:'جوابتان را بنویسید…',
     send:'ارسال', thinking:'در حال فکر کردن…',
     footer_tag:'جایی که هر مسیر شغلی راهنمای خودش را پیدا می‌کند',
-    toast_profile_created:'پروفایل ساخته شد', toast_save_fail:'ذخیره نشد؛ دوباره امتحان کنید', toast_saved:'ذخیره شد',
+    pn_title:'یک عکس پروفایل اضافه کنید', pn_body:'پروفایل‌هایی که عکس واضح و حرفه‌ای دارند رزرو بیشتری می‌گیرند. مراجعه‌کننده‌ها دوست دارند ببینند با چه کسی صحبت می‌کنند.', pn_upload:'بارگذاری عکس', pn_later:'بعداً', toast_profile_created:'پروفایل ساخته شد', toast_save_fail:'ذخیره نشد؛ دوباره امتحان کنید', toast_saved:'ذخیره شد',
     toast_request_sent:'درخواست ارسال شد', toast_request_fail:'درخواست ارسال نشد', toast_request_rls:'دیتابیس اجازه‌ی رزرو نداد؛ SQL جدید Workar را اجرا کنید', toast_pick_datetime:'یک تاریخ و ساعت انتخاب کنید',
     toast_review_posted:'نظر ثبت شد', toast_review_fail:'نظر ثبت نشد', toast_update_fail:'به‌روزرسانی نشد',
     toast_no_mentors:'هنوز منتوری در Workar نیست', toast_match_fail:'الان نتوانستیم بهترین گزینه را پیدا کنیم',
@@ -2890,7 +2903,7 @@ const I18N = {
     ob_sub:'خودتان را معرفی کنید. حدود دو دقیقه طول می‌کشد و بعداً می‌توانید همه‌چیز را تغییر دهید.', ob_s_about:'درباره‌ی شما', ob_preview:'مراجعان شما را این‌طور می‌بینند', ob_preview_note:'این کارت در صفحه‌ی پیدا کردن منتور نمایش داده می‌شود. عنوانی واضح و معرفی‌ای که خطاب به مراجع نوشته شده باشد، بیشترین رزرو را می‌گیرد.', ob_pv_name:'نام شما', ob_pv_head:'عنوان شغلی و شرکت', ob_pv_bio:'معرفی شما اینجا نمایش داده می‌شود.', ob_next:'قدم‌های بعدی', ob_next1_t:'پروفایلتان را کامل کنید', ob_next1_s:'تا منتور بداند الان کجا هستید و می‌خواهید به کجا برسید.', ob_next2_t:'منتور و زمان را انتخاب کنید', ob_next2_s:'پکیج و زمانی را که برایتان مناسب است انتخاب کنید.', ob_next3_t:'جلسه را در Workar برگزار کنید', ob_next3_s:'بعد از تأیید منتور، همین‌جا با تماس تصویری یا صوتی وصل شوید.', ob_submit_book:'ذخیره و انتخاب زمان',
     mp_s_exp:'سال سابقه‌ی کار', mp_s_reviews:'{n} نظر', mp_s_new_v:'جدید', mp_s_new_l:'به‌تازگی به Workar پیوسته', mp_s_min:'دقیقه در هر جلسه', mp_s_lang:'زبان', mp_more:'ادامه‌ی متن', mp_less:'نمایش کمتر', mp_best:'مناسب برای', mp_li_view:'پروفایل لینکدین', mp_about_n:'درباره‌ی {n}', mp_best_n:'مناسب چه کسانی است', mp_f_exp:'سابقه', mp_f_rate:'امتیاز', mp_f_lang:'زبان‌ها', mp_f_sess:'جلسه‌ها', mp_f_sess_both:'{m} دقیقه، تصویری یا صوتی', mp_f_sess_video:'{m} دقیقه، تصویری', mp_f_sess_voice:'{m} دقیقه، صوتی', mp_f_tz:'منطقه‌ی زمانی', mp_h_exp_v:'{n}+ سال', mp_h_exp_l:'سابقه‌ی حرفه‌ای', mp_h_lang_v:'{n} زبان', mp_h_lang1:'{n} زبان', mp_h_fmt_v:'تصویری و صوتی', mp_h_fmt_l:'جلسه‌های خصوصی ۳۰ دقیقه‌ای', mp_h_tz_l:'منطقه‌ی زمانی منتور', mp_how_t:'رزرو چطور انجام می‌شود', mp_how1:'یک پکیج و زمان مناسب انتخاب کنید', mp_how2:'{n} درخواست شما را تأیید می‌کند', mp_how3:'جلسه آنلاین برگزار می‌شود و مبلغ فقط بعد از جلسه از کارت کسر می‌شود', mp_best_t:'این منتور برای شما مناسب است؟', mp_skills:'مهارت‌ها و تخصص', mp_industries:'صنایع',
     mp_back:'→ همه‌ی منتورها', mp_back_chat:'→ برگشت به گفتگو', mp_speaks:'زبان‌ها:', mp_about:'درباره', mp_help:'زمینه‌های کمک', mp_per:'برای هر جلسه‌ی ۳۰ دقیقه‌ای', mp_per_short:'/ جلسه', mp_tier_suffix:'',
-    dash_aiming:'هدف: {p}', dash_view_public:'دیدن پروفایل عمومی', dash_edit:'ویرایش پروفایل', dash_edit_sub:'اسم، شغل، تحصیلات، مدارک، مهارت‌ها، زبان‌ها، نرخ و زمان‌های آزاد', acct_title:'حساب کاربری', df_lang_tz:'زبان‌ها و منطقه‌ی زمانی', df_prefs:'ترجیحات جلسه', acct_sub:'حذف دائمی پروفایل و حساب ورود شما.',
+    dash_aiming:'هدف: {p}', dash_view_public:'دیدن پروفایل عمومی', dash_edit:'ویرایش پروفایل', dash_edit_sub:'اسم، شغل، تحصیلات، مدارک، زبان‌ها، نرخ و زمان‌های آزاد', acct_title:'حساب کاربری', df_lang_tz:'زبان‌ها و منطقه‌ی زمانی', df_prefs:'ترجیحات جلسه', acct_sub:'حذف دائمی پروفایل و حساب ورود شما.',
     flag_new:'درخواست جدید', flag_action:'نیاز به اقدام', st_requested:'درخواست', st_accepted:'تأیید', st_paid:'پرداخت', st_session:'جلسه', st_declined:'رد شد',
     nx_pending_m:'با تأیید شما این زمان قطعی می‌شود. اگر برایتان مناسب نیست، اول به {n} پیام بدهید و روی زمان دیگری توافق کنید.', nx_pending_c:'منتظر تأیید {n}. تا آن موقع می‌توانید به او پیام بدهید.',
     nx_pay_m:'تأیید شد. منتظر تأیید کارت {n}؛ لینک تماس بلافاصله بعد از آن فعال می‌شود.', nx_pay_c:'{n} تأیید کرد. برای رزرو، کارتتان را تأیید کنید؛ مبلغ فقط بعد از برگزاری جلسه کسر می‌شود.',
@@ -3259,7 +3272,7 @@ privacy: { title:'Privacy Policy', sections:[
  ['Who we are','Workar ("we", "us") is an online career-mentoring platform operated from British Columbia, Canada, at workar.me. This policy explains what personal information we collect, why, and the choices you have. We follow Canada\'s Personal Information Protection and Electronic Documents Act (PIPEDA) and British Columbia\'s Personal Information Protection Act (PIPA).'],
  ['What we collect','Account information: your email address and password (stored securely by our authentication provider; we never see your password). Profile information you choose to add, such as your name, profession, career goals, education, certifications, languages, LinkedIn link, time zone and, for mentors, bio, rate and availability. Bookings and messages: session requests, dates and times, packages, and the messages you exchange with mentors or clients. Payments: processed by Stripe. We receive confirmation that a payment succeeded and the amount, but never your full card number. AI coaching: text you send to the AI coach, and the text of AI interview questions when voice mode is on. Technical data: basic information your browser sends, and settings saved on your device such as your language choice.'],
  ['How we use it','To create and run your account; to match clients with mentors and show mentor profiles; to schedule, confirm and remind you about sessions; to process payments, payouts and refunds; to send you service emails (for example a new request, an accepted booking, a new message or a session reminder); to provide AI coaching; to keep Workar safe, prevent misuse and resolve disputes; and to meet legal obligations. We do not sell your personal information and we do not use it for third-party advertising.'],
- ['Who can see what','Mentor profiles (name, headline, bio, skills, rate, languages and reviews) are public. A client\'s profile is visible only to the client, the mentors they book or message, and Workar administrators; on reviews we show only the reviewer\'s first name and last initial. Your bookings and messages are visible only to you, the other person in that booking, and Workar administrators when needed to support you or resolve a problem. Other visitors can see that a mentor\'s time slot is booked, but not who booked it.'],
+ ['Who can see what','Mentor profiles (name, headline, bio, rate, languages and reviews) are public. A client\'s profile is visible only to the client, the mentors they book or message, and Workar administrators; on reviews we show only the reviewer\'s first name and last initial. Your bookings and messages are visible only to you, the other person in that booking, and Workar administrators when needed to support you or resolve a problem. Other visitors can see that a mentor\'s time slot is booked, but not who booked it.'],
  ['Service providers','We use trusted providers to run Workar: Supabase (database and sign-in), Vercel (hosting), Stripe (payments), Anthropic (AI coach), OpenAI (AI interview voice), Resend (email) and Jitsi Meet (video and voice calls). They process information only to provide their service to us. Some of these providers store data outside Canada, including in the United States, where it may be subject to local laws.'],
  ['How long we keep it','We keep your information while your account is active. If you delete your profile, we delete or anonymise your personal information within 30 days, except records we must keep for legal, tax or accounting reasons (for example payment records, which we keep for up to 7 years).'],
  ['Your choices and rights','You can view and edit your profile at any time from My profile, and delete it there. You may ask us for access to the personal information we hold about you, ask us to correct it, or withdraw your consent, subject to legal limits. Contact us at '+SUPPORT_EMAIL+' and we will reply within 30 days.'],
@@ -6269,7 +6282,6 @@ function mentorPreviewCard(){
       <div class="card-top"><div class="avatar" id="pv-av">?</div><div><h3 id="pv-name">${esc(T('ob_pv_name'))}</h3><div class="prof" id="pv-head">${esc(T('ob_pv_head'))}</div></div></div>
       <div class="card-meta" id="pv-meta"></div>
       <p class="bio" id="pv-bio">${esc(T('ob_pv_bio'))}</p>
-      <div id="pv-skills"></div>
       <div class="card-foot"><span class="muted">${esc(T('new_mentor'))}</span><b id="pv-rate">$${minRate()}</b></div>
     </div>
     <p class="ob-preview-note">${esc(T('ob_preview_note'))}</p>
@@ -6318,7 +6330,6 @@ function onboardView(){
         </div>
         <div class="field"><label>${esc(T('lbl_certifications'))}</label><input name="certifications" placeholder="${esc(T('ph_certifications'))}"></div>
         ${obSection(3,'sec_mentoring')}
-        <div class="field"><label>${esc(T('lbl_skills'))}</label><input name="skills" placeholder="${esc(T('ph_skills'))}"></div>
         <div class="field"><label>${esc(T('lbl_formats_m'))}</label>${optPills('formats', FORMAT_KEYS, 'fmt_', ['video','voice'])}</div>
         ${obSection(4,'sec_rate')}
         <div class="field">${rateWidget(minRate(), 0, 'name="sessionRate"')}</div>
@@ -6366,7 +6377,6 @@ function wireMentorPreview(){
     document.getElementById('pv-bio').textContent = (fd.get('bio')||'').trim() || T('ob_pv_bio');
     const yrs = (fd.get('experience')||'').trim(), langs = splitList(fd.get('languages')).map(normLang);
     document.getElementById('pv-meta').textContent = [yrs ? yrs+' '+T('yrs_exp') : '', langs.join(', ')].filter(Boolean).join('  ·  ');
-    document.getElementById('pv-skills').innerHTML = splitList(fd.get('skills')).slice(0,3).map(x=>`<span class="chip">${esc(x)}</span>`).join('');
     const r = Number(fd.get('sessionRate'))||minRate();
     document.getElementById('pv-rate').textContent = T('from_price').replace('{p}', Math.max(minRate(), Math.round(r)));
   };
@@ -6444,7 +6454,6 @@ function browseView(){
         </div>
         <div class="card-meta">${[p.experience ? esc(p.experience)+' '+esc(T('yrs_exp')) : '', esc(mentorLangs(p).join(', '))].filter(Boolean).join('<i></i>')}</div>
         <p class="bio">${esc(p.bio||'')}</p>
-        <div class="card-chips">${(p.skills||[]).slice(0,3).map(s=>`<span class="chip">${esc(s)}</span>`).join('')}</div>
         <div class="card-foot">
           <span>${avg ? `<span class="stars">★</span> <b>${avg.toFixed(1)}</b>` : `<span class="muted">${esc(T('new_mentor'))}</span>`}</span>
           <span class="card-price"><b>$${mentorRate(p)} <small>CAD</small></b> <span class="muted">${esc(T('mp_per_short'))}</span></span>
@@ -6558,10 +6567,9 @@ function mentorView(){
           ${long ? `<button type="button" class="mp-more" data-bio-toggle><span class="mo">${esc(T('mp_more'))}</span><span class="ls">${esc(T('mp_less'))}</span></button>` : ''}
         </section>`; })() : ''}
       ${p.idealMentee ? `<section class="pf-sec"><h2>${esc(T('mp_best_n'))}</h2><p class="pf-best" dir="auto">${esc(p.idealMentee)}</p></section>` : ''}
-      ${(p.skills||[]).length ? `<section class="pf-sec"><h2>${esc(T('mp_skills'))}</h2><div class="pf-tags">${p.skills.map(x=>`<span dir="auto">${esc(x)}</span>`).join('')}</div></section>` : ''}
       ${(p.education || (p.certifications||[]).length || (p.industries||[]).length) ? `<section class="pf-sec"><h2>${esc(T('sec_background'))}</h2>
         <ul class="pf-list">
-          ${p.education ? `<li>${MP_ICONS.edu}<div><span>${esc(T('detail_education'))}</span><b dir="auto">${esc(p.education)}</b></div></li>` : ''}
+          ${(p.degree || p.university || p.education) ? `<li>${MP_ICONS.edu}<div><span>${esc(T('detail_education'))}</span>${(p.degree || p.university) ? `${p.degree ? `<b dir="auto">${esc(p.degree)}</b>` : ''}${p.university ? `<em class="pf-uni" dir="auto">${esc(p.university)}</em>` : ''}` : `<b dir="auto">${esc(p.education)}</b>`}</div></li>` : ''}
           ${(p.certifications||[]).length ? `<li>${MP_ICONS.cert}<div><span>${esc(T('detail_certs'))}</span>${p.certifications.map(c=>`<b dir="auto">${esc(c)}</b>`).join('')}</div></li>` : ''}
           ${(p.industries||[]).length ? `<li>${MP_ICONS.brief}<div><span>${esc(T('mp_industries'))}</span><b dir="auto">${esc(p.industries.join(', '))}</b></div></li>` : ''}
         </ul></section>` : ''}
@@ -7836,6 +7844,26 @@ document.addEventListener('click', e=>{
 }, true);
 
 // ---------- profile photo upload ----------
+let photoNudgeShown = false;
+function photoNudge(force){
+  if(!myProfile || myProfile.role!=='mentor' || myProfile.avatarUrl || (photoNudgeShown && !force)) return;
+  if(document.querySelector('.pn-wrap')) return;
+  photoNudgeShown = true;
+  const w = document.createElement('div'); w.className = 'pn-wrap';
+  w.innerHTML = `<div class="pn-card" role="dialog" aria-modal="true" aria-labelledby="pn-t">
+    <div class="pn-av">${initials(myProfile.name||'')}<span>${'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/></svg>'}</span></div>
+    <h3 id="pn-t">${esc(T('pn_title'))}</h3><p>${esc(T('pn_body'))}</p>
+    <input type="file" class="pn-file" accept="image/jpeg,image/png,image/webp" hidden>
+    <button type="button" class="btn btn-primary pn-up">${esc(T('pn_upload'))}</button>
+    <button type="button" class="pn-later">${esc(T('pn_later'))}</button></div>`;
+  const close = ()=>{ w.remove(); document.removeEventListener('keydown', onKey); };
+  const onKey = e=>{ if(e.key==='Escape') close(); };
+  w.addEventListener('click', e=>{ if(e.target===w || e.target.closest('.pn-later')) close(); });
+  w.querySelector('.pn-up').addEventListener('click', ()=>w.querySelector('.pn-file').click());
+  w.querySelector('.pn-file').addEventListener('change', e=>{ const f = e.target.files && e.target.files[0]; close(); if(f) uploadPhoto(f); });
+  document.addEventListener('keydown', onKey);
+  document.body.appendChild(w); setTimeout(()=>{ const b = w.querySelector('.pn-up'); if(b) b.focus(); }, 30);
+}
 async function uploadPhoto(file){
   if(!file || !sb || !uid) return;
   if(!/^image\/(jpeg|png|webp)$/.test(file.type)){ toast(T('ph_type')); return; }
@@ -7930,7 +7958,7 @@ async function postNote(reqId, text){ try{ await sb.from('messages').insert({ id
 function dashSide(isMentor){
   const P = myProfile||{}, has = v => Array.isArray(v) ? v.length>0 : !!String(v||'').trim();
   const items = isMentor
-    ? [['sd_i_photo', has(P.avatarUrl)], ['sd_i_title', has(P.profession)||has(P.headline)], ['sd_i_bio', has(P.bio)], ['sd_i_skills', has(P.skills)], ['sd_i_edu', has(P.degree)||has(P.education)], ['sd_i_lang', has(P.languages)], ['sd_i_avail', has(P.availability)], ['sd_i_li', has(P.linkedin)]]
+    ? [['sd_i_photo', has(P.avatarUrl)], ['sd_i_title', has(P.profession)||has(P.headline)], ['sd_i_bio', has(P.bio)], ['sd_i_edu', has(P.degree)||has(P.education)], ['sd_i_lang', has(P.languages)], ['sd_i_avail', has(P.availability)], ['sd_i_li', has(P.linkedin)]]
     : [['sd_i_photo', has(P.avatarUrl)], ['sd_i_title', has(P.profession)], ['sd_i_bio', has(P.bio)], ['sd_i_goals', has(P.goals)], ['sd_i_edu', has(P.degree)||has(P.education)], ['sd_i_cert', has(P.certifications)], ['sd_i_li', has(P.linkedin)]];
   const done = items.filter(x=>x[1]).length, pct = Math.round(done*100/items.length), todo = items.filter(x=>!x[1]);
   let convs = []; try{ convs = conversations().slice(0,4); }catch(e){}
@@ -8396,7 +8424,6 @@ function dashboardView(){
       </div>` : `<div class="field"><label>${esc(T('lbl_certifications'))}</label><input id="edit-certifications" value="${esc((myProfile.certifications||[]).join(', '))}" placeholder="${esc(T('ph_certifications'))}"></div>`}
     </section>
     <section class="df-sec"><h3>${esc(T(isMentor?'sec_mentoring':'df_prefs'))}</h3>
-      ${isMentor ? `<div class="field"><label>${esc(T('lbl_skills'))}</label><input id="edit-skills" value="${esc((myProfile.skills||[]).join(', '))}"></div>` : ''}
       <div class="field" id="edit-formats-wrap"><label>${esc(T(isMentor?'lbl_formats_m':'lbl_formats_c'))}</label>${optPills('formats', FORMAT_KEYS, 'fmt_', myProfile.formats||[])}</div>
       ${isMentor ? `<div class="field"><label>${esc(T('sec_rate'))}</label>${rateWidget(myProfile.sessionRate||minRate(), myProfile.experience, 'id="edit-session-rate"', myProfile.helpsWith)}</div>` : ''}
     </section>
@@ -8611,7 +8638,6 @@ function wire(){
       linkedinVal = li;
     }
     const doc = { role: state.role, name: fd.get('name')||'', profession: fd.get('profession')||'', bio: fd.get('bio')||'', linkedin: linkedinVal, aiCredits: 5, timezone: MY_TZ };
-    doc.skills = (fd.get('skills')||'').split(',').map(s=>s.trim()).filter(Boolean);
     doc.degree = (fd.get('degree')||'').trim(); doc.university = (fd.get('university')||'').trim();
     doc.education = [doc.degree, doc.university].filter(Boolean).join(', ');
     doc.certifications = splitList(fd.get('certifications'));
@@ -8638,7 +8664,7 @@ function wire(){
       await saveProfileSafe(doc, 'set');
       clearFormDrafts('ob');
       toast(T('toast_profile_created'));
-      if(state.role==='mentor') notify('mentor_applied');
+      if(state.role==='mentor'){ notify('mentor_applied'); setTimeout(()=>photoNudge(true), 600); }
       if(state.role==='client' && state.returnMentorId){
         const back = state.returnMentorId; state.returnMentorId = null;
         nav('mentor', { mentorId: back, bookingOpen: true });
@@ -8825,7 +8851,7 @@ function wire(){
     const priceEl = document.getElementById('edit-price-usd');
     if(priceEl) patch.priceUsd = priceEl.value==='' ? null : Math.max(0, Number(priceEl.value)||0);
     if(document.getElementById('av-exact')) patch.availability = [...avDraft()].sort((a,b)=>AVAIL_DAYS.indexOf(a.split('@')[0]) - AVAIL_DAYS.indexOf(b.split('@')[0]) || a.localeCompare(b));
-    try{ await saveProfileSafe(patch, 'update'); myProfile = Object.assign({}, myProfile, patch); state.avDraft = null; clearFormDrafts('dash'); toast(T('toast_saved')); render(); }
+    try{ await saveProfileSafe(patch, 'update'); myProfile = Object.assign({}, myProfile, patch); state.avDraft = null; clearFormDrafts('dash'); toast(T('toast_saved')); render(); if(myProfile.role==='mentor' && myProfile.approved===false) notify('mentor_applied'); setTimeout(()=>photoNudge(), 400); }
     catch(err){
       console.error('profile save failed:', err);
       toast(T('toast_save_fail'));
@@ -9377,8 +9403,8 @@ init();
   }
 
   /* ---------- 1. Mentor onboarding assistant ---------- */
-  const ob = { messages:null, draft:{}, missing:['headline','profession','company','yearsExperience','bio','languages','skills'], busy:false, error:'' };
-  const FORM_MAP = { name:'name', company:'company', profession:'profession', yearsExperience:'experience', bio:'bio', languages:'languages', education:'degree', university:'university', certifications:'certifications', skills:'skills' };
+  const ob = { messages:null, draft:{}, missing:['headline','profession','company','yearsExperience','bio','languages'], busy:false, error:'' };
+  const FORM_MAP = { name:'name', company:'company', profession:'profession', yearsExperience:'experience', bio:'bio', languages:'languages', education:'degree', university:'university', certifications:'certifications' };
   function fillForm(onlyEmpty){
     const form = document.getElementById('onboard-form'); if(!form) return;
     Object.entries(FORM_MAP).forEach(([k,name])=>{
@@ -9414,7 +9440,7 @@ init();
     chat(box, { busy:()=>ob.busy, send:v=>sendOb(v) });
     box.querySelectorAll('[data-ag-ob-read]').forEach(b=>b.addEventListener('click', ()=>{ if(!ob.busy && state.obResume) readResume(state.obResume, 'mentor', 'ob'); }));
     const rs = box.querySelector('[data-ag-ob-reset]');
-    if(rs) rs.addEventListener('click', ()=>{ ob.messages=null; ob.draft={}; ob.missing=['headline','profession','company','yearsExperience','bio','languages','skills']; ob.error=''; ob.failed=false; ob.readFor=''; mountOb(box); });
+    if(rs) rs.addEventListener('click', ()=>{ ob.messages=null; ob.draft={}; ob.missing=['headline','profession','company','yearsExperience','bio','languages']; ob.error=''; ob.failed=false; ob.readFor=''; mountOb(box); });
   }
   async function sendOb(text){
     ob.error=''; ob.messages.push({ role:'user', content:text }); ob.busy=true;

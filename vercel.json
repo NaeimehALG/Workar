@@ -9,6 +9,9 @@
     "api/reminders.js": {
       "maxDuration": 60
     },
+    "api/notify.js": {
+      "maxDuration": 60
+    },
     "api/agents.js": {
       "maxDuration": 60
     },

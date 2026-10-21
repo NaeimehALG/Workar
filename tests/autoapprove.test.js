@@ -49,3 +49,29 @@ test('mentors need their own personal LinkedIn profile', () => {
   assert.ok(AP.missingBasics(b, [a, b]).some(m => /already used/.test(m)));
   assert.ok(AP.missingBasics({ ...base, id: 'c', linkedin: 'https://linkedin.com/company/acme' }).some(m => /LinkedIn/.test(m)));
 });
+
+test('a new application is reviewed right away and only that applicant is touched', async () => {
+  const mailPath = require.resolve('../api/_mail'), aiPath = require.resolve('../api/_ai'), apPath = require.resolve('../api/_autopilot');
+  const realM = require('../api/_mail'), realAi = require('../api/_ai');
+  const noLi = { id: 'n', name: 'No LinkedIn', role: 'mentor', approved: false, headline: 'Analyst', bio: 'z'.repeat(120), linkedin: '', experience: '18', company: 'Carsan' };
+  const queries = [], sent = [], patched = [];
+  require.cache[mailPath].exports = Object.assign({}, realM, {
+    rows: async q => { queries.push(q); return q.startsWith('profiles?role=eq.mentor&approved=eq.false') ? [noLi] : []; },
+    patch: async (p, b) => { patched.push(b); return { ok: true }; },
+    emailOf: async id => id + '@x.test', sendMail: async (to, subject) => { sent.push({ to, subject }); return { ok: true }; }
+  });
+  require.cache[aiPath].exports = Object.assign({}, realAi, { askJSON: async () => [{ id: 'n', verdict: 'approve', summary: 'Strong' }] });
+  delete require.cache[apPath];
+  process.env.SUPABASE_URL = 'https://sb.test'; process.env.SUPABASE_SERVICE_ROLE_KEY = 'k'; process.env.ANTHROPIC_API_KEY = 'k';
+  const savedFetch = global.fetch;
+  global.fetch = async () => ({ ok: true, json: async () => [{ id: 'new' }], text: async () => '' });
+  try {
+    const AP = require('../api/_autopilot');
+    const out = await AP.reviewOne('n');
+    assert.ok(queries.some(q => q.includes('&id=eq.n')));
+    assert.equal(out.verdict, 'ask');                       // the AI liked it, but a missing LinkedIn always blocks approval
+    assert.match(out.question, /LinkedIn/);
+    assert.deepEqual(patched, []);
+    assert.ok(sent.some(m => m.to === 'n@x.test' && /question/.test(m.subject)));
+  } finally { global.fetch = savedFetch; delete require.cache[apPath]; delete require.cache[mailPath]; delete require.cache[aiPath]; }
+});

@@ -64,8 +64,8 @@ async function assessApplications(apps) {
   if (!apps.length || !process.env.ANTHROPIC_API_KEY) return {};
   const input = apps.slice(0, 10).map(p => ({
     id: p.id, name: p.name, headline: p.headline, profession: p.profession, yearsExperience: p.experience || p.yearsExperience,
-    bio: String(p.bio || '').slice(0, 1200), skills: p.skills, languages: p.languages, education: p.education,
-    certifications: p.certifications, linkedin: p.linkedin, helpsWith: p.helpsWith, sessionRate: p.sessionRate
+    bio: String(p.bio || '').slice(0, 1200), languages: p.languages, education: p.education,
+    certifications: p.certifications, linkedin: p.linkedin, company: p.company, bestFor: p.idealMentee, sessionRate: p.sessionRate
   }));
   try {
     const out = await AI.askJSON(
@@ -134,9 +134,16 @@ function missingBasics(p, others = []) {
   if (!String(p.company || '').trim()) miss.push('where you currently work');
   return miss;
 }
-async function mentorApplications(rep, ctx) {
-  const apps = (await M.rows(`profiles?role=eq.mentor&approved=eq.false&select=*`)).filter(p => !p.banned);
+async function approvedToday() {
+  const since = new Date(Date.now() - DAY).toISOString();
+  try { const r = await M.rows(`agent_events?kind=eq.approve&createdAt=gte.${encodeURIComponent(since)}&select=id`); return Array.isArray(r) ? r.filter(x => x && String(x.id || '').startsWith('approve:')).length : 0; } catch (e) { return 0; }
+}
+async function mentorApplications(rep, ctx, onlyId) {
+  const filter = onlyId ? `&id=eq.${encodeURIComponent(onlyId)}` : '';
+  const apps = (await M.rows(`profiles?role=eq.mentor&approved=eq.false${filter}&select=*`)).filter(p => !p.banned);
   ctx.apps = apps;
+  ctx.results = ctx.results || {};
+  if (ctx.approvedNow == null) ctx.approvedNow = await approvedToday();
   if (!apps.length) return;
   // every mentor's LinkedIn, so one profile can't be used by two applicants
   let others = apps;
@@ -145,16 +152,17 @@ async function mentorApplications(rep, ctx) {
   const site = M.SITE();
   for (const p of apps) {
     const a = assess[p.id];
-    if (!a) { rep.done.push(`AI review of <b>${M.esc(p.name || 'a mentor applicant')}</b> was not available today; it will try again tomorrow.`); continue; }
+    if (!a) { ctx.results[p.id] = { verdict: 'pending' }; rep.done.push(`AI review of <b>${M.esc(p.name || 'a mentor applicant')}</b> was not available today; it will try again tomorrow.`); continue; }
     const miss = missingBasics(p, others);
     let verdict = a.verdict === 'approve' || a.verdict === 'decline' ? a.verdict : 'ask';
     if (verdict === 'approve' && miss.length) verdict = 'ask';
+    ctx.results[p.id] = { verdict, summary: a.summary || '', concerns: a.concerns || [], question: miss.length ? `Please add ${miss.join(', ')}.` : (a.askThem || '') };
     if (verdict === 'approve' && !on('AUTO_APPROVE_MENTORS')) { rep.needs.push({ kind: 'app', text: `<b>${M.esc(p.name)}</b> looks ready to approve (automatic approval is switched off). ${M.esc(a.summary || '')}` }); continue; }
-    if (verdict === 'approve' && (ctx.approvedNow || 0) >= DAILY_MAX()) { rep.done.push(`<b>${M.esc(p.name)}</b> is ready; today's limit of ${DAILY_MAX()} approvals was reached, so tomorrow's run approves them.`); continue; }
+    if (verdict === 'approve' && (ctx.approvedNow || 0) >= DAILY_MAX()) { ctx.results[p.id].verdict = 'waiting'; rep.done.push(`<b>${M.esc(p.name)}</b> is ready; today's limit of ${DAILY_MAX()} approvals was reached, so tomorrow's run approves them.`); continue; }
     if (verdict === 'approve') {
       if (!(await once('approve', p.id))) continue;
       const r = await M.patch(`profiles?id=eq.${encodeURIComponent(p.id)}`, { approved: true });
-      if (!r.ok) { rep.errors.push(`Could not approve ${p.name}`); continue; }
+      if (!r.ok) { ctx.results[p.id].verdict = 'error'; rep.errors.push(`Could not approve ${p.name}`); continue; }
       await mail(rep, await M.emailOf(p.id), 'Your Workar mentor profile is live', `Welcome aboard, ${p.name}`,
         ['Thank you for joining Workar. Your mentor profile has been reviewed and is now visible to people looking for guidance.',
           'Please make sure your weekly availability is up to date so clients can book you.'], { text: 'Open my profile', url: site + '/?go=dashboard' });
@@ -376,6 +384,15 @@ async function digest(rep, ctx, extra) {
   return { digest: 'sent', needs: needs.length, done: rep.done.length };
 }
 
+// Review one applicant right away (called when a mentor submits or updates a pending profile).
+// The admin only hears about it when something needs attention; approvals show up in the daily digest.
+async function reviewOne(id) {
+  const rep = newReport(), ctx = {};
+  await checkMemory();
+  await mentorApplications(rep, ctx, id);
+  return Object.assign({ errors: rep.errors }, (ctx.results || {})[id] || { verdict: 'none' });
+}
+
 // ---------- entry point ----------
 async function run(extraErrors) {
   const rep = newReport(), ctx = {};
@@ -388,4 +405,4 @@ async function run(extraErrors) {
   return Object.assign({ emails: rep.emails }, out);
 }
 
-module.exports = { run, profileComplete, once, missingBasics, mentorApplications, linkedInSlug };
+module.exports = { run, reviewOne, profileComplete, once, missingBasics, mentorApplications, linkedInSlug };
