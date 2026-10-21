@@ -178,9 +178,13 @@ async function mentorApplications(rep, ctx, onlyId) {
     } else {
       const q = miss.length ? `To finish your profile, please add ${miss.join(', ')}.` : (a.askThem || 'Could you add a little more detail about your experience and how you help people?');
       if (await once('ask', p.id)) {
-        await mail(rep, await M.emailOf(p.id), 'A quick question about your Workar mentor profile', `Thank you for applying, ${first(p.name)}`,
-          ['We are reviewing your mentor profile and have one request before it goes live:', `<b>${M.esc(q)}</b>`,
-            'Please update your profile on Workar. We review it again automatically every day.'], { text: 'Update my profile', url: site + '/?go=dashboard' });
+        const askParas = ['We are reviewing your mentor profile and have one request before it goes live:', `<b>${M.esc(q)}</b>`,
+            'Please update your profile on Workar. As soon as you save it, we review it again automatically.'];
+        const to = await M.emailOf(p.id);
+        await mail(rep, to, 'A quick question about your Workar mentor profile', `Thank you for applying, ${first(p.name)}`, askParas, { text: 'Update my profile', url: site + '/?go=dashboard' });
+        // The admin gets a copy of exactly what was sent, so she knows without having to do anything.
+        await mail(rep, (process.env.ADMIN_EMAIL || 'naeimeh.alaghehband@gmail.com'), `Copy: we asked ${p.name} to complete their mentor profile`, `Sent to ${M.esc(p.name)}${to ? ' (' + M.esc(to) + ')' : ''}`,
+          ['This is a copy of the email Workar sent. Nothing is needed from you; the profile goes live by itself once it is complete.', '<hr style="border:0;border-top:1px solid #EAE0D2;margin:16px 0">', `<b>Thank you for applying, ${M.esc(first(p.name))}</b>`].concat(askParas));
         rep.done.push(`Asked mentor applicant <b>${M.esc(p.name)}</b>: “${M.esc(q)}”`);
       } else if (ms(p.createdAt) && Date.now() - ms(p.createdAt) > ASK_WAIT_DAYS * DAY && await once('ask_close', p.id)) {
         await mail(rep, await M.emailOf(p.id), 'Your Workar mentor profile is still waiting', `Hello ${first(p.name)}`,

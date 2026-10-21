@@ -2221,6 +2221,11 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   @keyframes pnIn{from{opacity:0}to{opacity:1}}
   @media (prefers-reduced-motion:reduce){.pn-wrap{animation:none;}}
   .app-state{font-size:12px;font-weight:600;color:var(--muted);padding:5px 10px;border-radius:999px;background:var(--surface-2);text-align:center;white-space:nowrap;}
+  .pf-mark{position:absolute;top:50%;inset-inline-end:-46px;height:150%;width:auto;transform:translateY(-52%);pointer-events:none;}
+  .pf-mark-f{fill:rgba(233,205,165,.07);}
+  .pf-mark-s{fill:none;stroke:rgba(233,205,165,.30);stroke-width:1.3;}
+  .pf-top, .pf-facts{position:relative;z-index:1;}
+  @media (max-width:700px){.pf-mark{height:56%;top:18px;transform:none;inset-inline-end:-40px;opacity:.55;}}
 </style>
 </head>
 <body>
@@ -6542,6 +6547,7 @@ function mentorView(){
   return `
   ${state.mentorFrom==='messages' ? `<a class="mp-back" data-nav="messages">${esc(T('mp_back_chat'))}</a>` : `<a class="mp-back" data-nav="browse">${esc(T('mp_back'))}</a>`}
   <header class="pf-hero">
+    <svg class="pf-mark" viewBox="0 0 306 310" aria-hidden="true" focusable="false"><path class="pf-mark-f" d="${WK_MARK}" fill-rule="evenodd"/><path class="pf-mark-s" d="${WK_MARK}" vector-effect="non-scaling-stroke"/></svg>
     <div class="pf-top">
       <div class="avatar pf-avatar">${av(id)}</div>
       <div class="pf-id">

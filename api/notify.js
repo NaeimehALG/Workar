@@ -5,6 +5,23 @@ process.env.SUPABASE_URL = String(process.env.SUPABASE_URL || 'https://jgbjhzhbd
 const M = require('./_mail');
 
 module.exports = async (req, res) => {
+  // Maintenance: review all pending mentor applications now (same AI review as the daily run).
+  if (req.method === 'GET') {
+    // Single-use, one-hour token: a row "review-now:<token>" in agent_events (written by the admin side), removed once used.
+    const got = String((req.query && req.query.token) || '');
+    if (!/^[A-Za-z0-9_-]{32,80}$/.test(got)) { res.status(404).end(); return; }
+    const key = 'review-now:' + got, svc = { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: 'Bearer ' + process.env.SUPABASE_SERVICE_ROLE_KEY };
+    const del = await fetch(`${process.env.SUPABASE_URL}/rest/v1/agent_events?id=eq.${encodeURIComponent(key)}`, { method: 'DELETE', headers: Object.assign({ Prefer: 'return=representation' }, svc) });
+    const used = del.ok ? await del.json() : [];
+    const row = Array.isArray(used) && used[0];
+    if (!row || Date.now() - Date.parse(row.createdAt || 0) > 3600 * 1000) { res.status(404).end(); return; }
+    try {
+      const AP = require('./_autopilot'), rep = { done: [], needs: [], emails: 0, errors: [] };
+      await AP.mentorApplications(rep, {});
+      res.status(200).json({ ok: true, done: rep.done.length, emails: rep.emails, errors: rep.errors.length });
+    } catch (e) { console.error('review-now-failed', e.message); res.status(500).json({ ok: false }); }
+    return;
+  }
   if (req.method !== 'POST') { res.status(405).end(); return; }
   let body = req.body; if (typeof body === 'string') { try { body = JSON.parse(body); } catch (e) { body = {}; } }
   const { event, requestId, targetId } = body || {};
@@ -23,7 +40,7 @@ module.exports = async (req, res) => {
       // daily digest); she gets an email only when an application needs attention.
       let out = { verdict: 'pending' };
       try { out = await require('./_autopilot').reviewOne(me.id); } catch (e) { console.error('review-one-failed', e.message); out = { verdict: 'pending', errors: [e.message] }; }
-      if (out.verdict !== 'approve' && out.verdict !== 'waiting') {
+      if (out.verdict !== 'approve' && out.verdict !== 'waiting' && out.verdict !== 'ask') { // 'ask' already sends the admin a copy
         const what = out.verdict === 'ask' ? `The profile is not live yet. We emailed ${M.esc(p.name)} to ask for: <b>${M.esc(out.question || 'more detail')}</b>`
           : out.verdict === 'decline' ? `The AI did not approve this profile and sent a polite "not at this time" email. ${M.esc(out.summary || '')}`
           : 'The automatic review could not run just now; it will try again in the next daily run. Nothing is needed from you.';
