@@ -2291,6 +2291,10 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .pf-hero .pf-avatar:not(:has(img))::after{content:"";position:absolute;inset:9px;border-radius:50%;border:1px solid rgba(184,147,106,.35);pointer-events:none;}
   .pf-hero .pf-avatar{position:relative;}
   .pf-hero{background:linear-gradient(115deg,#FFFEFC 0%,#FBF7F1 55%,#F6EFE5 100%) !important;}
+  /* let the artwork run through the whole card instead of stopping at the facts row */
+  .pf-hero .pf-facts{background:linear-gradient(to bottom, rgba(255,253,250,.25), rgba(255,253,250,.6)) !important;backdrop-filter:none !important;}
+  .pf-shake{top:-16% !important;height:132% !important;}
+  @media (max-width:700px){.pf-shake{top:-40px !important;height:115% !important;}}
 </style>
 </head>
 <body>
