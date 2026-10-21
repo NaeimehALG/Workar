@@ -49,6 +49,8 @@ async function checkMemory() {
   return r.ok;
 }
 
+const PHOTO_TIP = 'We also recommend adding a clear, professional profile photo. Profiles with a photo receive noticeably more bookings, because clients like to see who they will be talking to.';
+
 // Greeting that matches the recipient's local time ("Good morning Samira,").
 function greeting(tz) {
   let h = new Date().getUTCHours();
@@ -172,7 +174,7 @@ async function mentorApplications(rep, ctx, onlyId) {
       if (!r.ok) { ctx.results[p.id].verdict = 'error'; rep.errors.push(`Could not approve ${p.name}`); continue; }
       await mail(rep, await M.emailOf(p.id), 'Your Workar mentor profile is live', `Welcome aboard, ${p.name}`,
         ['Thank you for joining Workar. Your mentor profile has been reviewed and is now visible to people looking for guidance.',
-          'Please make sure your weekly availability is up to date so clients can book you.'], { text: 'Open my profile', url: site + '/?go=dashboard' });
+          'Please make sure your weekly availability is up to date so clients can book you.', p.avatarUrl ? '' : PHOTO_TIP], { text: 'Open my profile', url: site + '/?go=dashboard' });
       ctx.approvedNow = (ctx.approvedNow || 0) + 1;
       rep.done.push(`Approved and welcomed mentor <b>${M.esc(p.name)}</b> (${M.esc(p.profession || '')}). ${M.esc(a.summary || '')}`);
     } else if (verdict === 'decline') {
@@ -189,6 +191,7 @@ async function mentorApplications(rep, ctx, onlyId) {
           'Thank you for joining Workar as a mentor. Your profile is almost ready to be shown to people looking for guidance.',
           miss.length ? 'Before it goes live, we need one more detail from you:' : 'Before it goes live, we have one question for you:',
           miss.length ? M.list(miss) : `<b>${M.esc(q)}</b>`,
+          p.avatarUrl ? '' : PHOTO_TIP,
           'It takes about a minute: open your profile, add this and save. We review your profile again as soon as you save it, and you will receive an email once it is live.',
           'If you have any questions, simply reply to this email.',
           'Kind regards,<br>The Workar team'];
