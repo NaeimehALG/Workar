@@ -6620,8 +6620,6 @@ function mentorView(){
           ${long ? `<button type="button" class="mp-more" data-bio-toggle><span class="mo">${esc(T('mp_more'))}</span><span class="ls">${esc(T('mp_less'))}</span></button>` : ''}
         </section>`; })() : ''}
       ${p.idealMentee ? `<section class="mp-sec"><div class="mp-best"><span class="mp-bg-ic">${MP_ICONS.target}</span><div><small>${esc(T('mp_best'))}</small><p dir="auto">${esc(p.idealMentee)}</p></div></div></section>` : ''}
-      ${(()=>{ const topics = (typeof WorkarPricing!=='undefined' ? WorkarPricing.services(p.helpsWith) : []).map(k=>WorkarPricing.SERVICES.find(s=>s[0]===k)).filter(Boolean);
-        return topics.length ? `<section class="mp-sec"><h3>${esc(T('mp_help'))}</h3><ul class="mp-skills">${topics.map(([k,en,fa])=>`<li>${MP_ICONS.check}<span>${esc(pricingText(en,fa))}</span></li>`).join('')}</ul></section>` : ''; })()}
       ${(p.skills||[]).length ? `<section class="mp-sec"><h3>${esc(T('mp_skills'))}</h3><div class="mp-tags">${p.skills.map(x=>`<span>${esc(x)}</span>`).join('')}</div></section>` : ''}
       ${(p.education || (p.certifications||[]).length || (p.industries||[]).length) ? `<section class="mp-sec"><h3>${esc(T('sec_background'))}</h3>
         <div class="mp-bg">
