@@ -802,6 +802,22 @@ If the message is already in ${LANG_NAMES[lang]}, return it unchanged. Return on
   return res.status(200).json({ text: AI.textOf(data).trim() });
 }
 
+// Public: translate a mentor's About text and "Works best with" into the visitor's language ("See translation").
+// Only the mentor's own saved profile text is translated, never arbitrary input.
+async function translateProfile(req, res, b) {
+  const lang = LANG_NAMES[b.lang] ? b.lang : 'en';
+  const p = (await M.rows(`profiles?id=eq.${encQ(String(b.mentorId || ''))}&role=eq.mentor&select=id,bio,idealMentee,approved`))[0];
+  if (!p || p.approved === false) return res.status(404).json({ error: 'Not found.' });
+  const src = { bio: String(p.bio || '').slice(0, 2500), bestFor: String(p.idealMentee || '').slice(0, 600) };
+  if (!src.bio && !src.bestFor) return res.status(200).json({ bio: '', bestFor: '' });
+  const out = await AI.askJSON(
+    `You translate a mentor's profile on Workar, a career mentorship platform, into ${LANG_NAMES[lang]}.
+Translate faithfully and naturally: keep the meaning, names, job titles, company names, degrees and numbers. Keep paragraph breaks.
+If a field is already in ${LANG_NAMES[lang]}, return it unchanged. Return JSON: {"bio": "...", "bestFor": "..."} (empty string for an empty field).`,
+    JSON.stringify(src), { maxTokens: 1800, timeoutMs: 25000 });
+  return res.status(200).json({ bio: String((out && out.bio) || ''), bestFor: String((out && out.bestFor) || '') });
+}
+
 // 3. Payment guard: a quick keyword check, then the AI decides whether a message moves payment
 //    (or contact meant to arrange payment) outside Workar. Flagged messages go to the admin's Reports tab.
 const PAY_HINT = /(e-?\s?transfer|interac|paypal|venmo|zelle|\bwise\b|western\s?union|money\s?gram|bank\s?(transfer|account|details)|wire\s?transfer|crypto|bitcoin|usdt|cash\s?app|\bcash\b|pay\s+(you|me)\s+directly|directly\s+to\s+me|outside\s+(of\s+)?workar|off\s+(the\s+)?(platform|site|workar)|skip\s+workar|avoid\s+(the\s+)?(fee|commission)|whats\s?app|telegram|signal|wechat|my\s+(number|phone|email)|@[a-z0-9-]+\.[a-z]{2,}|\+?\d[\d\s().-]{8,}\d|کارت\s?به\s?کارت|شماره\s?(کارت|حساب|شبا|تلفن|موبایل)|واتس\s?[آا]پ|واتساپ|تلگرام|خارج\s+از\s+(سایت|ورکار|workar)|مستقیم|پول\s?نقد|کمیسیون)/i;
@@ -855,7 +871,7 @@ module.exports = async (req, res) => {
   }
   if (req.method !== 'POST') return res.status(405).json({ error: 'Use POST' });
   const b = body(req);
-  if ((b.task === 'help' || b.task === 'match') && await overPublicLimit(req, b.task)) {
+  if ((b.task === 'help' || b.task === 'match' || b.task === 'translate_profile') && await overPublicLimit(req, b.task)) {
     return res.status(429).json({ error: 'You have sent a lot of messages in a short time. Please try again in a little while.' });
   }
   try {
@@ -868,6 +884,7 @@ module.exports = async (req, res) => {
       case 'followup_send': return await followupSend(req, res, b);
       case 'help': return await help(req, res, b);
       case 'match': return await match(req, res, b);
+      case 'translate_profile': return await translateProfile(req, res, b);
       case 'request_note': return await requestNote(req, res, b);
       case 'profile_review': return await profileReview(req, res, b);
       case 'price_recommend': return await priceRecommendation(req, res, b);
