@@ -143,6 +143,9 @@ function missingBasics(p, others = []) {
   if (!String(p.company || '').trim()) miss.push('where you currently work');
   return miss;
 }
+async function askedLongAgo(id) {
+  try { const r = await M.rows(`agent_events?id=eq.${encodeURIComponent('ask:' + id)}&select=createdAt`); const t = r && r[0] && Date.parse(r[0].createdAt); return !!t && Date.now() - t > ASK_WAIT_DAYS * DAY; } catch (e) { return false; }
+}
 async function approvedToday() {
   const since = new Date(Date.now() - DAY).toISOString();
   try { const r = await M.rows(`agent_events?kind=eq.approve&createdAt=gte.${encodeURIComponent(since)}&select=id`); return Array.isArray(r) ? r.filter(x => x && String(x.id || '').startsWith('approve:')).length : 0; } catch (e) { return 0; }
@@ -200,9 +203,13 @@ async function mentorApplications(rep, ctx, onlyId) {
         await mail(rep, (process.env.ADMIN_EMAIL || 'naeimeh.alaghehband@gmail.com'), `Copy: we asked ${p.name} to complete their mentor profile`, `Sent to ${M.esc(p.name)}${to ? ' (' + M.esc(to) + ')' : ''}`,
           ['This is a copy of the email Workar sent. Nothing is needed from you; the profile goes live by itself once it is complete.', '<hr style="border:0;border-top:1px solid #EAE0D2;margin:16px 0">', '<b>Your profile is almost ready</b>'].concat(askParas));
         rep.done.push(`Asked mentor applicant <b>${M.esc(p.name)}</b>: “${M.esc(q)}”`);
-      } else if (ms(p.createdAt) && Date.now() - ms(p.createdAt) > ASK_WAIT_DAYS * DAY && await once('ask_close', p.id)) {
-        await mail(rep, await M.emailOf(p.id), 'Your Workar mentor profile is still waiting', `Hello ${first(p.name)}`,
-          ['Your mentor profile is not live yet because a few details are still missing. Whenever you are ready, update your profile and we will review it again automatically.'], { text: 'Update my profile', url: site + '/?go=dashboard' });
+      } else if (await askedLongAgo(p.id) && await once('ask_close', p.id)) {
+        // One friendly reminder a week after the first request, then nothing more.
+        await mail(rep, await M.emailOf(p.id), 'A reminder about your Workar mentor profile', 'Your profile is almost ready',
+          [`${greeting(p.timezone)} ${M.esc(first(p.name))},`,
+            miss.length === 1 ? `A quick reminder: your mentor profile will go live as soon as you add ${M.esc(miss[0])}.` : 'A quick reminder: your mentor profile will go live as soon as a few missing details are added.',
+            'Once you save your profile, we will review it right away and let you know when it is live.',
+            'Kind regards,<br>The Workar team'], { text: 'Complete my profile', url: site + '/?go=dashboard' });
         rep.done.push(`Sent a closing reminder to mentor applicant <b>${M.esc(p.name)}</b>.`);
       }
     }
