@@ -2225,8 +2225,8 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .pf-top, .pf-facts{position:relative;z-index:1;} .pf-top{isolation:isolate;}
   /* profile hero: light background artwork (profile-hero.jpg) */
   .pf-hero{background:#FBF7F1;color:#4A3526;border:1px solid #EDE2D3;box-shadow:0 30px 60px -46px rgba(74,53,38,.5);}
-  .pf-hero{background:#FFFFFF;}
-  .pf-art{position:absolute;inset-inline-end:3%;top:7%;height:104%;width:auto;pointer-events:none;-webkit-mask-image:linear-gradient(to left,#000 72%,transparent 100%);mask-image:linear-gradient(to left,#000 72%,transparent 100%);}
+  .pf-hero{background:linear-gradient(100deg,#FCF9F4 0%,#FAF5EE 55%,#F6EEE3 100%);}
+  .pf-art{position:absolute;inset-inline-end:-3%;top:-24%;height:140%;width:auto;pointer-events:none;-webkit-mask-image:linear-gradient(to left,#000 50%,transparent 92%);mask-image:linear-gradient(to left,#000 50%,transparent 92%);}
   html[dir="rtl"] .pf-art{transform:scaleX(-1);}
   .pf-hero::after{display:none;}
   .pf-avatar{box-shadow:0 0 0 6px #fff,0 0 0 7px #E2CDB0,0 22px 40px -22px rgba(74,53,38,.55);}
@@ -2235,12 +2235,12 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .pf-li{color:#4A3526;border-color:rgba(74,53,38,.22);background:rgba(255,255,255,.6);}
   .pf-li:hover{background:#fff;}
   .pf-li:focus-visible{outline-color:#8B6A4C;}
-  .pf-facts{background:rgba(251,247,241,.85);border-top-color:#EDE2D3;backdrop-filter:blur(2px);}
+  .pf-facts{background:rgba(255,255,255,.55);border-top-color:#EDE2D3;backdrop-filter:blur(2px);}
   .pf-facts div{border-color:#EDE2D3 !important;}
   .pf-facts dt{color:#A68A6D;}
   .pf-facts dd{color:#4A3526;}
   .pf-facts dd small{color:#A68A6D;} .pf-star{color:#C99B6C;}
-  @media (max-width:700px){.pf-art{height:210px;top:14px;inset-inline-end:-70px;opacity:.6;}}
+  @media (max-width:700px){.pf-art{height:300px;top:-60px;inset-inline-end:-110px;opacity:.55;}}
   @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pf-hero{border-color:transparent;}}
   .pf-trp{display:inline-block;margin-top:12px;background:none;border:0;padding:0;font:inherit;font-size:13.5px;font-weight:600;color:var(--muted);cursor:pointer;}
   .pf-trp:hover{color:var(--text);} .pf-trp:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px;}
@@ -6589,7 +6589,9 @@ function mentorView(){
   ${state.mentorFrom==='messages' ? `<a class="mp-back" data-nav="messages">${esc(T('mp_back_chat'))}</a>` : `<a class="mp-back" data-nav="browse">${esc(T('mp_back'))}</a>`}
   <header class="pf-hero">
     <svg class="pf-art" viewBox="0 0 304 286" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
-      <path d="${WK_MARK_SMOOTH}" fill="#F7EFE5" fill-opacity=".7" fill-rule="evenodd" stroke="#CBAE8A" stroke-width="1.1" vector-effect="non-scaling-stroke"/>
+      <circle cx="120" cy="190" r="118" fill="#EFE3D3" opacity=".4"/>
+      <path d="${WK_MARK_SMOOTH}" fill="#F3EADD" fill-rule="evenodd" opacity=".9"/>
+      <path d="${WK_MARK_SMOOTH}" fill="none" stroke="#B48C5E" stroke-width=".9" stroke-opacity=".85" vector-effect="non-scaling-stroke"/>
     </svg>
     <div class="pf-top">
       <div class="avatar pf-avatar">${av(id)}</div>
