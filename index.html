@@ -6589,8 +6589,12 @@ function mentorView(){
   ${state.mentorFrom==='messages' ? `<a class="mp-back" data-nav="messages">${esc(T('mp_back_chat'))}</a>` : `<a class="mp-back" data-nav="browse">${esc(T('mp_back'))}</a>`}
   <header class="pf-hero">
     <svg class="pf-art" viewBox="0 0 304 286" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
-      <path d="${WK_MARK_SMOOTH}" fill="#F8F1E8" fill-rule="evenodd"/>
-      <path d="${WK_MARK_SMOOTH}" fill="none" stroke="#CDB08C" stroke-width=".9" stroke-opacity=".7" vector-effect="non-scaling-stroke"/>
+      <defs><filter id="pf-emboss" x="-5%" y="-5%" width="110%" height="110%">
+        <feDropShadow dx="0" dy="1.2" stdDeviation="1.2" flood-color="#8B6A4C" flood-opacity=".10"/>
+        <feDropShadow dx="0" dy="-.8" stdDeviation=".5" flood-color="#FFFFFF" flood-opacity=".9"/></filter>
+        <radialGradient id="pf-warm" cx="50%" cy="55%" r="55%"><stop offset="0" stop-color="#F3E6D4" stop-opacity=".9"/><stop offset="1" stop-color="#F3E6D4" stop-opacity="0"/></radialGradient></defs>
+      <ellipse cx="152" cy="150" rx="190" ry="170" fill="url(#pf-warm)"/>
+      <path d="${WK_MARK_SMOOTH}" fill="#F1E6D7" fill-rule="evenodd" filter="url(#pf-emboss)"/>
     </svg>
     <div class="pf-top">
       <div class="avatar pf-avatar">${av(id)}</div>
