@@ -2249,8 +2249,8 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .pf-hero .pf-top, .pf-hero .pf-facts{position:relative;z-index:1;}
   .pf-shake{position:absolute;z-index:0;top:-22%;inset-inline-end:-9%;height:150%;width:auto;pointer-events:none;}
   html[dir="rtl"] .pf-shake{transform:scaleX(-1);}
-  .pf-shake-base{fill:#FAF6F0;stroke:#8A6644;stroke-width:.45;stroke-opacity:.36;vector-effect:non-scaling-stroke;}
-  .pf-shake-lit path{fill:#F4E5CE;stroke:#BF955F;stroke-width:.9;stroke-opacity:.95;vector-effect:non-scaling-stroke;}
+  .pf-shake-base{fill:#F9F4ED;stroke:#9A7754;stroke-width:.35;stroke-opacity:.32;vector-effect:non-scaling-stroke;}
+  .pf-shake-lit path{fill:#F6EDE0;stroke:#B48C5E;stroke-width:.5;stroke-opacity:.55;vector-effect:non-scaling-stroke;}
   .pf-shake-spark{mix-blend-mode:multiply;}
   .pf-hero .pf-facts{background:rgba(252,250,246,.82) !important;border-top-color:#EFE6DA !important;}
   .pf-hero .pf-facts div{border-color:#EFE6DA !important;}
@@ -2290,7 +2290,7 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .pf-hero .pf-avatar:not(:has(img)){background:radial-gradient(circle at 35% 30%,#FFFDF9 0%,#F4EADC 55%,#E8D7C0 100%);color:#7A5A3E;font-weight:600;letter-spacing:-.02em;}
   .pf-hero .pf-avatar:not(:has(img))::after{content:"";position:absolute;inset:9px;border-radius:50%;border:1px solid rgba(184,147,106,.35);pointer-events:none;}
   .pf-hero .pf-avatar{position:relative;}
-  .pf-hero{background:radial-gradient(60% 120% at 92% 40%, #F7EFE4 0%, rgba(247,239,228,0) 70%), #FCFAF6 !important;}
+  .pf-hero{background:#FCFAF6 !important;}
 </style>
 </head>
 <body>
@@ -6642,10 +6642,9 @@ function mentorView(){
         <linearGradient id="pf-litg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EAD6B8"/><stop offset="1" stop-color="#DCC29E"/></linearGradient>
         <radialGradient id="pf-haze" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#F3E7D6" stop-opacity=".55"/><stop offset=".6" stop-color="#F7EFE4" stop-opacity=".25"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/></radialGradient>
       </defs>
-      <ellipse cx="96" cy="232" rx="118" ry="104" fill="#F3ECE2" opacity=".6"/>
+      <ellipse cx="96" cy="232" rx="118" ry="104" fill="#F1E9DE" opacity=".55"/>
       <path class="pf-shake-base" d="${WK_MARK_SMOOTH}" fill-rule="evenodd"/>
-      <g class="pf-shake-lit"><animate attributeName="opacity" values="1;1;.32" keyTimes="0;.62;1" begin=".35s" dur="2.6s" fill="freeze"/><path d="${WK_MARK_SMOOTH}" fill-rule="evenodd" clip-path="url(#pf-cl)"/><path d="${WK_MARK_SMOOTH}" fill-rule="evenodd" clip-path="url(#pf-cr)"/></g>
-      <circle class="pf-shake-spark" cx="152" cy="132" r="70" fill="url(#pf-spark)" opacity="0"><animate attributeName="opacity" values="0;1;.9;.18" keyTimes="0;.25;.55;1" begin="1.25s" dur="1.8s" fill="freeze"/><animate attributeName="r" values="30;78;90" keyTimes="0;.4;1" begin="1.25s" dur="1.8s" fill="freeze"/></circle>
+      <g class="pf-shake-lit"><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.15;.6;1" begin=".3s" dur="3.2s" fill="freeze"/><path d="${WK_MARK_SMOOTH}" fill-rule="evenodd" clip-path="url(#pf-cl)"/><path d="${WK_MARK_SMOOTH}" fill-rule="evenodd" clip-path="url(#pf-cr)"/></g>
     </svg>
     <div class="pf-top">
       <div class="avatar pf-avatar">${av(id)}</div>
