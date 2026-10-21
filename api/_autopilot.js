@@ -49,7 +49,7 @@ async function checkMemory() {
   return r.ok;
 }
 
-const PHOTO_TIP = 'We also recommend adding a professional photo; profiles with a photo receive more bookings.';
+const PHOTO_TIP = 'We also recommend adding a professional photo, as it helps clients feel more comfortable booking a session with you.';
 
 
 // ---------- run report ----------
