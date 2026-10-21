@@ -2243,17 +2243,21 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .pf-trp:hover{color:var(--text);} .pf-trp:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px;}
   .pf-trp.is-busy{cursor:default;font-weight:500;}
   .mp-more + .pf-trp{margin-inline-start:18px;}
-  /* profile header: cream card with the large Workar mark as a faint background,
-     lighting up softly from both sides when the page opens (the "handshake") */
-  .pf-hero{position:relative;}
+  /* profile header: Nora's artwork palette - near-white card, the Workar mark in hairline
+     brown lines with an almost invisible fill, and a soft warm "handshake" when the page opens */
+  .pf-hero{background:#FCFAF6 !important;border-color:#EFE6DA !important;}
   .pf-hero .pf-top, .pf-hero .pf-facts{position:relative;z-index:1;}
-  .pf-shake{position:absolute;z-index:0;top:-14%;inset-inline-end:-4%;height:150%;width:auto;pointer-events:none;
-    -webkit-mask-image:linear-gradient(to left,#000 45%,transparent 88%);mask-image:linear-gradient(to left,#000 45%,transparent 88%);}
+  .pf-shake{position:absolute;z-index:0;top:-22%;inset-inline-end:-9%;height:150%;width:auto;pointer-events:none;}
   html[dir="rtl"] .pf-shake{transform:scaleX(-1);}
-  .pf-shake-base{fill:#F3EADD;opacity:.75;stroke:#D6BE9C;stroke-width:.9;stroke-opacity:.45;vector-effect:non-scaling-stroke;}
-  .pf-shake-lit path{fill:url(#pf-litg);opacity:.55;}
+  .pf-shake-base{fill:#FAF6F0;stroke:#8A6644;stroke-width:.7;stroke-opacity:.42;vector-effect:non-scaling-stroke;}
+  .pf-shake-lit path{fill:#F8F2E9;stroke:#9C7650;stroke-width:.8;stroke-opacity:.55;vector-effect:non-scaling-stroke;}
+  .pf-shake-spark{mix-blend-mode:multiply;}
+  .pf-hero .pf-facts{background:rgba(252,250,246,.82) !important;border-top-color:#EFE6DA !important;}
+  .pf-hero .pf-facts div{border-color:#EFE6DA !important;}
   @media (prefers-reduced-motion:reduce){.pf-shake-lit path{clip-path:none;} .pf-shake-spark{display:none;}}
-  @media (max-width:700px){.pf-shake{top:-40px;height:330px;inset-inline-end:-120px;opacity:.7;}}
+  @media (max-width:700px){.pf-shake{top:-60px;height:380px;inset-inline-end:-150px;}}
+  .pf-headline span{white-space:normal;}
+  .pf-sep{display:inline-block;width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.45;margin:0 10px;vertical-align:middle;}
 </style>
 </head>
 <body>
@@ -6596,15 +6600,15 @@ function mentorView(){
   return `
   ${state.mentorFrom==='messages' ? `<a class="mp-back" data-nav="messages">${esc(T('mp_back_chat'))}</a>` : `<a class="mp-back" data-nav="browse">${esc(T('mp_back'))}</a>`}
   <header class="pf-hero">
-    <svg class="pf-shake" viewBox="-110 -60 524 406" aria-hidden="true" focusable="false">
+    <svg class="pf-shake" viewBox="0 0 304 286" aria-hidden="true" focusable="false">
       <defs>
         <clipPath id="pf-cl"><rect x="0" y="0" width="0" height="286"><animate attributeName="width" from="0" to="153" begin=".35s" dur="1.1s" fill="freeze" calcMode="spline" keySplines=".45 0 .2 1" keyTimes="0;1"/></rect></clipPath>
         <clipPath id="pf-cr"><rect x="304" y="0" width="0" height="286"><animate attributeName="x" from="304" to="151" begin=".35s" dur="1.1s" fill="freeze" calcMode="spline" keySplines=".45 0 .2 1" keyTimes="0;1"/><animate attributeName="width" from="0" to="153" begin=".35s" dur="1.1s" fill="freeze" calcMode="spline" keySplines=".45 0 .2 1" keyTimes="0;1"/></rect></clipPath>
-        <radialGradient id="pf-spark"><stop offset="0" stop-color="#F8E7CC" stop-opacity=".85"/><stop offset=".45" stop-color="#F6EAD7" stop-opacity=".4"/><stop offset="1" stop-color="#F3E1C4" stop-opacity="0"/></radialGradient>
+        <radialGradient id="pf-spark"><stop offset="0" stop-color="#F3E2C8" stop-opacity=".7"/><stop offset=".45" stop-color="#F6EBDB" stop-opacity=".3"/><stop offset="1" stop-color="#F3E1C4" stop-opacity="0"/></radialGradient>
         <linearGradient id="pf-litg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EAD6B8"/><stop offset="1" stop-color="#DCC29E"/></linearGradient>
         <radialGradient id="pf-haze" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#F3E7D6" stop-opacity=".55"/><stop offset=".6" stop-color="#F7EFE4" stop-opacity=".25"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/></radialGradient>
       </defs>
-      <ellipse cx="152" cy="150" rx="250" ry="190" fill="url(#pf-haze)"/>
+      <ellipse cx="96" cy="232" rx="118" ry="104" fill="#F3ECE2" opacity=".6"/>
       <path class="pf-shake-base" d="${WK_MARK_SMOOTH}" fill-rule="evenodd"/>
       <g class="pf-shake-lit"><path d="${WK_MARK_SMOOTH}" fill-rule="evenodd" clip-path="url(#pf-cl)"/><path d="${WK_MARK_SMOOTH}" fill-rule="evenodd" clip-path="url(#pf-cr)"/></g>
       <circle class="pf-shake-spark" cx="152" cy="132" r="70" fill="url(#pf-spark)" opacity="0"><animate attributeName="opacity" values="0;1;.35" keyTimes="0;.35;1" begin="1.35s" dur="1.2s" fill="freeze"/></circle>
@@ -6613,7 +6617,7 @@ function mentorView(){
       <div class="avatar pf-avatar">${av(id)}</div>
       <div class="pf-id">
         <h1>${esc(nameOf(id))}</h1>
-        ${(p.headline||p.profession) ? `<p class="pf-headline" dir="auto">${esc(p.headline||p.profession)}</p>` : ''}
+        ${(p.headline||p.profession) ? `<p class="pf-headline" dir="auto">${String(p.headline||p.profession).split(/\s*[|•·]\s*/).filter(Boolean).map(x=>`<span>${esc(x)}</span>`).join('<i class="pf-sep" aria-hidden="true"></i>')}</p>` : ''}
         ${p.linkedin ? `<a class="pf-li" href="${esc(p.linkedin)}" target="_blank" rel="noopener">${MP_ICONS.li}<span>${esc(T('mp_li_view'))}</span></a>` : ''}
       </div>
     </div>
