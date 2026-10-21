@@ -49,7 +49,7 @@ async function checkMemory() {
   return r.ok;
 }
 
-const PHOTO_TIP = 'We also recommend adding a clear, professional profile photo. Profiles with a photo receive noticeably more bookings, because clients like to see who they will be talking to.';
+const PHOTO_TIP = 'We also recommend adding a professional photo; profiles with a photo receive more bookings.';
 
 // Greeting that matches the recipient's local time ("Good morning Samira,").
 function greeting(tz) {
@@ -136,7 +136,7 @@ function missingBasics(p, others = []) {
   if (!(p.headline || p.profession)) miss.push('your current role or headline');
   if (String(p.bio || '').trim().length < 80) miss.push('a short bio (a few sentences about your experience and how you help people)');
   const slug = linkedInSlug(p.linkedin);
-  if (!slug) miss.push('A link to your personal LinkedIn profile (for example linkedin.com/in/yourname). Every Workar mentor includes one, so clients can learn more about your experience.');
+  if (!slug) miss.push('a link to your LinkedIn profile, so clients can learn more about your experience');
   else if (others.some(o => o.id !== p.id && o.role === 'mentor' && linkedInSlug(o.linkedin) === slug)) miss.push('your own LinkedIn profile link (the one on your profile is already used by another Workar mentor)');
   const years = parseFloat(String(p.experience || p.yearsExperience || '').replace(/[^0-9.]/g, '')) || 0;
   if (years < MIN_YEARS()) miss.push(`your years of professional experience (Workar mentors have at least ${MIN_YEARS()})`);
@@ -188,12 +188,11 @@ async function mentorApplications(rep, ctx, onlyId) {
       const q = miss.length ? `Please add ${miss.join('; ')}` : (a.askThem || 'Could you add a little more detail about your experience and how you help people?');
       if (await once('ask', p.id)) {
         const askParas = [`${greeting(p.timezone)} ${M.esc(first(p.name))},`,
-          'Thank you for joining Workar as a mentor. Your profile is almost ready to be shown to people looking for guidance.',
-          miss.length ? 'Before it goes live, we need one more detail from you:' : 'Before it goes live, we have one question for you:',
-          miss.length ? M.list(miss) : `<b>${M.esc(q)}</b>`,
+          'Thank you for joining Workar as a mentor. Your profile is almost ready to go live.',
+          miss.length === 1 ? `To publish it, please add ${M.esc(miss[0])}.` : miss.length ? 'To publish it, please add:' : M.esc(q),
+          miss.length > 1 ? M.list(miss) : '',
           p.avatarUrl ? '' : PHOTO_TIP,
-          'It takes about a minute: open your profile, add this and save. We review your profile again as soon as you save it, and you will receive an email once it is live.',
-          'If you have any questions, simply reply to this email.',
+          'Once you save your profile, we will review it right away and let you know when it is live.',
           'Kind regards,<br>The Workar team'];
         const to = await M.emailOf(p.id);
         await mail(rep, to, 'One last step to publish your Workar mentor profile', 'Your profile is almost ready', askParas, { text: 'Complete my profile', url: site + '/?go=dashboard' });
