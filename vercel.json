@@ -7,7 +7,7 @@
       "maxDuration": 60
     },
     "api/reminders.js": {
-      "maxDuration": 60
+      "maxDuration": 300
     },
     "api/notify.js": {
       "maxDuration": 60
