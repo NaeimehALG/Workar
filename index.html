@@ -2295,6 +2295,24 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .pf-hero .pf-facts{background:linear-gradient(to bottom, rgba(255,253,250,.25), rgba(255,253,250,.6)) !important;backdrop-filter:none !important;}
   .pf-shake{top:-16% !important;height:132% !important;}
   @media (max-width:700px){.pf-shake{top:-40px !important;height:115% !important;}}
+  /* Cleaner profile card background: the mark stays as a quiet corner accent and never runs behind text */
+  .pf-hero{background:
+      radial-gradient(120% 90% at 100% 0%, rgba(236,220,196,.55) 0%, rgba(236,220,196,0) 55%),
+      radial-gradient(90% 70% at 0% 100%, rgba(242,230,214,.5) 0%, rgba(242,230,214,0) 60%),
+      linear-gradient(160deg,#FFFEFB 0%,#FBF6EF 100%) !important;}
+  .pf-shake{top:-12% !important;height:118% !important;inset-inline-end:-6% !important;opacity:.7;
+    -webkit-mask-image:radial-gradient(75% 75% at 78% 30%,#000 35%,transparent 80%);
+            mask-image:radial-gradient(75% 75% at 78% 30%,#000 35%,transparent 80%);}
+  .pf-shake ellipse{display:none;}
+  .pf-hero .pf-facts{background:rgba(255,253,249,.92) !important;border-top:1px solid #EFE6DA !important;}
+  @media (max-width:700px){
+    .pf-shake{top:-34px !important;height:240px !important;inset-inline-end:-92px !important;opacity:.5;
+      -webkit-mask-image:radial-gradient(60% 60% at 60% 40%,#000 30%,transparent 78%);
+              mask-image:radial-gradient(60% 60% at 60% 40%,#000 30%,transparent 78%);}
+    .pf-hero{background:
+        radial-gradient(140% 60% at 100% 0%, rgba(236,220,196,.6) 0%, rgba(236,220,196,0) 60%),
+        linear-gradient(180deg,#FFFEFB 0%,#FAF5EE 100%) !important;}
+  }
 </style>
 </head>
 <body>
