@@ -157,9 +157,10 @@ async function mentorApplications(rep, ctx, onlyId) {
   const assess = await assessApplications(apps);
   const site = M.SITE();
   for (const p of apps) {
-    const a = assess[p.id];
-    if (!a) { ctx.results[p.id] = { verdict: 'pending' }; rep.done.push(`AI review of <b>${M.esc(p.name || 'a mentor applicant')}</b> was not available today; it will try again tomorrow.`); continue; }
     const miss = missingBasics(p, others);
+    // Missing basics (like LinkedIn) are known without the AI, so the applicant is still asked even when the AI review is unavailable.
+    const a = assess[p.id] || (miss.length ? { verdict: 'ask', summary: '', concerns: [], askThem: '' } : null);
+    if (!a) { ctx.results[p.id] = { verdict: 'pending' }; rep.done.push(`AI review of <b>${M.esc(p.name || 'a mentor applicant')}</b> was not available today; it will try again tomorrow.`); continue; }
     let verdict = a.verdict === 'approve' || a.verdict === 'decline' ? a.verdict : 'ask';
     if (verdict === 'approve' && miss.length) verdict = 'ask';
     ctx.results[p.id] = { verdict, summary: a.summary || '', concerns: a.concerns || [], question: miss.length ? `Please add ${miss.join(', ')}.` : (a.askThem || '') };

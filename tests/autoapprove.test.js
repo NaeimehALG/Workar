@@ -75,3 +75,29 @@ test('a new application is reviewed right away and only that applicant is touche
     assert.ok(sent.some(m => m.to === 'n@x.test' && /almost ready/.test(m.subject)));
   } finally { global.fetch = savedFetch; delete require.cache[apPath]; delete require.cache[mailPath]; delete require.cache[aiPath]; }
 });
+
+test('a missing LinkedIn is still asked for when the AI review is unavailable', async () => {
+  const mailPath = require.resolve('../api/_mail'), aiPath = require.resolve('../api/_ai'), apPath = require.resolve('../api/_autopilot');
+  const realM = require('../api/_mail'), realAi = require('../api/_ai');
+  const noLi = { id: 'n', name: 'No LinkedIn', role: 'mentor', approved: false, headline: 'Analyst', bio: 'z'.repeat(120), linkedin: '', experience: '18', company: 'Carsan' };
+  const done = { id: 'd', name: 'Complete', role: 'mentor', approved: false, headline: 'PM', bio: 'y'.repeat(120), linkedin: 'https://linkedin.com/in/complete-one', experience: '9', company: 'Acme' };
+  const sent = [], patched = [];
+  require.cache[mailPath].exports = Object.assign({}, realM, {
+    rows: async q => q.startsWith('profiles?role=eq.mentor&approved=eq.false') ? [noLi, done] : [],
+    patch: async (p, b) => { patched.push(b); return { ok: true }; },
+    emailOf: async id => id + '@x.test', sendMail: async (to, subject) => { sent.push({ to, subject }); return { ok: true }; }
+  });
+  require.cache[aiPath].exports = Object.assign({}, realAi, { askJSON: async () => { throw new Error('AI down'); } });
+  delete require.cache[apPath];
+  process.env.SUPABASE_URL = 'https://sb.test'; process.env.SUPABASE_SERVICE_ROLE_KEY = 'k'; process.env.ANTHROPIC_API_KEY = 'k';
+  const savedFetch = global.fetch;
+  global.fetch = async () => ({ ok: true, json: async () => [{ id: 'new' }], text: async () => '' });
+  try {
+    const AP = require('../api/_autopilot');
+    const rep = { done: [], needs: [], emails: 0, errors: [] };
+    await AP.mentorApplications(rep, {});
+    assert.ok(sent.some(m => m.to === 'n@x.test' && /almost ready/.test(m.subject))); // asked for LinkedIn anyway
+    assert.ok(!sent.some(m => m.to === 'd@x.test'));                                  // complete profile waits for the AI
+    assert.equal(patched.length, 0);                                                    // nobody approved without the AI
+  } finally { global.fetch = savedFetch; delete require.cache[apPath]; delete require.cache[mailPath]; delete require.cache[aiPath]; }
+});
