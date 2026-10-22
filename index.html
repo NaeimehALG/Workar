@@ -2342,6 +2342,20 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .mc-price b{display:block;font-size:20px;font-weight:700;color:#43301F;line-height:1.1;}
   .mc-price span{font-size:12px;color:#A88B6C;}
   .mc-book{border-radius:999px;padding:9px 22px;flex:none;}
+  /* mentor cards: photo sits on the card's left edge, half inside and half outside; compact card */
+  .grid:has(.card.mc){padding-inline-start:36px;gap:20px 52px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));}
+  .card.mc{position:relative;overflow:visible;border-radius:18px;}
+  .card.mc .mc-av{position:absolute;top:18px;inset-inline-start:-34px;width:68px;height:68px;margin:0;box-shadow:0 0 0 4px #fff, 0 0 0 5px #EADCC9, 0 10px 22px -14px rgba(74,53,38,.5);}
+  .card.mc .mc-body{padding:16px 18px 14px 50px;}
+  html[dir="rtl"] .card.mc .mc-body{padding:16px 50px 14px 18px;}
+  .card.mc .mc-name{margin:0;font-size:17px;}
+  .card.mc .mc-head{font-size:13px;margin-top:3px;}
+  .card.mc .mc-meta{margin-top:10px;margin-bottom:8px;gap:4px 12px;}
+  .card.mc .mc-bio{margin:0 0 12px;font-size:13px;line-height:1.55;}
+  .card.mc .mc-foot{padding-top:12px;}
+  .card.mc .mc-price b{font-size:18px;}
+  .card.mc .mc-book{padding:8px 18px;font-size:13.5px;}
+  @media (max-width:600px){.grid:has(.card.mc){padding-inline-start:30px;}}
 </style>
 </head>
 <body>
