@@ -25,7 +25,7 @@
   "crons": [
     {
       "path": "/api/reminders",
-      "schedule": "0 15 * * *"
+      "schedule": "0 16 * * *"
     }
   ],
   "headers": [
