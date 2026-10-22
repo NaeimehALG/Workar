@@ -2287,6 +2287,15 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
     .pf-hero .pf-facts div:nth-child(even){border-inline-start:1px solid #EEE4D7;}
     .pf-hero .pf-facts .pf-f-lang{grid-column:1/-1;order:9;border-bottom:0;border-inline-start:0 !important;}
   }
+  /* About and text sections: one calm reading style */
+  .pf-sec{margin:0 0 44px;}
+  .pf-sec h2{margin:0 0 14px;font-size:19px;line-height:1.35;font-weight:700;letter-spacing:-.005em;color:#43301F;}
+  .pf-bio{margin:0 0 14px;font-size:15.5px;line-height:1.75;font-weight:400;color:#5B4433;opacity:1;max-width:68ch;white-space:normal;}
+  .pf-bio:last-child{margin-bottom:0;}
+  .pf-best{margin:0;padding:2px 0 2px 18px;border-inline-start:2px solid #D9C3A3;font-size:15.5px;line-height:1.75;color:#5B4433;max-width:68ch;}
+  html[dir="rtl"] .pf-best{padding:2px 18px 2px 0;}
+  html[dir="rtl"] .pf-bio, html[dir="rtl"] .pf-best{line-height:1.95;}
+  @media (max-width:700px){.pf-sec{margin-bottom:34px;} .pf-sec h2{font-size:18px;} .pf-bio, .pf-best{font-size:15px;}}
 </style>
 </head>
 <body>
@@ -6656,10 +6665,10 @@ function mentorView(){
   ${isSelf ? `<div class="banner">${esc(T(p.approved===false ? 'pending_review' : 'this_is_profile'))}</div>` : ''}
   <div class="mp-grid">
     <div class="mp-main">
-      ${p.bio ? (()=>{ const bio = String(trShow && trp.data.bio ? trp.data.bio : p.bio).trim(); const m = bio.match(/^([\s\S]{20,240}?[.!?؟])\s+([\s\S]+)$/);
-        const lead = m ? m[1] : bio, rest = m ? m[2] : '', long = bio.length > 950;
+      ${p.bio ? (()=>{ const bio = String(trShow && trp.data.bio ? trp.data.bio : p.bio).trim(); const long = bio.length > 950;
+        const paras = bio.split(/\n\s*\n|\n/).map(x=>x.trim()).filter(Boolean);
         return `<section class="pf-sec"><h2>${esc(T('mp_about_n').replace('{n}', nameOf(id)))}</h2>
-          <div class="mp-bio-wrap ${long?'clamp':''}"><p class="pf-lead" dir="auto">${esc(lead)}</p>${rest ? `<p class="pf-bio" dir="auto">${esc(rest)}</p>` : ''}</div>
+          <div class="mp-bio-wrap ${long?'clamp':''}">${paras.map(x=>`<p class="pf-bio" dir="auto">${esc(x)}</p>`).join('')}</div>
           ${long ? `<button type="button" class="mp-more" data-bio-toggle><span class="mo">${esc(T('mp_more'))}</span><span class="ls">${esc(T('mp_less'))}</span></button>` : ''}
           ${trpLink}
         </section>`; })() : ''}
