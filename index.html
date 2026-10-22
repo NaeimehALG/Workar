@@ -3275,7 +3275,7 @@ let state = { view:'home', mentorId:null, coachMode:'resume', chatMsgs:[], sendi
   authMode:'login', authError:'', authCheckEmail:false, authBusy:false,
   lang:'en', query:'', role:null, voiceMode:false, listening:false, outOfCredits:false };
 try{ const __qs = new URLSearchParams(location.search), __dr = __qs.get('r'); if(__qs.get('go')==='dispute' && __dr){ state.view = 'dispute'; state.disputeReq = __dr.slice(0,120); history.replaceState(null, '', location.pathname + location.hash); } }catch(e){}
-try{ const __go = new URLSearchParams(location.search).get('go'); if(__go && ['dashboard','admin','privacy','terms','refunds','conduct','browse','coach','prep','requests','messages'].includes(__go)){ if(__go==='requests'){ state.ibPreferAction = true; } state.view = __go==='requests' ? 'messages' : __go; history.replaceState(null, '', location.pathname + location.hash); } }catch(e){}
+try{ const __qs2 = new URLSearchParams(location.search), __go = __qs2.get('go'), __m = (__qs2.get('m')||'').slice(0,80); if(__go && ['dashboard','admin','privacy','terms','refunds','conduct','browse','coach','prep','requests','messages','mentor','onboard'].includes(__go) && (__go!=='mentor' || __m)){ if(__go==='requests'){ state.ibPreferAction = true; } state.view = __go==='requests' ? 'messages' : __go; if(__go==='mentor') state.mentorId = __m; } }catch(e){}
 state.ciSkip = state.ciSkip || {}; state.ciStars = state.ciStars || {};
 let cache = { profiles:{}, reviews:{}, requests:[], names:{}, people:{}, msgs:{}, busy:{}, busyLoaded:{} };
 
@@ -3297,15 +3297,25 @@ function nav(view, params, fromHistory){
     if(params && params.prepScreen){ prep.screen = params.prepScreen; }
   }
   state.view=view; Object.assign(state, params||{});
-  if(!fromHistory){ try{ history.pushState({ view, prepScreen: (typeof prep!=='undefined' && view==='prep') ? prep.screen : null, guide: (typeof prep!=='undefined') ? prep.guide : null }, ''); }catch(e){} }
+  if(!fromHistory){ try{ history.pushState({ view, mentorId: view==='mentor' ? state.mentorId : null, prepScreen: (typeof prep!=='undefined' && view==='prep') ? prep.screen : null, guide: (typeof prep!=='undefined') ? prep.guide : null }, '', viewUrl(view)); }catch(e){} }
   render(); window.scrollTo(0,0);
+}
+// The address bar always shows the current page (?go=...), so refreshing stays on the same page.
+function viewUrl(view){
+  const keep = new Set(['dashboard','admin','privacy','terms','refunds','conduct','browse','coach','prep','messages','mentor','onboard','dispute']);
+  if(!keep.has(view)) return location.pathname;
+  const q = new URLSearchParams({ go: view });
+  if(view==='mentor' && state.mentorId) q.set('m', state.mentorId);
+  if(view==='dispute' && state.disputeReq) q.set('r', state.disputeReq);
+  return location.pathname + '?' + q.toString();
 }
 window.addEventListener('popstate', e=>{
   const st = e.state || { view:'home' };
   if(typeof prep!=='undefined'){ if(st.guide) prep.guide = st.guide; }
-  nav(st.view || 'home', st.prepScreen ? { prepScreen: st.prepScreen } : null, true);
+  const params = Object.assign({}, st.prepScreen ? { prepScreen: st.prepScreen } : {}, st.mentorId ? { mentorId: st.mentorId } : {});
+  nav(st.view || 'home', Object.keys(params).length ? params : null, true);
 });
-try{ history.replaceState({ view: state.view }, ''); }catch(e){}
+try{ history.replaceState({ view: state.view, mentorId: state.view==='mentor' ? state.mentorId : null }, '', /type=recovery/.test(location.hash) ? location.href : viewUrl(state.view) + location.hash); }catch(e){}
 
 async function resolveNames(ids){
   if(!sb) return;
@@ -6618,7 +6628,7 @@ document.addEventListener('click', e=>{
 function mentorView(){
   const id = state.mentorId;
   const p = cache.profiles[id];
-  if(!p) return `<div class="empty">Not found.</div>`;
+  if(!p) return Object.keys(cache.profiles).length ? `<div class="empty">${esc(T('mentor_not_available'))}</div>` : `<div class="empty">${esc(T('pay_loading'))}</div>`;
   if(p.approved===false && id!==uid && !isAdmin()) return `<div class="empty">${esc(T('mentor_not_available'))}</div>`;
   const reviews = cache.reviews[id] || [];
   const avg = avgRating(id);
