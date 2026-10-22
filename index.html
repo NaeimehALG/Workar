@@ -2323,39 +2323,27 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .pf-bio{margin-bottom:16px;}
   .pf-hero .pf-li{align-self:flex-end;margin:0 0 -3px;}
   @media (max-width:700px){.pf-hero .pf-li{align-self:flex-start;margin:4px 0 0;}}
-  /* ===== mentor cards in Find a mentor (match the profile header) ===== */
-  .card.mc{padding:0;overflow:hidden;border-radius:20px;border-color:#EEE4D7;box-shadow:0 1px 2px rgba(74,53,38,.04);transition:box-shadow .2s, transform .2s, border-color .2s;}
-  .card.mc:hover{border-color:#E2D2BD;box-shadow:0 22px 40px -30px rgba(74,53,38,.45);transform:translateY(-2px);}
+  /* ===== mentor cards in Find a mentor ===== */
+  .card.mc{display:flex;flex-direction:column;padding:20px;border-radius:16px;border:1px solid #EEE4D7;background:#fff;box-shadow:0 1px 2px rgba(74,53,38,.04);transition:border-color .2s, box-shadow .2s;}
+  .card.mc:hover{border-color:#DFCDB5;box-shadow:0 18px 36px -28px rgba(74,53,38,.45);}
   .card.mc:focus-visible{outline:2px solid #8B6A4C;outline-offset:3px;}
-  .mc-body{display:flex;flex-direction:column;flex:1;padding:20px 20px 18px;}
-  .mc-av{width:64px;height:64px;font-size:23px;margin-top:0;border:0;box-shadow:0 0 0 3px #fff, 0 0 0 4px #EADCC9;background:radial-gradient(circle at 35% 30%,#FFFDF9 0%,#F4EADC 55%,#E8D7C0 100%);color:#7A5A3E;font-weight:600;}
-  .mc-name{margin:12px 0 0;font-size:18px;font-weight:700;letter-spacing:-.01em;color:#43301F;line-height:1.25;}
-  .mc-head{margin:4px 0 0;font-size:13.5px;font-weight:500;line-height:1.45;color:#8B6A4C;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-wrap:pretty;}
-  .mc-meta{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:12px;font-size:12.5px;color:#7D6650;}
-  .mc-meta span{display:inline-flex;align-items:center;gap:6px;}
-  .mc-meta svg{width:15px;height:15px;color:#B8936A;flex:none;}
-  .mc-rate{color:#43301F;font-weight:600;} .mc-rate svg{color:#C99B6C;fill:#C99B6C;}
-  .mc-bio{margin:12px 0 0;font-size:13.5px;line-height:1.6;color:#6B5543;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-  .mc-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto;padding-top:16px;border-top:1px solid #F1E9DE;}
-  .mc-body > .mc-meta{margin-bottom:12px;}
-  .mc-body > .mc-bio{margin:0 0 18px;}
-  .mc-price b{display:block;font-size:20px;font-weight:700;color:#43301F;line-height:1.1;}
-  .mc-price span{font-size:12px;color:#A88B6C;}
-  .mc-book{border-radius:999px;padding:9px 22px;flex:none;}
-  /* mentor cards: photo sits on the card's left edge, half inside and half outside; compact card */
-  .grid:has(.card.mc){padding-inline-start:36px;gap:20px 52px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));}
-  .card.mc{position:relative;overflow:visible;border-radius:18px;}
-  .card.mc .mc-av{position:absolute;top:18px;inset-inline-start:-34px;width:68px;height:68px;margin:0;box-shadow:0 0 0 4px #fff, 0 0 0 5px #EADCC9, 0 10px 22px -14px rgba(74,53,38,.5);}
-  .card.mc .mc-body{padding:16px 18px 14px 50px;}
-  html[dir="rtl"] .card.mc .mc-body{padding:16px 50px 14px 18px;}
-  .card.mc .mc-name{margin:0;font-size:17px;}
-  .card.mc .mc-head{font-size:13px;margin-top:3px;}
-  .card.mc .mc-meta{margin-top:10px;margin-bottom:8px;gap:4px 12px;}
-  .card.mc .mc-bio{margin:0 0 12px;font-size:13px;line-height:1.55;}
-  .card.mc .mc-foot{padding-top:12px;}
-  .card.mc .mc-price b{font-size:18px;}
-  .card.mc .mc-book{padding:8px 18px;font-size:13.5px;}
-  @media (max-width:600px){.grid:has(.card.mc){padding-inline-start:30px;}}
+  .mc-top{display:flex;align-items:center;gap:12px;}
+  .mc-av{width:52px;height:52px;font-size:19px;flex:none;border:0;box-shadow:0 0 0 1px #EADCC9;background:radial-gradient(circle at 35% 30%,#FFFDF9 0%,#F4EADC 55%,#E8D7C0 100%);color:#7A5A3E;font-weight:600;}
+  .mc-who{min-width:0;flex:1;}
+  .mc-name{margin:0;font-size:16.5px;font-weight:700;line-height:1.25;color:#43301F;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .mc-sub{margin-top:2px;font-size:12.5px;color:#A88B6C;display:flex;flex-wrap:wrap;align-items:center;gap:0 8px;}
+  .mc-sub i{width:3px;height:3px;border-radius:50%;background:currentColor;opacity:.6;}
+  .mc-rate{display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:600;color:#43301F;align-self:flex-start;}
+  .mc-rate svg{width:14px;height:14px;color:#C99B6C;fill:#C99B6C;}
+  .mc-head{margin:14px 0 0;font-size:14px;font-weight:500;line-height:1.5;color:#5B4433;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-wrap:pretty;min-height:3em;}
+  .mc-langs{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;}
+  .mc-langs span{font-size:12px;font-weight:500;color:#7D6650;padding:3px 9px;border-radius:999px;background:#F8F3EC;border:1px solid #EFE5D8;}
+  .mc-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto;padding-top:14px;}
+  .card.mc > :nth-last-child(2){margin-bottom:16px;}
+  .mc-foot{border-top:1px solid #F2EAE0;}
+  .mc-price b{font-size:17px;font-weight:700;color:#43301F;}
+  .mc-price span{font-size:12.5px;color:#A88B6C;}
+  .mc-book{border-radius:999px;padding:7px 18px;font-size:13.5px;flex:none;}
 </style>
 </head>
 <body>
@@ -6594,20 +6582,19 @@ function browseView(){
       const avg = avgRating(id);
       const yrs = String(p.experience||'').trim(), langs = mentorLangs(p);
       return `<div class="card mc" data-nav="mentor" data-mentor="${id}">
-        <div class="mc-body">
+        <div class="mc-top">
           <div class="avatar mc-av">${av(id)}</div>
-          <h3 class="mc-name">${esc(nameOf(id))}</h3>
-          ${(p.headline||p.profession) ? `<p class="mc-head" dir="auto">${esc(String(p.headline||p.profession).split(/\s*[|•·]\s*/).filter(Boolean).join(' · '))}</p>` : ''}
-          <div class="mc-meta">
-            ${yrs ? `<span>${MP_ICONS.brief}${esc(T('mp_h_exp_v').replace('{n}', yrs))}</span>` : ''}
-            ${langs.length ? `<span>${MP_ICONS.globe}${esc(langs.join(', '))}</span>` : ''}
-            ${avg ? `<span class="mc-rate">${MP_ICONS.star}${avg.toFixed(1)}</span>` : ''}
+          <div class="mc-who">
+            <h3 class="mc-name">${esc(nameOf(id))}</h3>
+            <div class="mc-sub">${[yrs ? esc(T('mp_h_exp_v').replace('{n}', yrs)) : '', esc(tzCity(mentorTz(id)))].filter(Boolean).join('<i aria-hidden="true"></i>')}</div>
           </div>
-          ${p.bio ? `<p class="mc-bio" dir="auto">${esc(p.bio)}</p>` : ''}
-          <div class="mc-foot">
-            <div class="mc-price"><b>$${mentorRate(p)}</b><span>CAD · ${esc(T('rate_per_session'))}</span></div>
-            ${id!==uid ? `<button class="btn btn-primary btn-sm mc-book card-book" data-book="${id}">${esc(T('mc_book'))}</button>` : ''}
-          </div>
+          ${avg ? `<span class="mc-rate">${MP_ICONS.star}${avg.toFixed(1)}</span>` : ''}
+        </div>
+        ${(p.headline||p.profession) ? `<p class="mc-head" dir="auto">${esc(String(p.headline||p.profession).split(/\s*[|•·]\s*/).filter(Boolean).join(' · '))}</p>` : ''}
+        ${langs.length ? `<div class="mc-langs">${langs.slice(0,4).map(l=>`<span>${esc(l)}</span>`).join('')}</div>` : ''}
+        <div class="mc-foot">
+          <div class="mc-price"><b>$${mentorRate(p)}</b> <span>CAD / ${SESSION_MIN} min</span></div>
+          ${id!==uid ? `<button class="btn btn-primary btn-sm mc-book card-book" data-book="${id}">${esc(T('mc_book'))}</button>` : ''}
         </div>
       </div>`;
     }).join('')}
