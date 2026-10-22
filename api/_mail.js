@@ -57,7 +57,7 @@ function layout(title, paragraphs, cta) {
   <tr><td style="padding:6px 30px 26px;"><h1 style="margin:0 0 16px;font-size:21px;line-height:1.3;color:#4A3526;">${esc(title)}</h1>${p}${button}</td></tr>
   </table>
   <p style="font-size:12px;color:#A88660;margin:16px 0 4px;">Questions? Simply reply to this email and our team will help.</p>
-  <p style="font-size:12px;color:#A88660;margin:0;">Workar · career mentoring · <a href="${SITE()}" style="color:#A88660;">workar.me</a></p>
+  <p style="font-size:12px;color:#A88660;margin:0;">Workar Group · career mentoring · <a href="${SITE()}" style="color:#A88660;">workar.me</a></p>
   </td></tr></table></body></html>`;
 }
 
