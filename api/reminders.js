@@ -74,20 +74,18 @@ async function reengage() {
     await M.patch(`requests?id=eq.${encodeURIComponent(r.id)}`, { nudgedAt: new Date().toISOString() });
     if (bookedAgain) continue;
     const [mentor, client] = await Promise.all([M.fullProfile(r.mentorId), M.fullProfile(r.clientId)]);
-    let line = '';
-    if (process.env.ANTHROPIC_API_KEY) {
-      try {
-        const data = await AI.callClaude({
-          system: `Write 2 short, courteous sentences to a client of Workar, a career mentorship site, about a week or more after their mentoring session. Mention their goal if known and suggest one concrete next step a follow-up session with the same mentor could help with. No pressure, no discounts, no invented facts. Plain text, English.`,
-          messages: [{ role: 'user', content: JSON.stringify({ clientFirstName: String(client.name || '').split(' ')[0], goal: (r.prepBrief && r.prepBrief.goal) || client.profession || '', mentorName: mentor.name, mentorProfession: mentor.profession }) }],
-          maxTokens: 200, timeoutMs: 12000
-        });
-        line = AI.textOf(data);
-      } catch (e) { console.error('nudge-ai-failed', e.message); }
-    }
-    if (!line) line = `It's been a little while since your session with ${mentor.name}. A follow-up session is a good way to check progress and plan your next step.`;
-    await M.sendMail(await M.emailOf(r.clientId), `Ready for your next step with ${mentor.name}?`,
-      M.layout('We hope your session was helpful', [M.esc(line), `<span style="font-size:13px;color:#8a7461;">You'll only get this note once per booking.</span>`], { text: `Book ${mentor.name} again`, url: M.SITE() + '/?go=browse' }));
+    // Fixed, human-written text: no AI guesses about what was discussed in the session.
+    const who = M.esc(mentor.name || 'your mentor'), hi = M.esc(String(client.name || '').trim().split(/\s+/)[0] || 'there');
+    let reviewed = false;
+    try { const rv = await M.rows(`reviews?mentorId=eq.${encodeURIComponent(r.mentorId)}&clientId=eq.${encodeURIComponent(r.clientId)}&select=id&limit=1`); reviewed = Array.isArray(rv) && rv.length > 0; } catch (e) { console.error('nudge-review-check', e.message); }
+    await M.sendMail(await M.emailOf(r.clientId), `How was your session with ${mentor.name || 'your mentor'}?`,
+      M.layout(`Your next step with ${who}`, [
+        `Hi ${hi},`,
+        `Thank you for your session with ${who}. We hope it gave you useful direction toward your goals.`,
+        reviewed ? '' : `<b>Share your experience:</b> a short review helps ${who} and helps other clients choose the right mentor. <a href="${M.SITE()}/?go=dashboard" style="color:#8B6A4C;font-weight:700;">Leave a review</a>`,
+        `<b>Keep the momentum going:</b> if you would like to continue, you can book a follow-up session with ${who} directly from their profile.`,
+        'Kind regards,<br>The Workar team'
+      ], { text: `Book ${mentor.name || 'your mentor'} again`, url: M.SITE() + '/?go=mentor&m=' + encodeURIComponent(r.mentorId) }));
     sent++;
   }
   return { nudged: sent };
