@@ -2344,6 +2344,30 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .mc-price b{font-size:17px;font-weight:700;color:#43301F;}
   .mc-price span{font-size:12.5px;color:#A88B6C;}
   .mc-book{border-radius:999px;padding:7px 18px;font-size:13.5px;flex:none;}
+  /* Find a mentor: one mentor per row (like LinkedIn search results) */
+  .grid:has(> .card.mc){grid-template-columns:1fr;gap:14px;max-width:900px;}
+  .card.mc{display:grid;grid-template-columns:76px minmax(0,1fr) auto;grid-template-rows:auto auto auto;column-gap:20px;align-items:center;padding:20px 24px;}
+  .card.mc .mc-top{display:contents;}
+  .card.mc .mc-av{grid-row:1/4;grid-column:1;width:76px;height:76px;font-size:26px;align-self:center;}
+  .card.mc .mc-who{grid-column:2;grid-row:1;}
+  .card.mc .mc-name{font-size:18px;}
+  .card.mc .mc-head{grid-column:2;grid-row:2;margin:4px 0 0;min-height:0;-webkit-line-clamp:2;}
+  .card.mc .mc-langs{grid-column:2;grid-row:3;margin:10px 0 0;}
+  .card.mc > :nth-last-child(2){margin-bottom:0;}
+  .card.mc .mc-rate{grid-column:3;grid-row:1;justify-self:end;}
+  .card.mc .mc-foot{grid-column:3;grid-row:1/4;flex-direction:column;align-items:flex-end;justify-content:center;gap:10px;border:0;padding:0;margin:0;}
+  .card.mc:has(.mc-rate) .mc-foot{grid-row:2/4;}
+  .card.mc .mc-price{white-space:nowrap;}
+  .card.mc .mc-book{padding:8px 22px;}
+  @media (max-width:640px){
+    .card.mc{grid-template-columns:60px minmax(0,1fr);grid-template-rows:auto auto auto auto;column-gap:14px;padding:16px 18px;}
+    .card.mc .mc-av{grid-row:1/2;width:60px;height:60px;font-size:21px;}
+    .card.mc .mc-who{grid-row:1;align-self:center;}
+    .card.mc .mc-head{grid-column:1/-1;grid-row:2;margin-top:12px;}
+    .card.mc .mc-langs{grid-column:1/-1;grid-row:3;}
+    .card.mc .mc-rate{grid-column:2;grid-row:1;align-self:start;}
+    .card.mc .mc-foot, .card.mc:has(.mc-rate) .mc-foot{grid-column:1/-1;grid-row:4;flex-direction:row;align-items:center;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px solid #F2EAE0;}
+  }
 </style>
 </head>
 <body>
