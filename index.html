@@ -2296,6 +2296,28 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   html[dir="rtl"] .pf-best{padding:2px 18px 2px 0;}
   html[dir="rtl"] .pf-bio, html[dir="rtl"] .pf-best{line-height:1.95;}
   @media (max-width:700px){.pf-sec{margin-bottom:34px;} .pf-sec h2{font-size:18px;} .pf-bio, .pf-best{font-size:15px;}}
+  /* compact identity row: photo | name + headline | LinkedIn, sized like the rest of the site */
+  .pf-hero::before{height:132px;}
+  .pf-hero .pf-top{margin-top:-56px;padding:0 36px 22px;align-items:flex-end;gap:22px;}
+  .pf-hero .pf-avatar{width:120px;height:120px;font-size:42px;box-shadow:0 0 0 5px #fff, 0 0 0 6px #EADCC9, 0 14px 28px -18px rgba(74,53,38,.5) !important;}
+  .pf-hero .pf-avatar:not(:has(img))::after{inset:7px;}
+  .pf-hero .pf-id{flex:1;padding:0 0 4px;}
+  .pf-hero .pf-id h1{font-size:30px;line-height:1.15;letter-spacing:-.02em;}
+  .pf-hero .pf-headline{margin-top:4px;font-size:15.5px;line-height:1.45;color:#8B6A4C;max-width:60ch;}
+  .pf-hero .pf-li{flex:none;margin:0 0 6px;padding:7px 14px 7px 10px;font-size:13px;}
+  html[dir="rtl"] .pf-hero .pf-li{padding:7px 10px 7px 14px;}
+  .pf-hero .pf-facts div{padding:16px 24px;}
+  .pf-hero .pf-facts div:first-child{padding-inline-start:36px;}
+  .pf-hero .pf-facts dd{font-size:15px;}
+  @media (max-width:700px){
+    .pf-hero::before{height:96px;}
+    .pf-hero .pf-top{margin-top:-46px;padding:0 20px 18px;flex-direction:column;align-items:flex-start;gap:10px;}
+    .pf-hero .pf-avatar{width:92px;height:92px;font-size:32px;}
+    .pf-hero .pf-id h1{font-size:26px;}
+    .pf-hero .pf-headline{font-size:15px;}
+    .pf-hero .pf-li{margin:4px 0 0;}
+    .pf-hero .pf-facts div, .pf-hero .pf-facts div:first-child{padding:14px 20px;}
+  }
 </style>
 </head>
 <body>
@@ -6652,8 +6674,8 @@ function mentorView(){
       <div class="pf-id">
         <h1>${esc(nameOf(id))}</h1>
         ${(p.headline||p.profession) ? `<p class="pf-headline" dir="auto">${String(p.headline||p.profession).split(/\s*[|•·]\s*/).filter(Boolean).map(x=>`<span>${esc(x)}</span>`).join('<i class="pf-sep" aria-hidden="true"></i>')}</p>` : ''}
-        ${p.linkedin ? `<a class="pf-li" href="${esc(p.linkedin)}" target="_blank" rel="noopener">${MP_ICONS.li}<span>${esc(T('mp_li_view'))}</span></a>` : ''}
       </div>
+      ${p.linkedin ? `<a class="pf-li" href="${esc(p.linkedin)}" target="_blank" rel="noopener">${MP_ICONS.li}<span>${esc(T('mp_li_view'))}</span></a>` : ''}
     </div>
     <dl class="pf-facts">
       ${(()=>{ const yrs = String(p.experience||'').trim(); return yrs ? `<div>${MP_ICONS.brief}<dt>${esc(T('mp_f_exp'))}</dt><dd>${esc(T('mp_h_exp_v').replace('{n}', yrs))}</dd></div>` : ''; })()}
