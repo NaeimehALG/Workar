@@ -42,7 +42,7 @@ module.exports = async (req, res) => {
       try { out = await require('./_autopilot').reviewOne(me.id); } catch (e) { console.error('review-one-failed', e.message); out = { verdict: 'pending', errors: [e.message] }; }
       if (out.verdict !== 'approve' && out.verdict !== 'waiting' && out.verdict !== 'ask') { // 'ask' already sends the admin a copy
         const what = out.verdict === 'ask' ? `The profile is not live yet. We emailed ${M.esc(p.name)} to ask for: <b>${M.esc(out.question || 'more detail')}</b>`
-          : out.verdict === 'decline' ? `The AI did not approve this profile and sent a polite "not at this time" email. ${M.esc(out.summary || '')}`
+          : out.verdict === 'decline' ? `The AI did not approve this profile. It stays hidden, and no email was sent to ${M.esc(p.name)}. ${M.esc(out.summary || '')}`
           : 'The automatic review could not run just now; it will try again in the next daily run. Nothing is needed from you.';
         await M.sendMail(adminEmail, `Mentor application needs attention: ${p.name}`,
           M.layout(`About ${M.esc(p.name)}'s mentor application`, [what].concat((out.concerns || []).length ? [`Notes: ${M.esc(out.concerns.join('; '))}`] : []), { text: 'Open the admin panel', url: site + '/?go=admin' }));

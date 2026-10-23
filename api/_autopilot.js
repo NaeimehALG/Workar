@@ -122,7 +122,7 @@ function meetsAutoLimits(p) {
 // Fully hands-off: the AI decides every application. Nothing waits for the admin; she only sees it in the digest.
 //   approve  → profile live + welcome email (within the quality bar and the daily cap; over the cap waits for tomorrow's run)
 //   ask      → one polite question (missing details, under the quality bar, or unclear); re-reviewed automatically when they update
-//   decline  → one polite "not at this time" email; the profile stays hidden
+//   decline  → no email to the applicant; the profile simply stays hidden
 // Applicants who never answer a question are sent a closing note after 7 days.
 const ASK_WAIT_DAYS = 7;
 function missingBasics(p, others = []) {
@@ -177,11 +177,9 @@ async function mentorApplications(rep, ctx, onlyId) {
       ctx.approvedNow = (ctx.approvedNow || 0) + 1;
       rep.done.push(`Approved and welcomed mentor <b>${M.esc(p.name)}</b> (${M.esc(p.profession || '')}). ${M.esc(a.summary || '')}`);
     } else if (verdict === 'decline') {
+      // No "not at this time" email is ever sent to the applicant (admin's decision, Oct 2026): the profile simply stays hidden.
       if (await once('decline', p.id)) {
-        await mail(rep, await M.emailOf(p.id), 'About your Workar mentor application', `Thank you for applying, ${first(p.name)}`,
-          ['Thank you for your interest in mentoring on Workar. After reviewing your profile, we are not able to list it at this time.',
-            'You are very welcome to update your profile with more detail about your experience, and we will review it again automatically.'], { text: 'Update my profile', url: site + '/?go=dashboard' });
-        rep.done.push(`Declined mentor applicant <b>${M.esc(p.name || '')}</b>. ${M.esc(a.summary || '')}${a.concerns && a.concerns.length ? ' (' + M.esc(a.concerns.join('; ')) + ')' : ''}`);
+        rep.done.push(`Did not approve mentor applicant <b>${M.esc(p.name || '')}</b>; the profile stays hidden and no email was sent to them. ${M.esc(a.summary || '')}${a.concerns && a.concerns.length ? ' (' + M.esc(a.concerns.join('; ')) + ')' : ''}`);
       }
     } else {
       const q = miss.length ? `Please add ${miss.join('; ')}` : (a.askThem || 'Could you add a little more detail about your experience and how you help people?');

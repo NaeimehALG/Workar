@@ -30,7 +30,7 @@ test('every AI verdict ends in an action, never an admin to-do', async () => {
     assert.deepEqual(patched.map(x => x.b), [{ approved: true }]);              // only the good one goes live
     assert.ok(patched[0].p.includes('id=eq.g'));
     assert.ok(sent.some(m => m.to === 't@x.test' && /almost ready/.test(m.subject))); // thin profile is asked for details
-    assert.ok(sent.some(m => m.to === 'b@x.test' && /application/.test(m.subject))); // declined politely
+    assert.ok(!sent.some(m => m.to === 'b@x.test')); // declined silently: no email to the applicant
     assert.ok(!sent.some(m => m.to === 'x@x.test'));                              // banned accounts are skipped
   } finally { global.fetch = savedFetch; delete require.cache[apPath]; delete require.cache[mailPath]; delete require.cache[aiPath]; }
 });
