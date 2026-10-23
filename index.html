@@ -775,6 +775,7 @@
   .ob-roles{max-width:calc(100% - 348px);margin-bottom:26px;}
   @media (max-width:900px){.ob-roles{max-width:none;}}
   .role-opt{transition:border-color .15s, background .15s;position:relative;}
+  .bm-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
   .role-opt:hover{border-color:var(--accent-2);}
   .role-opt .role-ic{display:block;color:var(--accent);margin-bottom:12px;}
   .role-opt.selected::after{content:"";position:absolute;top:16px;inset-inline-end:16px;width:18px;height:18px;border-radius:50%;background:var(--accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.2l2.4 2.4 4.6-5' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/11px no-repeat;}
@@ -2591,6 +2592,8 @@ const I18N = {
     listening:'Listening…', mic_start:'🎤 Speak', toast_ai_credits_added:'Credits added — you\'re all set!',
     need_access:'Workar needs workspace access to load profiles and mentors.', try_open:'Try opening this from within your Claude organization.',
     yrs_exp:'yrs experience', linkedin_link:'LinkedIn ↗',
+    bm_card_t:'Signed up as a client by mistake?', bm_card_s:'You can switch your account to a mentor profile.', bm_btn:'Become a mentor',
+    bm_title:'Switch to a mentor profile', bm_sub:'Complete your mentor details below. Your messages stay the same. Your profile will appear in Find a mentor once it has been reviewed.', bm_cancel:'Cancel', bm_submit:'Switch to mentor',
     lang_switch:'فارسی',
     api_key_btn:'API key', api_key_prompt:'Enter your Anthropic API key to power AI coaching and matching.\nStored only in this browser — leave blank to clear.',
     api_key_saved:'API key saved', api_key_cleared:'API key cleared',
@@ -3048,6 +3051,8 @@ const I18N = {
     listening:'در حال گوش دادن…', mic_start:'🎤 صحبت کنید', toast_ai_credits_added:'پیام‌ها اضافه شد؛ آماده‌اید!',
     need_access:'Workar برای بارگذاری پروفایل‌ها و منتورها به دسترسی Workspace نیاز دارد.', try_open:'آن را از داخل سازمان Claude خودتان باز کنید.',
     yrs_exp:'سال تجربه', linkedin_link:'لینکدین ↗',
+    bm_card_t:'اشتباهی به‌عنوان مراجع ثبت‌نام کرده‌اید؟', bm_card_s:'می‌توانید حساب‌تان را به پروفایل منتور تغییر دهید.', bm_btn:'منتور شوید',
+    bm_title:'تغییر به پروفایل منتور', bm_sub:'اطلاعات منتوری‌تان را در فرم زیر کامل کنید. پیام‌هایتان همان‌طور می‌مانند. پروفایل شما پس از بررسی در فهرست منتورها نمایش داده می‌شود.', bm_cancel:'انصراف', bm_submit:'تغییر به منتور',
     lang_switch:'English',
     api_key_btn:'کلید API', api_key_prompt:'کلید Anthropic API خود را وارد کنید تا کوچینگ و پیشنهاد منتور با هوش مصنوعی فعال شود.\nفقط در همین مرورگر ذخیره می‌شود؛ برای پاک کردن، خالی بگذارید.',
     api_key_saved:'کلید ذخیره شد', api_key_cleared:'کلید پاک شد',
@@ -6470,17 +6475,22 @@ function clientNextSteps(){
     </ol>
   </div>`;
 }
+// A signed-in client (not the admin) who opens setup is switching their account to a mentor profile.
+function obSwitching(){ return !!(myProfile && myProfile.role==='client' && !myProfile.isAdmin); }
 function onboardView(){
+  const switching = obSwitching();
+  if(switching) state.role = 'mentor';
   const preset = state.role;
   return `
   <div class="ob-head">
-    <h2>${esc(T(state.returnMentorId ? 'onboard_title_book' : 'onboard_title'))}</h2>
-    <p class="muted">${state.returnMentorId ? esc(T('onboard_book_note').replace('{m}', nameOf(state.returnMentorId))) : esc(T('ob_sub'))}</p>
+    <h2>${esc(T(switching ? 'bm_title' : state.returnMentorId ? 'onboard_title_book' : 'onboard_title'))}</h2>
+    <p class="muted">${switching ? esc(T('bm_sub')) : state.returnMentorId ? esc(T('onboard_book_note').replace('{m}', nameOf(state.returnMentorId))) : esc(T('ob_sub'))}</p>
+    ${switching ? `<button type="button" class="btn btn-ghost btn-sm" data-nav="dashboard">${esc(T('bm_cancel'))}</button>` : ''}
   </div>
-  <div class="role-pick ob-roles">
+  ${switching ? '' : `<div class="role-pick ob-roles">
     <div class="role-opt ${preset==='client'?'selected':''}" data-role="client"><span class="role-ic">${ICON_SEEK}</span><b>${esc(T('role_client_t'))}</b><span>${esc(T('role_client_s'))}</span></div>
     <div class="role-opt ${preset==='mentor'?'selected':''}" data-role="mentor"><span class="role-ic">${ICON_GUIDE}</span><b>${esc(T('role_mentor_t'))}</b><span>${esc(T('role_mentor_s'))}</span></div>
-  </div>
+  </div>`}
   ${preset ? `
   ${preset==='mentor' ? '<div id="ob-ai"></div>' : ''}
   <div class="ob-grid">
@@ -6533,7 +6543,7 @@ function onboardView(){
         <div class="field"><label>${esc(T('lbl_linkedin_opt'))} <span class="hint" style="display:inline;">${esc(T('opt_label'))}</span></label><input name="linkedin" type="text" placeholder="${esc(T('ph_linkedin'))}"></div>
       `}
       <div id="onboard-err" class="form-err" style="display:none;"></div>
-      <button class="btn btn-primary ob-submit" type="submit">${esc(T(state.returnMentorId && preset==='client' ? 'ob_submit_book' : 'create_profile'))}</button>
+      <button class="btn btn-primary ob-submit" type="submit">${esc(T(switching ? 'bm_submit' : state.returnMentorId && preset==='client' ? 'ob_submit_book' : 'create_profile'))}</button>
     </form>
     ${preset==='mentor' ? mentorPreviewCard() : clientNextSteps()}
   </div>` : `<p class="muted" style="margin-top:14px;">${esc(T('pick_to_continue'))}</p>`}`;
@@ -8638,6 +8648,7 @@ function dashboardView(){
     </div>
   </div>`; })()}
   ${isMentor && myProfile.approved===false ? `<div class="banner pending-banner">${esc(T('pending_review'))}</div>` : ''}
+  ${!isMentor && !myProfile.isAdmin ? `<div class="banner bm-banner"><span><b>${esc(T('bm_card_t'))}</b> ${esc(T('bm_card_s'))}</span><button type="button" class="btn btn-outline btn-sm" data-nav="onboard" data-role="mentor">${esc(T('bm_btn'))}</button></div>` : ''}
   <details class="dash-edit" ${state.dashEditOpen?'open':''}>
   <summary><span class="de-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></span><span class="de-t"><span>${esc(T('dash_edit'))}</span><span class="muted">${esc(T('dash_edit_sub'))}</span></span></summary>
   <div class="dash-form">
@@ -8865,6 +8876,13 @@ function wire(){
   wireFirstJob(); wireMentorPreview();
   const dEdit = document.querySelector('.dash-edit'); if(dEdit) dEdit.addEventListener('toggle', ()=>{ state.dashEditOpen = dEdit.open; });
   const form = document.getElementById('onboard-form');
+  if(form && obSwitching()){
+    const P = myProfile, put = (n, v)=>{ const i = form.querySelector('[name="'+n+'"]'); if(i && !i.value && v) i.value = v; };
+    put('name', P.name); put('company', P.currentProfession==='N/A' ? '' : P.company); put('experience', P.experience);
+    put('languages', (P.languages||[]).join(', ')); put('degree', P.degree); put('university', P.university);
+    put('certifications', (P.certifications||[]).join(', ')); put('linkedin', P.linkedin);
+    if(P.currentProfession && P.currentProfession!=='N/A') put('profession', P.currentProfession);
+  }
   if(form) form.addEventListener('submit', async e=>{
     e.preventDefault();
     const fd = new FormData(form);
@@ -8906,6 +8924,7 @@ function wire(){
       state.onboardError = '';
       await saveProfileSafe(doc, 'set');
       clearFormDrafts('ob');
+      if(state.role==='mentor' && myProfile) myProfile = Object.assign({}, myProfile, doc, { approved: false });
       toast(T('toast_profile_created'));
       if(state.role==='mentor'){ notify('mentor_applied'); setTimeout(()=>photoNudge(true), 600); }
       if(state.role==='client' && state.returnMentorId){
