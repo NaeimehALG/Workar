@@ -76,8 +76,11 @@ async function assessApplications(apps) {
 For each application judge: is the profile complete and specific, is the experience plausible and relevant to mentoring,
 are there red flags (empty or copy-paste bio, inconsistent claims, unprofessional content, contact details or payment requests in the bio, missing LinkedIn).
 Use "approve" only when you would be comfortable showing this mentor to paying clients today.
+Use "decline" ONLY for spam, abusive, offensive or clearly fake profiles. Every other profile that is not ready is "ask".
 Return an array: [{"id": "...", "verdict": "approve" | "ask" | "decline", "summary": one sentence,
-"concerns": up to 3 short strings (empty array if none), "askThem": one polite question to send if verdict is "ask", else ""}]`,
+"concerns": up to 3 short strings (empty array if none),
+"askThem": if verdict is "ask", one or two polite sentences that tell the applicant exactly what to add or change on their profile to be listed
+(for example: "Please add a short bio describing your experience and how you help people, and make sure your headline matches your current workplace."); otherwise ""}]`,
       JSON.stringify(input), { maxTokens: 1500, timeoutMs: 25000 });
     const map = {}; (out || []).forEach(a => { if (a && a.id) map[a.id] = a; }); return map;
   } catch (e) { console.error('assess-failed', e.message); return {}; }
@@ -182,7 +185,7 @@ async function mentorApplications(rep, ctx, onlyId) {
         rep.done.push(`Did not approve mentor applicant <b>${M.esc(p.name || '')}</b>; the profile stays hidden and no email was sent to them. ${M.esc(a.summary || '')}${a.concerns && a.concerns.length ? ' (' + M.esc(a.concerns.join('; ')) + ')' : ''}`);
       }
     } else {
-      const q = miss.length ? `Please add ${miss.join('; ')}` : (a.askThem || 'Could you add a little more detail about your experience and how you help people?');
+      const q = miss.length ? `Please add ${miss.join('; ')}` : (a.askThem || 'Please add a short bio (a few sentences about your experience and how you help people).');
       if (await once('ask', p.id)) {
         const askParas = [`Hi ${M.esc(first(p.name))},`,
           'Welcome to Workar, and thank you for joining us as a mentor.',
