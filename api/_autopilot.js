@@ -162,7 +162,8 @@ async function mentorApplications(rep, ctx, onlyId) {
     const a = assess[p.id] || (miss.length ? { verdict: 'ask', summary: '', concerns: [], askThem: '' } : null);
     if (!a) { ctx.results[p.id] = { verdict: 'pending' }; rep.done.push(`AI review of <b>${M.esc(p.name || 'a mentor applicant')}</b> was not available today; it will try again tomorrow.`); continue; }
     let verdict = a.verdict === 'approve' || a.verdict === 'decline' ? a.verdict : 'ask';
-    if (verdict === 'approve' && miss.length) verdict = 'ask';
+    // Missing basics (LinkedIn, bio, workplace…) are always a question, never an approval or a decline.
+    if (miss.length) verdict = 'ask';
     ctx.results[p.id] = { verdict, summary: a.summary || '', concerns: a.concerns || [], question: miss.length ? `Please add ${miss.join(', ')}.` : (a.askThem || '') };
     if (verdict === 'approve' && !on('AUTO_APPROVE_MENTORS')) { rep.needs.push({ kind: 'app', text: `<b>${M.esc(p.name)}</b> looks ready to approve (automatic approval is switched off). ${M.esc(a.summary || '')}` }); continue; }
     if (verdict === 'approve' && (ctx.approvedNow || 0) >= DAILY_MAX()) { ctx.results[p.id].verdict = 'waiting'; rep.done.push(`<b>${M.esc(p.name)}</b> is ready; today's limit of ${DAILY_MAX()} approvals was reached, so tomorrow's run approves them.`); continue; }
