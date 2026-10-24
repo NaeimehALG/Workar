@@ -763,9 +763,32 @@
   .li-connect{margin-top:8px;}
   .pn-li-btn + .pn-up{margin-top:8px;}
   .adm-photo{display:flex;align-items:center;gap:14px;margin:0 0 14px;}
-  .ob-photo-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-  .ob-photo-av{width:56px;height:56px;font-size:22px;overflow:hidden;}
+  .ob-photo-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .ob-photo-av{width:72px;height:72px;overflow:hidden;border:1.5px dashed var(--accent-2);background:#FBF7F1;color:var(--accent-2);}
+  .ob-photo-av.has{border:2px solid #fff;box-shadow:0 0 0 1.5px var(--accent-2);}
   .ob-photo-av img{width:100%;height:100%;object-fit:cover;}
+  .ob-li-btn{display:inline-flex;align-items:center;gap:7px;}
+  /* Sign-up form polish: white fields with a soft focus ring, filled step numbers, roomier card */
+  .ob-form{border-radius:22px;box-shadow:0 1px 2px rgba(74,53,38,.04), 0 18px 48px -28px rgba(74,53,38,.28);}
+  .ob-form .field{margin-bottom:18px;}
+  .ob-form .field label{font-weight:600;font-size:12.5px;letter-spacing:.01em;}
+  .ob-form .field input, .ob-form .field textarea, .ob-form .field select{background:#fff;border-color:#EADFD1;border-radius:12px;padding:12px 14px;transition:border-color .15s, box-shadow .15s;}
+  .ob-form .field input::placeholder, .ob-form .field textarea::placeholder{color:#C2AE98;}
+  .ob-form .field input:focus, .ob-form .field textarea:focus, .ob-form .field select:focus{outline:none;border-color:var(--accent-2);box-shadow:0 0 0 4px rgba(185,141,94,.14);}
+  .ob-form .field textarea{min-height:110px;line-height:1.55;}
+  .ob-form .ob-sec{margin:36px 0 18px;}
+  .ob-form .ob-num{background:var(--accent);border-color:var(--accent);color:#fff;width:28px;height:28px;}
+  .ob-form .ob-sec h3{font-size:18px;letter-spacing:-.01em;}
+  .ob-form .hint{font-size:12.5px;margin-top:6px;}
+  .ob-form button[type="submit"]{height:52px;border-radius:14px;font-size:15px;letter-spacing:.01em;box-shadow:0 10px 24px -12px rgba(139,106,76,.6);}
+  .ob-head h2{font-size:32px;letter-spacing:-.02em;}
+  .ob-form .opt-grid{gap:8px;}
+  .ob-form .opt-pill{position:relative;padding:9px 16px;background:#fff;border-color:#EADFD1;font-weight:500;transition:background .15s, border-color .15s, color .15s;}
+  .ob-form .opt-pill input{position:absolute;opacity:0;pointer-events:none;}
+  .ob-form .opt-pill:hover{border-color:var(--accent-2);}
+  .ob-form .opt-pill:has(input:checked){background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;}
+  .ob-form .opt-pill:has(input:checked)::before{content:"✓";font-size:12px;}
+  .ob-form .opt-pill:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px;}
   .adm-photo img,.adm-photo-ph{width:64px;height:64px;border-radius:50%;object-fit:cover;flex:none;}
   .adm-photo-ph{display:flex;align-items:center;justify-content:center;background:var(--border);font-weight:700;}
   .adm-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px;}
@@ -6554,9 +6577,9 @@ const ICON_GUIDE = '<svg viewBox="0 0 32 32" width="30" height="30" fill="none" 
 function obPhotoField(){
   return `<div class="field ob-photo"><label>${esc(T('ob_photo_lbl'))}</label>
           <div class="ob-photo-row">
-            <span class="avatar ob-photo-av">${state.obPhoto && state.obPhoto.url ? `<img src="${esc(state.obPhoto.url)}" alt="">` : '📷'}</span>
+            <span class="avatar ob-photo-av ${state.obPhoto && state.obPhoto.url ? 'has' : ''}">${state.obPhoto && state.obPhoto.url ? `<img src="${esc(state.obPhoto.url)}" alt="">` : '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>'}</span>
             <button type="button" class="btn btn-outline btn-sm" id="ob-photo-up">${esc(T(state.obPhoto ? 'ob_photo_change' : 'pn_upload'))}</button>
-            ${state.liLogin && !(state.obPhoto && state.obPhoto.li) ? `<button type="button" class="btn btn-outline btn-sm" id="ob-photo-li">${esc(T('pn_use_li'))}</button>` : ''}
+            ${state.liLogin && !(state.obPhoto && state.obPhoto.li) ? `<button type="button" class="btn btn-outline btn-sm ob-li-btn" id="ob-photo-li"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="#0A66C2" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45z"/></svg><span>${esc(T('pn_use_li'))}</span></button>` : ''}
             <input type="file" id="ob-photo-file" accept="image/jpeg,image/png,image/webp" hidden>
           </div>
           ${state.role==='mentor' ? `<div class="hint">${esc(T('ob_photo_hint'))}</div>` : ''}
