@@ -203,7 +203,10 @@ module.exports = async (req, res) => {
         // The database sets the booking's price when it is made (supabase-booking-protection.sql), so charge
         // that saved price: the client pays what they saw, even if the mentor changes their rate afterwards.
         const savedCents = Number(reqRow.amountCents);
-        if (Number.isSafeInteger(savedCents) && savedCents >= 50) amount = savedCents;
+        // Only for bookings made after that database rule went live; older prices were set in the browser.
+        const PRICE_RULE_SINCE = Date.parse('2026-10-24T17:30:00Z');
+        const madeAt = Number(reqRow.createdAt) || Date.parse(reqRow.created_at || '') || 0;
+        if (madeAt >= PRICE_RULE_SINCE && Number.isSafeInteger(savedCents) && savedCents >= 50) amount = savedCents;
       } catch (e) {
         res.status(503).json({ error: 'price-lookup-failed' }); return;
       }

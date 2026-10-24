@@ -177,7 +177,8 @@ async function mentorApplications(rep, ctx, onlyId) {
   // Verdicts already given to this exact version of a profile are reused; only new or changed profiles go to the AI.
   const prints = {}; apps.forEach(p => { prints[p.id] = profilePrint(p); });
   const known = {};
-  const past = await M.rowsStrict(`agent_events?kind=eq.verdict&select=id,ref&limit=1000`);
+  const wanted = apps.map(p => `verdict:${p.id}:${prints[p.id]}`);
+  const past = wanted.length ? await M.rowsStrict(`agent_events?id=in.(${wanted.map(w => encodeURIComponent('"' + w + '"')).join(',')})&select=id,ref`) : [];
   past.forEach(e => { known[e.id] = e.ref; });
   const fresh = apps.filter(p => !known[`verdict:${p.id}:${prints[p.id]}`]);
   const assess = await assessApplications(fresh);
@@ -192,7 +193,8 @@ async function mentorApplications(rep, ctx, onlyId) {
     let verdict = a.verdict === 'approve' || a.verdict === 'decline' ? a.verdict : 'ask';
     // Missing basics (LinkedIn, bio, workplace…) are always a question, never an approval or a decline.
     if (miss.length) verdict = 'ask';
-    if (!prior) await rememberVerdict(p.id, prints[p.id], verdict);
+    // Store the AI's own verdict (not the forced 'ask'), so it still applies once the missing basics are fixed.
+    if (!prior && assess[p.id]) await rememberVerdict(p.id, prints[p.id], a.verdict === 'approve' || a.verdict === 'decline' ? a.verdict : 'ask');
     ctx.results[p.id] = { verdict, summary: a.summary || '', concerns: a.concerns || [], question: miss.length ? `Please add ${miss.join(', ')}.` : (a.askThem || '') };
     if (verdict === 'approve' && !on('AUTO_APPROVE_MENTORS')) { rep.needs.push({ kind: 'app', text: `<b>${M.esc(p.name)}</b> looks ready to approve (automatic approval is switched off). ${M.esc(a.summary || '')}` }); continue; }
     if (verdict === 'approve' && (ctx.approvedNow || 0) >= DAILY_MAX()) { ctx.results[p.id].verdict = 'waiting'; rep.done.push(`<b>${M.esc(p.name)}</b> is ready; today's limit of ${DAILY_MAX()} approvals was reached, so tomorrow's run approves them.`); continue; }

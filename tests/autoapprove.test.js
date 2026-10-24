@@ -109,7 +109,7 @@ test('an unchanged profile keeps its earlier verdict and is not sent to the AI a
   const app = { id: 'd', name: 'Declined', role: 'mentor', approved: false, headline: 'PM', bio: 'q'.repeat(120), linkedin: 'https://linkedin.com/in/declined-one', experience: '9', company: 'Acme' };
   const events = [], sent = [], patched = []; let aiCalls = 0;
   require.cache[mailPath].exports = withStrict(Object.assign({}, realM, {
-    rows: async q => q.startsWith('profiles?role=eq.mentor&approved=eq.false') ? [Object.assign({}, app)] : q.startsWith('agent_events?kind=eq.verdict') ? events.slice() : [],
+    rows: async q => q.startsWith('profiles?role=eq.mentor&approved=eq.false') ? [Object.assign({}, app)] : q.startsWith('agent_events?id=in.') ? events.filter(e => decodeURIComponent(q).includes('"' + e.id + '"')) : [],
     patch: async (p, b) => { patched.push(b); return { ok: true }; },
     emailOf: async id => id + '@x.test', sendMail: async (to, subject) => { sent.push({ to, subject }); return { ok: true }; }
   }));

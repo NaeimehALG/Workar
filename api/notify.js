@@ -119,15 +119,15 @@ module.exports = async (req, res) => {
       request_cancelled: x => x.status === 'cancelled', times_proposed: x => Array.isArray(x.proposedTimes) && x.proposedTimes.length > 0,
       time_picked: x => x.status === 'accepted', time_changed: x => x.status !== 'cancelled' && x.status !== 'declined'
     };
+    let noticeId = null;
     if (STATE_OK[event]) {
       if (!STATE_OK[event](r)) { res.status(409).json({ error: 'booking-state' }); return; }
-      const stamp = require('crypto').createHash('sha1').update([event, r.id, r.status, r.startsAt || '', JSON.stringify(r.proposedTimes || null)].join('|')).digest('hex').slice(0, 20);
+      // Same notice for the same booking state within 10 minutes = a repeat; a later change back to an earlier time still sends.
+      const win = Math.floor(Date.now() / (10 * 60 * 1000));
+      noticeId = 'notice:' + require('crypto').createHash('sha1').update([event, r.id, r.status, r.startsAt || '', JSON.stringify(r.proposedTimes || null), win].join('|')).digest('hex').slice(0, 20);
       try {
-        const ins = await fetch(`${process.env.SUPABASE_URL}/rest/v1/agent_events?on_conflict=id`, {
-          method: 'POST', headers: { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: 'Bearer ' + process.env.SUPABASE_SERVICE_ROLE_KEY, 'Content-Type': 'application/json', Prefer: 'resolution=ignore-duplicates,return=representation' },
-          body: JSON.stringify({ id: 'notice:' + stamp, kind: 'notice', ref: r.id, createdAt: new Date().toISOString() })
-        });
-        if (ins.ok) { const got = await ins.json().catch(() => [{}]); if (Array.isArray(got) && got.length === 0) { res.status(200).json({ ok: true, already: true }); return; } }
+        const seen = await M.rows(`agent_events?id=eq.${encodeURIComponent(noticeId)}&select=id`);
+        if (Array.isArray(seen) && seen.length) { res.status(200).json({ ok: true, already: true }); return; }
       } catch (e) { console.error('notice-dedupe-failed', e.message); }
     }
     switch (event) {
@@ -196,7 +196,16 @@ module.exports = async (req, res) => {
       }
     }
     if (!subject) { res.status(400).json({ error: 'unknown event' }); return; }
-    await M.sendMail(toEmail, subject, M.layout(title, paras, dash), attachments);
+    const sentNotice = await M.sendMail(toEmail, subject, M.layout(title, paras, dash), attachments);
+    // Mark the notice as sent only after the right person triggered it and the email went out.
+    if (noticeId && sentNotice && sentNotice.ok) {
+      try {
+        await fetch(`${process.env.SUPABASE_URL}/rest/v1/agent_events?on_conflict=id`, {
+          method: 'POST', headers: { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: 'Bearer ' + process.env.SUPABASE_SERVICE_ROLE_KEY, 'Content-Type': 'application/json', Prefer: 'resolution=ignore-duplicates,return=minimal' },
+          body: JSON.stringify({ id: noticeId, kind: 'notice', ref: r.id, createdAt: new Date().toISOString() })
+        });
+      } catch (e) { console.error('notice-mark-failed', e.message); }
+    }
     res.status(200).json({ ok: true });
   } catch (e) {
     console.error(e);
