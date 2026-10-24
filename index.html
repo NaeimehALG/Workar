@@ -761,7 +761,7 @@
   .auth-li svg{color:#0A66C2;}
   .auth-li-note{font-size:12.5px;margin:-6px 0 14px;text-align:center;}
   .li-connect{margin-top:8px;}
-  .pn-li{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;font-size:13px;color:var(--muted);cursor:pointer;}
+  .pn-li-btn + .pn-up{margin-top:8px;}
   .auth-or{display:flex;align-items:center;gap:12px;margin:0 0 14px;color:var(--muted,#8a7461);font-size:13px;}
   .auth-or::before,.auth-or::after{content:"";flex:1;height:1px;background:currentColor;opacity:.25;}
   .li-ok{display:inline-flex;align-items:center;gap:4px;margin-inline-start:8px;font-size:12.5px;font-weight:600;color:#2f6f4f;}
@@ -8155,28 +8155,27 @@ function photoNudge(force){
     <div class="pn-av">${initials(myProfile.name||'')}<span>${'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13.5" r="3.5"/></svg>'}</span></div>
     <h3 id="pn-t">${esc(T('pn_title'))}</h3><p>${esc(T('pn_body'))}</p>
     <input type="file" class="pn-file" accept="image/jpeg,image/png,image/webp" hidden>
-    <button type="button" class="btn btn-primary pn-up">${esc(T('pn_upload'))}</button>
-    ${state.liLogin ? `<label class="pn-li"><input type="checkbox" class="pn-li-box"> <span>${esc(T('pn_use_li'))}</span></label>` : ''}
+    ${state.liLogin ? `<button type="button" class="btn btn-primary pn-li-btn">${esc(T('pn_use_li'))}</button>
+    <button type="button" class="btn btn-ghost btn-sm pn-up">${esc(T('pn_upload'))}</button>` : `<button type="button" class="btn btn-primary pn-up">${esc(T('pn_upload'))}</button>`}
     <button type="button" class="pn-later">${esc(T('pn_later'))}</button></div>`;
   const close = ()=>{ w.remove(); document.removeEventListener('keydown', onKey); };
   const onKey = e=>{ if(e.key==='Escape') close(); };
   w.addEventListener('click', e=>{ if(e.target===w || e.target.closest('.pn-later')) close(); });
-  const liBox = w.querySelector('.pn-li-box'), upBtn = w.querySelector('.pn-up');
-  if(liBox) liBox.addEventListener('change', ()=>{ upBtn.textContent = liBox.checked ? T('pn_ok') : T('pn_upload'); });
-  upBtn.addEventListener('click', async ()=>{
-    if(!(liBox && liBox.checked)){ w.querySelector('.pn-file').click(); return; }
-    upBtn.disabled = true;
+  const liBtn = w.querySelector('.pn-li-btn'), upBtn = w.querySelector('.pn-up');
+  upBtn.addEventListener('click', ()=>w.querySelector('.pn-file').click());
+  if(liBtn) liBtn.addEventListener('click', async ()=>{
+    liBtn.disabled = true;
     try{
       const { data } = await sb.auth.getSession(); const user = data && data.session && data.session.user;
       if(((user && user.identities) || []).some(i=>i && i.provider==='linkedin_oidc')){ close(); await syncLinkedIn(); return; }
       // Not connected to LinkedIn yet: LinkedIn asks once, then the photo is added automatically on return.
       const { error } = await sb.auth.linkIdentity({ provider:'linkedin_oidc', options:{ redirectTo: location.origin + location.pathname + '?go=dashboard' } });
       if(error) throw error;
-    }catch(err){ console.error('linkedin-photo-link-failed', err); upBtn.disabled = false; toast(T('li_link_fail'), 5000); }
+    }catch(err){ console.error('linkedin-photo-link-failed', err); liBtn.disabled = false; toast(T('auth_li_fail'), 5000); }
   });
   w.querySelector('.pn-file').addEventListener('change', e=>{ const f = e.target.files && e.target.files[0]; close(); if(f) uploadPhoto(f); });
   document.addEventListener('keydown', onKey);
-  document.body.appendChild(w); setTimeout(()=>{ const b = w.querySelector('.pn-up'); if(b) b.focus(); }, 30);
+  document.body.appendChild(w); setTimeout(()=>{ const b = w.querySelector('.pn-li-btn') || w.querySelector('.pn-up'); if(b) b.focus(); }, 30);
 }
 async function uploadPhoto(file){
   if(!file || !sb || !uid) return;
