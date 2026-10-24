@@ -525,7 +525,7 @@ const AUTH_COPY = {
 };
 async function mailAuth(email, kind, url, lang) {
   const c = AUTH_COPY[lang === 'fa' ? 'fa' : 'en'], [title, text, cta] = c[kind];
-  const r = await M.sendMail(email, title, M.layout(title, [M.esc(text), M.esc(c.note)], { url, text: cta }));
+  const r = await M.sendMail(email, title, M.layout(title, [M.esc(text), M.esc(c.note)], { url, text: cta }), null, { noCopy: true });
   if (!r || !r.ok) throw new Error('email-send-failed');
 }
 
