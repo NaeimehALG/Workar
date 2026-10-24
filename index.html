@@ -6551,6 +6551,17 @@ function checkedVals(root, name){ return Array.from(root.querySelectorAll('input
 
 const ICON_SEEK = '<svg viewBox="0 0 32 32" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="14" cy="14" r="8"/><path d="M20 20l7 7"/><path d="M11 14h6M14 11v6"/></svg>';
 const ICON_GUIDE = '<svg viewBox="0 0 32 32" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 26c3-9 7-13 12-13s9 4 12 13"/><circle cx="16" cy="7" r="3.5"/><path d="M16 13v6"/></svg>';
+function obPhotoField(){
+  return `<div class="field ob-photo"><label>${esc(T('ob_photo_lbl'))}</label>
+          <div class="ob-photo-row">
+            <span class="avatar ob-photo-av">${state.obPhoto && state.obPhoto.url ? `<img src="${esc(state.obPhoto.url)}" alt="">` : '📷'}</span>
+            <button type="button" class="btn btn-outline btn-sm" id="ob-photo-up">${esc(T(state.obPhoto ? 'ob_photo_change' : 'pn_upload'))}</button>
+            ${state.liLogin && !(state.obPhoto && state.obPhoto.li) ? `<button type="button" class="btn btn-outline btn-sm" id="ob-photo-li">${esc(T('pn_use_li'))}</button>` : ''}
+            <input type="file" id="ob-photo-file" accept="image/jpeg,image/png,image/webp" hidden>
+          </div>
+          ${state.role==='mentor' ? `<div class="hint">${esc(T('ob_photo_hint'))}</div>` : ''}
+        </div>`;
+}
 function obSection(n, key){ return `<div class="ob-sec"><span class="ob-num">${n}</span><h3>${esc(T(key))}</h3></div>`; }
 function mentorPreviewCard(){
   return `<div class="ob-preview">
@@ -6597,15 +6608,7 @@ function onboardView(){
       ${preset==='client' ? resumeCard('ob') : ''}
       ${preset==='mentor' ? `
         ${obSection(1,'ob_s_about')}
-        <div class="field ob-photo"><label>${esc(T('ob_photo_lbl'))}</label>
-          <div class="ob-photo-row">
-            <span class="avatar ob-photo-av">${state.obPhoto && state.obPhoto.url ? `<img src="${esc(state.obPhoto.url)}" alt="">` : '📷'}</span>
-            <button type="button" class="btn btn-outline btn-sm" id="ob-photo-up">${esc(T(state.obPhoto ? 'ob_photo_change' : 'pn_upload'))}</button>
-            ${state.liLogin && !(state.obPhoto && state.obPhoto.li) ? `<button type="button" class="btn btn-outline btn-sm" id="ob-photo-li">${esc(T('pn_use_li'))}</button>` : ''}
-            <input type="file" id="ob-photo-file" accept="image/jpeg,image/png,image/webp" hidden>
-          </div>
-          <div class="hint">${esc(T('ob_photo_hint'))}</div>
-        </div>
+        ${obPhotoField()}
         <div class="field"><label>${esc(T('lbl_name'))}</label><input name="name" required autocomplete="name" placeholder="${esc(T('ph_name'))}" value="${esc(liSignupName)}"></div>
         <div class="field-row">
           <div class="field"><label>${esc(T('lbl_title_m'))}</label><input name="profession" required placeholder="${esc(T('ph_title_m'))}"></div>
@@ -6628,6 +6631,7 @@ function onboardView(){
         <div class="field"><label>${esc(T('lbl_linkedin_req'))}</label><input name="linkedin" type="text" required autocomplete="url" placeholder="${esc(T('ph_linkedin'))}"><div class="hint">${esc(T('hint_linkedin_m'))}</div></div>
       ` : `
         ${obSection(1,'ob_s_about')}
+        ${obPhotoField()}
         <div class="field"><label>${esc(T('lbl_name'))}</label><input name="name" required autocomplete="name" placeholder="${esc(T('ph_name'))}" value="${esc(liSignupName)}"></div>
         <div class="field-row">
           ${currentJobField('currentProfession', '')}
@@ -9061,12 +9065,13 @@ function wire(){
     }
     try{
       state.onboardError = '';
-      if(state.role==='mentor' && state.obPhoto && state.obPhoto.url && !state.obPhoto.li) doc.avatarUrl = state.obPhoto.url;
+      if(state.obPhoto && state.obPhoto.url && !state.obPhoto.li) doc.avatarUrl = state.obPhoto.url;
       await saveProfileSafe(doc, 'set');
       clearFormDrafts('ob');
       if(state.role==='mentor' && myProfile) myProfile = Object.assign({}, myProfile, doc, { approved: false });
       toast(T('toast_profile_created'));
-      if(state.role==='mentor'){ notify('mentor_applied'); if(!state.obPhoto) setTimeout(()=>photoNudge(true), 600); state.obPhoto = null; }
+      if(state.role==='mentor'){ notify('mentor_applied'); if(!state.obPhoto) setTimeout(()=>photoNudge(true), 600); }
+      state.obPhoto = null;
       if(state.role==='client' && state.returnMentorId){
         const back = state.returnMentorId; state.returnMentorId = null;
         nav('mentor', { mentorId: back, bookingOpen: true });
