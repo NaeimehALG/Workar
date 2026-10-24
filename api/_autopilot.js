@@ -182,6 +182,7 @@ async function mentorApplications(rep, ctx, onlyId) {
   const wanted = apps.map(p => `verdict:${p.id}:${prints[p.id]}`);
   const past = wanted.length ? await M.rowsStrict(`agent_events?id=in.(${wanted.map(w => encodeURIComponent('"' + w + '"')).join(',')})&select=id,ref`) : [];
   past.forEach(e => { known[e.id] = e.ref; });
+  const verdictOf = ref => String(ref || '').split('|')[0], questionOf = ref => String(ref || '').split('|').slice(1).join('|');
   const fresh = apps.filter(p => !known[`verdict:${p.id}:${prints[p.id]}`]);
   const assess = await assessApplications(fresh);
   const site = M.SITE();
@@ -189,14 +190,14 @@ async function mentorApplications(rep, ctx, onlyId) {
     const miss = missingBasics(p, others);
     const prior = known[`verdict:${p.id}:${prints[p.id]}`];
     // Missing basics (like LinkedIn) are known without the AI, so the applicant is still asked even when the AI review is unavailable.
-    const a = prior ? { verdict: prior, summary: '', concerns: [], askThem: '' }
+    const a = prior ? { verdict: verdictOf(prior), summary: '', concerns: [], askThem: questionOf(prior) }
       : (assess[p.id] || (miss.length ? { verdict: 'ask', summary: '', concerns: [], askThem: '' } : null));
     if (!a) { ctx.results[p.id] = { verdict: 'pending' }; rep.done.push(`AI review of <b>${M.esc(p.name || 'a mentor applicant')}</b> was not available today; it will try again tomorrow.`); continue; }
     let verdict = a.verdict === 'approve' || a.verdict === 'decline' ? a.verdict : 'ask';
     // Missing basics (LinkedIn, bio, workplace…) are always a question, never an approval or a decline.
     if (miss.length) verdict = 'ask';
     // Store the AI's own verdict (not the forced 'ask'), so it still applies once the missing basics are fixed.
-    if (!prior && assess[p.id]) await rememberVerdict(p.id, prints[p.id], a.verdict === 'approve' || a.verdict === 'decline' ? a.verdict : 'ask');
+    if (!prior && assess[p.id]) await rememberVerdict(p.id, prints[p.id], a.verdict === 'approve' || a.verdict === 'decline' ? a.verdict : 'ask|' + String(a.askThem || '').slice(0, 400));
     ctx.results[p.id] = { verdict, summary: a.summary || '', concerns: a.concerns || [], question: miss.length ? `Please add ${miss.join(', ')}.` : (a.askThem || '') };
     if (verdict === 'approve' && !on('AUTO_APPROVE_MENTORS')) { rep.needs.push({ kind: 'app', text: `<b>${M.esc(p.name)}</b> looks ready to approve (automatic approval is switched off). ${M.esc(a.summary || '')}` }); continue; }
     if (verdict === 'approve' && (ctx.approvedNow || 0) >= DAILY_MAX()) { ctx.results[p.id].verdict = 'waiting'; rep.done.push(`<b>${M.esc(p.name)}</b> is ready; today's limit of ${DAILY_MAX()} approvals was reached, so tomorrow's run approves them.`); continue; }

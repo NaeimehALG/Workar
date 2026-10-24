@@ -210,3 +210,9 @@ alter table public.requests add column if not exists "lastDoneStartsAt" timestam
 -- 2026-10-24 (migration: linkedin_verified_flag): profiles."linkedinVerified" (boolean, default false).
 -- Set only by the server after "Continue with LinkedIn" (api/agents.js linkedin_photo); protect_profile_approval()
 -- resets it on insert and keeps the old value on update for everyone except the admin and the server.
+
+-- 2026-10-24 (migration: session_marks_spacing_and_created_at), after the second re-check:
+--  * requests."lastDoneAt": a mentor can mark at most one session done per 12 hours (a reschedule-and-mark
+--    loop could mark a whole package done in a minute and unlock the payout)
+--  * created_at is set by the database on insert and can't be changed (checkout reads it to decide
+--    whether the saved price can be trusted)

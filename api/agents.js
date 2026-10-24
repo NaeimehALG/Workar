@@ -889,7 +889,9 @@ async function linkedinPhoto(req, res) {
   const pic = String(data.picture || data.avatar_url || '');
   if (!prof.avatarUrl && /^https:\/\//i.test(pic)) {
     try {
-      const img = await fetch(pic);
+      const ctl = new AbortController(); const tm = setTimeout(() => ctl.abort(), 8000);
+      const img = await fetch(pic, { signal: ctl.signal }).finally(() => clearTimeout(tm));
+      if (Number(img.headers.get('content-length') || 0) > 5 * 1024 * 1024) throw new Error('photo too large');
       const type = String(img.headers.get('content-type') || '');
       const buf = Buffer.from(await img.arrayBuffer());
       if (img.ok && /^image\/(jpeg|png|webp)/.test(type) && buf.length > 0 && buf.length < 5 * 1024 * 1024) {

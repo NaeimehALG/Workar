@@ -205,7 +205,7 @@ module.exports = async (req, res) => {
         const savedCents = Number(reqRow.amountCents);
         // Only for bookings made after that database rule went live; older prices were set in the browser.
         const PRICE_RULE_SINCE = Date.parse('2026-10-24T17:30:00Z');
-        const madeAt = Number(reqRow.createdAt) || Date.parse(reqRow.created_at || '') || 0;
+        const madeAt = Date.parse(reqRow.created_at || '') || 0; // set by the database, not the browser
         if (madeAt >= PRICE_RULE_SINCE && Number.isSafeInteger(savedCents) && savedCents >= 50) amount = savedCents;
       } catch (e) {
         res.status(503).json({ error: 'price-lookup-failed' }); return;

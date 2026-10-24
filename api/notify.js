@@ -123,10 +123,9 @@ module.exports = async (req, res) => {
     if (STATE_OK[event]) {
       if (!STATE_OK[event](r)) { res.status(409).json({ error: 'booking-state' }); return; }
       // Same notice for the same booking state within 10 minutes = a repeat; a later change back to an earlier time still sends.
-      const win = Math.floor(Date.now() / (10 * 60 * 1000));
-      noticeId = 'notice:' + require('crypto').createHash('sha1').update([event, r.id, r.status, r.startsAt || '', JSON.stringify(r.proposedTimes || null), win].join('|')).digest('hex').slice(0, 20);
+      noticeId = 'notice:' + require('crypto').createHash('sha1').update([event, r.id, r.status, r.startsAt || '', JSON.stringify(r.proposedTimes || null)].join('|')).digest('hex').slice(0, 20);
       try {
-        const seen = await M.rows(`agent_events?id=eq.${encodeURIComponent(noticeId)}&select=id`);
+        const seen = await M.rows(`agent_events?id=eq.${encodeURIComponent(noticeId)}&createdAt=gte.${encodeURIComponent(new Date(Date.now() - 10 * 60 * 1000).toISOString())}&select=id`);
         if (Array.isArray(seen) && seen.length) { res.status(200).json({ ok: true, already: true }); return; }
       } catch (e) { console.error('notice-dedupe-failed', e.message); }
     }
@@ -201,7 +200,7 @@ module.exports = async (req, res) => {
     if (noticeId && sentNotice && sentNotice.ok) {
       try {
         await fetch(`${process.env.SUPABASE_URL}/rest/v1/agent_events?on_conflict=id`, {
-          method: 'POST', headers: { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: 'Bearer ' + process.env.SUPABASE_SERVICE_ROLE_KEY, 'Content-Type': 'application/json', Prefer: 'resolution=ignore-duplicates,return=minimal' },
+          method: 'POST', headers: { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: 'Bearer ' + process.env.SUPABASE_SERVICE_ROLE_KEY, 'Content-Type': 'application/json', Prefer: 'resolution=merge-duplicates,return=minimal' },
           body: JSON.stringify({ id: noticeId, kind: 'notice', ref: r.id, createdAt: new Date().toISOString() })
         });
       } catch (e) { console.error('notice-mark-failed', e.message); }
