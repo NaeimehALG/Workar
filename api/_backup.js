@@ -51,7 +51,7 @@ function isBackupDay(now = new Date()) { return now.getUTCDay() === 0; } // Sund
 
 async function run(problems, { force = false, now = new Date() } = {}) {
   if (!force && !isBackupDay(now)) return { backup: 'not today' };
-  const to = process.env.ADMIN_EMAIL || 'naeimeh.alaghehband@gmail.com';
+  const to = M.CONTACT_EMAIL();
   const snap = await snapshot();
   problems.push(...snap.problems.map(p => 'Backup: ' + p));
   const gz = zlib.gzipSync(Buffer.from(JSON.stringify(snap.data)));

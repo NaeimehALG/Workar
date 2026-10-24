@@ -44,7 +44,7 @@ module.exports = async (req, res) => {
         const what = out.verdict === 'ask' ? `The profile is not live yet. We emailed ${M.esc(p.name)} to ask for: <b>${M.esc(out.question || 'more detail')}</b>`
           : out.verdict === 'decline' ? `The AI did not approve this profile. It stays hidden, and no email was sent to ${M.esc(p.name)}. ${M.esc(out.summary || '')}`
           : 'The automatic review could not run just now; it will try again in the next daily run. Nothing is needed from you.';
-        await M.sendMail(adminEmail, `Mentor application needs attention: ${p.name}`,
+        await M.sendMail(M.CONTACT_EMAIL(), `Mentor application needs attention: ${p.name}`,
           M.layout(`About ${M.esc(p.name)}'s mentor application`, [what].concat((out.concerns || []).length ? [`Notes: ${M.esc(out.concerns.join('; '))}`] : []), { text: 'Open the admin panel', url: site + '/?go=admin' }));
       }
       res.status(200).json({ ok: true, verdict: out.verdict }); return;
