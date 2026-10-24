@@ -178,6 +178,7 @@ async function mentorApplications(rep, ctx, onlyId) {
         ['Thank you for joining Workar. Your mentor profile has been reviewed and is now visible to people looking for guidance.',
           'Please make sure your weekly availability is up to date so clients can book you.', p.avatarUrl ? '' : PHOTO_TIP], { text: 'Open my profile', url: site + '/?go=dashboard' });
       ctx.approvedNow = (ctx.approvedNow || 0) + 1;
+      (ctx.approvedIds = ctx.approvedIds || []).push(p.id);
       rep.done.push(`Approved and welcomed mentor <b>${M.esc(p.name)}</b> (${M.esc(p.profession || '')}). ${M.esc(a.summary || '')}`);
     } else if (verdict === 'decline') {
       // No "not at this time" email is ever sent to the applicant (admin's decision, Oct 2026): the profile simply stays hidden.
@@ -330,7 +331,7 @@ async function signups(rep, ctx) {
   const users = (data && data.users) || [];
   ctx.users = users;
   const profiles = {};
-  (await M.rows(`profiles?select=id,name,role`)).forEach(p => { profiles[p.id] = p; });
+  (await M.rows(`profiles?select=id,name,role,approved,banned`)).forEach(p => { profiles[p.id] = p; });
   ctx.profiles = profiles;
   const booked = new Set((ctx.requests || []).map(q => q.clientId));
   for (const u of users) {
@@ -364,8 +365,10 @@ async function digest(rep, ctx, extra) {
   const users = ctx.users || [];
   const newUsers = users.filter(u => now - Date.parse(u.created_at) < DAY).length;
   const newReqs = reqs.filter(r => now - ms(r.createdAt) < DAY).length;
-  const waiting = Math.max(0, (ctx.apps || []).length - (ctx.approvedNow || 0));
-  const mentorsLive = Object.values(ctx.profiles || {}).filter(p => p.role === 'mentor').length - waiting;
+  // Applications still waiting after this run, and mentors whose profiles are live (banned accounts excluded).
+  const approvedIds = ctx.approvedIds || [];
+  const waiting = (ctx.apps || []).filter(p => !approvedIds.includes(p.id)).length;
+  const mentorsLive = Object.values(ctx.profiles || {}).filter(p => p.role === 'mentor' && !p.banned && (p.approved !== false || approvedIds.includes(p.id))).length;
   const today = reqs.filter(r => r.status === 'accepted' && (r.paid || !(Number(r.amountCents) > 0)) && r.startsAt && Date.parse(r.startsAt) > now && Date.parse(r.startsAt) - now < DAY)
     .sort((a, b) => Date.parse(a.startsAt) - Date.parse(b.startsAt));
   // Mentor payouts are automatic (api/_payouts.js); only held or failed ones reach this digest, via the cron's problem list.
