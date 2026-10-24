@@ -196,9 +196,7 @@ async function mentorApplications(rep, ctx, onlyId) {
           'We are glad to have you with us.<br>The Workar team'];
         const to = await M.emailOf(p.id);
         await mail(rep, to, 'Your Workar mentor profile is almost ready', 'One last step', askParas, { text: 'Complete my profile', url: site + '/?go=dashboard' });
-        // The admin gets a copy of exactly what was sent, so she knows without having to do anything.
-        await mail(rep, (process.env.ADMIN_EMAIL || 'naeimeh.alaghehband@gmail.com'), `Copy: we asked ${p.name} to complete their mentor profile`, `Sent to ${M.esc(p.name)}${to ? ' (' + M.esc(to) + ')' : ''}`,
-          ['This is a copy of the email Workar sent. Nothing is needed from you; the profile goes live by itself once it is complete.', '<hr style="border:0;border-top:1px solid #EAE0D2;margin:16px 0">', '<b>One last step</b>'].concat(askParas));
+        // The team inbox gets a hidden copy of this email automatically (see sendMail in _mail.js).
         rep.done.push(`Asked mentor applicant <b>${M.esc(p.name)}</b>: “${M.esc(q)}”`);
       } else if (await askedLongAgo(p.id) && await once('ask_close', p.id)) {
         // One friendly reminder a week after the first request, then nothing more.
