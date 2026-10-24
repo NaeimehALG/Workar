@@ -6,9 +6,9 @@ const withStrict = m => Object.assign(m, { rowsStrict: m.rows });
 test('every AI verdict ends in an action, never an admin to-do', async () => {
   const mailPath = require.resolve('../api/_mail'), aiPath = require.resolve('../api/_ai'), apPath = require.resolve('../api/_autopilot');
   const realM = require('../api/_mail'), realAi = require('../api/_ai');
-  const good = { id: 'g', name: 'Good Mentor', role: 'mentor', approved: false, headline: 'Senior PM', bio: 'x'.repeat(120), linkedin: 'https://linkedin.com/in/good-mentor', experience: '8', company: 'Acme' };
+  const good = { id: 'g', name: 'Good Mentor', role: 'mentor', approved: false, headline: 'Senior PM', bio: 'x'.repeat(120), linkedin: 'https://linkedin.com/in/good-mentor', experience: '8', company: 'Acme', languages: ['English'], avatarUrl: 'https://x.test/a.jpg' };
   const thin = { id: 't', name: 'Thin Mentor', role: 'mentor', approved: false, headline: 'PM', bio: 'short', linkedin: '', experience: '1' };
-  const bad = { id: 'b', name: 'Bad Mentor', role: 'mentor', approved: false, headline: 'x', bio: 'y'.repeat(100), linkedin: 'https://linkedin.com/in/bad-mentor', experience: '5', company: 'Z' };
+  const bad = { id: 'b', name: 'Bad Mentor', role: 'mentor', approved: false, headline: 'x', bio: 'y'.repeat(100), linkedin: 'https://linkedin.com/in/bad-mentor', experience: '5', company: 'Z', languages: ['English'], avatarUrl: 'https://x.test/a.jpg' };
   const banned = Object.assign({}, good, { id: 'x', banned: true, linkedin: 'https://linkedin.com/in/banned-one' });
   const patched = [], sent = [];
   require.cache[mailPath].exports = withStrict(Object.assign({}, realM, {
@@ -43,7 +43,7 @@ test('mentors need their own personal LinkedIn profile', () => {
   assert.equal(AP.linkedInSlug('https://www.linkedin.com/company/workarmentoring/'), '');
   assert.equal(AP.linkedInSlug('https://linkedin.com/'), '');
   assert.equal(AP.linkedInSlug('https://notlinkedin.com/in/jane'), '');
-  const base = { name: 'A', role: 'mentor', headline: 'PM', bio: 'x'.repeat(100), experience: '6', company: 'Acme' };
+  const base = { name: 'A', role: 'mentor', headline: 'PM', bio: 'x'.repeat(100), experience: '6', company: 'Acme', languages: ['English'], avatarUrl: 'https://x.test/a.jpg' };
   const a = { ...base, id: 'a', linkedin: 'https://www.linkedin.com/in/jane-doe' };
   const b = { ...base, id: 'b', linkedin: 'linkedin.com/in/JANE-DOE/' };
   assert.deepEqual(AP.missingBasics(a, [a]), []);
@@ -81,7 +81,7 @@ test('a missing LinkedIn is still asked for when the AI review is unavailable', 
   const mailPath = require.resolve('../api/_mail'), aiPath = require.resolve('../api/_ai'), apPath = require.resolve('../api/_autopilot');
   const realM = require('../api/_mail'), realAi = require('../api/_ai');
   const noLi = { id: 'n', name: 'No LinkedIn', role: 'mentor', approved: false, headline: 'Analyst', bio: 'z'.repeat(120), linkedin: '', experience: '18', company: 'Carsan' };
-  const done = { id: 'd', name: 'Complete', role: 'mentor', approved: false, headline: 'PM', bio: 'y'.repeat(120), linkedin: 'https://linkedin.com/in/complete-one', experience: '9', company: 'Acme' };
+  const done = { id: 'd', name: 'Complete', role: 'mentor', approved: false, headline: 'PM', bio: 'y'.repeat(120), linkedin: 'https://linkedin.com/in/complete-one', experience: '9', company: 'Acme', languages: ['English'], avatarUrl: 'https://x.test/a.jpg' };
   const sent = [], patched = [];
   require.cache[mailPath].exports = withStrict(Object.assign({}, realM, {
     rows: async q => q.startsWith('profiles?role=eq.mentor&approved=eq.false') ? [noLi, done] : [],
@@ -106,7 +106,7 @@ test('a missing LinkedIn is still asked for when the AI review is unavailable', 
 test('an unchanged profile keeps its earlier verdict and is not sent to the AI again', async () => {
   const mailPath = require.resolve('../api/_mail'), aiPath = require.resolve('../api/_ai'), apPath = require.resolve('../api/_autopilot');
   const realM = require('../api/_mail'), realAi = require('../api/_ai');
-  const app = { id: 'd', name: 'Declined', role: 'mentor', approved: false, headline: 'PM', bio: 'q'.repeat(120), linkedin: 'https://linkedin.com/in/declined-one', experience: '9', company: 'Acme' };
+  const app = { id: 'd', name: 'Declined', role: 'mentor', approved: false, headline: 'PM', bio: 'q'.repeat(120), linkedin: 'https://linkedin.com/in/declined-one', experience: '9', company: 'Acme', languages: ['English'], avatarUrl: 'https://x.test/a.jpg' };
   const events = [], sent = [], patched = []; let aiCalls = 0;
   require.cache[mailPath].exports = withStrict(Object.assign({}, realM, {
     rows: async q => q.startsWith('profiles?role=eq.mentor&approved=eq.false') ? [Object.assign({}, app)] : q.startsWith('agent_events?id=in.') ? events.filter(e => decodeURIComponent(q).includes('"' + e.id + '"')) : [],

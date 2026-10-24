@@ -155,6 +155,9 @@ function missingBasics(p, others = []) {
   const years = parseFloat(String(p.experience || p.yearsExperience || '').replace(/[^0-9.]/g, '')) || 0;
   if (years < MIN_YEARS()) miss.push(`your years of professional experience (Workar mentors have at least ${MIN_YEARS()})`);
   if (!String(p.company || '').trim()) miss.push('where you currently work');
+  const langs = Array.isArray(p.languages) ? p.languages.filter(x => String(x || '').trim()) : String(p.languages || '').split(',').filter(x => x.trim());
+  if (!langs.length) miss.push('the languages you can mentor in');
+  if (!String(p.avatarUrl || '').trim()) miss.push('a profile photo (you can also connect LinkedIn from your profile to use your LinkedIn photo)');
   return miss;
 }
 async function askedLongAgo(id) {
@@ -220,7 +223,7 @@ async function mentorApplications(rep, ctx, onlyId) {
           'Welcome to Workar, and thank you for joining us as a mentor.',
           miss.length === 1 ? `Your profile is almost ready to go live. To publish it, please add ${M.esc(miss[0])}.` : miss.length ? 'Your profile is almost ready to go live. To publish it, please add:' : `Your profile is almost ready to go live. ${M.esc(q)}`,
           miss.length > 1 ? M.list(miss) : '',
-          p.avatarUrl ? '' : PHOTO_TIP,
+          (p.avatarUrl || miss.some(m => /photo/.test(m))) ? '' : PHOTO_TIP,
           'As soon as you save your changes, we will review your profile and let you know when it is live.',
           'We are glad to have you with us.<br>The Workar team'];
         const to = await M.emailOf(p.id);

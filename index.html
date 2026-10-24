@@ -2608,7 +2608,7 @@ const I18N = {
     lbl_price_usd:'Price to charge via card (USD)', price_usd_hint:'e.g. 40 — leave blank for free sessions',
     pay_to_confirm:'Confirm with card · $${amount}', pay_hold_note:"Nothing is charged now — your card is charged only after the session takes place.", prob_nocharge:"Don't charge", prob_nocharge_q:"Don't charge the client for this session? Their card hold is released (or the charge refunded) and the mentor isn't paid for it.", prob_nocharged:'Done. The client will not be charged.', waiting_for_payment:'Waiting for the client to confirm with their card…',
     earn_title:'Your earnings', earn_note:'You keep {p}% of every paid booking. Workar holds the payment securely and sends your share to your bank automatically 7 days after the session.', earn_total:'Earned', earn_paid:'Paid to you', earn_owed:'On its way to you',
-    sess_progress_m:'{d} of {t} sessions done', sess_progress_c:'{l} of {t} sessions left', sess_all_done:'All sessions done', sess_mark:'Mark a session done', sess_mark_one:'Mark session done', sess_completed:'Completed', sess_saved:'Session recorded', sess_fail:'Could not save — check that the payouts SQL has been run',
+    sess_progress_m:'{d} of {t} sessions done', sess_progress_c:'{l} of {t} sessions left', sess_all_done:'All sessions done', sess_mark:'Mark a session done', sess_mark_one:'Mark session done', sess_completed:'Completed', sess_saved:'Session recorded', sess_next_time:'Saved. Now choose the time for the next session.', sess_fail:'Could not save — check that the payouts SQL has been run',
     po_err_connect_admin:'Stripe needs one more step before mentors can add bank details: in Stripe open Settings → Connect → Platform profile (dashboard.stripe.com/settings/connect/platform-profile) and complete the loss-liability acknowledgement.',
     pay_fail_mentor_setup:'Your mentor is finishing their payment setup. We have let them know, and you can pay as soon as it is done.',
     po_waiting:'You have {a} waiting', po_waiting_sub:'Add your bank details once and Workar sends your share automatically. It takes about 5 minutes.', po_later:'Get paid automatically', po_later_sub:'Add your bank details once, before your first payout. It takes about 5 minutes.', po_country:'Country of your bank account', po_btn_start:'Add bank details', po_btn_continue:'Finish bank setup', po_needs_info:'Finish your bank setup', po_needs_info_sub:'Stripe needs a few more details before it can pay you.', po_on:'Payouts are on', po_on_sub:'Your share is sent to your bank automatically 7 days after each session.', po_btn_dash:'Payout details', po_secure:'Bank details are handled securely by Stripe, our payment partner. Workar never sees them.', po_done_toast:'Your bank details are saved. Payouts are on.', po_pending_toast:'Almost there. Stripe still needs a few details.', po_err:'Bank setup is not available right now. Please try again later.', po_err_country:'Payouts to this country are not supported yet. Please contact support.', po_opening:'Opening Stripe…',
@@ -3067,7 +3067,7 @@ const I18N = {
     lbl_price_usd:'مبلغ پرداخت با کارت (دلار)', price_usd_hint:'مثلاً ۴۰؛ برای جلسه‌ی رایگان خالی بگذارید',
     pay_to_confirm:'تأیید با کارت · ${amount} دلار کانادا', pay_hold_note:'الان چیزی کسر نمی‌شود؛ مبلغ فقط بعد از برگزاری جلسه از کارت کسر می‌شود.', prob_nocharge:'کسر نشود', prob_nocharge_q:'برای این جلسه از مراجع پولی کسر نشود؟ hold کارتش آزاد می‌شود (یا مبلغ برگشت داده می‌شود) و به منتور هم پرداختی نمی‌شود.', prob_nocharged:'انجام شد. از مراجع چیزی کسر نمی‌شود.', waiting_for_payment:'منتظر تأیید کارت مراجع…',
     earn_title:'درآمد شما', earn_note:'{p}٪ از هر رزرو پرداخت‌شده سهم شماست. Workar پرداخت را به‌صورت امن نگه می‌دارد و سهم شما را ۷ روز بعد از جلسه خودکار به حساب بانکی‌تان واریز می‌کند.', earn_total:'کل درآمد', earn_paid:'پرداخت‌شده به شما', earn_owed:'در راه واریز',
-    sess_progress_m:'{d} از {t} جلسه برگزار شد', sess_progress_c:'{l} از {t} جلسه باقی مانده', sess_all_done:'همه‌ی جلسات برگزار شد', sess_mark:'ثبت برگزاری یک جلسه', sess_mark_one:'ثبت برگزاری جلسه', sess_completed:'تمام‌شده', sess_saved:'جلسه ثبت شد', sess_fail:'ذخیره نشد؛ مطمئن شوید SQL پرداخت منتورها اجرا شده است',
+    sess_progress_m:'{d} از {t} جلسه برگزار شد', sess_progress_c:'{l} از {t} جلسه باقی مانده', sess_all_done:'همه‌ی جلسات برگزار شد', sess_mark:'ثبت برگزاری یک جلسه', sess_mark_one:'ثبت برگزاری جلسه', sess_completed:'تمام‌شده', sess_saved:'جلسه ثبت شد', sess_next_time:'ثبت شد. حالا زمان جلسه‌ی بعدی را انتخاب کنید.', sess_fail:'ذخیره نشد؛ مطمئن شوید SQL پرداخت منتورها اجرا شده است',
     po_err_connect_admin:'Stripe پیش از ثبت اطلاعات بانکی منتورها یک مرحله‌ی دیگر لازم دارد: در Stripe به Settings → Connect → Platform profile بروید و تأیید مسئولیت زیان (loss liability) را کامل کنید.',
     pay_fail_mentor_setup:'منتور شما در حال تکمیل تنظیمات پرداخت است. به او اطلاع دادیم و به محض تکمیل، می‌توانید پرداخت کنید.',
     po_waiting:'{a} منتظر واریز به شماست', po_waiting_sub:'یک بار اطلاعات بانکی‌تان را وارد کنید تا Workar سهمتان را خودکار بفرستد. حدود ۵ دقیقه طول می‌کشد.', po_later:'دریافت خودکار درآمد', po_later_sub:'پیش از اولین واریز، یک بار اطلاعات بانکی‌تان را وارد کنید. حدود ۵ دقیقه طول می‌کشد.', po_country:'کشور حساب بانکی', po_btn_start:'افزودن حساب بانکی', po_btn_continue:'تکمیل اطلاعات بانکی', po_needs_info:'اطلاعات بانکی‌تان را کامل کنید', po_needs_info_sub:'Stripe قبل از واریز به چند اطلاعات دیگر نیاز دارد.', po_on:'واریز خودکار فعال است', po_on_sub:'سهم شما ۷ روز بعد از هر جلسه خودکار به حساب بانکی‌تان واریز می‌شود.', po_btn_dash:'جزئیات واریزها', po_secure:'اطلاعات بانکی به‌صورت امن نزد Stripe، شریک پرداخت ما، نگهداری می‌شود و Workar آن را نمی‌بیند.', po_done_toast:'اطلاعات بانکی‌تان ثبت شد. واریز خودکار فعال است.', po_pending_toast:'تقریباً تمام است. Stripe هنوز به چند اطلاعات دیگر نیاز دارد.', po_err:'الان امکان ثبت حساب بانکی نیست. لطفاً بعداً دوباره امتحان کنید.', po_err_country:'واریز به این کشور هنوز پشتیبانی نمی‌شود. لطفاً با پشتیبانی تماس بگیرید.', po_opening:'در حال باز کردن Stripe…',
@@ -3591,6 +3591,11 @@ function utcToZoned(date, tz){ const p = tzParts(date, tz); return { date:`${p.y
 function tzAbbr(tz, date){ try{ const x = new Intl.DateTimeFormat('en-US',{ timeZone:tz, timeZoneName:'short' }).formatToParts(date||new Date()).find(v=>v.type==='timeZoneName'); return x ? x.value : tz; }catch(e){ return tz; } }
 function tzCity(tz){ return String(tz||'').split('/').pop().replace(/_/g,' '); }
 function mentorTz(id){ const p = cache.profiles[id] || (id===uid ? myProfile : null); return (p && p.timezone) || 'America/Vancouver'; }
+// A session can be marked done once it has started (15 min grace), and each session needs its own time.
+function sessStarted(r){ const t = reqInstant(r); if(!t || t.getTime() > Date.now() + 15*60*1000) return false; return !r.lastDoneStartsAt || t.getTime() > new Date(r.lastDoneStartsAt).getTime(); }
+// After marking a session done in a multi-session package, open the time editor for the next one.
+function afterSessDone(id){ const r = (cache.requests||[]).find(q=>q.id===id); const done = r ? (Number(r.sessionsDone)||0) : 0;
+  if(r && done < reqSessionsTotal(r)){ state.reqEdit = id; toast(T('sess_next_time'), 5000); } else toast(T('sess_saved')); }
 function reqInstant(r){
   if(r.startsAt) return new Date(r.startsAt);
   if(r.date && r.time){ try{ return zonedToUtc(r.date, String(r.time).slice(0,5), r.tz || mentorTz(r.mentorId)); }catch(e){} }
@@ -6547,7 +6552,7 @@ function onboardView(){
         </div>
         <div class="field"><label>${esc(T('lbl_experience'))}</label><input name="experience" type="number" min="0" placeholder="${esc(T('ph_experience'))}"></div>
         <div class="field"><label>${esc(T('lbl_bio_m'))}</label><textarea name="bio" required placeholder="${esc(T('ph_bio_m'))}"></textarea></div>
-        <div class="field"><label>${esc(T('lbl_languages'))}</label><input name="languages" placeholder="${esc(T('ph_languages'))}"></div>
+        <div class="field"><label>${esc(T('lbl_languages'))}</label><input name="languages" required placeholder="${esc(T('ph_languages'))}"></div>
         ${obSection(2,'sec_background')}
         <div class="field-row">
           <div class="field"><label>${esc(T('lbl_degree'))}</label><input name="degree" placeholder="${esc(T('ph_degree'))}"></div>
@@ -6989,7 +6994,7 @@ function reqCard(r, isMentor, grouped){
         <button class="btn btn-sm btn-primary" data-call="${esc(r.id)}" data-url="${esc(r.meetingUrl||'')}" data-mode="video" title="${esc(T('call_tip'))}">${esc(T('join_video'))}</button>
         <button class="btn btn-sm btn-outline" data-call="${esc(r.id)}" data-url="${esc(r.meetingUrl||'')}" data-mode="voice" title="${esc(T('call_tip'))}">${esc(T('join_voice'))}</button>
         ${bookingCalendarActions(r)}
-        ${isMentor ? `<button class="btn btn-sm btn-ghost" data-sess="${esc(r.id)}" data-next="${(Number(r.sessionsDone)||0)+1}">${esc(T(reqSessionsTotal(r)>1 ? 'sess_mark' : 'sess_mark_one'))}</button>` : ''}` : ''}
+        ${isMentor && sessStarted(r) ? `<button class="btn btn-sm btn-ghost" data-sess="${esc(r.id)}" data-next="${(Number(r.sessionsDone)||0)+1}">${esc(T(reqSessionsTotal(r)>1 ? 'sess_mark' : 'sess_mark_one'))}</button>` : ''}` : ''}
       ${st===3 ? `<span class="status-pill done">${esc(T('sess_completed'))}</span>` : ''}
       ${isMentor && (st===3 || (st===2 && (Number(r.sessionsDone)>0 || (reqInstant(r) && reqInstant(r) < new Date())))) ? `<button class="btn btn-sm btn-outline" data-followup="${esc(r.id)}" data-fu-sent="${r.followupSentAt?1:0}" data-fu-who="${esc(other)}">${esc(T(r.followupSentAt ? 'ag_fu_again' : 'ag_fu_btn'))}</button>` : ''}
       ${st<0 ? `<span class="status-pill declined">${esc(T(r.status==='cancelled'?'st_cancelled':'st_declined'))}</span>` : ''}
@@ -7449,7 +7454,7 @@ document.addEventListener('click', async e=>{
   const cm = e.target.closest && e.target.closest('[data-ci-mdone]');
   if(cm){ const id = cm.getAttribute('data-ci-mdone'), r = (cache.requests||[]).find(q=>q.id===id); if(!r) return; cm.disabled = true;
     const next = (Number(r.sessionsDone)||0)+1;
-    try{ await updateReq(id, { sessionsDone: next }); r.sessionsDone = next; toast(T('sess_saved')); render(); }
+    try{ await updateReq(id, { sessionsDone: next }); r.sessionsDone = next; afterSessDone(id); render(); }
     catch(err){ cm.disabled = false; toast(T('toast_update_fail'), 5000); } return; }
   const sb2 = e.target.closest && e.target.closest('[data-prob-send]');
   if(sb2){
@@ -8485,7 +8490,7 @@ function ivUpcomingRow(r, asMentor){
       <button type="button" class="iv-pill ${soon?'solid':''}" data-call="${esc(r.id)}" data-url="${esc(r.meetingUrl||'')}" data-mode="video">${HUB_IC.video}${esc(T('iv_join'))}</button>
       <button type="button" class="iv-ic" data-dm="${esc(o)}" title="${esc(T('msg_btn'))}" aria-label="${esc(T('msg_btn'))}">${HUB_IC.msg}</button>
       ${asMentor ? `<span class="req-more"><button class="req-dots" data-menu="${esc(r.id)}" aria-label="${esc(T('mg_more'))}"><svg viewBox="0 0 20 20" width="18" height="18"><circle cx="4" cy="10" r="1.7" fill="currentColor"/><circle cx="10" cy="10" r="1.7" fill="currentColor"/><circle cx="16" cy="10" r="1.7" fill="currentColor"/></svg></button>
-        ${state.reqMenu===r.id ? `<div class="req-menu"><button data-edit-time="${esc(r.id)}">${esc(T('mg_time'))}</button><button data-sess="${esc(r.id)}" data-next="${(Number(r.sessionsDone)||0)+1}">${esc(T(reqSessionsTotal(r)>1 ? 'sess_mark' : 'sess_mark_one'))}</button><button data-set-status="${esc(r.id)}" data-to="cancelled" class="danger">${esc(T('mg_cancel_paid'))}</button></div>` : ''}</span>` : ''}
+        ${state.reqMenu===r.id ? `<div class="req-menu"><button data-edit-time="${esc(r.id)}">${esc(T('mg_time'))}</button>${!sessStarted(r) ? '' : `<button data-sess="${esc(r.id)}" data-next="${(Number(r.sessionsDone)||0)+1}">${esc(T(reqSessionsTotal(r)>1 ? 'sess_mark' : 'sess_mark_one'))}</button>`}<button data-set-status="${esc(r.id)}" data-to="cancelled" class="danger">${esc(T('mg_cancel_paid'))}</button></div>` : ''}</span>` : ''}
     </div>
     ${state.reqEdit===r.id ? reqEditHtml(r, nameOf(o)) : ''}
   </article>`;
@@ -8726,7 +8731,7 @@ function dashboardView(){
     ${isMentor ? `
     <section class="df-sec"><h3>${esc(T('df_lang_tz'))}</h3>
       <div class="field-row">
-        <div class="field"><label>${esc(T('lbl_languages'))}</label><input id="edit-languages" value="${esc((myProfile.languages||[]).join(', '))}"></div>
+        <div class="field"><label>${esc(T('lbl_languages'))}</label><input id="edit-languages" value="${esc((myProfile.languages||[]).join(', '))}"${myProfile.role==='mentor' ? ' required' : ''}></div>
         <div class="field"><label>${esc(T('lbl_timezone'))}</label><select id="edit-timezone">${[...new Set([myProfile.timezone||MY_TZ, MY_TZ].concat(TZ_CHOICES))].map(z=>`<option value="${esc(z)}" ${z===(myProfile.timezone||MY_TZ)?'selected':''}>${esc(tzCity(z) + ' (' + tzAbbr(z) + ')')}</option>`).join('')}</select>
       <div class="muted" style="font-size:12.5px;margin-top:6px;">${esc(T('tz_hint'))}</div></div>
       </div>
@@ -9248,7 +9253,8 @@ function wire(){
   document.querySelectorAll('[data-sess]').forEach(btn=>{
     btn.addEventListener('click', async ()=>{
       btn.disabled = true;
-      try{ await window.__db.doc('requests/'+btn.getAttribute('data-sess')).update({ sessionsDone: parseInt(btn.getAttribute('data-next'),10) }); toast(T('sess_saved')); loadRequests(); }
+      const sid = btn.getAttribute('data-sess'), next = parseInt(btn.getAttribute('data-next'),10);
+      try{ await window.__db.doc('requests/'+sid).update({ sessionsDone: next }); const rr = (cache.requests||[]).find(q=>q.id===sid); if(rr) rr.sessionsDone = next; afterSessDone(sid); loadRequests(); }
       catch(err){ toast(T('sess_fail')); btn.disabled = false; }
     });
   });
