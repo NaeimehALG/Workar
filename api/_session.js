@@ -64,7 +64,7 @@ async function sendConfirmation(r, opts = {}) {
       gcal ? `${M.link(gcal, 'Add to Google Calendar')}, or open the attached invite to add it to Outlook or Apple Calendar. The invite reminds you 1 hour and 15 minutes before.` : '',
       p.isMentor ? 'The day before, we will email you a short prep brief about your client.' : 'The day before, we will email you a few tips to get the most out of the session.'
     ];
-    await M.sendMail(await M.emailOf(p.me.id), subject, M.layout(opts.updated ? 'Your session time changed' : 'Session confirmed', paras, { text: 'Join the call', url }), MT.icsAttachment(ics));
+    await M.sendMail(await M.emailOf(p.me.id), subject, M.layout(opts.updated ? 'Your session time changed' : 'Session confirmed', paras, { text: 'Join the call', url }), MT.icsAttachment(ics), { noCopy: true }); // has the private call link
   }
 }
 
