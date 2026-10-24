@@ -297,8 +297,9 @@ async function createTicket(input, me, ctx, messages) {
     `<span style="font-size:13px;color:#8a7461;">Reply to this email to answer ${M.esc(ticket.name || 'them')} directly.</span>`
   ]), [], { replyTo: email });
   if ((!ins || !ins.ok) && (!delivered || !delivered.ok)) return { ok: false, note: 'The support request could not be saved or delivered. Ask the person to email workarmentoring@gmail.com directly; do not claim it was submitted.' };
-  // To the person: confirmation with their reference number.
-  const confirmation = await M.sendMail(email, `We received your request (${id})`, M.layout('Thank you for contacting Workar', [
+  // To the person: confirmation with their reference number. Only signed-in people get it, at their own account
+  // address; otherwise anyone could make Workar email any address. Visitors see the reference number on screen.
+  const confirmation = !me ? { skipped: true } : await M.sendMail(email, `We received your request (${id})`, M.layout('Thank you for contacting Workar', [
     `Dear ${M.esc((ticket.name || '').split(' ')[0] || 'Workar member')},`,
     `Thank you for reaching out. Your request has been passed to our support team under reference <b>${id}</b>.`,
     `<b>Summary:</b> ${M.esc(ticket.summary)}`,

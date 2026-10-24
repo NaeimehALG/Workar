@@ -43,6 +43,23 @@ async function once(kind, ref) {
   const rows = await r.json();
   return Array.isArray(rows) && rows.length > 0; // empty = already done before
 }
+async function forget(kind, ref) {
+  try { await fetch(`${process.env.SUPABASE_URL}/rest/v1/agent_events?id=eq.${encodeURIComponent(kind + ':' + ref)}`, { method: 'DELETE', headers: svc() }); } catch (e) { console.error('forget-failed', kind, e.message); }
+}
+// A fingerprint of everything the review looks at: a mentor is only re-reviewed after they change their profile,
+// so the AI can't give the same profile a different verdict on a later run.
+function profilePrint(p) {
+  const keys = ['name', 'headline', 'profession', 'experience', 'yearsExperience', 'bio', 'languages', 'education', 'certifications', 'linkedin', 'company', 'idealMentee', 'sessionRate'];
+  return require('crypto').createHash('sha1').update(JSON.stringify(keys.map(k => p[k] == null ? null : p[k]))).digest('hex').slice(0, 16);
+}
+async function rememberVerdict(id, print, verdict) {
+  try {
+    await fetch(`${process.env.SUPABASE_URL}/rest/v1/agent_events?on_conflict=id`, {
+      method: 'POST', headers: Object.assign({ Prefer: 'resolution=ignore-duplicates,return=minimal' }, svc()),
+      body: JSON.stringify({ id: `verdict:${id}:${print}`, kind: 'verdict', ref: verdict, createdAt: new Date().toISOString() })
+    });
+  } catch (e) { console.error('verdict-save-failed', id, e.message); }
+}
 async function checkMemory() {
   const r = await fetch(`${process.env.SUPABASE_URL}/rest/v1/agent_events?select=id&limit=1`, { headers: svc() });
   memoryOk = r.ok;
@@ -141,39 +158,48 @@ function missingBasics(p, others = []) {
   return miss;
 }
 async function askedLongAgo(id) {
-  try { const r = await M.rows(`agent_events?id=eq.${encodeURIComponent('ask:' + id)}&select=createdAt`); const t = r && r[0] && Date.parse(r[0].createdAt); return !!t && Date.now() - t > ASK_WAIT_DAYS * DAY; } catch (e) { return false; }
+  try { const r = await M.rowsStrict(`agent_events?id=eq.${encodeURIComponent('ask:' + id)}&select=createdAt`); const t = r && r[0] && Date.parse(r[0].createdAt); return !!t && Date.now() - t > ASK_WAIT_DAYS * DAY; } catch (e) { return false; }
 }
 async function approvedToday() {
   const since = new Date(Date.now() - DAY).toISOString();
-  try { const r = await M.rows(`agent_events?kind=eq.approve&createdAt=gte.${encodeURIComponent(since)}&select=id`); return Array.isArray(r) ? r.filter(x => x && String(x.id || '').startsWith('approve:')).length : 0; } catch (e) { return 0; }
+  try { const r = await M.rowsStrict(`agent_events?kind=eq.approve&createdAt=gte.${encodeURIComponent(since)}&select=id`); return Array.isArray(r) ? r.filter(x => x && String(x.id || '').startsWith('approve:')).length : 0; } catch (e) { return DAILY_MAX(); } // unknown: assume today's limit is reached
 }
 async function mentorApplications(rep, ctx, onlyId) {
   const filter = onlyId ? `&id=eq.${encodeURIComponent(onlyId)}` : '';
-  const apps = (await M.rows(`profiles?role=eq.mentor&approved=eq.false${filter}&select=*`)).filter(p => !p.banned);
+  const apps = (await M.rowsStrict(`profiles?role=eq.mentor&approved=eq.false${filter}&select=*`)).filter(p => !p.banned);
   ctx.apps = apps;
   ctx.results = ctx.results || {};
   if (ctx.approvedNow == null) ctx.approvedNow = await approvedToday();
   if (!apps.length) return;
   // every mentor's LinkedIn, so one profile can't be used by two applicants
   let others = apps;
-  try { const all = await M.rows(`profiles?role=eq.mentor&select=id,role,linkedin`); if (Array.isArray(all)) others = all.concat(apps.filter(a => !all.some(x => x.id === a.id))); } catch (e) { console.error('mentor-linkedin-list', e.message); }
-  const assess = await assessApplications(apps);
+  try { const all = await M.rowsStrict(`profiles?role=eq.mentor&select=id,role,linkedin`); if (Array.isArray(all)) others = all.concat(apps.filter(a => !all.some(x => x.id === a.id))); } catch (e) { console.error('mentor-linkedin-list', e.message); }
+  // Verdicts already given to this exact version of a profile are reused; only new or changed profiles go to the AI.
+  const prints = {}; apps.forEach(p => { prints[p.id] = profilePrint(p); });
+  const known = {};
+  const past = await M.rowsStrict(`agent_events?kind=eq.verdict&select=id,ref&limit=1000`);
+  past.forEach(e => { known[e.id] = e.ref; });
+  const fresh = apps.filter(p => !known[`verdict:${p.id}:${prints[p.id]}`]);
+  const assess = await assessApplications(fresh);
   const site = M.SITE();
   for (const p of apps) {
     const miss = missingBasics(p, others);
+    const prior = known[`verdict:${p.id}:${prints[p.id]}`];
     // Missing basics (like LinkedIn) are known without the AI, so the applicant is still asked even when the AI review is unavailable.
-    const a = assess[p.id] || (miss.length ? { verdict: 'ask', summary: '', concerns: [], askThem: '' } : null);
+    const a = prior ? { verdict: prior, summary: '', concerns: [], askThem: '' }
+      : (assess[p.id] || (miss.length ? { verdict: 'ask', summary: '', concerns: [], askThem: '' } : null));
     if (!a) { ctx.results[p.id] = { verdict: 'pending' }; rep.done.push(`AI review of <b>${M.esc(p.name || 'a mentor applicant')}</b> was not available today; it will try again tomorrow.`); continue; }
     let verdict = a.verdict === 'approve' || a.verdict === 'decline' ? a.verdict : 'ask';
     // Missing basics (LinkedIn, bio, workplace…) are always a question, never an approval or a decline.
     if (miss.length) verdict = 'ask';
+    if (!prior) await rememberVerdict(p.id, prints[p.id], verdict);
     ctx.results[p.id] = { verdict, summary: a.summary || '', concerns: a.concerns || [], question: miss.length ? `Please add ${miss.join(', ')}.` : (a.askThem || '') };
     if (verdict === 'approve' && !on('AUTO_APPROVE_MENTORS')) { rep.needs.push({ kind: 'app', text: `<b>${M.esc(p.name)}</b> looks ready to approve (automatic approval is switched off). ${M.esc(a.summary || '')}` }); continue; }
     if (verdict === 'approve' && (ctx.approvedNow || 0) >= DAILY_MAX()) { ctx.results[p.id].verdict = 'waiting'; rep.done.push(`<b>${M.esc(p.name)}</b> is ready; today's limit of ${DAILY_MAX()} approvals was reached, so tomorrow's run approves them.`); continue; }
     if (verdict === 'approve') {
       if (!(await once('approve', p.id))) continue;
       const r = await M.patch(`profiles?id=eq.${encodeURIComponent(p.id)}`, { approved: true });
-      if (!r.ok) { ctx.results[p.id].verdict = 'error'; rep.errors.push(`Could not approve ${p.name}`); continue; }
+      if (!r.ok) { await forget('approve', p.id); ctx.results[p.id].verdict = 'error'; rep.errors.push(`Could not approve ${p.name}; it will be retried on the next run`); continue; }
       await mail(rep, await M.emailOf(p.id), 'Your Workar mentor profile is live', `Welcome aboard, ${p.name}`,
         ['Thank you for joining Workar. Your mentor profile has been reviewed and is now visible to people looking for guidance.',
           'Please make sure your weekly availability is up to date so clients can book you.', p.avatarUrl ? '' : PHOTO_TIP], { text: 'Open my profile', url: site + '/?go=dashboard' });
@@ -215,11 +241,11 @@ async function mentorApplications(rep, ctx, onlyId) {
 // ---------- 2 + 3 + 4. bookings ----------
 async function bookings(rep, ctx) {
   const now = Date.now(), site = M.SITE();
-  const all = await M.rows(`requests?select=*`);
+  const all = await M.rowsStrict(`requests?select=*`);
   ctx.requests = all;
   const ids = [...new Set(all.flatMap(r => [r.mentorId, r.clientId]).filter(Boolean))];
   const names = {};
-  if (ids.length) (await M.rows(`profiles?id=in.(${ids.map(encodeURIComponent).join(',')})&select=id,name,timezone`)).forEach(p => { names[p.id] = p; });
+  if (ids.length) (await M.rowsStrict(`profiles?id=in.(${ids.map(encodeURIComponent).join(',')})&select=id,name,timezone`)).forEach(p => { names[p.id] = p; });
   ctx.names = names;
   const nm = id => (names[id] && names[id].name) || 'Someone';
 
@@ -289,7 +315,7 @@ async function bookings(rep, ctx) {
 // ---------- 5. reviews ----------
 async function reviews(rep, ctx) {
   const now = Date.now(), site = M.SITE();
-  const all = await M.rows(`reviews?select=*&order=createdAt.desc&limit=200`);
+  const all = await M.rowsStrict(`reviews?select=*&order=createdAt.desc&limit=200`);
   const names = ctx.names || {};
   const nm = id => (names[id] && names[id].name) || 'Someone';
   ctx.newReviews = all.filter(r => now - ms(r.createdAt) < DAY);
@@ -331,7 +357,7 @@ async function signups(rep, ctx) {
   const users = (data && data.users) || [];
   ctx.users = users;
   const profiles = {};
-  (await M.rows(`profiles?select=id,name,role,approved,banned`)).forEach(p => { profiles[p.id] = p; });
+  (await M.rowsStrict(`profiles?select=id,name,role,approved,banned`)).forEach(p => { profiles[p.id] = p; });
   ctx.profiles = profiles;
   const booked = new Set((ctx.requests || []).map(q => q.clientId));
   for (const u of users) {

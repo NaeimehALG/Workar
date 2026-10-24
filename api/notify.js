@@ -112,6 +112,24 @@ module.exports = async (req, res) => {
       }
       res.status(200).json({ ok: true }); return;
     }
+    // Booking emails only go out when the booking really is in that state, and each state change is
+    // announced once (so nobody can send a fake "cancelled" email, or resend the same notice again and again).
+    const STATE_OK = {
+      request_new: x => x.status === 'pending', request_accepted: x => x.status === 'accepted', request_declined: x => x.status === 'declined',
+      request_cancelled: x => x.status === 'cancelled', times_proposed: x => Array.isArray(x.proposedTimes) && x.proposedTimes.length > 0,
+      time_picked: x => x.status === 'accepted', time_changed: x => x.status !== 'cancelled' && x.status !== 'declined'
+    };
+    if (STATE_OK[event]) {
+      if (!STATE_OK[event](r)) { res.status(409).json({ error: 'booking-state' }); return; }
+      const stamp = require('crypto').createHash('sha1').update([event, r.id, r.status, r.startsAt || '', JSON.stringify(r.proposedTimes || null)].join('|')).digest('hex').slice(0, 20);
+      try {
+        const ins = await fetch(`${process.env.SUPABASE_URL}/rest/v1/agent_events?on_conflict=id`, {
+          method: 'POST', headers: { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: 'Bearer ' + process.env.SUPABASE_SERVICE_ROLE_KEY, 'Content-Type': 'application/json', Prefer: 'resolution=ignore-duplicates,return=representation' },
+          body: JSON.stringify({ id: 'notice:' + stamp, kind: 'notice', ref: r.id, createdAt: new Date().toISOString() })
+        });
+        if (ins.ok) { const got = await ins.json().catch(() => [{}]); if (Array.isArray(got) && got.length === 0) { res.status(200).json({ ok: true, already: true }); return; } }
+      } catch (e) { console.error('notice-dedupe-failed', e.message); }
+    }
     switch (event) {
       case 'request_new':
         if (!isClient) break;

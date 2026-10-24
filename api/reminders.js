@@ -144,6 +144,10 @@ module.exports = async (req, res) => {
   const secret = process.env.CRON_SECRET;
   if (secret && req.headers.authorization !== 'Bearer ' + secret) { res.status(401).end(); return; }
   const out = {}, problems = [];
+  // Vercel stops this job at 300s. Optional steps are skipped when time runs short, so the mentor review
+  // and the daily report (which come last) always run, and the report says what was skipped.
+  const t0 = Date.now(), late = () => Date.now() - t0 > 170 * 1000;
+  const skip = what => problems.push(`${what} was skipped today because the daily job ran short of time; it runs again tomorrow.`);
   try { Object.assign(out, await sessionReminders()); } catch (e) { console.error('reminders-failed', e); problems.push('Session reminders failed: ' + (e.message || e)); }
   try { Object.assign(out, await reengage()); } catch (e) { console.error('reengage-failed', e); problems.push('Re-engagement emails failed: ' + (e.message || e)); }
   // Backup for the Stripe webhook: confirm any paid booking that wasn't marked paid yet
@@ -165,11 +169,11 @@ module.exports = async (req, res) => {
     problems.push(...p.problems);
   } catch (e) { console.error('payouts-failed', e); problems.push('Mentor payouts failed: ' + (e.message || e)); }
   // Dispute agent: brief the admin on reported problems before the card hold runs out
-  try { Object.assign(out, await require('./_dispute').runDue(problems)); } catch (e) { console.error('disputes-failed', e); problems.push('Dispute agent failed: ' + (e.message || e)); }
+  if (late()) skip('The dispute review'); else try { Object.assign(out, await require('./_dispute').runDue(problems)); } catch (e) { console.error('disputes-failed', e); problems.push('Dispute agent failed: ' + (e.message || e)); }
   // LinkedIn: send this week's queued posts to Typefully (api/_linkedin.js)
-  try { Object.assign(out, await require('./_linkedin').run(problems)); } catch (e) { console.error('linkedin-failed', e); problems.push('LinkedIn posting failed: ' + (e.message || e)); }
+  if (late()) skip('LinkedIn posting'); else try { Object.assign(out, await require('./_linkedin').run(problems)); } catch (e) { console.error('linkedin-failed', e); problems.push('LinkedIn posting failed: ' + (e.message || e)); }
   // Weekly off-site backup emailed to the admin (Sundays, api/_backup.js)
-  try { Object.assign(out, await require('./_backup').run(problems)); } catch (e) { console.error('backup-failed', e); problems.push('Weekly backup failed: ' + (e.message || e)); }
+  if (late()) skip('The weekly backup'); else try { Object.assign(out, await require('./_backup').run(problems)); } catch (e) { console.error('backup-failed', e); problems.push('Weekly backup failed: ' + (e.message || e)); }
   // Autopilot agents + the daily digest to the admin (always sent, even on a quiet day)
   try { Object.assign(out, await require('./_autopilot').run(problems)); } catch (e) { console.error('autopilot-failed', e); out.autopilotError = String(e.message || e); }
   res.status(200).json(out);

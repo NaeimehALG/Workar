@@ -200,6 +200,10 @@ module.exports = async (req, res) => {
           if (r > minRate) rate = Math.round(r);
         }
         amount = Math.round(Number(pkg.price) * rate / minRate) * 100;
+        // The database sets the booking's price when it is made (supabase-booking-protection.sql), so charge
+        // that saved price: the client pays what they saw, even if the mentor changes their rate afterwards.
+        const savedCents = Number(reqRow.amountCents);
+        if (Number.isSafeInteger(savedCents) && savedCents >= 50) amount = savedCents;
       } catch (e) {
         res.status(503).json({ error: 'price-lookup-failed' }); return;
       }

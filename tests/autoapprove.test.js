@@ -1,6 +1,7 @@
 // Mentor applications are decided by the AI alone: nothing is left waiting for the admin.
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
+const withStrict = m => Object.assign(m, { rowsStrict: m.rows });
 
 test('every AI verdict ends in an action, never an admin to-do', async () => {
   const mailPath = require.resolve('../api/_mail'), aiPath = require.resolve('../api/_ai'), apPath = require.resolve('../api/_autopilot');
@@ -10,10 +11,10 @@ test('every AI verdict ends in an action, never an admin to-do', async () => {
   const bad = { id: 'b', name: 'Bad Mentor', role: 'mentor', approved: false, headline: 'x', bio: 'y'.repeat(100), linkedin: 'https://linkedin.com/in/bad-mentor', experience: '5', company: 'Z' };
   const banned = Object.assign({}, good, { id: 'x', banned: true, linkedin: 'https://linkedin.com/in/banned-one' });
   const patched = [], sent = [];
-  require.cache[mailPath].exports = Object.assign({}, realM, {
+  require.cache[mailPath].exports = withStrict(Object.assign({}, realM, {
     rows: async () => [good, thin, bad, banned], patch: async (p, b) => { patched.push({ p, b }); return { ok: true }; },
     emailOf: async id => id + '@x.test', sendMail: async (to, subject) => { sent.push({ to, subject }); return { ok: true }; }
-  });
+  }));
   require.cache[aiPath].exports = Object.assign({}, realAi, { askJSON: async () => [
     { id: 'g', verdict: 'approve', summary: 'Strong' }, { id: 't', verdict: 'approve', summary: 'ok' }, { id: 'b', verdict: 'decline', summary: 'Copy-paste bio' }, { id: 'x', verdict: 'approve' }] });
   delete require.cache[apPath];
@@ -55,11 +56,11 @@ test('a new application is reviewed right away and only that applicant is touche
   const realM = require('../api/_mail'), realAi = require('../api/_ai');
   const noLi = { id: 'n', name: 'No LinkedIn', role: 'mentor', approved: false, headline: 'Analyst', bio: 'z'.repeat(120), linkedin: '', experience: '18', company: 'Carsan' };
   const queries = [], sent = [], patched = [];
-  require.cache[mailPath].exports = Object.assign({}, realM, {
+  require.cache[mailPath].exports = withStrict(Object.assign({}, realM, {
     rows: async q => { queries.push(q); return q.startsWith('profiles?role=eq.mentor&approved=eq.false') ? [noLi] : []; },
     patch: async (p, b) => { patched.push(b); return { ok: true }; },
     emailOf: async id => id + '@x.test', sendMail: async (to, subject) => { sent.push({ to, subject }); return { ok: true }; }
-  });
+  }));
   require.cache[aiPath].exports = Object.assign({}, realAi, { askJSON: async () => [{ id: 'n', verdict: 'approve', summary: 'Strong' }] });
   delete require.cache[apPath];
   process.env.SUPABASE_URL = 'https://sb.test'; process.env.SUPABASE_SERVICE_ROLE_KEY = 'k'; process.env.ANTHROPIC_API_KEY = 'k';
@@ -82,11 +83,11 @@ test('a missing LinkedIn is still asked for when the AI review is unavailable', 
   const noLi = { id: 'n', name: 'No LinkedIn', role: 'mentor', approved: false, headline: 'Analyst', bio: 'z'.repeat(120), linkedin: '', experience: '18', company: 'Carsan' };
   const done = { id: 'd', name: 'Complete', role: 'mentor', approved: false, headline: 'PM', bio: 'y'.repeat(120), linkedin: 'https://linkedin.com/in/complete-one', experience: '9', company: 'Acme' };
   const sent = [], patched = [];
-  require.cache[mailPath].exports = Object.assign({}, realM, {
+  require.cache[mailPath].exports = withStrict(Object.assign({}, realM, {
     rows: async q => q.startsWith('profiles?role=eq.mentor&approved=eq.false') ? [noLi, done] : [],
     patch: async (p, b) => { patched.push(b); return { ok: true }; },
     emailOf: async id => id + '@x.test', sendMail: async (to, subject) => { sent.push({ to, subject }); return { ok: true }; }
-  });
+  }));
   require.cache[aiPath].exports = Object.assign({}, realAi, { askJSON: async () => { throw new Error('AI down'); } });
   delete require.cache[apPath];
   process.env.SUPABASE_URL = 'https://sb.test'; process.env.SUPABASE_SERVICE_ROLE_KEY = 'k'; process.env.ANTHROPIC_API_KEY = 'k';
@@ -99,5 +100,35 @@ test('a missing LinkedIn is still asked for when the AI review is unavailable', 
     assert.ok(sent.some(m => m.to === 'n@x.test' && /almost ready/.test(m.subject))); // asked for LinkedIn anyway
     assert.ok(!sent.some(m => m.to === 'd@x.test'));                                  // complete profile waits for the AI
     assert.equal(patched.length, 0);                                                    // nobody approved without the AI
+  } finally { global.fetch = savedFetch; delete require.cache[apPath]; delete require.cache[mailPath]; delete require.cache[aiPath]; }
+});
+
+test('an unchanged profile keeps its earlier verdict and is not sent to the AI again', async () => {
+  const mailPath = require.resolve('../api/_mail'), aiPath = require.resolve('../api/_ai'), apPath = require.resolve('../api/_autopilot');
+  const realM = require('../api/_mail'), realAi = require('../api/_ai');
+  const app = { id: 'd', name: 'Declined', role: 'mentor', approved: false, headline: 'PM', bio: 'q'.repeat(120), linkedin: 'https://linkedin.com/in/declined-one', experience: '9', company: 'Acme' };
+  const events = [], sent = [], patched = []; let aiCalls = 0;
+  require.cache[mailPath].exports = withStrict(Object.assign({}, realM, {
+    rows: async q => q.startsWith('profiles?role=eq.mentor&approved=eq.false') ? [Object.assign({}, app)] : q.startsWith('agent_events?kind=eq.verdict') ? events.slice() : [],
+    patch: async (p, b) => { patched.push(b); return { ok: true }; },
+    emailOf: async id => id + '@x.test', sendMail: async (to, subject) => { sent.push({ to, subject }); return { ok: true }; }
+  }));
+  require.cache[aiPath].exports = Object.assign({}, realAi, { askJSON: async () => { aiCalls++; return aiCalls === 1 ? [{ id: 'd', verdict: 'decline', summary: 'no' }] : [{ id: 'd', verdict: 'approve', summary: 'yes' }]; } });
+  delete require.cache[apPath];
+  process.env.SUPABASE_URL = 'https://sb.test'; process.env.SUPABASE_SERVICE_ROLE_KEY = 'k'; process.env.ANTHROPIC_API_KEY = 'k';
+  const savedFetch = global.fetch;
+  global.fetch = async (url, o) => {
+    if (o && o.method === 'POST' && String(url).includes('agent_events')) { const b = JSON.parse(o.body); if (b.kind === 'verdict') events.push({ id: b.id, ref: b.ref }); }
+    return { ok: true, json: async () => [{ id: 'new' }], text: async () => '' };
+  };
+  try {
+    const AP = require('../api/_autopilot');
+    await AP.mentorApplications({ done: [], needs: [], emails: 0, errors: [] }, {});
+    await AP.mentorApplications({ done: [], needs: [], emails: 0, errors: [] }, {});
+    assert.equal(aiCalls, 1);            // second run reused the stored verdict
+    assert.equal(patched.length, 0);     // and did not flip to an approval
+    app.bio = 'r'.repeat(130);           // the mentor edits their profile
+    await AP.mentorApplications({ done: [], needs: [], emails: 0, errors: [] }, {});
+    assert.equal(aiCalls, 2);            // a changed profile is reviewed again
   } finally { global.fetch = savedFetch; delete require.cache[apPath]; delete require.cache[mailPath]; delete require.cache[aiPath]; }
 });

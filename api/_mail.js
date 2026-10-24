@@ -31,6 +31,12 @@ async function rows(path) {
   if (!r.ok) return [];
   return r.json();
 }
+// Like rows(), but a failed read throws instead of looking like "no data" (for decisions that send emails or money).
+async function rowsStrict(path) {
+  const r = await fetch(`${SB()}/rest/v1/${path}`, { headers: svc() });
+  if (!r.ok) throw new Error('database read failed (' + r.status + ') for ' + path.split('?')[0]);
+  return r.json();
+}
 async function patch(path, body) {
   return fetch(`${SB()}/rest/v1/${path}`, { method: 'PATCH', headers: Object.assign({ Prefer: 'return=minimal' }, svc()), body: JSON.stringify(body) });
 }
@@ -100,4 +106,4 @@ async function sendMail(to, subject, html, attachments, opts = {}) {
 function link(url, text) { return `<a href="${esc(url)}" style="color:#8B6A4C;font-weight:700;">${esc(text)}</a>`; }
 function list(items) { const li = (items || []).filter(Boolean).map(x => `<li style="margin:0 0 6px;">${esc(x)}</li>`).join(''); return li ? `<ul style="margin:0;padding-left:20px;">${li}</ul>` : ''; }
 
-module.exports = { htmlToText, CONTACT_EMAIL, SUPPORT_REPLY_TO, SITE, esc, userFromToken, emailOf, rows, patch, profile, fullProfile, when, layout, sendMail, link, list };
+module.exports = { htmlToText, CONTACT_EMAIL, SUPPORT_REPLY_TO, SITE, esc, userFromToken, emailOf, rows, rowsStrict, patch, profile, fullProfile, when, layout, sendMail, link, list };
