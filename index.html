@@ -759,6 +759,8 @@
   .auth-forgot{text-align:end;margin:-8px 0 14px;}
   .auth-li{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;margin:4px 0 14px;}
   .auth-li svg{color:#0A66C2;}
+  .auth-li-note{font-size:12.5px;margin:-6px 0 14px;text-align:center;}
+  .li-connect{margin-top:8px;}
   .auth-or{display:flex;align-items:center;gap:12px;margin:0 0 14px;color:var(--muted,#8a7461);font-size:13px;}
   .auth-or::before,.auth-or::after{content:"";flex:1;height:1px;background:currentColor;opacity:.25;}
   .li-ok{display:inline-flex;align-items:center;gap:4px;margin-inline-start:8px;font-size:12.5px;font-weight:600;color:#2f6f4f;}
@@ -2658,7 +2660,7 @@ const I18N = {
     slot_morning:'Morning', slot_afternoon:'Afternoon', slot_evening:'Evening',
     choose_slot_title:'Pick a time', no_slots_available:'This mentor has no open times right now — check back later.',
     slot_taken:'Booked',
-    auth_title:'Welcome to Workar', auth_li:'Continue with LinkedIn', auth_or:'or', li_verified:'LinkedIn verified', auth_li_fail:'LinkedIn sign-in did not work. Please try again or use your email.', auth_subtitle:'Sign in or create an account to continue.',
+    auth_title:'Welcome to Workar', li_connect:'Connect LinkedIn', li_connected:'LinkedIn connected', li_connect_hint:'Adds your LinkedIn photo and a verified badge.', auth_li_note:'Already have a Workar account? Log in with your email, then connect LinkedIn from your profile.', li_link_fail:'This LinkedIn is already used by another Workar account.', auth_li:'Continue with LinkedIn', auth_or:'or', li_verified:'LinkedIn verified', auth_li_fail:'LinkedIn sign-in did not work. Please try again or use your email.', auth_subtitle:'Sign in or create an account to continue.',
     lbl_email:'Email', lbl_password:'Password', ph_email:'you@example.com', ph_password:'At least 6 characters',
     btn_login:'Log in', btn_signup:'Create account', auth_toggle_to_signup:"Don't have an account? Sign up",
     auth_toggle_to_login:'Already have an account? Log in',
@@ -3117,7 +3119,7 @@ const I18N = {
     slot_morning:'صبح', slot_afternoon:'بعدازظهر', slot_evening:'عصر',
     choose_slot_title:'یک زمان انتخاب کنید', no_slots_available:'این منتور فعلاً زمان آزادی ندارد؛ بعداً دوباره سر بزنید.',
     slot_taken:'رزرو شده',
-    auth_title:'به Workar خوش آمدید', auth_li:'ادامه با لینکدین', auth_or:'یا', li_verified:'لینکدین تأییدشده', auth_li_fail:'ورود با لینکدین انجام نشد. دوباره امتحان کنید یا با ایمیل وارد شوید.', auth_subtitle:'برای ادامه وارد شوید یا حساب بسازید.',
+    auth_title:'به Workar خوش آمدید', li_connect:'اتصال لینکدین', li_connected:'لینکدین متصل است', li_connect_hint:'عکس لینکدین و نشان تأیید به پروفایل شما اضافه می‌شود.', auth_li_note:'از قبل حساب Workar دارید؟ با ایمیل وارد شوید و از پروفایل، لینکدین را متصل کنید.', li_link_fail:'این لینکدین قبلاً به حساب دیگری در Workar وصل شده است.', auth_li:'ادامه با لینکدین', auth_or:'یا', li_verified:'لینکدین تأییدشده', auth_li_fail:'ورود با لینکدین انجام نشد. دوباره امتحان کنید یا با ایمیل وارد شوید.', auth_subtitle:'برای ادامه وارد شوید یا حساب بسازید.',
     lbl_email:'ایمیل', lbl_password:'رمز عبور', ph_email:'you@example.com', ph_password:'حداقل ۶ کاراکتر',
     btn_login:'ورود', btn_signup:'ساخت حساب', auth_toggle_to_signup:'حساب ندارید؟ بسازید',
     auth_toggle_to_login:'حساب دارید؟ وارد شوید',
@@ -3852,6 +3854,15 @@ function makeSupabaseDB(){
 }
 
 let liSynced = false, liSignupName = '';
+document.addEventListener('click', async e=>{
+  const b = e.target.closest && e.target.closest('#li-connect'); if(!b || !sb) return;
+  b.disabled = true;
+  try{ const { error } = await sb.auth.linkIdentity({ provider:'linkedin_oidc', options:{ redirectTo: location.origin + location.pathname + '?go=dashboard' } }); if(error) throw error; }
+  catch(err){ console.error('linkedin-link-failed', err); b.disabled = false; toast(T('li_link_fail'), 5000); }
+});
+// Coming back from LinkedIn with an error (e.g. that LinkedIn already belongs to another account)
+try{ const hp = new URLSearchParams((location.hash||'').replace(/^#/,'') || location.search); const ed = hp.get('error_description')||hp.get('error');
+  if(ed && /identity|linkedin|already/i.test(ed)) setTimeout(()=>{ try{ toast(T('li_link_fail'), 6000); }catch(e){} }, 1200); }catch(e){}
 async function syncLinkedIn(){
   try{
     const { data } = await sb.auth.getSession(); const tok = data && data.session && data.session.access_token; if(!tok) return;
@@ -6292,6 +6303,7 @@ function authView(){
       </div>` : ''}
       ${state.authInfo ? `<div class="auth-note">${esc(state.authInfo)}</div>` : ''}
       ${state.liLogin && mode!=='forgot' ? `<button type="button" class="btn btn-outline auth-li" id="auth-li"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45z"/></svg><span>${esc(T('auth_li'))}</span></button>
+      <p class="muted auth-li-note">${esc(T('auth_li_note'))}</p>
       <div class="auth-or"><span>${esc(T('auth_or'))}</span></div>` : ''}
       <form id="auth-form">
         <div class="field"><label>${esc(T('lbl_email'))}</label><input name="email" type="email" required autocomplete="email" placeholder="${esc(T('ph_email'))}" value="${esc(state.authEmail||'')}"></div>
@@ -8724,7 +8736,8 @@ function dashboardView(){
       ${availEditor()}
     </section>` : ''}
     <section class="df-sec"><h3>${esc(T('sec_links_only'))}</h3>
-      <div class="field"><label>${esc(T(myProfile.role==='mentor' ? 'lbl_linkedin_req' : 'lbl_linkedin'))}</label><input id="edit-linkedin" type="text" value="${esc(myProfile.linkedin||'')}" placeholder="linkedin.com/in/…"${myProfile.role==='mentor' ? ' required' : ''}></div>
+      <div class="field"><label>${esc(T(myProfile.role==='mentor' ? 'lbl_linkedin_req' : 'lbl_linkedin'))}</label><input id="edit-linkedin" type="text" value="${esc(myProfile.linkedin||'')}" placeholder="linkedin.com/in/…"${myProfile.role==='mentor' ? ' required' : ''}>
+        ${myProfile.linkedinVerified ? `<span class="li-ok">✓ ${esc(T('li_connected'))}</span>` : state.liLogin ? `<button type="button" class="btn btn-outline btn-sm li-connect" id="li-connect">${esc(T('li_connect'))}</button> <span class="muted" style="font-size:12.5px;">${esc(T('li_connect_hint'))}</span>` : ''}</div>
     </section>
     <div class="df-actions"><button class="btn btn-primary" id="save-profile">${esc(T('save_changes'))}</button></div>
   </div>
