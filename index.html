@@ -2693,12 +2693,12 @@ const I18N = {
     choose_slot_title:'Pick a time', no_slots_available:'This mentor has no open times right now — check back later.',
     slot_taken:'Booked',
     auth_title:'Welcome to Workar', li_connect:'Connect LinkedIn', li_connected:'LinkedIn connected', li_connect_hint:'Adds your LinkedIn photo and a verified badge.', auth_li_note:'Already have a Workar account? Log in with your email, then connect LinkedIn from your profile.', li_link_fail:'This LinkedIn is already used by another Workar account.', auth_li:'Continue with LinkedIn', auth_or:'or', li_verified:'Signed in with LinkedIn', auth_li_fail:'LinkedIn sign-in did not work. Please try again or use your email.', auth_subtitle:'Sign in or create an account to continue.',
-    lbl_email:'Email', lbl_password:'Password', ph_email:'you@example.com', ph_password:'At least 6 characters',
+    lbl_email:'Email', lbl_password:'Password', ph_email:'you@example.com', ph_password:'Your password', ph_password_new:'At least 10 characters, letters and numbers',
     btn_login:'Log in', btn_signup:'Create account', auth_toggle_to_signup:"Don't have an account? Sign up",
     auth_toggle_to_login:'Already have an account? Log in',
     auth_check_email:'Account created — check your email and click the confirmation link, then log in below.',
     auth_check_spam:"Don't see it within a few minutes? Check your spam or promotions folder.",
-    auth_resend:'Resend confirmation email', auth_resent:'Sent — check your inbox', auth_too_many:'Too many emails were requested. Please wait a few minutes and try again.', auth_weak_pw:'Please choose a password with at least 6 characters.',
+    auth_resend:'Resend confirmation email', auth_resent:'Sent — check your inbox', auth_too_many:'Too many emails were requested. Please wait a few minutes and try again.', auth_weak_pw:'Please choose a password with at least 10 characters, including letters and numbers. Very common or leaked passwords are not accepted.',
     auth_already_registered:'This email already has an account — please log in.',
     lbl_confirm_password_signup:'Confirm password', ph_confirm_password:'Re-enter your password', forgot_link:'Forgot password?', forgot_hint:"Enter your account email and we'll send you a link to reset your password.",
     btn_send_reset:'Send reset link', back_to_login:'Back to log in',
@@ -3152,12 +3152,12 @@ const I18N = {
     choose_slot_title:'یک زمان انتخاب کنید', no_slots_available:'این منتور فعلاً زمان آزادی ندارد؛ بعداً دوباره سر بزنید.',
     slot_taken:'رزرو شده',
     auth_title:'به Workar خوش آمدید', li_connect:'اتصال لینکدین', li_connected:'لینکدین متصل است', li_connect_hint:'عکس لینکدین و نشان تأیید به پروفایل شما اضافه می‌شود.', auth_li_note:'از قبل حساب Workar دارید؟ با ایمیل وارد شوید و از پروفایل، لینکدین را متصل کنید.', li_link_fail:'این لینکدین قبلاً به حساب دیگری در Workar وصل شده است.', auth_li:'ادامه با لینکدین', auth_or:'یا', li_verified:'ورود با لینکدین', auth_li_fail:'ورود با لینکدین انجام نشد. دوباره امتحان کنید یا با ایمیل وارد شوید.', auth_subtitle:'برای ادامه وارد شوید یا حساب بسازید.',
-    lbl_email:'ایمیل', lbl_password:'رمز عبور', ph_email:'you@example.com', ph_password:'حداقل ۶ کاراکتر',
+    lbl_email:'ایمیل', lbl_password:'رمز عبور', ph_email:'you@example.com', ph_password:'رمز عبور شما', ph_password_new:'دست‌کم ۱۰ کاراکتر، حرف و عدد',
     btn_login:'ورود', btn_signup:'ساخت حساب', auth_toggle_to_signup:'حساب ندارید؟ بسازید',
     auth_toggle_to_login:'حساب دارید؟ وارد شوید',
     auth_check_email:'حساب ساخته شد. ایمیلتان را باز کنید و روی لینک تأیید بزنید، بعد همین پایین وارد شوید.',
     auth_check_spam:'اگر تا چند دقیقه ایمیل نرسید، پوشه‌ی اسپم یا Promotions را هم ببینید.',
-    auth_resend:'ارسال دوباره‌ی ایمیل تأیید', auth_resent:'ارسال شد؛ ایمیلتان را ببینید', auth_too_many:'درخواست‌های زیادی ارسال شده است. لطفاً چند دقیقه بعد دوباره امتحان کنید.', auth_weak_pw:'لطفاً رمزی با دست‌کم ۶ کاراکتر انتخاب کنید.',
+    auth_resend:'ارسال دوباره‌ی ایمیل تأیید', auth_resent:'ارسال شد؛ ایمیلتان را ببینید', auth_too_many:'درخواست‌های زیادی ارسال شده است. لطفاً چند دقیقه بعد دوباره امتحان کنید.', auth_weak_pw:'لطفاً رمزی با دست‌کم ۱۰ کاراکتر، شامل حرف و عدد، انتخاب کنید. رمزهای خیلی رایج یا لو‌رفته پذیرفته نمی‌شوند.',
     auth_already_registered:'با این ایمیل قبلاً حساب ساخته شده است؛ لطفاً وارد شوید.',
     lbl_confirm_password_signup:'تکرار رمز عبور', ph_confirm_password:'رمز عبور را دوباره وارد کنید', forgot_link:'رمز عبور را فراموش کرده‌اید؟', forgot_hint:'ایمیل حسابتان را وارد کنید تا لینک تغییر رمز برایتان فرستاده شود.',
     btn_send_reset:'ارسال لینک تغییر رمز', back_to_login:'بازگشت به ورود',
@@ -6343,9 +6343,12 @@ function homeView(){
   `;
 }
 
+// Matches the Supabase password rules (Authentication > Email): 10+ characters with letters and digits.
+function pwStrong(p){ p = String(p||''); return p.length >= 10 && p.length <= 72 && /[A-Za-z]/.test(p) && /\d/.test(p); }
+function isWeakPwError(e){ return !!e && (e.code === 'weak_password' || /weak|pwned|leaked|compromised/i.test(String(e.message||''))); }
 function pwField(name, labelKey, phKey, auto){
   return `<div class="field"><label>${esc(T(labelKey))}</label><div class="pw-wrap">
-    <input name="${name}" type="password" required minlength="6" autocomplete="${auto}" placeholder="${esc(T(phKey))}">
+    <input name="${name}" type="password" required ${auto==='new-password'?'minlength="10"':''} autocomplete="${auto}" placeholder="${esc(T(phKey))}">
     <button type="button" class="pw-eye" aria-label="${esc(T('pw_show'))}" tabindex="-1"><svg viewBox="0 0 20 20" width="18" height="18"><path d="M1.5 10S4.8 4 10 4s8.5 6 8.5 6-3.3 6-8.5 6S1.5 10 1.5 10z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="10" r="2.6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
   </div></div>`;
 }
@@ -6391,7 +6394,7 @@ function authView(){
       <form id="auth-form">
         <div class="field"><label>${esc(T('lbl_email'))}</label><input name="email" type="email" required autocomplete="email" placeholder="${esc(T('ph_email'))}" value="${esc(state.authEmail||'')}"></div>
         ${mode==='forgot' ? '' : `
-        ${pwField('password','lbl_password','ph_password', mode==='signup'?'new-password':'current-password')}
+        ${pwField('password','lbl_password', mode==='signup'?'ph_password_new':'ph_password', mode==='signup'?'new-password':'current-password')}
         ${mode==='signup' ? pwField('password2','lbl_confirm_password_signup','ph_confirm_password','new-password') : ''}
         ${mode==='login' ? `<div class="auth-forgot"><a href="#" id="auth-forgot">${esc(T('forgot_link'))}</a></div>` : ''}`}
         ${mode==='signup' ? `<label class="auth-agree"><input type="checkbox" id="auth-agree" required> <span>${T('auth_agree').replace('{t}', `<a data-nav="terms">${esc(T('ft_terms'))}</a>`).replace('{p}', `<a data-nav="privacy">${esc(T('ft_privacy'))}</a>`).replace('{c}', `<a data-nav="conduct">${esc(T('ft_conduct'))}</a>`)}</span></label>` : ''}
@@ -6409,8 +6412,8 @@ function resetPasswordView(){
   <div class="panel" style="max-width:420px;">
     <p class="muted" style="margin-top:0;">${esc(T('reset_subtitle'))}</p>
     <form id="reset-form">
-      <div class="field"><label>${esc(T('lbl_new_password'))}</label><input name="pw1" type="password" required minlength="6" placeholder="${esc(T('ph_password'))}"></div>
-      <div class="field"><label>${esc(T('lbl_confirm_password'))}</label><input name="pw2" type="password" required minlength="6"></div>
+      <div class="field"><label>${esc(T('lbl_new_password'))}</label><input name="pw1" type="password" required minlength="10" autocomplete="new-password" placeholder="${esc(T('ph_password_new'))}"></div>
+      <div class="field"><label>${esc(T('lbl_confirm_password'))}</label><input name="pw2" type="password" required minlength="10" autocomplete="new-password"></div>
       ${state.authError ? `<p style="color:#b3412c;font-size:13px;margin:4px 0 10px;">${esc(state.authError)}</p>` : ''}
       <button class="btn btn-primary" type="submit" style="width:100%;" ${state.authBusy?'disabled':''}>${esc(T('btn_save_password'))}</button>
     </form>
@@ -6424,10 +6427,11 @@ function wireResetPassword(){
     const fd = new FormData(f);
     const pw1 = fd.get('pw1')||'', pw2 = fd.get('pw2')||'';
     if(pw1 !== pw2){ state.authError = T('pw_mismatch'); render(); return; }
+    if(!pwStrong(pw1)){ state.authError = T('auth_weak_pw'); render(); return; }
     state.authBusy = true; state.authError = ''; render();
     try{
       const { error } = await withTimeout(sb.auth.updateUser({ password: pw1 }), 8000, 'updateUser');
-      if(error) throw error;
+      if(error) throw (isWeakPwError(error) ? new Error(T('auth_weak_pw')) : error);
       state.authBusy = false; state.recoveryMode = false;
       history.replaceState(null, '', window.location.pathname);
       toast(T('pw_updated'));
@@ -6503,6 +6507,11 @@ function wireAuth(){
           const em = document.querySelector('#auth-form input[name="email"]'); if(em) em.value = email;
           return;
         }
+        if(!pwStrong(password)){
+          state.authBusy = false; state.authError = T('auth_weak_pw'); render();
+          const em = document.querySelector('#auth-form input[name="email"]'); if(em) em.value = email;
+          return;
+        }
         state.authEmail = email;
         const viaUs = await authMail('auth_signup', { email, password });
         if(viaUs && viaUs.already){
@@ -6514,7 +6523,7 @@ function wireAuth(){
           state.resendDone = false; state.authInfo = ''; render(); return;
         }
         const { data, error } = await withTimeout(sb.auth.signUp({ email, password, options:{ emailRedirectTo: window.location.origin } }), 8000, 'signUp');
-        if(error) throw error;
+        if(error) throw (isWeakPwError(error) ? new Error(T('auth_weak_pw')) : error);
         if(data.session){
           onSignedIn(data.session);
         } else if(data.user && Array.isArray(data.user.identities) && data.user.identities.length===0){
