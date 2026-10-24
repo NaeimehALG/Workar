@@ -194,3 +194,15 @@ create policy "dm send" on public.messages for insert with check (
     or lower(coalesce(auth.jwt() ->> 'email', '')) = 'naeimeh.alaghehband@gmail.com'
   )
 );
+
+-- Follow-up (migration: booking_id_and_session_followup), after an independent re-check:
+--  * booking ids may not start with "dm" (a dm_<a>_<b>-shaped booking id linked two strangers in the read rules)
+--  * booking ids can't be changed; new bookings need a start time
+--  * each session in a package needs its own passed start time ("lastDoneStartsAt" remembers the last one)
+alter table public.requests drop constraint if exists requests_id_format;
+alter table public.requests add constraint requests_id_format check (id ~ '^[A-Za-z0-9_-]{1,80}$' and id !~* '^dm');
+alter table public.requests add column if not exists "lastDoneStartsAt" timestamptz;
+-- protect_request(): adds `new.id is distinct from old.id` to the blocked list, requires
+--   old."startsAt" > old."lastDoneStartsAt" to mark another session done, and sets new."lastDoneStartsAt" := old."startsAt".
+-- protect_request_insert(): rejects a null or past "startsAt" and clears "lastDoneStartsAt".
+-- (Full function bodies are in the live database; see pg_proc.)

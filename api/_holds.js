@@ -146,8 +146,9 @@ async function secureFromSession(requestId, session) {
     // second payment so the client's card isn't held or charged twice.
     if (session.mode !== 'setup' && upd.stripePaymentIntentId) {
       try {
-        const row = (await dbRows(`${idq(requestId)}&select=stripeSessionId,stripePaymentIntentId`))[0] || {};
-        if (row.stripeSessionId !== session.id && row.stripePaymentIntentId !== upd.stripePaymentIntentId) {
+        const row = (await dbRows(`${idq(requestId)}&select=id,paid,stripeSessionId,stripePaymentIntentId`))[0];
+        // Only when we can see the booking is paid through a different checkout; never on a failed lookup.
+        if (row && row.id === requestId && row.paid && row.stripeSessionId && row.stripeSessionId !== session.id && row.stripePaymentIntentId !== upd.stripePaymentIntentId) {
           const pid = upd.stripePaymentIntentId;
           if (upd.holdStatus === 'authorized') await P.stripe('POST', 'payment_intents/' + encodeURIComponent(pid) + '/cancel', {}, 'workar-dup-cancel-' + pid);
           else await P.stripe('POST', 'refunds', { payment_intent: pid }, 'workar-dup-refund-' + pid);
