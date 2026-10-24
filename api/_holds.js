@@ -137,8 +137,26 @@ async function secureFromSession(requestId, session) {
     });
     if (pi.status === 'succeeded') upd.capturedAt = new Date().toISOString();
   }
+  // Keep the booking's price equal to what the card was actually held or charged for.
+  const charged = session.mode === 'setup' ? Number(md.amountCents) : Number(upd.holdAmountCents);
+  if (Number.isSafeInteger(charged) && charged > 0) upd.amountCents = charged;
   const changed = await dbPatch(`${idq(requestId)}&paid=is.false`, upd);
-  if (!changed.length) return { paid: true, already: true };
+  if (!changed.length) {
+    // The booking was already paid through another checkout (two tabs, back button). Release this
+    // second payment so the client's card isn't held or charged twice.
+    if (session.mode !== 'setup' && upd.stripePaymentIntentId) {
+      try {
+        const row = (await dbRows(`${idq(requestId)}&select=stripeSessionId,stripePaymentIntentId`))[0] || {};
+        if (row.stripeSessionId !== session.id && row.stripePaymentIntentId !== upd.stripePaymentIntentId) {
+          const pid = upd.stripePaymentIntentId;
+          if (upd.holdStatus === 'authorized') await P.stripe('POST', 'payment_intents/' + encodeURIComponent(pid) + '/cancel', {}, 'workar-dup-cancel-' + pid);
+          else await P.stripe('POST', 'refunds', { payment_intent: pid }, 'workar-dup-refund-' + pid);
+          console.log('duplicate-checkout-released', requestId, pid);
+        }
+      } catch (e) { console.error('duplicate-checkout-release-failed', requestId, e.message); }
+    }
+    return { paid: true, already: true };
+  }
   if (upd.holdStatus === 'captured') { try { await P.recordPayment(requestId, { amount_total: upd.holdAmountCents, payment_intent: upd.stripePaymentIntentId }); } catch (e) { console.error('payout-record-failed', e.message); } }
   try { await require('./_session').confirmPaidSession(requestId); } catch (e) { console.error('session-confirm-failed', e); }
   return { paid: true, holdStatus: upd.holdStatus };

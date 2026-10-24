@@ -33,7 +33,7 @@ module.exports = async (req, res) => {
 
     // ---- mentor applications ----
     if (event === 'mentor_applied') {
-      const p = await M.profile(me.id);
+      const p = await M.fullProfile(me.id);
       if (p.role !== 'mentor') { res.status(403).end(); return; }
       if (p.approved !== false) { res.status(200).json({ ok: true, verdict: 'live' }); return; }
       // The AI reviews the application right away. Approvals need nothing from the admin (they appear in the

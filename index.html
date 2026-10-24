@@ -3350,6 +3350,8 @@ state.ciSkip = state.ciSkip || {}; state.ciStars = state.ciStars || {};
 let cache = { profiles:{}, reviews:{}, requests:[], names:{}, people:{}, msgs:{}, busy:{}, busyLoaded:{} };
 
 function el(html){ const t=document.createElement('template'); t.innerHTML=html.trim(); return t.content; }
+// Only plain web links may be put in an href (blocks javascript: and other schemes).
+function safeHttp(u){ const t=String(u||'').trim(); return /^https?:\/\//i.test(t) ? t : ''; }
 function esc(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function toast(msg, ms){ const d=document.createElement('div'); d.className='toast'; d.textContent=msg; document.body.appendChild(d); setTimeout(()=>d.remove(), ms||2600); }
 function nav(view, params, fromHistory){
@@ -4404,7 +4406,7 @@ function adminView(){
       `<div class="apps">${state.apps.map(a=>`<div class="app-row">
         <div class="avatar">${av(a.id, a.name||'?')}</div>
         <div class="app-info"><b>${esc(a.name||'')}</b><span class="muted">${esc([a.headline||a.profession, a.experience ? a.experience+' '+T('yrs_exp') : '', (a.languages||[]).join(', ')].filter(Boolean).join(' · '))}</span>
-          ${a.bio ? `<p>${esc(String(a.bio).slice(0,260))}</p>` : ''}${a.linkedin ? `<a href="${esc(a.linkedin)}" target="_blank" rel="noopener">${esc(T('linkedin_link'))}</a>` : ''}</div>
+          ${a.bio ? `<p>${esc(String(a.bio).slice(0,260))}</p>` : ''}${safeHttp(a.linkedin) ? `<a href="${esc(safeHttp(a.linkedin))}" target="_blank" rel="noopener">${esc(T('linkedin_link'))}</a>` : ''}</div>
         <div class="app-btns"><span class="app-state">${esc(T(a.linkedin ? 'apps_st_review' : 'apps_st_li'))}</span><button class="btn btn-sm btn-ghost" data-nav="mentor" data-mentor="${esc(a.id)}">${esc(T('apps_view'))}</button></div>
       </div>`).join('')}</div>`}
   </div>
@@ -4922,7 +4924,7 @@ function prepReviewDashboard(){
       <h3>${esc(T('rv_rec_t').replace('{d}', prepDomLabel(weakest)))}</h3>
       <p>${esc(T('rv_rec_d'))}</p>
     </div>
-    <div class="rv-rec-mods">${recMods.map(m=>`<button class="rv-rec-mod" data-guide="${m.id}"><span>${String(PREP_GUIDE.indexOf(m)+1).padStart(2,'0')}</span>${esc(m.title)} →</button>`).join('')}</div>
+    <div class="rv-rec-mods">${recMods.map(m=>`<button class="rv-rec-mod" data-guide="${esc(m.id)}"><span>${String(PREP_GUIDE.indexOf(m)+1).padStart(2,'0')}</span>${esc(m.title)} →</button>`).join('')}</div>
   </div>` : ''}
 
   <div class="rv-card" style="margin-top:18px;">
@@ -5909,7 +5911,7 @@ function prepGuideHome(){
       return `<section class="lx-part">
         <h3 class="lx-part-h">${esc(T('guide_part'))} ${pi+1} · ${esc(T(pk))}</h3>
         ${mods.map(m=>{ const i = PREP_GUIDE.indexOf(m), isDone = done.includes(m.id), isNext = next && next.id===m.id;
-          return `<button class="lx-row ${isDone?'done':''} ${isNext?'next':''}" data-guide="${m.id}">
+          return `<button class="lx-row ${isDone?'done':''} ${isNext?'next':''}" data-guide="${esc(m.id)}">
             <span class="lx-num">${isDone ? '✓' : String(i+1).padStart(2,'0')}</span>
             <span class="lx-title">${esc(m.title)}</span>
             <span class="lx-meta">${m.mins} ${esc(T('prep_min'))}</span>
@@ -6610,7 +6612,7 @@ function browseView(){
       <div style="margin-top:18px;display:flex;flex-direction:column;gap:10px;">
         ${state.matchResults.map(r=>{
           const p = cache.profiles[r.id]; if(!p) return '';
-          return `<div class="card" data-nav="mentor" data-mentor="${r.id}">
+          return `<div class="card" data-nav="mentor" data-mentor="${esc(r.id)}">
             <div class="card-top">
               <div class="avatar">${av(r.id)}</div>
               <div><h3>${esc(nameOf(r.id))}</h3><div class="prof">${esc(p.headline||p.profession||'')}</div></div>
@@ -6799,7 +6801,7 @@ function mentorView(){
         <h1>${esc(nameOf(id))}</h1>
         ${(p.headline||p.profession) ? `<p class="pf-headline" dir="auto">${String(p.headline||p.profession).split(/\s*[|•·]\s*/).filter(Boolean).map(x=>`<span>${esc(x)}</span>`).join('<i class="pf-sep" aria-hidden="true"></i>')}</p>` : ''}
       </div>
-      ${p.linkedin ? `<a class="pf-li" href="${esc(p.linkedin)}" target="_blank" rel="noopener">${MP_ICONS.li}<span>${esc(T('mp_li_view'))}</span></a>` : ''}
+      ${safeHttp(p.linkedin) ? `<a class="pf-li" href="${esc(safeHttp(p.linkedin))}" target="_blank" rel="noopener">${MP_ICONS.li}<span>${esc(T('mp_li_view'))}</span></a>` : ''}
     </div>
     <dl class="pf-facts">
       ${(()=>{ const yrs = String(p.experience||'').trim(); return yrs ? `<div>${MP_ICONS.brief}<dt>${esc(T('mp_f_exp'))}</dt><dd>${esc(T('mp_h_exp_v').replace('{n}', yrs))}</dd></div>` : ''; })()}
@@ -6940,26 +6942,26 @@ function reqCard(r, isMentor, grouped){
     <p class="req-next">${esc(reqNextText(r, isMentor, other))}</p>
     <div class="req-actions">
       ${isMentor && r.status==='pending' ? `
-        <button class="btn btn-sm btn-primary" data-req="${r.id}" data-status="accepted">${esc(T('accept'))}</button>
-        <button class="btn btn-sm btn-ghost" data-req="${r.id}" data-status="declined">${esc(T('decline'))}</button>` : ''}
-      ${!isMentor && st===1 ? `<button class="btn btn-sm btn-primary" data-pay="${r.id}" data-amount="${r.amountCents}" data-mentor="${r.mentorId}">${esc(T('pay_to_confirm').replace('${amount}', (r.amountCents/100).toFixed(2)))}</button><span class="pay-hold-note">${esc(T('pay_hold_note'))}</span>` : ''}
+        <button class="btn btn-sm btn-primary" data-req="${esc(r.id)}" data-status="accepted">${esc(T('accept'))}</button>
+        <button class="btn btn-sm btn-ghost" data-req="${esc(r.id)}" data-status="declined">${esc(T('decline'))}</button>` : ''}
+      ${!isMentor && st===1 ? `<button class="btn btn-sm btn-primary" data-pay="${esc(r.id)}" data-amount="${Number(r.amountCents)||0}" data-mentor="${esc(r.mentorId)}">${esc(T('pay_to_confirm').replace('${amount}', (r.amountCents/100).toFixed(2)))}</button><span class="pay-hold-note">${esc(T('pay_hold_note'))}</span>` : ''}
       ${st===2 ? `
-        <button class="btn btn-sm btn-primary" data-call="${r.id}" data-url="${esc(r.meetingUrl||'')}" data-mode="video" title="${esc(T('call_tip'))}">${esc(T('join_video'))}</button>
-        <button class="btn btn-sm btn-outline" data-call="${r.id}" data-url="${esc(r.meetingUrl||'')}" data-mode="voice" title="${esc(T('call_tip'))}">${esc(T('join_voice'))}</button>
+        <button class="btn btn-sm btn-primary" data-call="${esc(r.id)}" data-url="${esc(r.meetingUrl||'')}" data-mode="video" title="${esc(T('call_tip'))}">${esc(T('join_video'))}</button>
+        <button class="btn btn-sm btn-outline" data-call="${esc(r.id)}" data-url="${esc(r.meetingUrl||'')}" data-mode="voice" title="${esc(T('call_tip'))}">${esc(T('join_voice'))}</button>
         ${bookingCalendarActions(r)}
-        ${isMentor ? `<button class="btn btn-sm btn-ghost" data-sess="${r.id}" data-next="${(Number(r.sessionsDone)||0)+1}">${esc(T(reqSessionsTotal(r)>1 ? 'sess_mark' : 'sess_mark_one'))}</button>` : ''}` : ''}
+        ${isMentor ? `<button class="btn btn-sm btn-ghost" data-sess="${esc(r.id)}" data-next="${(Number(r.sessionsDone)||0)+1}">${esc(T(reqSessionsTotal(r)>1 ? 'sess_mark' : 'sess_mark_one'))}</button>` : ''}` : ''}
       ${st===3 ? `<span class="status-pill done">${esc(T('sess_completed'))}</span>` : ''}
-      ${isMentor && (st===3 || (st===2 && (Number(r.sessionsDone)>0 || (reqInstant(r) && reqInstant(r) < new Date())))) ? `<button class="btn btn-sm btn-outline" data-followup="${r.id}" data-fu-sent="${r.followupSentAt?1:0}" data-fu-who="${esc(other)}">${esc(T(r.followupSentAt ? 'ag_fu_again' : 'ag_fu_btn'))}</button>` : ''}
+      ${isMentor && (st===3 || (st===2 && (Number(r.sessionsDone)>0 || (reqInstant(r) && reqInstant(r) < new Date())))) ? `<button class="btn btn-sm btn-outline" data-followup="${esc(r.id)}" data-fu-sent="${r.followupSentAt?1:0}" data-fu-who="${esc(other)}">${esc(T(r.followupSentAt ? 'ag_fu_again' : 'ag_fu_btn'))}</button>` : ''}
       ${st<0 ? `<span class="status-pill declined">${esc(T(r.status==='cancelled'?'st_cancelled':'st_declined'))}</span>` : ''}
       <span class="req-right">
-      <button class="btn btn-sm btn-outline req-chat-btn ${open?'on':''}" data-chat="${r.id}">${esc(T(open?'chat_hide':'chat_open'))}${unread && !open ? `<span class="req-badge">${unread}</span>` : ''}</button>
+      <button class="btn btn-sm btn-outline req-chat-btn ${open?'on':''}" data-chat="${esc(r.id)}">${esc(T(open?'chat_hide':'chat_open'))}${unread && !open ? `<span class="req-badge">${unread}</span>` : ''}</button>
       <span class="req-more">
-        <button class="req-dots" data-menu="${r.id}" aria-label="${esc(T('mg_more'))}"><svg viewBox="0 0 20 20" width="18" height="18"><circle cx="4" cy="10" r="1.7" fill="currentColor"/><circle cx="10" cy="10" r="1.7" fill="currentColor"/><circle cx="16" cy="10" r="1.7" fill="currentColor"/></svg></button>
+        <button class="req-dots" data-menu="${esc(r.id)}" aria-label="${esc(T('mg_more'))}"><svg viewBox="0 0 20 20" width="18" height="18"><circle cx="4" cy="10" r="1.7" fill="currentColor"/><circle cx="10" cy="10" r="1.7" fill="currentColor"/><circle cx="16" cy="10" r="1.7" fill="currentColor"/></svg></button>
         ${state.reqMenu===r.id ? `<div class="req-menu">
-          ${st>=0 && st<3 ? `<button data-edit-time="${r.id}">${esc(T('mg_time'))}</button>` : ''}
-          ${st>=0 && st<2 ? `<button data-set-status="${r.id}" data-to="cancelled" class="danger">${esc(T(isMentor?'mg_cancel_m':'mg_cancel_c'))}</button>` : ''}
-          ${st===2 && isMentor ? `<button data-set-status="${r.id}" data-to="cancelled" class="danger">${esc(T('mg_cancel_paid'))}</button>` : ''}
-          <button data-hide="${r.id}">${esc(T(st<0||st===3 ? 'mg_remove' : 'mg_hide'))}</button>
+          ${st>=0 && st<3 ? `<button data-edit-time="${esc(r.id)}">${esc(T('mg_time'))}</button>` : ''}
+          ${st>=0 && st<2 ? `<button data-set-status="${esc(r.id)}" data-to="cancelled" class="danger">${esc(T(isMentor?'mg_cancel_m':'mg_cancel_c'))}</button>` : ''}
+          ${st===2 && isMentor ? `<button data-set-status="${esc(r.id)}" data-to="cancelled" class="danger">${esc(T('mg_cancel_paid'))}</button>` : ''}
+          <button data-hide="${esc(r.id)}">${esc(T(st<0||st===3 ? 'mg_remove' : 'mg_hide'))}</button>
         </div>` : ''}
       </span>
       </span>
@@ -6968,7 +6970,7 @@ function reqCard(r, isMentor, grouped){
       ${(()=>{ const i = reqInstant(r), lz = i ? utcToZoned(i, MY_TZ) : { date:r.date||'', time:r.time||'' };
         return `<div class="field"><label>${esc(T('lbl_date'))}</label>${dateField('re-date', lz.date)}</div>
       <div class="field"><label>${esc(T('lbl_time'))} (${esc(tzAbbr(MY_TZ))})</label>${timeSelect('re-time', lz.time)}</div>`; })()}
-      <div class="req-edit-btns"><button class="btn btn-sm btn-primary" data-save-time="${r.id}">${esc(T('mg_save_time'))}</button><button class="btn btn-sm btn-ghost" data-edit-time="">${esc(T('cancel'))}</button></div>
+      <div class="req-edit-btns"><button class="btn btn-sm btn-primary" data-save-time="${esc(r.id)}">${esc(T('mg_save_time'))}</button><button class="btn btn-sm btn-ghost" data-edit-time="">${esc(T('cancel'))}</button></div>
       <p class="muted">${esc(T('mg_time_note').replace('{n}', other))}</p>
     </div>` : ''}
     ${open ? chatPanel(r, isMentor, other) : ''}
@@ -6990,9 +6992,9 @@ function chatPanel(r, isMentor, other){
     ${cache.msgsError ? `<p class="rc-err">${esc(T('chat_err'))}</p>` : ''}
     <div class="rc-quick">${['chat_q1','chat_q2','chat_q3'].map(k=>`<button type="button" class="rc-q" data-q="${esc(T(k))}">${esc(T(k))}</button>`).join('')}</div>
     <div class="rc-send">
-      <button type="button" class="btn btn-ghost btn-sm rc-att" data-rc-attach="${r.id}" title="${esc(T('att_btn'))}" aria-label="${esc(T('att_btn'))}">${CLIP_IC}</button>
+      <button type="button" class="btn btn-ghost btn-sm rc-att" data-rc-attach="${esc(r.id)}" title="${esc(T('att_btn'))}" aria-label="${esc(T('att_btn'))}">${CLIP_IC}</button>
       <textarea id="rc-input" rows="1" placeholder="${esc(T('chat_ph').replace('{n}', other))}">${esc(state.chatDraft||'')}</textarea>
-      <button class="btn btn-primary btn-sm" id="rc-send" data-req-id="${r.id}">${esc(T('chat_send'))}</button>
+      <button class="btn btn-primary btn-sm" id="rc-send" data-req-id="${esc(r.id)}">${esc(T('chat_send'))}</button>
     </div>
   </div>`;
 }
@@ -7683,8 +7685,8 @@ function inboxThread(o){
         return last && last.senderId===uid && last.readAt ? `<div class="ib-seen">${esc(T('ib_seen'))} · ${esc(inboxTime(last.readAt))}</div>` : ''; })()
       + `<div class="ib-msg ib-typing ${__typing.showing?'on':''}" id="ib-typing" aria-live="polite"><span class="ib-av sm">${av(o)}</span><div class="ib-bub"><i></i><i></i><i></i></div></div>`;
   const callBtns = live
-    ? `<button class="ib-ic" data-call="${live.id}" data-url="${esc(live.meetingUrl||'')}" data-mode="voice" title="${esc(T('inbox_voice'))}" aria-label="${esc(T('inbox_voice'))}">${IB_IC.voice}</button>
-       <button class="ib-ic" data-call="${live.id}" data-url="${esc(live.meetingUrl||'')}" data-mode="video" title="${esc(T('inbox_video'))}" aria-label="${esc(T('inbox_video'))}">${IB_IC.video}</button>`
+    ? `<button class="ib-ic" data-call="${esc(live.id)}" data-url="${esc(live.meetingUrl||'')}" data-mode="voice" title="${esc(T('inbox_voice'))}" aria-label="${esc(T('inbox_voice'))}">${IB_IC.voice}</button>
+       <button class="ib-ic" data-call="${esc(live.id)}" data-url="${esc(live.meetingUrl||'')}" data-mode="video" title="${esc(T('inbox_video'))}" aria-label="${esc(T('inbox_video'))}">${IB_IC.video}</button>`
     : `<button class="ib-ic off" data-call-locked="1" title="${esc(T('inbox_calls_locked'))}" aria-label="${esc(T('inbox_voice'))}">${IB_IC.voice}</button>
        <button class="ib-ic off" data-call-locked="1" title="${esc(T('inbox_calls_locked'))}" aria-label="${esc(T('inbox_video'))}">${IB_IC.video}</button>`;
   const pri = r=>{ const me = r.mentorId===uid, st = reqStage(r), prop = (r.proposedTimes||[]).some(t=>new Date(t).getTime() > Date.now());
@@ -8395,7 +8397,7 @@ function ivMiniRow(r, asMentor){
     if(st===0 && proposed.length) act = `<button type="button" class="iv-link" data-propose="${esc(r.id)}">${esc(T('iv_change_sugg'))}</button>`;
   } else {
     if(st===0) status = T('iv_c_wait').replace('{n}', name);
-    else if(st===1) { status = T('iv_c_pay'); act = `<button type="button" class="iv-pill solid" data-pay="${esc(r.id)}" data-amount="${r.amountCents}" data-mentor="${esc(r.mentorId)}">${esc(T('pay_to_confirm').replace('${amount}', (r.amountCents/100).toFixed(2)))}</button><span class="pay-hold-note">${esc(T('pay_hold_note'))}</span>`; }
+    else if(st===1) { status = T('iv_c_pay'); act = `<button type="button" class="iv-pill solid" data-pay="${esc(r.id)}" data-amount="${Number(r.amountCents)||0}" data-mentor="${esc(r.mentorId)}">${esc(T('pay_to_confirm').replace('${amount}', (r.amountCents/100).toFixed(2)))}</button><span class="pay-hold-note">${esc(T('pay_hold_note'))}</span>`; }
   }
   return `<article class="iv-row mini ${!asMentor && st===1 ? 'hot' : ''}">
     <button type="button" class="iv-av sm" data-dm="${esc(o)}" aria-label="${esc(name)}">${av(o)}</button>

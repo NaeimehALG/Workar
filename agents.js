@@ -555,13 +555,8 @@ async function authEmail(req, res, b) {
   const u = userOf(m.j);
   if (!m.ok || !u) return res.status(200).json({ sent: true });
   if (u.email_confirmed_at || u.confirmed_at) return res.status(200).json({ already: true });
-  if (b.task === 'auth_signup' && password.length >= 6 && password.length <= 72) {
-    // Nobody has used this unconfirmed account yet, so the newest password wins.
-    const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    await fetch(`${process.env.SUPABASE_URL}/auth/v1/admin/users/${encodeURIComponent(u.id)}`, {
-      method: 'PUT', headers: { apikey: key, Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' }, body: JSON.stringify({ password })
-    });
-  }
+  // Never change the password of an existing account here: anyone can submit this form with someone else's
+  // email. The confirmation link goes to the real owner; if they forgot their password they can reset it.
   await mailAuth(email, 'confirm', linkOf(m.j), lang);
   return res.status(200).json({ sent: true });
 }
