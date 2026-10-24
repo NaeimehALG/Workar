@@ -763,6 +763,9 @@
   .li-connect{margin-top:8px;}
   .pn-li-btn + .pn-up{margin-top:8px;}
   .adm-photo{display:flex;align-items:center;gap:14px;margin:0 0 14px;}
+  .ob-photo-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .ob-photo-av{width:56px;height:56px;font-size:22px;overflow:hidden;}
+  .ob-photo-av img{width:100%;height:100%;object-fit:cover;}
   .adm-photo img,.adm-photo-ph{width:64px;height:64px;border-radius:50%;object-fit:cover;flex:none;}
   .adm-photo-ph{display:flex;align-items:center;justify-content:center;background:var(--border);font-weight:700;}
   .adm-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px;}
@@ -2593,7 +2596,7 @@ const I18N = {
     ph_chat_resume:'Paste your resume text here…', ph_chat_career:'Type your question…', ph_chat_interview:'Type your answer…',
     send:'Send', thinking:'Thinking…',
     footer_tag:'a place for every career to find its guide',
-    pn_title:'Add a profile photo', pn_body:'Profiles with a clear, professional photo get noticeably more bookings. Clients like to see who they will be talking to.', pn_upload:'Upload photo', pn_later:'Not now', pn_use_li:'Use my LinkedIn photo', pn_ok:'OK', toast_profile_created:'Profile created', toast_save_fail:'Could not save — try again', toast_saved:'Saved',
+    pn_title:'Add a profile photo', pn_body:'Profiles with a clear, professional photo get noticeably more bookings. Clients like to see who they will be talking to.', pn_upload:'Upload photo', pn_later:'Not now', pn_use_li:'Use my LinkedIn photo', pn_ok:'OK', ob_photo_lbl:'Profile photo (optional)', ob_photo_hint:'Profiles with a photo get more bookings.', ob_photo_change:'Change photo', toast_profile_created:'Profile created', toast_save_fail:'Could not save — try again', toast_saved:'Saved',
     toast_request_sent:'Request sent', toast_request_fail:'Could not send request', toast_request_rls:'Booking is blocked by a database permission — run the latest Workar SQL', toast_pick_datetime:'Pick a date and time',
     toast_review_posted:'Review posted', toast_review_fail:'Could not post review', toast_update_fail:'Could not update',
     toast_no_mentors:'No mentors on Workar yet', toast_match_fail:'Could not find matches right now',
@@ -3052,7 +3055,7 @@ const I18N = {
     ph_chat_resume:'متن رزومه‌تان را اینجا بگذارید…', ph_chat_career:'سؤالتان را بنویسید…', ph_chat_interview:'جوابتان را بنویسید…',
     send:'ارسال', thinking:'در حال فکر کردن…',
     footer_tag:'جایی که هر مسیر شغلی راهنمای خودش را پیدا می‌کند',
-    pn_title:'یک عکس پروفایل اضافه کنید', pn_body:'پروفایل‌هایی که عکس واضح و حرفه‌ای دارند رزرو بیشتری می‌گیرند. مراجعه‌کننده‌ها دوست دارند ببینند با چه کسی صحبت می‌کنند.', pn_upload:'بارگذاری عکس', pn_later:'بعداً', pn_use_li:'از عکس لینکدینم استفاده شود', pn_ok:'تأیید', toast_profile_created:'پروفایل ساخته شد', toast_save_fail:'ذخیره نشد؛ دوباره امتحان کنید', toast_saved:'ذخیره شد',
+    pn_title:'یک عکس پروفایل اضافه کنید', pn_body:'پروفایل‌هایی که عکس واضح و حرفه‌ای دارند رزرو بیشتری می‌گیرند. مراجعه‌کننده‌ها دوست دارند ببینند با چه کسی صحبت می‌کنند.', pn_upload:'بارگذاری عکس', pn_later:'بعداً', pn_use_li:'از عکس لینکدینم استفاده شود', pn_ok:'تأیید', ob_photo_lbl:'عکس پروفایل (اختیاری)', ob_photo_hint:'پروفایل‌های دارای عکس بیشتر رزرو می‌شوند.', ob_photo_change:'تغییر عکس', toast_profile_created:'پروفایل ساخته شد', toast_save_fail:'ذخیره نشد؛ دوباره امتحان کنید', toast_saved:'ذخیره شد',
     toast_request_sent:'درخواست ارسال شد', toast_request_fail:'درخواست ارسال نشد', toast_request_rls:'دیتابیس اجازه‌ی رزرو نداد؛ SQL جدید Workar را اجرا کنید', toast_pick_datetime:'یک تاریخ و ساعت انتخاب کنید',
     toast_review_posted:'نظر ثبت شد', toast_review_fail:'نظر ثبت نشد', toast_update_fail:'به‌روزرسانی نشد',
     toast_no_mentors:'هنوز منتوری در Workar نیست', toast_match_fail:'الان نتوانستیم بهترین گزینه را پیدا کنیم',
@@ -3874,6 +3877,48 @@ document.addEventListener('click', async e=>{
 // Coming back from LinkedIn with an error (e.g. that LinkedIn already belongs to another account)
 try{ const hp = new URLSearchParams((location.hash||'').replace(/^#/,'') || location.search); const ed = hp.get('error_description')||hp.get('error');
   if(ed && /identity|linkedin|already/i.test(ed)) setTimeout(()=>{ try{ toast(T('li_link_fail'), 6000); }catch(e){} }, 1200); }catch(e){}
+// Sign-up form photo: upload now (saved with the profile), or use the LinkedIn photo.
+function liPictureOf(user){ const li = ((user && user.identities) || []).find(i=>i && i.provider==='linkedin_oidc'); const d = li && li.identity_data || {}; return d.picture || d.avatar_url || ''; }
+document.addEventListener('click', async e=>{
+  const t = e.target.closest && e.target.closest('#ob-photo-up, #ob-photo-li'); if(!t || !sb) return;
+  if(t.id==='ob-photo-up'){ const f = document.getElementById('ob-photo-file'); if(f) f.click(); return; }
+  t.disabled = true;
+  try{
+    const { data } = await sb.auth.getSession(); const user = data && data.session && data.session.user;
+    const pic = liPictureOf(user);
+    if(pic){ state.obPhoto = { li:true, url:pic }; render(); return; }
+    // Not connected to LinkedIn yet: keep what they typed, ask LinkedIn once, then come back to this form.
+    try{ sessionStorage.setItem('wk-ob-resume', JSON.stringify({ drafts: __formDrafts, role: state.role })); }catch(err){}
+    const { error } = await sb.auth.linkIdentity({ provider:'linkedin_oidc', options:{ redirectTo: location.origin + location.pathname + '?go=onboard' } });
+    if(error) throw error;
+  }catch(err){ console.error('ob-linkedin-photo-failed', err); t.disabled = false; toast(T('auth_li_fail'), 5000); }
+});
+document.addEventListener('change', async e=>{
+  if(!e.target || e.target.id!=='ob-photo-file' || !sb || !uid) return;
+  const file = e.target.files && e.target.files[0]; if(!file) return;
+  if(!/^image\/(jpeg|png|webp)$/.test(file.type)){ toast(T('ph_type')); return; }
+  toast(T('ph_uploading'));
+  try{
+    const img = await new Promise((ok, bad)=>{ const i = new Image(); i.onload = ()=>ok(i); i.onerror = bad; i.src = URL.createObjectURL(file); });
+    const side = Math.min(img.width, img.height), S = 480;
+    const c = document.createElement('canvas'); c.width = S; c.height = S;
+    c.getContext('2d').drawImage(img, (img.width-side)/2, (img.height-side)/2, side, side, 0, 0, S, S);
+    const blob = await new Promise(r=>c.toBlob(r, 'image/jpeg', 0.86));
+    const path = uid + '/' + Date.now() + '.jpg';
+    const { error } = await sb.storage.from('avatars').upload(path, blob, { contentType:'image/jpeg', cacheControl:'31536000' });
+    if(error) throw error;
+    state.obPhoto = { url: sb.storage.from('avatars').getPublicUrl(path).data.publicUrl }; render();
+  }catch(err){ console.error('ob-photo-upload-failed', err); toast(T('toast_save_fail')); }
+});
+function resumeOnboardAfterLinkedIn(session){
+  let saved = null; try{ saved = JSON.parse(sessionStorage.getItem('wk-ob-resume') || 'null'); sessionStorage.removeItem('wk-ob-resume'); }catch(e){}
+  if(!saved) return;
+  Object.assign(__formDrafts, saved.drafts || {});
+  if(saved.role) state.role = saved.role;
+  const pic = liPictureOf(session && session.user);
+  if(pic) state.obPhoto = { li:true, url:pic };
+  state.view = 'onboard';
+}
 async function syncLinkedIn(){
   try{
     const { data } = await sb.auth.getSession(); const tok = data && data.session && data.session.access_token; if(!tok) return;
@@ -3882,6 +3927,7 @@ async function syncLinkedIn(){
 }
 function onSignedIn(session){
   uid = session.user.id;
+  resumeOnboardAfterLinkedIn(session);
   userEmail = session.user.email || null;
   state.authBusy = false; state.authError = ''; state.authCheckEmail = false;
 
@@ -6551,6 +6597,15 @@ function onboardView(){
       ${preset==='client' ? resumeCard('ob') : ''}
       ${preset==='mentor' ? `
         ${obSection(1,'ob_s_about')}
+        <div class="field ob-photo"><label>${esc(T('ob_photo_lbl'))}</label>
+          <div class="ob-photo-row">
+            <span class="avatar ob-photo-av">${state.obPhoto && state.obPhoto.url ? `<img src="${esc(state.obPhoto.url)}" alt="">` : '📷'}</span>
+            <button type="button" class="btn btn-outline btn-sm" id="ob-photo-up">${esc(T(state.obPhoto ? 'ob_photo_change' : 'pn_upload'))}</button>
+            ${state.liLogin && !(state.obPhoto && state.obPhoto.li) ? `<button type="button" class="btn btn-outline btn-sm" id="ob-photo-li">${esc(T('pn_use_li'))}</button>` : ''}
+            <input type="file" id="ob-photo-file" accept="image/jpeg,image/png,image/webp" hidden>
+          </div>
+          <div class="hint">${esc(T('ob_photo_hint'))}</div>
+        </div>
         <div class="field"><label>${esc(T('lbl_name'))}</label><input name="name" required autocomplete="name" placeholder="${esc(T('ph_name'))}" value="${esc(liSignupName)}"></div>
         <div class="field-row">
           <div class="field"><label>${esc(T('lbl_title_m'))}</label><input name="profession" required placeholder="${esc(T('ph_title_m'))}"></div>
@@ -6608,7 +6663,9 @@ function wireMentorPreview(){
     const fd = new FormData(form);
     const name = (fd.get('name')||'').trim();
     document.getElementById('pv-name').textContent = name || T('ob_pv_name');
-    document.getElementById('pv-av').textContent = name ? initials(name) : '?';
+    const pvAv = document.getElementById('pv-av');
+    if(state.obPhoto && state.obPhoto.url){ pvAv.innerHTML = `<img class="av-img" src="${esc(state.obPhoto.url)}" alt="" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`; }
+    else pvAv.textContent = name ? initials(name) : '?';
     document.getElementById('pv-head').textContent = [(fd.get('profession')||'').trim(), (fd.get('company')||'').trim()].filter(Boolean).join(' '+T('at_word')+' ') || T('ob_pv_head');
     document.getElementById('pv-bio').textContent = (fd.get('bio')||'').trim() || T('ob_pv_bio');
     const yrs = (fd.get('experience')||'').trim(), langs = splitList(fd.get('languages')).map(normLang);
@@ -9004,11 +9061,12 @@ function wire(){
     }
     try{
       state.onboardError = '';
+      if(state.role==='mentor' && state.obPhoto && state.obPhoto.url && !state.obPhoto.li) doc.avatarUrl = state.obPhoto.url;
       await saveProfileSafe(doc, 'set');
       clearFormDrafts('ob');
       if(state.role==='mentor' && myProfile) myProfile = Object.assign({}, myProfile, doc, { approved: false });
       toast(T('toast_profile_created'));
-      if(state.role==='mentor'){ notify('mentor_applied'); setTimeout(()=>photoNudge(true), 600); }
+      if(state.role==='mentor'){ notify('mentor_applied'); if(!state.obPhoto) setTimeout(()=>photoNudge(true), 600); state.obPhoto = null; }
       if(state.role==='client' && state.returnMentorId){
         const back = state.returnMentorId; state.returnMentorId = null;
         nav('mentor', { mentorId: back, bookingOpen: true });
