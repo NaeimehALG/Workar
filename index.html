@@ -6671,7 +6671,7 @@ function onboardView(){
         ${obSection(2,'sec_mentoring')}
         <div class="field"><label>${esc(T('lbl_goals_c'))}</label>${optPills('goals', GOAL_KEYS, 'goal_', [])}</div>
         <div class="field"><label>${esc(T('lbl_formats_c'))}</label>${optPills('formats', FORMAT_KEYS, 'fmt_', [])}</div>
-        <div class="field"><label>${esc(T('lbl_goal_c'))}</label><textarea name="bio" placeholder="${esc(T('ph_goal_c'))}"></textarea></div>
+        <div class="field"><label>${esc(T('lbl_goal_c'))} <span class="hint" style="display:inline;">${esc(T('opt_label'))}</span></label><textarea name="bio" placeholder="${esc(T('ph_goal_c'))}"></textarea></div>
         ${obSection(3,'sec_background')}
         <div class="field-row">
           <div class="field"><label>${esc(T('lbl_degree'))} <span class="hint" style="display:inline;">${esc(T('opt_label'))}</span></label><input name="degree" placeholder="${esc(T('ph_degree'))}"></div>
@@ -8833,7 +8833,7 @@ function dashboardView(){
         <div class="field"><label>${esc(T('lbl_field_c'))}</label><input id="edit-target-field" value="${esc(myProfile.targetField||'')}" placeholder="${esc(T('ph_field_c'))}"></div>
       </div>
       <div class="field" id="edit-goals-wrap"><label>${esc(T('lbl_goals_c'))}</label>${optPills('goals', GOAL_KEYS, 'goal_', myProfile.goals||[])}</div>` : ''}
-      <div class="field"><label>${esc(T(isMentor?'lbl_bio_m':'lbl_goal_c'))}</label><textarea id="edit-bio">${esc(myProfile.bio||'')}</textarea></div>
+      <div class="field"><label>${esc(T(isMentor?'lbl_bio_m':'lbl_goal_c'))}${isMentor?'':` <span class="hint" style="display:inline;">${esc(T('opt_label'))}</span>`}</label><textarea id="edit-bio">${esc(myProfile.bio||'')}</textarea></div>
     </section>
     <section class="df-sec"><h3>${esc(T('sec_background'))}</h3>
       <div class="field-row">
