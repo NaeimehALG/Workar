@@ -761,6 +761,7 @@
   .auth-li svg{color:#0A66C2;}
   .auth-li-note{font-size:12.5px;margin:-6px 0 14px;text-align:center;}
   .li-connect{margin-top:8px;}
+  .pn-li{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;font-size:13px;color:var(--muted);cursor:pointer;}
   .auth-or{display:flex;align-items:center;gap:12px;margin:0 0 14px;color:var(--muted,#8a7461);font-size:13px;}
   .auth-or::before,.auth-or::after{content:"";flex:1;height:1px;background:currentColor;opacity:.25;}
   .li-ok{display:inline-flex;align-items:center;gap:4px;margin-inline-start:8px;font-size:12.5px;font-weight:600;color:#2f6f4f;}
@@ -2587,7 +2588,7 @@ const I18N = {
     ph_chat_resume:'Paste your resume text here…', ph_chat_career:'Type your question…', ph_chat_interview:'Type your answer…',
     send:'Send', thinking:'Thinking…',
     footer_tag:'a place for every career to find its guide',
-    pn_title:'Add a profile photo', pn_body:'Profiles with a clear, professional photo get noticeably more bookings. Clients like to see who they will be talking to.', pn_upload:'Upload photo', pn_later:'Not now', toast_profile_created:'Profile created', toast_save_fail:'Could not save — try again', toast_saved:'Saved',
+    pn_title:'Add a profile photo', pn_body:'Profiles with a clear, professional photo get noticeably more bookings. Clients like to see who they will be talking to.', pn_upload:'Upload photo', pn_later:'Not now', pn_use_li:'Use my LinkedIn photo', pn_ok:'OK', toast_profile_created:'Profile created', toast_save_fail:'Could not save — try again', toast_saved:'Saved',
     toast_request_sent:'Request sent', toast_request_fail:'Could not send request', toast_request_rls:'Booking is blocked by a database permission — run the latest Workar SQL', toast_pick_datetime:'Pick a date and time',
     toast_review_posted:'Review posted', toast_review_fail:'Could not post review', toast_update_fail:'Could not update',
     toast_no_mentors:'No mentors on Workar yet', toast_match_fail:'Could not find matches right now',
@@ -3046,7 +3047,7 @@ const I18N = {
     ph_chat_resume:'متن رزومه‌تان را اینجا بگذارید…', ph_chat_career:'سؤالتان را بنویسید…', ph_chat_interview:'جوابتان را بنویسید…',
     send:'ارسال', thinking:'در حال فکر کردن…',
     footer_tag:'جایی که هر مسیر شغلی راهنمای خودش را پیدا می‌کند',
-    pn_title:'یک عکس پروفایل اضافه کنید', pn_body:'پروفایل‌هایی که عکس واضح و حرفه‌ای دارند رزرو بیشتری می‌گیرند. مراجعه‌کننده‌ها دوست دارند ببینند با چه کسی صحبت می‌کنند.', pn_upload:'بارگذاری عکس', pn_later:'بعداً', toast_profile_created:'پروفایل ساخته شد', toast_save_fail:'ذخیره نشد؛ دوباره امتحان کنید', toast_saved:'ذخیره شد',
+    pn_title:'یک عکس پروفایل اضافه کنید', pn_body:'پروفایل‌هایی که عکس واضح و حرفه‌ای دارند رزرو بیشتری می‌گیرند. مراجعه‌کننده‌ها دوست دارند ببینند با چه کسی صحبت می‌کنند.', pn_upload:'بارگذاری عکس', pn_later:'بعداً', pn_use_li:'از عکس لینکدینم استفاده شود', pn_ok:'تأیید', toast_profile_created:'پروفایل ساخته شد', toast_save_fail:'ذخیره نشد؛ دوباره امتحان کنید', toast_saved:'ذخیره شد',
     toast_request_sent:'درخواست ارسال شد', toast_request_fail:'درخواست ارسال نشد', toast_request_rls:'دیتابیس اجازه‌ی رزرو نداد؛ SQL جدید Workar را اجرا کنید', toast_pick_datetime:'یک تاریخ و ساعت انتخاب کنید',
     toast_review_posted:'نظر ثبت شد', toast_review_fail:'نظر ثبت نشد', toast_update_fail:'به‌روزرسانی نشد',
     toast_no_mentors:'هنوز منتوری در Workar نیست', toast_match_fail:'الان نتوانستیم بهترین گزینه را پیدا کنیم',
@@ -8155,11 +8156,24 @@ function photoNudge(force){
     <h3 id="pn-t">${esc(T('pn_title'))}</h3><p>${esc(T('pn_body'))}</p>
     <input type="file" class="pn-file" accept="image/jpeg,image/png,image/webp" hidden>
     <button type="button" class="btn btn-primary pn-up">${esc(T('pn_upload'))}</button>
+    ${state.liLogin ? `<label class="pn-li"><input type="checkbox" class="pn-li-box"> <span>${esc(T('pn_use_li'))}</span></label>` : ''}
     <button type="button" class="pn-later">${esc(T('pn_later'))}</button></div>`;
   const close = ()=>{ w.remove(); document.removeEventListener('keydown', onKey); };
   const onKey = e=>{ if(e.key==='Escape') close(); };
   w.addEventListener('click', e=>{ if(e.target===w || e.target.closest('.pn-later')) close(); });
-  w.querySelector('.pn-up').addEventListener('click', ()=>w.querySelector('.pn-file').click());
+  const liBox = w.querySelector('.pn-li-box'), upBtn = w.querySelector('.pn-up');
+  if(liBox) liBox.addEventListener('change', ()=>{ upBtn.textContent = liBox.checked ? T('pn_ok') : T('pn_upload'); });
+  upBtn.addEventListener('click', async ()=>{
+    if(!(liBox && liBox.checked)){ w.querySelector('.pn-file').click(); return; }
+    upBtn.disabled = true;
+    try{
+      const { data } = await sb.auth.getSession(); const user = data && data.session && data.session.user;
+      if(((user && user.identities) || []).some(i=>i && i.provider==='linkedin_oidc')){ close(); await syncLinkedIn(); return; }
+      // Not connected to LinkedIn yet: LinkedIn asks once, then the photo is added automatically on return.
+      const { error } = await sb.auth.linkIdentity({ provider:'linkedin_oidc', options:{ redirectTo: location.origin + location.pathname + '?go=dashboard' } });
+      if(error) throw error;
+    }catch(err){ console.error('linkedin-photo-link-failed', err); upBtn.disabled = false; toast(T('li_link_fail'), 5000); }
+  });
   w.querySelector('.pn-file').addEventListener('change', e=>{ const f = e.target.files && e.target.files[0]; close(); if(f) uploadPhoto(f); });
   document.addEventListener('keydown', onKey);
   document.body.appendChild(w); setTimeout(()=>{ const b = w.querySelector('.pn-up'); if(b) b.focus(); }, 30);
