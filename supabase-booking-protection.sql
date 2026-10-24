@@ -206,3 +206,7 @@ alter table public.requests add column if not exists "lastDoneStartsAt" timestam
 --   old."startsAt" > old."lastDoneStartsAt" to mark another session done, and sets new."lastDoneStartsAt" := old."startsAt".
 -- protect_request_insert(): rejects a null or past "startsAt" and clears "lastDoneStartsAt".
 -- (Full function bodies are in the live database; see pg_proc.)
+
+-- 2026-10-24 (migration: linkedin_verified_flag): profiles."linkedinVerified" (boolean, default false).
+-- Set only by the server after "Continue with LinkedIn" (api/agents.js linkedin_photo); protect_profile_approval()
+-- resets it on insert and keeps the old value on update for everyone except the admin and the server.

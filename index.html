@@ -757,6 +757,11 @@
   .auth-sub{margin:0 0 22px;font-size:14.5px;}
   .auth-note{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;margin:0 0 18px;font-size:13.5px;}
   .auth-forgot{text-align:end;margin:-8px 0 14px;}
+  .auth-li{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;margin:4px 0 14px;}
+  .auth-li svg{color:#0A66C2;}
+  .auth-or{display:flex;align-items:center;gap:12px;margin:0 0 14px;color:var(--muted,#8a7461);font-size:13px;}
+  .auth-or::before,.auth-or::after{content:"";flex:1;height:1px;background:currentColor;opacity:.25;}
+  .li-ok{display:inline-flex;align-items:center;gap:4px;margin-inline-start:8px;font-size:12.5px;font-weight:600;color:#2f6f4f;}
   .auth-forgot a,.auth-alt a{font-size:13px;color:var(--accent);font-weight:600;}
   .auth-submit{width:100%;padding:13px 20px;font-size:15px;margin-top:4px;}
   .auth-fine{font-size:12.5px;color:var(--muted);margin:16px 0 0;text-align:center;}
@@ -2653,7 +2658,7 @@ const I18N = {
     slot_morning:'Morning', slot_afternoon:'Afternoon', slot_evening:'Evening',
     choose_slot_title:'Pick a time', no_slots_available:'This mentor has no open times right now — check back later.',
     slot_taken:'Booked',
-    auth_title:'Welcome to Workar', auth_subtitle:'Sign in or create an account to continue.',
+    auth_title:'Welcome to Workar', auth_li:'Continue with LinkedIn', auth_or:'or', li_verified:'LinkedIn verified', auth_li_fail:'LinkedIn sign-in did not work. Please try again or use your email.', auth_subtitle:'Sign in or create an account to continue.',
     lbl_email:'Email', lbl_password:'Password', ph_email:'you@example.com', ph_password:'At least 6 characters',
     btn_login:'Log in', btn_signup:'Create account', auth_toggle_to_signup:"Don't have an account? Sign up",
     auth_toggle_to_login:'Already have an account? Log in',
@@ -3112,7 +3117,7 @@ const I18N = {
     slot_morning:'صبح', slot_afternoon:'بعدازظهر', slot_evening:'عصر',
     choose_slot_title:'یک زمان انتخاب کنید', no_slots_available:'این منتور فعلاً زمان آزادی ندارد؛ بعداً دوباره سر بزنید.',
     slot_taken:'رزرو شده',
-    auth_title:'به Workar خوش آمدید', auth_subtitle:'برای ادامه وارد شوید یا حساب بسازید.',
+    auth_title:'به Workar خوش آمدید', auth_li:'ادامه با لینکدین', auth_or:'یا', li_verified:'لینکدین تأییدشده', auth_li_fail:'ورود با لینکدین انجام نشد. دوباره امتحان کنید یا با ایمیل وارد شوید.', auth_subtitle:'برای ادامه وارد شوید یا حساب بسازید.',
     lbl_email:'ایمیل', lbl_password:'رمز عبور', ph_email:'you@example.com', ph_password:'حداقل ۶ کاراکتر',
     btn_login:'ورود', btn_signup:'ساخت حساب', auth_toggle_to_signup:'حساب ندارید؟ بسازید',
     auth_toggle_to_login:'حساب دارید؟ وارد شوید',
@@ -3846,14 +3851,24 @@ function makeSupabaseDB(){
   };
 }
 
+let liSynced = false, liSignupName = '';
+async function syncLinkedIn(){
+  try{
+    const { data } = await sb.auth.getSession(); const tok = data && data.session && data.session.access_token; if(!tok) return;
+    await fetch('/api/agents', { method:'POST', headers:{ 'Content-Type':'application/json', Authorization:'Bearer '+tok }, body: JSON.stringify({ task:'linkedin_photo' }) });
+  }catch(e){ console.error('linkedin-sync-failed', e); }
+}
 function onSignedIn(session){
   uid = session.user.id;
   userEmail = session.user.email || null;
   state.authBusy = false; state.authError = ''; state.authCheckEmail = false;
 
   prep.loaded = false;
+  const viaLinkedIn = ((session.user && session.user.identities) || []).some(i=>i && i.provider==='linkedin_oidc');
+  liSignupName = viaLinkedIn ? String((session.user.user_metadata||{}).name || (session.user.user_metadata||{}).full_name || '') : '';
   window.__db.doc('profiles/'+uid).onSnapshot(doc=>{
     myProfile = doc && doc.data ? doc.data : null;
+    if(viaLinkedIn && myProfile && (!myProfile.linkedinVerified || !myProfile.avatarUrl) && !liSynced){ liSynced = true; syncLinkedIn(); }
     // the profile finished loading after the visitor clicked "Book a session": skip setup and open booking
     if(myProfile && state.view==='onboard' && state.returnMentorId){
       const back = state.returnMentorId; state.returnMentorId = null;
@@ -3911,6 +3926,9 @@ async function init(){
     render();
   });
 
+  // Show "Continue with LinkedIn" only once that sign-in is switched on in Supabase
+  fetch(SUPABASE_URL + '/auth/v1/settings', { headers:{ apikey: SUPABASE_ANON_KEY } }).then(r=>r.ok ? r.json() : null)
+    .then(j=>{ const on = !!(j && j.external && j.external.linkedin_oidc); if(on !== !!state.liLogin){ state.liLogin = on; render(); } }).catch(()=>{});
   let session;
   try{
     const res = await withTimeout(sb.auth.getSession(), 8000, 'getSession');
@@ -6273,6 +6291,8 @@ function authView(){
         <button type="button" class="btn btn-outline btn-sm" id="auth-resend" ${state.resendBusy?'disabled':''}>${esc(state.resendDone ? T('auth_resent') : T('auth_resend'))}</button>
       </div>` : ''}
       ${state.authInfo ? `<div class="auth-note">${esc(state.authInfo)}</div>` : ''}
+      ${state.liLogin && mode!=='forgot' ? `<button type="button" class="btn btn-outline auth-li" id="auth-li"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45z"/></svg><span>${esc(T('auth_li'))}</span></button>
+      <div class="auth-or"><span>${esc(T('auth_or'))}</span></div>` : ''}
       <form id="auth-form">
         <div class="field"><label>${esc(T('lbl_email'))}</label><input name="email" type="email" required autocomplete="email" placeholder="${esc(T('ph_email'))}" value="${esc(state.authEmail||'')}"></div>
         ${mode==='forgot' ? '' : `
@@ -6338,6 +6358,14 @@ function wireAuth(){
     state.authMode = (state.authMode==='signup') ? 'login' : (state.authMode==='forgot' ? 'login' : 'signup');
     state.authError = ''; state.authCheckEmail = false; state.authInfo = '';
     render();
+  });
+  const liBtn = document.getElementById('auth-li');
+  if(liBtn) liBtn.addEventListener('click', async ()=>{
+    liBtn.disabled = true;
+    try{
+      const { error } = await sb.auth.signInWithOAuth({ provider:'linkedin_oidc', options:{ redirectTo: location.origin + location.pathname } });
+      if(error) throw error;
+    }catch(e){ console.error('linkedin-signin-failed', e); liBtn.disabled = false; state.authError = T('auth_li_fail'); render(); }
   });
   const forgotLink = document.getElementById('auth-forgot');
   if(forgotLink) forgotLink.addEventListener('click', (e)=>{
@@ -6500,7 +6528,7 @@ function onboardView(){
       ${preset==='client' ? resumeCard('ob') : ''}
       ${preset==='mentor' ? `
         ${obSection(1,'ob_s_about')}
-        <div class="field"><label>${esc(T('lbl_name'))}</label><input name="name" required autocomplete="name" placeholder="${esc(T('ph_name'))}"></div>
+        <div class="field"><label>${esc(T('lbl_name'))}</label><input name="name" required autocomplete="name" placeholder="${esc(T('ph_name'))}" value="${esc(liSignupName)}"></div>
         <div class="field-row">
           <div class="field"><label>${esc(T('lbl_title_m'))}</label><input name="profession" required placeholder="${esc(T('ph_title_m'))}"></div>
           <div class="field"><label>${esc(T('lbl_company'))}</label><input name="company" required placeholder="${esc(T('ph_company'))}"></div>
@@ -6522,7 +6550,7 @@ function onboardView(){
         <div class="field"><label>${esc(T('lbl_linkedin_req'))}</label><input name="linkedin" type="text" required autocomplete="url" placeholder="${esc(T('ph_linkedin'))}"><div class="hint">${esc(T('hint_linkedin_m'))}</div></div>
       ` : `
         ${obSection(1,'ob_s_about')}
-        <div class="field"><label>${esc(T('lbl_name'))}</label><input name="name" required autocomplete="name" placeholder="${esc(T('ph_name'))}"></div>
+        <div class="field"><label>${esc(T('lbl_name'))}</label><input name="name" required autocomplete="name" placeholder="${esc(T('ph_name'))}" value="${esc(liSignupName)}"></div>
         <div class="field-row">
           ${currentJobField('currentProfession', '')}
           <div class="field"><label>${esc(T('lbl_target_job'))}</label><input name="profession" required placeholder="${esc(T('ph_target_job'))}"></div>
@@ -6801,7 +6829,7 @@ function mentorView(){
         <h1>${esc(nameOf(id))}</h1>
         ${(p.headline||p.profession) ? `<p class="pf-headline" dir="auto">${String(p.headline||p.profession).split(/\s*[|•·]\s*/).filter(Boolean).map(x=>`<span>${esc(x)}</span>`).join('<i class="pf-sep" aria-hidden="true"></i>')}</p>` : ''}
       </div>
-      ${safeHttp(p.linkedin) ? `<a class="pf-li" href="${esc(safeHttp(p.linkedin))}" target="_blank" rel="noopener">${MP_ICONS.li}<span>${esc(T('mp_li_view'))}</span></a>` : ''}
+      ${safeHttp(p.linkedin) ? `<a class="pf-li" href="${esc(safeHttp(p.linkedin))}" target="_blank" rel="noopener">${MP_ICONS.li}<span>${esc(T('mp_li_view'))}</span></a>${p.linkedinVerified ? `<span class="li-ok" title="${esc(T('li_verified'))}">✓ ${esc(T('li_verified'))}</span>` : ''}` : ''}
     </div>
     <dl class="pf-facts">
       ${(()=>{ const yrs = String(p.experience||'').trim(); return yrs ? `<div>${MP_ICONS.brief}<dt>${esc(T('mp_f_exp'))}</dt><dd>${esc(T('mp_h_exp_v').replace('{n}', yrs))}</dd></div>` : ''; })()}

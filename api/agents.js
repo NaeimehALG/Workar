@@ -860,6 +860,46 @@ Return {"offPlatform": true or false, "confidence": a number from 0 to 1, "reaso
   return res.status(200).json({ flagged: true });
 }
 
+// Sign in with LinkedIn: LinkedIn gives us the person's verified name and photo. We copy the photo into
+// Workar's own storage (LinkedIn photo links expire) and mark the profile as LinkedIn-verified.
+async function linkedinPhoto(req, res) {
+  const me = await M.userFromToken(bearer(req)).catch(() => null);
+  if (!me) return res.status(401).json({ error: 'sign in required' });
+  const SBU = process.env.SUPABASE_URL, key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const h = { apikey: key, Authorization: 'Bearer ' + key };
+  const ur = await fetch(`${SBU}/auth/v1/admin/users/${encodeURIComponent(me.id)}`, { headers: h });
+  if (!ur.ok) return res.status(502).json({ error: 'user-lookup-failed' });
+  const user = await ur.json();
+  const li = (user.identities || []).find(i => i && i.provider === 'linkedin_oidc');
+  if (!li) return res.status(200).json({ linkedin: false });
+  const data = li.identity_data || {};
+  const prof = (await M.rows(`profiles?id=eq.${encodeURIComponent(me.id)}&select=id,name,avatarUrl,linkedinVerified`))[0];
+  if (!prof) return res.status(200).json({ linkedin: true, profile: false, name: data.name || data.full_name || '' });
+  const patch = {};
+  if (!prof.linkedinVerified) patch.linkedinVerified = true;
+  if (!String(prof.name || '').trim() && (data.name || data.full_name)) patch.name = String(data.name || data.full_name).slice(0, 120);
+  const pic = String(data.picture || data.avatar_url || '');
+  if (!prof.avatarUrl && /^https:\/\//i.test(pic)) {
+    try {
+      const img = await fetch(pic);
+      const type = String(img.headers.get('content-type') || '');
+      const buf = Buffer.from(await img.arrayBuffer());
+      if (img.ok && /^image\/(jpeg|png|webp)/.test(type) && buf.length > 0 && buf.length < 5 * 1024 * 1024) {
+        const ext = type.includes('png') ? 'png' : type.includes('webp') ? 'webp' : 'jpg';
+        const path = `${me.id}/linkedin-${Date.now()}.${ext}`;
+        const up = await fetch(`${SBU}/storage/v1/object/avatars/${path}`, { method: 'POST', headers: Object.assign({ 'Content-Type': type.split(';')[0], 'Cache-Control': '31536000', 'x-upsert': 'true' }, h), body: buf });
+        if (up.ok) patch.avatarUrl = `${SBU}/storage/v1/object/public/avatars/${path}`;
+        else console.error('linkedin-photo-upload-failed', up.status, (await up.text()).slice(0, 200));
+      }
+    } catch (e) { console.error('linkedin-photo-failed', e.message); }
+  }
+  if (Object.keys(patch).length) {
+    const r = await M.patch(`profiles?id=eq.${encodeURIComponent(me.id)}`, patch);
+    if (!r.ok) return res.status(502).json({ error: 'profile-update-failed' });
+  }
+  return res.status(200).json({ linkedin: true, profile: true, photo: !!(patch.avatarUrl || prof.avatarUrl), verified: true });
+}
+
 module.exports = async (req, res) => {
   if (req.method === 'GET') {
     const ok = !!(process.env.ANTHROPIC_API_KEY && process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
@@ -889,6 +929,7 @@ module.exports = async (req, res) => {
       case 'translate': return await translateMsg(req, res, b);
       case 'msg_check': return await msgCheck(req, res, b);
       case 'delete_account': return await deleteAccount(req, res);
+      case 'linkedin_photo': return await linkedinPhoto(req, res);
       case 'auth_signup': case 'auth_resend': case 'auth_recover': return await authEmail(req, res, b);
       default: return res.status(400).json({ error: 'Unknown task' });
     }
