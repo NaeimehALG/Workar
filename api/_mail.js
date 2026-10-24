@@ -83,9 +83,9 @@ async function sendMail(to, subject, html, attachments, opts = {}) {
     reply_to: opts.replyTo || SUPPORT_REPLY_TO()
   };
   if (attachments && attachments.length) payload.attachments = attachments; // [{ filename, content (base64) }]
-  // The admin gets a hidden copy (BCC) of every email Workar sends, except emails already addressed to the
+  // The Workar team inbox gets a hidden copy (BCC) of every email Workar sends, except emails already addressed to the
   // admin/team and sign-in emails (confirm, password reset, magic link), whose links would open the user's account.
-  const copyTo = String(process.env.COPY_ALL_EMAILS_TO || process.env.ADMIN_EMAIL || 'naeimeh.alaghehband@gmail.com').trim().toLowerCase();
+  const copyTo = String(process.env.COPY_ALL_EMAILS_TO || CONTACT_EMAIL()).trim().toLowerCase();
   const team = [copyTo, String(CONTACT_EMAIL()).toLowerCase(), String(process.env.ADMIN_EMAIL || '').toLowerCase()];
   if (copyTo && copyTo !== 'off' && !opts.noCopy && !payload.to.some(t => team.includes(String(t).trim().toLowerCase()))) payload.bcc = [copyTo];
   const r = await fetch('https://api.resend.com/emails', {
