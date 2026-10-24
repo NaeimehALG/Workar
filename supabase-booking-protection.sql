@@ -216,3 +216,9 @@ alter table public.requests add column if not exists "lastDoneStartsAt" timestam
 --    loop could mark a whole package done in a minute and unlock the payout)
 --  * created_at is set by the database on insert and can't be changed (checkout reads it to decide
 --    whether the saved price can be trusted)
+
+-- Oct 24 2026: hygiene from the Supabase security advisor.
+alter function public.dm_other(text, text) set search_path = public;
+revoke execute on function public.protect_profile_approval() from public, anon, authenticated;
+revoke execute on function public.protect_request() from public, anon, authenticated;
+revoke execute on function public.protect_request_insert() from public, anon, authenticated;
