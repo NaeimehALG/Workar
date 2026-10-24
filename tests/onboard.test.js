@@ -37,3 +37,11 @@ test('onboarding saves name and workplace in Persian', async () => {
   assert.equal(res.body.draft.company, 'شرکت استنتک');
   assert.ok(!res.body.missing.includes('company'));
 });
+
+test('onboarding saves the LinkedIn link the mentor pastes (and ignores non-profile links)', async () => {
+  let res = await runChat({ linkedin: 'linkedin.com/in/farhoud-asl-sabbagh-pour-84431218a/' });
+  assert.equal(res.code, 200, JSON.stringify(res.body));
+  assert.equal(res.body.draft.linkedin, 'https://www.linkedin.com/in/farhoud-asl-sabbagh-pour-84431218a');
+  res = await runChat({ linkedin: 'https://www.linkedin.com/company/workar' });
+  assert.equal(res.body.draft.linkedin, undefined);
+});

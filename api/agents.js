@@ -87,7 +87,8 @@ const ONBOARD_TOOL = {
       field: { type: 'string', enum: FIELDS },
       seniority: { type: 'string', enum: SENIORITY },
       industries: { type: 'array', items: { type: 'string' }, maxItems: 5 },
-      idealMentee: { type: 'string', description: 'One or two sentences on who they help best.' }
+      idealMentee: { type: 'string', description: 'One or two sentences on who they help best.' },
+      linkedin: { type: 'string', description: 'Their personal LinkedIn profile link, e.g. "https://www.linkedin.com/in/jane-doe". Save it whenever they paste or type it.' }
     }
   }
 };
@@ -100,11 +101,12 @@ How to run the chat:
 - Cover: what they do and for how long, education and certifications, who they help best, and which languages they can mentor in.
 - If they paste a CV or LinkedIn summary, extract everything you can, save it immediately, then ask only about what's missing.
 - Call update_profile_draft whenever you learn something. Choose the categories yourself; don't read category lists to them.
+- Save the mentor's LinkedIn profile link with the tool as soon as they give it.
 - Save the mentor's name and current workplace with the tool as soon as they give them, in whatever language or script they write them. Never ask again for something already in the current form values.
 - Never invent facts: no employers, degrees, certifications, numbers or achievements they didn't give you. Ask when unsure.
 - Chat in the language the mentor writes in. Write the profile fields in English unless the mentor asks for another language.
 - The bio is first person, warm and specific, 60 to 120 words.
-- When nothing required is missing, thank them, and politely ask them to review the form, add their LinkedIn (and their name, if you haven't saved it), choose their session rate, and submit it. Offer to change anything; apply changes with the tool.
+- When nothing required is missing, thank them, and politely ask them to review the form, add their LinkedIn if it isn't in the current form values yet (and their name, if you haven't saved it), choose their session rate, and submit it. Offer to change anything; apply changes with the tool.
 
 Rules:
 - Each mentor sets their own session rate in the rate section of the form, with a Workar minimum. Don't suggest a specific price.
@@ -146,6 +148,12 @@ function applyDraft(draft, input) {
   if (SENIORITY.includes(input.seniority)) next.seniority = input.seniority;
   set('industries', strArr(input.industries, 5, 50));
   set('idealMentee', str(input.idealMentee, 300));
+  // Only a personal profile link (linkedin.com/in/<name>) counts, stored in one standard form.
+  if (typeof input.linkedin === 'string') {
+    let t = input.linkedin.trim(); if (t && !/^https?:\/\//i.test(t)) t = 'https://' + t.replace(/^\/+/, '');
+    const m = /^https?:\/\/(?:[a-z]{2,3}\.|www\.)?linkedin\.com\/in\/([^\/?#\s]{3,100})\/?(?:[?#].*)?$/i.exec(t);
+    if (m) next.linkedin = 'https://www.linkedin.com/in/' + m[1];
+  }
   return next;
 }
 const missingOf = d => REQUIRED.filter(k => { const v = d[k]; return Array.isArray(v) ? !v.length : (v === undefined || v === null || v === ''); });
