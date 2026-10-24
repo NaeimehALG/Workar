@@ -53,7 +53,7 @@ module.exports = async (req, res) => {
       if ((me.email || '').toLowerCase() !== adminEmail || !targetId) { res.status(403).end(); return; }
       const p = await M.profile(targetId);
       await M.sendMail(await M.emailOf(targetId), 'Your Workar mentor profile is live',
-        M.layout(`Welcome aboard, ${p.name}`, ['Your mentor profile has been approved and is now visible to people looking for guidance.', 'Make sure your weekly availability is up to date so clients can book you.'], { text: 'Open my profile', url: site + '/?go=dashboard' }));
+        M.layout(`Welcome aboard, ${p.name}`, ['Your mentor profile has been approved and is now visible to people looking for guidance.', 'Make sure your weekly availability is up to date so clients can book you.', p.avatarUrl ? '' : 'We also recommend adding a profile photo. A friendly, professional photo helps clients feel confident choosing you.'], { text: 'Open my profile', url: site + '/?go=dashboard' }));
       res.status(200).json({ ok: true }); return;
     }
 
