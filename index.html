@@ -762,6 +762,11 @@
   .auth-li-note{font-size:12.5px;margin:-6px 0 14px;text-align:center;}
   .li-connect{margin-top:8px;}
   .pn-li-btn + .pn-up{margin-top:8px;}
+  .adm-photo{display:flex;align-items:center;gap:14px;margin:0 0 14px;}
+  .adm-photo img,.adm-photo-ph{width:64px;height:64px;border-radius:50%;object-fit:cover;flex:none;}
+  .adm-photo-ph{display:flex;align-items:center;justify-content:center;background:var(--border);font-weight:700;}
+  .adm-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px;}
+  @media (max-width:560px){ .adm-grid{grid-template-columns:1fr;} }
   .auth-or{display:flex;align-items:center;gap:12px;margin:0 0 14px;color:var(--muted,#8a7461);font-size:13px;}
   .auth-or::before,.auth-or::after{content:"";flex:1;height:1px;background:currentColor;opacity:.25;}
   .li-ok{display:inline-flex;align-items:center;gap:4px;margin-inline-start:8px;font-size:12.5px;font-weight:600;color:#2f6f4f;}
@@ -6877,8 +6882,24 @@ function mentorView(){
       ${(isAdmin() && !isSelf) ? `
       <section class="mp-sec mp-admin">
         <h3>${esc(T('admin_tools'))}</h3>
+        <div class="adm-photo">
+          ${p.avatarUrl ? `<img src="${esc(p.avatarUrl)}" alt="">` : `<span class="adm-photo-ph">${esc(initials(p.name||''))}</span>`}
+          <button type="button" class="btn btn-outline btn-sm" id="admin-photo-btn">${esc(T('pn_upload'))}</button>
+          <input type="file" id="admin-photo-file" accept="image/jpeg,image/png,image/webp" hidden>
+        </div>
         <div class="field"><label>${esc(T('lbl_name'))}</label><input id="admin-edit-name" value="${esc(p.name||'')}"></div>
         <div class="field"><label>${esc(T('lbl_headline'))}</label><input id="admin-edit-headline" value="${esc(p.headline||'')}"></div>
+        <div class="adm-grid">
+          <div class="field"><label>${esc(T('lbl_title_m'))}</label><input id="admin-edit-profession" value="${esc(p.profession||'')}"></div>
+          <div class="field"><label>${esc(T('lbl_company'))}</label><input id="admin-edit-company" value="${esc(p.company||'')}"></div>
+          <div class="field"><label>${esc(T('lbl_experience'))}</label><input id="admin-edit-experience" type="number" min="0" value="${esc(String(p.experience||''))}"></div>
+          <div class="field"><label>${esc(T('lbl_rate'))}</label><input id="admin-edit-rate" type="number" min="0" value="${esc(String(p.sessionRate||''))}"></div>
+          <div class="field"><label>${esc(T('lbl_degree'))}</label><input id="admin-edit-degree" value="${esc(p.degree||'')}"></div>
+          <div class="field"><label>${esc(T('lbl_university'))}</label><input id="admin-edit-university" value="${esc(p.university||'')}"></div>
+        </div>
+        <div class="field"><label>${esc(T('lbl_languages'))}</label><input id="admin-edit-languages" value="${esc((p.languages||[]).join(', '))}"></div>
+        <div class="field"><label>${esc(T('lbl_certifications'))}</label><input id="admin-edit-certifications" value="${esc((p.certifications||[]).join(', '))}"></div>
+        <div class="field"><label>${esc(T('lbl_linkedin'))}</label><input id="admin-edit-linkedin" value="${esc(p.linkedin||'')}" placeholder="linkedin.com/in/…"></div>
         <div class="field"><label>${esc(T('lbl_bio_m'))}</label><textarea id="admin-edit-bio">${esc(p.bio||'')}</textarea></div>
         <div style="display:flex;gap:10px;">
           <button class="btn btn-outline btn-sm" id="admin-save-profile">${esc(T('btn_save_admin_edit'))}</button>
@@ -9053,15 +9074,45 @@ function wire(){
 
   const adminSaveBtn = document.getElementById('admin-save-profile');
   if(adminSaveBtn) adminSaveBtn.addEventListener('click', async ()=>{
+    const v = id => (document.getElementById(id)||{}).value || '';
     const patch = {
-      name: document.getElementById('admin-edit-name').value,
-      headline: document.getElementById('admin-edit-headline').value,
-      bio: document.getElementById('admin-edit-bio').value,
+      name: v('admin-edit-name').trim(), headline: v('admin-edit-headline').trim(), bio: v('admin-edit-bio'),
+      profession: v('admin-edit-profession').trim(), company: v('admin-edit-company').trim(),
+      experience: v('admin-edit-experience').trim(), degree: v('admin-edit-degree').trim(), university: v('admin-edit-university').trim(),
+      languages: splitList(v('admin-edit-languages')), certifications: splitList(v('admin-edit-certifications'))
     };
-    try{ await window.__db.doc('profiles/'+state.mentorId).update(patch); toast(T('toast_saved')); }
+    patch.education = [patch.degree, patch.university].filter(Boolean).join(', ');
+    const rate = Number(v('admin-edit-rate')); if(rate > 0) patch.sessionRate = Math.round(rate);
+    const liRaw = v('admin-edit-linkedin').trim();
+    if(liRaw){ const li = normLinkedIn(liRaw); if(!li){ toast(T('err_linkedin_bad')); return; } patch.linkedin = li; } else patch.linkedin = '';
+    try{ await window.__db.doc('profiles/'+state.mentorId).update(patch); Object.assign(cache.profiles[state.mentorId]||{}, patch); toast(T('toast_saved')); render(); }
     catch(err){ console.error('admin edit failed:', err); toast(T('toast_save_fail')); }
   });
 
+  // Admin: upload a photo for this mentor (stored in the admin's own folder, then set on their profile)
+  const admPhotoBtn = document.getElementById('admin-photo-btn'), admPhotoFile = document.getElementById('admin-photo-file');
+  if(admPhotoBtn && admPhotoFile){
+    admPhotoBtn.addEventListener('click', ()=>admPhotoFile.click());
+    admPhotoFile.addEventListener('change', async e=>{
+      const file = e.target.files && e.target.files[0]; if(!file) return;
+      if(!/^image\/(jpeg|png|webp)$/.test(file.type)){ toast(T('ph_type')); return; }
+      const target = state.mentorId; toast(T('ph_uploading'));
+      try{
+        const img = await new Promise((ok, bad)=>{ const i = new Image(); i.onload = ()=>ok(i); i.onerror = bad; i.src = URL.createObjectURL(file); });
+        const side = Math.min(img.width, img.height), S = 480;
+        const c = document.createElement('canvas'); c.width = S; c.height = S;
+        c.getContext('2d').drawImage(img, (img.width-side)/2, (img.height-side)/2, side, side, 0, 0, S, S);
+        const blob = await new Promise(r=>c.toBlob(r, 'image/jpeg', 0.86));
+        const path = uid + '/for-' + target + '-' + Date.now() + '.jpg';
+        const { error } = await sb.storage.from('avatars').upload(path, blob, { contentType:'image/jpeg', cacheControl:'31536000' });
+        if(error) throw error;
+        const url = sb.storage.from('avatars').getPublicUrl(path).data.publicUrl;
+        await window.__db.doc('profiles/'+target).update({ avatarUrl: url });
+        if(cache.profiles[target]) cache.profiles[target].avatarUrl = url;
+        toast(T('toast_saved')); render();
+      }catch(err){ console.error('admin photo upload failed', err); toast(T('toast_save_fail')); }
+    });
+  }
   const adminDeleteBtn = document.getElementById('admin-delete-profile');
   if(adminDeleteBtn) adminDeleteBtn.addEventListener('click', async ()=>{
     if(!confirm(T('confirm_delete_other'))) return;
