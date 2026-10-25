@@ -99,7 +99,18 @@ Return an array: [{"id": "...", "verdict": "approve" | "ask" | "decline", "summa
 "askThem": if verdict is "ask", one or two polite sentences that tell the applicant exactly what to add or change on their profile to be listed
 (for example: "Please add a short bio describing your experience and how you help people, and make sure your headline matches your current workplace."); otherwise ""}]`,
       JSON.stringify(input), { maxTokens: 1500, timeoutMs: 25000 });
-    const map = {}; (out || []).forEach(a => { if (a && a.id) map[a.id] = a; }); return map;
+    // The model sometimes answers with one object, or wraps the list ({"applications": [...]}); accept those too.
+    let list = Array.isArray(out) ? out : (out && (out.applications || out.results || out.reviews)) || (out && out.verdict ? [out] : []);
+    if (!Array.isArray(list)) list = [];
+    const map = {}, ids = new Set(input.map(x => x.id));
+    list.forEach((a, i) => {
+      if (!a || !a.verdict) return;
+      const id = ids.has(a.id) ? a.id : (input.length === list.length ? input[i].id : null); // fall back to the order of the input
+      if (id) map[id] = Object.assign({}, a, { id });
+    });
+    const lost = input.filter(x => !map[x.id]).map(x => x.id);
+    if (lost.length) console.error('assess-incomplete', JSON.stringify({ lost, got: JSON.stringify(out).slice(0, 400) }));
+    return map;
   } catch (e) { console.error('assess-failed', e.message); return {}; }
 }
 
@@ -459,4 +470,4 @@ async function run(extraErrors) {
   return Object.assign({ emails: rep.emails }, out);
 }
 
-module.exports = { run, reviewOne, profileComplete, once, missingBasics, mentorApplications, linkedInSlug };
+module.exports = { _assess: (a) => assessApplications(a), run, reviewOne, profileComplete, once, missingBasics, mentorApplications, linkedInSlug };
