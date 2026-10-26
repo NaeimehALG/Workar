@@ -38,7 +38,7 @@ async function once(kind, ref) {
     headers: Object.assign({ Prefer: 'resolution=ignore-duplicates,return=representation' }, svc()),
     body: JSON.stringify({ id: `${kind}:${ref}`, kind, ref, createdAt: new Date().toISOString() })
   });
-  if (!r.ok) { memoryOk = false; console.error('agent_events-missing', r.status, await r.text()); return false; }
+  if (!r.ok) { console.error('agent_events-write-failed', kind, r.status, await r.text()); if (r.status === 404) memoryOk = false; return false; }
   memoryOk = true;
   const rows = await r.json();
   return Array.isArray(rows) && rows.length > 0; // empty = already done before
@@ -76,42 +76,52 @@ async function mail(rep, to, subject, title, paras, cta) {
   if (rep.emails >= MAX_EMAILS_PER_RUN) return false;
   rep.emails++;
   const r = await M.sendMail(to, subject, M.layout(title, paras, cta));
-  return !!(r && (r.ok || r.skipped));
+  const ok = !!(r && (r.ok || r.skipped));
+  if (!ok) { console.error('mail-failed', subject, to); rep.errors.push(`An email could not be sent (“${subject}”); it will be retried on the next run.`); }
+  return ok;
 }
 
 // ---------- AI helpers ----------
+// Reviews applications in small batches (big batches cut the AI's answer short or time out).
+// Returns { map: {id: verdict}, error: why some could not be reviewed, or '' }.
+const ASSESS_BATCH = 4;
 async function assessApplications(apps) {
-  if (!apps.length || !process.env.ANTHROPIC_API_KEY) return {};
-  const input = apps.slice(0, 10).map(p => ({
-    id: p.id, name: p.name, headline: p.headline, profession: p.profession, yearsExperience: p.experience || p.yearsExperience,
-    bio: String(p.bio || '').slice(0, 1200), languages: p.languages, education: p.education,
-    certifications: p.certifications, linkedin: p.linkedin, company: p.company, bestFor: p.idealMentee, sessionRate: p.sessionRate
-  }));
-  try {
-    const out = await AI.askJSON(
-      `You help the admin of Workar, a career mentorship marketplace, review mentor applications.
+  if (!apps.length) return { map: {}, error: '' };
+  if (!process.env.ANTHROPIC_API_KEY) { console.error('assess-skipped: ANTHROPIC_API_KEY is not set'); return { map: {}, error: 'the AI key (ANTHROPIC_API_KEY) is not set in Vercel' }; }
+  const map = {}, problems = [];
+  for (let i = 0; i < apps.length && i < 20; i += ASSESS_BATCH) {
+    const input = apps.slice(i, i + ASSESS_BATCH).map(p => ({
+      id: p.id, name: p.name, headline: p.headline, profession: p.profession, yearsExperience: p.experience || p.yearsExperience,
+      bio: String(p.bio || '').slice(0, 1200), languages: p.languages, education: p.education,
+      certifications: p.certifications, linkedin: p.linkedin, company: p.company, bestFor: p.idealMentee, sessionRate: p.sessionRate
+    }));
+    try {
+      const out = await AI.askJSON(
+        `You help the admin of Workar, a career mentorship marketplace, review mentor applications.
 For each application judge: is the profile complete and specific, is the experience plausible and relevant to mentoring,
 are there red flags (empty or copy-paste bio, inconsistent claims, unprofessional content, contact details or payment requests in the bio, missing LinkedIn).
 Use "approve" only when you would be comfortable showing this mentor to paying clients today.
 Use "decline" ONLY for spam, abusive, offensive or clearly fake profiles. Every other profile that is not ready is "ask".
-Return an array: [{"id": "...", "verdict": "approve" | "ask" | "decline", "summary": one sentence,
+Return an array with one entry per application, using the exact "id" given: [{"id": "...", "verdict": "approve" | "ask" | "decline", "summary": one sentence,
 "concerns": up to 3 short strings (empty array if none),
 "askThem": if verdict is "ask", one or two polite sentences that tell the applicant exactly what to add or change on their profile to be listed
 (for example: "Please add a short bio describing your experience and how you help people, and make sure your headline matches your current workplace."); otherwise ""}]`,
-      JSON.stringify(input), { maxTokens: 1500, timeoutMs: 25000 });
-    // The model sometimes answers with one object, or wraps the list ({"applications": [...]}); accept those too.
-    let list = Array.isArray(out) ? out : (out && (out.applications || out.results || out.reviews)) || (out && out.verdict ? [out] : []);
-    if (!Array.isArray(list)) list = [];
-    const map = {}, ids = new Set(input.map(x => x.id));
-    list.forEach((a, i) => {
-      if (!a || !a.verdict) return;
-      const id = ids.has(a.id) ? a.id : (input.length === list.length ? input[i].id : null); // fall back to the order of the input
-      if (id) map[id] = Object.assign({}, a, { id });
-    });
-    const lost = input.filter(x => !map[x.id]).map(x => x.id);
-    if (lost.length) console.error('assess-incomplete', JSON.stringify({ lost, got: JSON.stringify(out).slice(0, 400) }));
-    return map;
-  } catch (e) { console.error('assess-failed', e.message); return {}; }
+        JSON.stringify(input), { maxTokens: 400 * input.length + 300, timeoutMs: 45000 });
+      // The model sometimes answers with one object, or wraps the list ({"applications": [...]}); accept those too.
+      let list = Array.isArray(out) ? out : (out && (out.applications || out.results || out.reviews)) || (out && out.verdict ? [out] : []);
+      if (!Array.isArray(list)) list = [];
+      const ids = new Set(input.map(x => x.id));
+      list.forEach((a, k) => {
+        if (!a || !a.verdict) return;
+        const id = ids.has(a.id) ? a.id : (input.length === list.length ? input[k].id : null); // fall back to the order of the input
+        if (id) map[id] = Object.assign({}, a, { id });
+      });
+      const lost = input.filter(x => !map[x.id]).map(x => x.id);
+      if (lost.length) { console.error('assess-incomplete', JSON.stringify({ lost, got: JSON.stringify(out).slice(0, 400) })); problems.push('the AI answer did not include every applicant'); }
+    } catch (e) { console.error('assess-failed', e.message); problems.push('the AI review failed (' + String(e.message || e).slice(0, 120) + ')'); }
+  }
+  if (apps.length > 20) problems.push('more than 20 applications were waiting; the rest are reviewed on the next run');
+  return { map, error: [...new Set(problems)].join('; ') };
 }
 
 async function checkReviews(reviews) {
@@ -195,7 +205,7 @@ async function mentorApplications(rep, ctx, onlyId) {
   past.forEach(e => { known[e.id] = e.ref; });
   const verdictOf = ref => String(ref || '').split('|')[0], questionOf = ref => String(ref || '').split('|').slice(1).join('|');
   const fresh = apps.filter(p => !known[`verdict:${p.id}:${prints[p.id]}`]);
-  const assess = await assessApplications(fresh);
+  const { map: assess, error: assessError } = await assessApplications(fresh);
   const site = M.SITE();
   for (const p of apps) {
     const miss = missingBasics(p, others);
@@ -203,7 +213,7 @@ async function mentorApplications(rep, ctx, onlyId) {
     // Missing basics (like LinkedIn) are known without the AI, so the applicant is still asked even when the AI review is unavailable.
     const a = prior ? { verdict: verdictOf(prior), summary: '', concerns: [], askThem: questionOf(prior) }
       : (assess[p.id] || (miss.length ? { verdict: 'ask', summary: '', concerns: [], askThem: '' } : null));
-    if (!a) { ctx.results[p.id] = { verdict: 'pending' }; rep.done.push(`AI review of <b>${M.esc(p.name || 'a mentor applicant')}</b> was not available today; it will try again tomorrow.`); continue; }
+    if (!a) { ctx.results[p.id] = { verdict: 'pending' }; rep.errors.push(`The AI review of ${p.name || 'a mentor applicant'} could not run: ${assessError || 'no answer from the AI'}. It is retried automatically within the hour.`); continue; }
     let verdict = a.verdict === 'approve' || a.verdict === 'decline' ? a.verdict : 'ask';
     // Missing basics (LinkedIn, bio, workplace…) are always a question, never an approval or a decline.
     if (miss.length) verdict = 'ask';
@@ -229,7 +239,9 @@ async function mentorApplications(rep, ctx, onlyId) {
       }
     } else {
       const q = miss.length ? `Please add ${miss.join('; ')}` : (a.askThem || 'Please add a short bio (a few sentences about your experience and how you help people).');
-      if (await once('ask', p.id)) {
+      const firstAsk = await once('ask', p.id);
+      if (firstAsk) await once('ask', p.id + ':' + prints[p.id]);
+      if (firstAsk) {
         const askParas = [`Hi ${M.esc(first(p.name))},`,
           'Welcome to Workar, and thank you for joining us as a mentor.',
           miss.length === 1 ? `Your profile is almost ready to go live. To publish it, please add ${M.esc(miss[0])}.` : miss.length ? 'Your profile is almost ready to go live. To publish it, please add:' : `Your profile is almost ready to go live. ${M.esc(q)}`,
@@ -238,9 +250,19 @@ async function mentorApplications(rep, ctx, onlyId) {
           'As soon as you save your changes, we will review your profile and let you know when it is live.',
           'We are glad to have you with us.<br>The Workar team'];
         const to = await M.emailOf(p.id);
-        await mail(rep, to, 'Your Workar mentor profile is almost ready', 'One last step', askParas, { text: 'Complete my profile', url: site + '/?go=dashboard' });
+        if (!(await mail(rep, to, 'Your Workar mentor profile is almost ready', 'One last step', askParas, { text: 'Complete my profile', url: site + '/?go=dashboard' }))) { await forget('ask', p.id); await forget('ask', p.id + ':' + prints[p.id]); continue; }
         // The team inbox gets a hidden copy of this email automatically (see sendMail in _mail.js).
         rep.done.push(`Asked mentor applicant <b>${M.esc(p.name)}</b>: “${M.esc(q)}”`);
+      } else if (await once('ask', p.id + ':' + prints[p.id])) {
+        // They updated the profile after our first request, and it still needs something: tell them exactly what, once per version.
+        if (!(await mail(rep, await M.emailOf(p.id), 'Thank you for updating your Workar profile', 'Nearly there',
+          [`Hi ${M.esc(first(p.name))},`,
+            'Thank you for updating your mentor profile. We have reviewed it again.',
+            miss.length === 1 ? `To publish it, please add ${M.esc(miss[0])}.` : miss.length ? 'To publish it, please add:' : M.esc(q),
+            miss.length > 1 ? M.list(miss) : '',
+            'As soon as you save your changes, we will review it again and let you know when it is live.',
+            'Kind regards,<br>The Workar team'], { text: 'Complete my profile', url: site + '/?go=dashboard' }))) { await forget('ask', p.id + ':' + prints[p.id]); continue; }
+        rep.done.push(`Asked mentor applicant <b>${M.esc(p.name)}</b> again after their update: “${M.esc(q)}”`);
       } else if (await askedLongAgo(p.id) && await once('ask_close', p.id)) {
         // One friendly reminder a week after the first request, then nothing more.
         await mail(rep, await M.emailOf(p.id), 'A reminder about your Workar mentor profile', 'Your profile is almost ready',
@@ -368,7 +390,7 @@ async function reviews(rep, ctx) {
 async function signups(rep, ctx) {
   const now = Date.now(), site = M.SITE();
   const r = await fetch(`${process.env.SUPABASE_URL}/auth/v1/admin/users?page=1&per_page=1000`, { headers: svc() });
-  if (!r.ok) return;
+  if (!r.ok) throw new Error(`could not read the sign-up list (${r.status}); today's sign-up and mentor counts are unknown`);
   const data = await r.json();
   const users = (data && data.users) || [];
   ctx.users = users;
@@ -409,7 +431,8 @@ async function digest(rep, ctx, extra) {
   const newReqs = reqs.filter(r => now - ms(r.createdAt) < DAY).length;
   // Applications still waiting after this run, and mentors whose profiles are live (banned accounts excluded).
   const approvedIds = ctx.approvedIds || [];
-  const waiting = (ctx.apps || []).filter(p => !approvedIds.includes(p.id)).length;
+  const results = ctx.results || {};
+  const waiting = (ctx.apps || []).filter(p => !approvedIds.includes(p.id) && !(results[p.id] && results[p.id].verdict === 'decline')).length;
   const mentorsLive = Object.values(ctx.profiles || {}).filter(p => p.role === 'mentor' && !p.banned && (p.approved !== false || approvedIds.includes(p.id))).length;
   const today = reqs.filter(r => r.status === 'accepted' && (r.paid || !(Number(r.amountCents) > 0)) && r.startsAt && Date.parse(r.startsAt) > now && Date.parse(r.startsAt) - now < DAY)
     .sort((a, b) => Date.parse(a.startsAt) - Date.parse(b.startsAt));
@@ -420,9 +443,9 @@ async function digest(rep, ctx, extra) {
   const paras = [];
   paras.push(h3('Last 24 hours'));
   paras.push(M.list([
-    `${newUsers} new sign-up${newUsers === 1 ? '' : 's'}`,
+    ctx.users ? `${newUsers} new sign-up${newUsers === 1 ? '' : 's'}` : 'New sign-ups: unknown (see Needs you)',
     `${newReqs} new booking request${newReqs === 1 ? '' : 's'}`,
-    `${Math.max(0, mentorsLive)} mentor${mentorsLive === 1 ? '' : 's'} live, ${waiting} application${waiting === 1 ? '' : 's'} waiting`,
+    ctx.profiles ? `${Math.max(0, mentorsLive)} mentor${mentorsLive === 1 ? '' : 's'} live, ${waiting} application${waiting === 1 ? '' : 's'} waiting` : `Mentors live: unknown, ${waiting} application${waiting === 1 ? '' : 's'} waiting`,
     `${today.length} session${today.length === 1 ? '' : 's'} in the next 24 hours`
   ]));
   if (today.length) {
@@ -445,8 +468,10 @@ async function digest(rep, ctx, extra) {
 
   const dateTxt = new Date().toLocaleDateString('en-US', { timeZone: tz, weekday: 'long', month: 'long', day: 'numeric' });
   const subject = needs.length ? `Workar today: ${needs.length} thing${needs.length === 1 ? '' : 's'} need you, ${rep.done.length} handled` : `Workar today: all handled (${rep.done.length} action${rep.done.length === 1 ? '' : 's'})`;
-  await M.sendMail(adminEmail, subject, M.layout(`Your Workar day, ${dateTxt}`, paras, { text: 'Open the admin panel', url: site + '/?go=admin' }));
-  return { digest: 'sent', needs: needs.length, done: rep.done.length };
+  const sent = await M.sendMail(adminEmail, subject, M.layout(`Your Workar day, ${dateTxt}`, paras, { text: 'Open the admin panel', url: site + '/?go=admin' }), null, { noCopy: true });
+  const ok = !!(sent && (sent.ok || sent.skipped));
+  if (!ok) console.error('digest-send-failed', JSON.stringify(sent || {}).slice(0, 300));
+  return { digest: ok ? 'sent' : 'failed', needs: needs.length, done: rep.done.length };
 }
 
 // Review one applicant right away (called when a mentor submits or updates a pending profile).

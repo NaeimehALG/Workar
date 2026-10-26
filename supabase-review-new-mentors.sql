@@ -35,3 +35,7 @@ end $$;
 revoke all on function public.workar_review_new_mentors() from public, anon, authenticated;
 
 select cron.schedule('workar-review-new-mentors', '*/15 * * * *', $$select public.workar_review_new_mentors()$$);
+
+-- Oct 25 2026: also re-review applicants whose current profile version has no AI verdict yet
+-- (edited after being asked, or an earlier AI call failed). Applied live as migration review_changed_mentor_profiles.
+-- See that migration for workar_profile_print() and the updated workar_review_new_mentors().

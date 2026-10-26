@@ -18,6 +18,7 @@ module.exports = async (req, res) => {
     try {
       const AP = require('./_autopilot'), rep = { done: [], needs: [], emails: 0, errors: [] };
       await AP.mentorApplications(rep, {});
+      if (rep.errors.length) console.error('review-now-errors', JSON.stringify(rep.errors));
       res.status(200).json({ ok: true, done: rep.done.length, emails: rep.emails, errors: rep.errors.length });
     } catch (e) { console.error('review-now-failed', e.message); res.status(500).json({ ok: false }); }
     return;
@@ -51,7 +52,7 @@ module.exports = async (req, res) => {
     }
     if (event === 'mentor_approved') {
       if ((me.email || '').toLowerCase() !== adminEmail || !targetId) { res.status(403).end(); return; }
-      const p = await M.profile(targetId);
+      const p = await M.fullProfile(targetId);
       await M.sendMail(await M.emailOf(targetId), 'Your Workar mentor profile is live',
         M.layout(`Welcome aboard, ${p.name}`, ['Your mentor profile has been approved and is now visible to people looking for guidance.', 'Make sure your weekly availability is up to date so clients can book you.', p.avatarUrl ? '' : 'We also recommend adding a profile photo. A friendly, professional photo helps clients feel confident choosing you.'], { text: 'Open my profile', url: site + '/?go=dashboard' }));
       res.status(200).json({ ok: true }); return;
