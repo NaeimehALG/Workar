@@ -1,0 +1,18 @@
+name: tmp fetch images
+on:
+  push:
+    branches: [tmp-fetch-images]
+    paths: [tmp-img/urls.txt]
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          cd tmp-img
+          while read -r name url; do curl -sS -L -o "$name" -w "$name %{http_code} %{size_download}\n" "$url"; done < urls.txt
+          file *.png
+          git config user.name "Claude"; git config user.email "noreply@anthropic.com"
+          git add *.png && git commit -m "tmp: fetched images" && git push
