@@ -33,13 +33,39 @@ function textOf(data) {
   return ((data && data.content) || []).filter(b => b.type === 'text').map(b => b.text).join('\n').trim();
 }
 
-// Ask for JSON only, and parse it even if the model wraps it in ``` fences.
-async function askJSON(system, userText, opts = {}) {
-  const data = await callClaude(Object.assign({ system: system + '\n\nRespond with valid JSON only. No markdown, no code fences, no commentary.', messages: [{ role: 'user', content: userText }] }, opts));
-  const raw = textOf(data).replace(/```json|```/g, '').trim();
-  const start = raw.search(/[\[{]/);
-  const end = Math.max(raw.lastIndexOf('}'), raw.lastIndexOf(']'));
-  return JSON.parse(raw.slice(start, end + 1));
+// Pull the first complete JSON object/array out of a model reply, ignoring any
+// code fences or extra text (even extra text containing braces) around it.
+function extractJSON(text) {
+  const raw = String(text || '').replace(/```json|```/g, '').trim();
+  for (let start = raw.search(/[\[{]/); start !== -1; ) {
+    let depth = 0, inStr = false, esc = false;
+    for (let i = start; i < raw.length; i++) {
+      const c = raw[i];
+      if (inStr) { if (esc) esc = false; else if (c === '\\') esc = true; else if (c === '"') inStr = false; continue; }
+      if (c === '"') inStr = true;
+      else if (c === '{' || c === '[') depth++;
+      else if (c === '}' || c === ']') {
+        if (--depth === 0) {
+          try { return JSON.parse(raw.slice(start, i + 1)); } catch (e) { break; }
+        }
+      }
+    }
+    const next = raw.slice(start + 1).search(/[\[{]/);
+    start = next === -1 ? -1 : start + 1 + next;
+  }
+  throw new Error('no valid JSON in AI reply');
 }
 
-module.exports = { TONE, MODEL, callClaude, textOf, askJSON };
+// Ask for JSON only, and parse it even if the model wraps it in ``` fences or adds
+// commentary. One retry if the reply still can't be parsed.
+async function askJSON(system, userText, opts = {}) {
+  const sys = system + '\n\nRespond with exactly one valid JSON value only. No markdown, no code fences, no commentary before or after it.';
+  let lastErr;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const data = await callClaude(Object.assign({ system: sys, messages: [{ role: 'user', content: userText }] }, opts));
+    try { return extractJSON(textOf(data)); } catch (e) { lastErr = e; }
+  }
+  throw lastErr;
+}
+
+module.exports = { TONE, MODEL, callClaude, textOf, askJSON, extractJSON };
