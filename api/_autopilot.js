@@ -100,6 +100,7 @@ async function assessApplications(apps) {
         `You help the admin of Workar, a career mentorship marketplace, review mentor applications.
 For each application judge: is the profile complete and specific, is the experience plausible and relevant to mentoring,
 are there red flags (empty or copy-paste bio, inconsistent claims, unprofessional content, contact details or payment requests in the bio, missing LinkedIn).
+Never ask the applicant to fill in "bestFor" (Best For), their mentoring approach, or other optional extras: "bestFor" is written automatically from their bio.
 Use "approve" only when you would be comfortable showing this mentor to paying clients today.
 Use "decline" ONLY for spam, abusive, offensive or clearly fake profiles. Every other profile that is not ready is "ask".
 Return an array with one entry per application, using the exact "id" given: [{"id": "...", "verdict": "approve" | "ask" | "decline", "summary": one sentence,
@@ -139,9 +140,9 @@ Return an array: [{"id": "...", "flag": true|false, "reason": "short reason, emp
 
 // A profile is only auto-approved when the basics are really there, whatever the AI says.
 // Extra limits on what the AI may approve by itself; anything below them gets a polite question instead:
-//   at least AUTO_APPROVE_MIN_YEARS years of experience (default 3), a current workplace,
+//   at least AUTO_APPROVE_MIN_YEARS years of experience (default 1, admin's decision Oct 27 2026), a current workplace,
 //   and no more than AUTO_APPROVE_DAILY_MAX approvals per day (default 3).
-const MIN_YEARS = () => Number(process.env.AUTO_APPROVE_MIN_YEARS || 3);
+const MIN_YEARS = () => Number(process.env.AUTO_APPROVE_MIN_YEARS || 1);
 const DAILY_MAX = () => Number(process.env.AUTO_APPROVE_DAILY_MAX || 3);
 // Mentors must link a personal LinkedIn profile (linkedin.com/in/<name>); company pages or other links don't count.
 function linkedInSlug(v) {
@@ -187,9 +188,31 @@ async function approvedToday() {
   const since = new Date(Date.now() - DAY).toISOString();
   try { const r = await M.rowsStrict(`agent_events?kind=eq.approve&createdAt=gte.${encodeURIComponent(since)}&select=id`); return Array.isArray(r) ? r.filter(x => x && String(x.id || '').startsWith('approve:')).length : 0; } catch (e) { return DAILY_MAX(); } // unknown: assume today's limit is reached
 }
+// "Best For" is never asked of applicants: when it is empty, the AI writes one short sentence from the bio (admin's decision, Oct 27 2026).
+async function fillBestFor(apps) {
+  const need = apps.filter(p => !String(p.idealMentee || '').trim() && String(p.bio || '').trim().length >= 80);
+  if (!need.length || !process.env.ANTHROPIC_API_KEY) return;
+  try {
+    const out = await AI.askJSON(
+      `For each mentor on Workar, a career mentorship marketplace, write the "Best for" line shown on their profile:
+one short sentence (max 140 characters) saying which people this mentor is best placed to help, based only on their bio, role and field.
+Write it in the same language as the bio. No quotes, no names, no promises of specific services.
+Return an array: [{"id": "...", "bestFor": "..."}]`,
+      JSON.stringify(need.slice(0, 20).map(p => ({ id: p.id, role: p.headline || p.profession || '', field: p.field || '', bio: String(p.bio || '').slice(0, 1200) }))),
+      { maxTokens: 120 * need.length + 200, timeoutMs: 30000 });
+    const list = Array.isArray(out) ? out : (out && (out.mentors || out.results)) || [];
+    for (const a of list) {
+      const p = need.find(x => a && x.id === a.id), line = String((a && a.bestFor) || '').trim().slice(0, 160);
+      if (!p || !line) continue;
+      const r = await M.patch(`profiles?id=eq.${encodeURIComponent(p.id)}`, { idealMentee: line });
+      if (r.ok) p.idealMentee = line;
+    }
+  } catch (e) { console.error('best-for-failed', e.message); }
+}
 async function mentorApplications(rep, ctx, onlyId) {
   const filter = onlyId ? `&id=eq.${encodeURIComponent(onlyId)}` : '';
   const apps = (await M.rowsStrict(`profiles?role=eq.mentor&approved=eq.false${filter}&select=*`)).filter(p => !p.banned);
+  await fillBestFor(apps);
   ctx.apps = apps;
   ctx.results = ctx.results || {};
   if (ctx.approvedNow == null) ctx.approvedNow = await approvedToday();

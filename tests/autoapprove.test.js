@@ -106,7 +106,7 @@ test('a missing LinkedIn is still asked for when the AI review is unavailable', 
 test('an unchanged profile keeps its earlier verdict and is not sent to the AI again', async () => {
   const mailPath = require.resolve('../api/_mail'), aiPath = require.resolve('../api/_ai'), apPath = require.resolve('../api/_autopilot');
   const realM = require('../api/_mail'), realAi = require('../api/_ai');
-  const app = { id: 'd', name: 'Declined', role: 'mentor', approved: false, headline: 'PM', bio: 'q'.repeat(120), linkedin: 'https://linkedin.com/in/declined-one', experience: '9', company: 'Acme', languages: ['English'], avatarUrl: 'https://x.test/a.jpg' };
+  const app = { id: 'd', name: 'Declined', role: 'mentor', approved: false, headline: 'PM', idealMentee: 'Early-career PMs', bio: 'q'.repeat(120), linkedin: 'https://linkedin.com/in/declined-one', experience: '9', company: 'Acme', languages: ['English'], avatarUrl: 'https://x.test/a.jpg' };
   const events = [], sent = [], patched = []; let aiCalls = 0;
   require.cache[mailPath].exports = withStrict(Object.assign({}, realM, {
     rows: async q => q.startsWith('profiles?role=eq.mentor&approved=eq.false') ? [Object.assign({}, app)] : q.startsWith('agent_events?id=in.') ? events.filter(e => decodeURIComponent(q).includes('"' + e.id + '"')) : [],
@@ -130,5 +130,29 @@ test('an unchanged profile keeps its earlier verdict and is not sent to the AI a
     app.bio = 'r'.repeat(130);           // the mentor edits their profile
     await AP.mentorApplications({ done: [], needs: [], emails: 0, errors: [] }, {});
     assert.equal(aiCalls, 2);            // a changed profile is reviewed again
+  } finally { global.fetch = savedFetch; delete require.cache[apPath]; delete require.cache[mailPath]; delete require.cache[aiPath]; }
+});
+
+test('an empty "Best For" is written from the bio and never asked of the applicant', async () => {
+  const mailPath = require.resolve('../api/_mail'), aiPath = require.resolve('../api/_ai'), apPath = require.resolve('../api/_autopilot');
+  const realM = require('../api/_mail'), realAi = require('../api/_ai');
+  const app = { id: 'b', name: 'Bio Only', role: 'mentor', approved: false, headline: 'Analyst', bio: 'I help analysts grow. '.repeat(6), linkedin: 'https://linkedin.com/in/bio-only', experience: '1', company: 'Acme', languages: ['English'], avatarUrl: 'https://x.test/a.jpg' };
+  const patched = [], prompts = [];
+  require.cache[mailPath].exports = withStrict(Object.assign({}, realM, {
+    rows: async q => q.startsWith('profiles?role=eq.mentor&approved=eq.false') ? [Object.assign({}, app)] : [],
+    patch: async (p, b) => { patched.push(b); return { ok: true }; },
+    emailOf: async id => id + '@x.test', sendMail: async () => ({ ok: true })
+  }));
+  require.cache[aiPath].exports = Object.assign({}, realAi, { askJSON: async (sys) => { prompts.push(sys); return /Best for/.test(sys) ? [{ id: 'b', bestFor: 'New analysts growing their careers' }] : [{ id: 'b', verdict: 'approve', summary: 'ok' }]; } });
+  delete require.cache[apPath];
+  process.env.SUPABASE_URL = 'https://sb.test'; process.env.SUPABASE_SERVICE_ROLE_KEY = 'k'; process.env.ANTHROPIC_API_KEY = 'k';
+  const savedFetch = global.fetch;
+  global.fetch = async () => ({ ok: true, json: async () => [{ id: 'new' }], text: async () => '' });
+  try {
+    const AP = require('../api/_autopilot');
+    await AP.mentorApplications({ done: [], needs: [], emails: 0, errors: [] }, {});
+    assert.ok(patched.some(b => b.idealMentee === 'New analysts growing their careers'));
+    assert.ok(patched.some(b => b.approved === true));          // 1 year of experience is enough
+    assert.ok(prompts.some(p => /Never ask the applicant to fill in "bestFor"/.test(p)));
   } finally { global.fetch = savedFetch; delete require.cache[apPath]; delete require.cache[mailPath]; delete require.cache[aiPath]; }
 });
