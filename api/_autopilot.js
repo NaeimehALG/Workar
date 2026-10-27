@@ -189,6 +189,8 @@ async function approvedToday() {
   try { const r = await M.rowsStrict(`agent_events?kind=eq.approve&createdAt=gte.${encodeURIComponent(since)}&select=id`); return Array.isArray(r) ? r.filter(x => x && String(x.id || '').startsWith('approve:')).length : 0; } catch (e) { return DAILY_MAX(); } // unknown: assume today's limit is reached
 }
 // "Best For" is never asked of applicants: when it is empty, the AI writes one short sentence from the bio (admin's decision, Oct 27 2026).
+function clip(s, n) { if (s.length <= n) return s; const c = s.slice(0, n - 1); const i = c.lastIndexOf(' '); return (i > n * 0.6 ? c.slice(0, i) : c).replace(/[\s,;:(\-]+$/, '') + '…'; }
+
 async function fillBestFor(apps) {
   const need = apps.filter(p => !String(p.idealMentee || '').trim() && String(p.bio || '').trim().length >= 80);
   if (!need.length || !process.env.ANTHROPIC_API_KEY) return;
@@ -202,7 +204,7 @@ Return an array: [{"id": "...", "bestFor": "..."}]`,
       { maxTokens: 120 * need.length + 200, timeoutMs: 30000 });
     const list = Array.isArray(out) ? out : (out && (out.mentors || out.results)) || [];
     for (const a of list) {
-      const p = need.find(x => a && x.id === a.id), line = String((a && a.bestFor) || '').trim().slice(0, 160);
+      const p = need.find(x => a && x.id === a.id), line = clip(String((a && a.bestFor) || '').trim(), 160);
       if (!p || !line) continue;
       const r = await M.patch(`profiles?id=eq.${encodeURIComponent(p.id)}`, { idealMentee: line });
       if (r.ok) p.idealMentee = line;
