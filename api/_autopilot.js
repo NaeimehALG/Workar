@@ -188,6 +188,79 @@ async function approvedToday() {
   const since = new Date(Date.now() - DAY).toISOString();
   try { const r = await M.rowsStrict(`agent_events?kind=eq.approve&createdAt=gte.${encodeURIComponent(since)}&select=id`); return Array.isArray(r) ? r.filter(x => x && String(x.id || '').startsWith('approve:')).length : 0; } catch (e) { return DAILY_MAX(); } // unknown: assume today's limit is reached
 }
+// Everything the public sees on a mentor profile is in English, whatever language the mentor wrote it in
+// (admin's decision, Oct 28 2026). The AI translates only the fields that aren't English; each version of a
+// profile is checked once (agent_events "en:<id>:<fingerprint>"). The mentor's name is left as they wrote it.
+const EN_TEXT = { headline: 90, profession: 80, company: 120, bio: 3000, idealMentee: 300, education: 200, degree: 200, university: 160 };
+const EN_LIST = { certifications: [8, 80], industries: [5, 50], skills: [20, 60] };
+function enPick(p) {
+  const o = {};
+  Object.keys(EN_TEXT).forEach(k => { const v = String(p[k] == null ? '' : p[k]).trim(); if (v) o[k] = v; });
+  Object.keys(EN_LIST).forEach(k => { const v = Array.isArray(p[k]) ? p[k].map(x => String(x || '').trim()).filter(Boolean) : []; if (v.length) o[k] = v; });
+  return o;
+}
+const enPrint = p => require('crypto').createHash('sha1').update(JSON.stringify(enPick(p))).digest('hex').slice(0, 16);
+function enClean(changes, p) {
+  const out = {};
+  if (!changes || typeof changes !== 'object') return out;
+  Object.keys(EN_TEXT).forEach(k => {
+    if (typeof changes[k] !== 'string' || !String(p[k] || '').trim()) return;
+    const v = changes[k].trim().slice(0, EN_TEXT[k]);
+    if (v && v !== String(p[k]).trim()) out[k] = v;
+  });
+  Object.keys(EN_LIST).forEach(k => {
+    if (!Array.isArray(changes[k]) || !Array.isArray(p[k]) || !p[k].length) return;
+    const v = changes[k].map(x => String(x || '').trim().slice(0, EN_LIST[k][1])).filter(Boolean).slice(0, EN_LIST[k][0]);
+    if (v.length && JSON.stringify(v) !== JSON.stringify(p[k])) out[k] = v;
+  });
+  return out;
+}
+async function englishProfiles(list) {
+  if (!process.env.ANTHROPIC_API_KEY) return;
+  const items = (list || []).filter(p => p && p.id && Object.keys(enPick(p)).length).map(p => ({ p, h: enPrint(p) }));
+  if (!items.length) return;
+  const done = new Set();
+  try {
+    const r = await M.rowsStrict(`agent_events?id=in.(${items.map(x => encodeURIComponent(`"en:${x.p.id}:${x.h}"`)).join(',')})&select=id`);
+    (Array.isArray(r) ? r : []).forEach(e => e && done.add(e.id));
+  } catch (e) { console.error('english-memory', e.message); return; }
+  const need = items.filter(x => !done.has(`en:${x.p.id}:${x.h}`));
+  for (let i = 0; i < need.length; i += 4) {
+    const batch = need.slice(i, i + 4);
+    let out;
+    try {
+      out = await AI.askJSON(
+        `Workar, a career mentorship platform, shows every mentor profile to the public in English only.
+For each profile, check every field. If a field is written in any language other than English (any script: Persian, Arabic, French, Spanish, Chinese and so on), or mixes English with another language, translate it into natural, professional English.
+- Keep the meaning and the mentor's voice: a first-person bio stays first person. Keep paragraph breaks.
+- Keep numbers, links, and tool, product and technology names as they are.
+- Organization, school and degree names: use the official English name when there is one; otherwise write the name in Latin letters.
+- Do not add, remove or embellish facts.
+- Leave out fields that are already in English.
+Return a JSON array: [{"id": "...", "changes": {"<field>": "<English text>"}}]. List fields (certifications, industries, skills) are returned as complete arrays of English strings. Use "changes": {} when nothing needs translating.`,
+        JSON.stringify(batch.map(x => ({ id: x.p.id, fields: enPick(x.p) }))),
+        { maxTokens: 1400 * batch.length + 200, timeoutMs: 40000 });
+    } catch (e) { console.error('english-failed', e.message); continue; }
+    const res = Array.isArray(out) ? out : (out && (out.profiles || out.results)) || [];
+    for (const x of batch) {
+      const a = res.find(r => r && r.id === x.p.id);
+      if (!a) continue;
+      const ch = enClean(a.changes, x.p);
+      if (Object.keys(ch).length) {
+        const r = await M.patch(`profiles?id=eq.${encodeURIComponent(x.p.id)}`, ch);
+        if (!r.ok) { console.error('english-save', x.p.id, r.status); continue; }
+        Object.assign(x.p, ch);
+      }
+      await once('en', `${x.p.id}:${enPrint(x.p)}`).catch(() => {});
+    }
+  }
+}
+// Live mentors are checked in the daily run too, so a profile edited after approval is still shown in English.
+async function englishLiveMentors() {
+  const live = await M.rowsStrict(`profiles?role=eq.mentor&approved=eq.true&select=*`);
+  await englishProfiles((Array.isArray(live) ? live : []).filter(p => !p.banned));
+}
+
 // "Best For" is never asked of applicants: when it is empty, the AI writes one short sentence from the bio (admin's decision, Oct 27 2026).
 function clip(s, n) { if (s.length <= n) return s; const c = s.slice(0, n - 1); const i = c.lastIndexOf(' '); return (i > n * 0.6 ? c.slice(0, i) : c).replace(/[\s,;:(\-]+$/, '') + '…'; }
 
@@ -198,7 +271,7 @@ async function fillBestFor(apps) {
     const out = await AI.askJSON(
       `For each mentor on Workar, a career mentorship marketplace, write the "Best for" line shown on their profile:
 one short sentence (max 140 characters) saying which people this mentor is best placed to help, based only on their bio, role and field.
-Write it in the same language as the bio. No quotes, no names, no promises of specific services.
+Always write it in English, whatever language the bio is in. No quotes, no names, no promises of specific services.
 Return an array: [{"id": "...", "bestFor": "..."}]`,
       JSON.stringify(need.slice(0, 20).map(p => ({ id: p.id, role: p.headline || p.profession || '', field: p.field || '', bio: String(p.bio || '').slice(0, 1200) }))),
       { maxTokens: 120 * need.length + 200, timeoutMs: 30000 });
@@ -214,6 +287,7 @@ Return an array: [{"id": "...", "bestFor": "..."}]`,
 async function mentorApplications(rep, ctx, onlyId) {
   const filter = onlyId ? `&id=eq.${encodeURIComponent(onlyId)}` : '';
   const apps = (await M.rowsStrict(`profiles?role=eq.mentor&approved=eq.false${filter}&select=*`)).filter(p => !p.banned);
+  await englishProfiles(apps);
   await fillBestFor(apps);
   ctx.apps = apps;
   ctx.results = ctx.results || {};
@@ -512,7 +586,7 @@ async function reviewOne(id) {
 async function run(extraErrors) {
   const rep = newReport(), ctx = {};
   await checkMemory();
-  const steps = [['applications', mentorApplications], ['bookings', bookings], ['reviews', reviews], ['signups', signups]];
+  const steps = [['applications', mentorApplications], ['english', englishLiveMentors], ['bookings', bookings], ['reviews', reviews], ['signups', signups]];
   for (const [name, fn] of steps) {
     try { await fn(rep, ctx); } catch (e) { console.error('autopilot-' + name, e); rep.errors.push(`The ${name} agent had a problem: ${e.message || e}`); }
   }
@@ -520,4 +594,4 @@ async function run(extraErrors) {
   return Object.assign({ emails: rep.emails }, out);
 }
 
-module.exports = { _assess: (a) => assessApplications(a), run, reviewOne, profileComplete, once, missingBasics, mentorApplications, linkedInSlug };
+module.exports = { _assess: (a) => assessApplications(a), run, reviewOne, profileComplete, once, missingBasics, mentorApplications, linkedInSlug, englishProfiles };

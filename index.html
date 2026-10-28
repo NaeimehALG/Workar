@@ -9336,7 +9336,7 @@ function wire(){
     const priceEl = document.getElementById('edit-price-usd');
     if(priceEl) patch.priceUsd = priceEl.value==='' ? null : Math.max(0, Number(priceEl.value)||0);
     if(document.getElementById('av-exact')) patch.availability = [...avDraft()].sort((a,b)=>AVAIL_DAYS.indexOf(a.split('@')[0]) - AVAIL_DAYS.indexOf(b.split('@')[0]) || a.localeCompare(b));
-    try{ await saveProfileSafe(patch, 'update'); myProfile = Object.assign({}, myProfile, patch); state.avDraft = null; clearFormDrafts('dash'); toast(T('toast_saved')); render(); if(myProfile.role==='mentor' && myProfile.approved===false) notify('mentor_applied'); setTimeout(()=>photoNudge(), 400); }
+    try{ await saveProfileSafe(patch, 'update'); myProfile = Object.assign({}, myProfile, patch); state.avDraft = null; clearFormDrafts('dash'); toast(T('toast_saved')); render(); if(myProfile.role==='mentor' && myProfile.approved===false) notify('mentor_applied'); else if(myProfile.role==='mentor') notify('profile_saved'); setTimeout(()=>photoNudge(), 400); }
     catch(err){
       console.error('profile save failed:', err);
       toast(T('toast_save_fail'));

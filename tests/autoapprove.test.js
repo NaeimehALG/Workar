@@ -113,7 +113,7 @@ test('an unchanged profile keeps its earlier verdict and is not sent to the AI a
     patch: async (p, b) => { patched.push(b); return { ok: true }; },
     emailOf: async id => id + '@x.test', sendMail: async (to, subject) => { sent.push({ to, subject }); return { ok: true }; }
   }));
-  require.cache[aiPath].exports = Object.assign({}, realAi, { askJSON: async () => { aiCalls++; return aiCalls === 1 ? [{ id: 'd', verdict: 'decline', summary: 'no' }] : [{ id: 'd', verdict: 'approve', summary: 'yes' }]; } });
+  require.cache[aiPath].exports = Object.assign({}, realAi, { askJSON: async (sys) => { if (/public in English only/.test(sys)) return []; aiCalls++; return aiCalls === 1 ? [{ id: 'd', verdict: 'decline', summary: 'no' }] : [{ id: 'd', verdict: 'approve', summary: 'yes' }]; } });
   delete require.cache[apPath];
   process.env.SUPABASE_URL = 'https://sb.test'; process.env.SUPABASE_SERVICE_ROLE_KEY = 'k'; process.env.ANTHROPIC_API_KEY = 'k';
   const savedFetch = global.fetch;
@@ -154,5 +154,37 @@ test('an empty "Best For" is written from the bio and never asked of the applica
     assert.ok(patched.some(b => b.idealMentee === 'New analysts growing their careers'));
     assert.ok(patched.some(b => b.approved === true));          // 1 year of experience is enough
     assert.ok(prompts.some(p => /Never ask the applicant to fill in "bestFor"/.test(p)));
+  } finally { global.fetch = savedFetch; delete require.cache[apPath]; delete require.cache[mailPath]; delete require.cache[aiPath]; }
+});
+
+test('profile text in any other language is shown to the public in English, and checked once per version', async () => {
+  const mailPath = require.resolve('../api/_mail'), aiPath = require.resolve('../api/_ai'), apPath = require.resolve('../api/_autopilot');
+  const realM = require('../api/_mail'), realAi = require('../api/_ai');
+  const app = { id: 'z', name: 'زویا', role: 'mentor', approved: true, headline: 'Computer engineer', bio: 'I started Computer Science at 35.', idealMentee: 'افرادی که قصد ورود به حوزه فناوری اطلاعات را دارند', certifications: ['گواهی داده'], languages: ['English', 'Persian'] };
+  const events = [], patched = []; let calls = 0;
+  require.cache[mailPath].exports = withStrict(Object.assign({}, realM, {
+    rows: async q => q.startsWith('agent_events?id=in.') ? events.filter(e => decodeURIComponent(q).includes('"' + e.id + '"')) : [],
+    patch: async (p, b) => { patched.push(b); return { ok: true }; }
+  }));
+  require.cache[aiPath].exports = Object.assign({}, realAi, { askJSON: async (sys, input) => {
+    calls++; assert.match(sys, /public in English only/);
+    const sent = JSON.parse(input)[0].fields; assert.equal(sent.name, undefined); // the name is never translated
+    return [{ id: 'z', changes: { idealMentee: 'People of any age moving into tech', certifications: ['Data certificate'], bio: 'I started Computer Science at 35.', name: 'Zoya', approved: true } }];
+  } });
+  delete require.cache[apPath];
+  process.env.SUPABASE_URL = 'https://sb.test'; process.env.SUPABASE_SERVICE_ROLE_KEY = 'k'; process.env.ANTHROPIC_API_KEY = 'k';
+  const savedFetch = global.fetch;
+  global.fetch = async (url, o) => {
+    if (o && o.method === 'POST' && String(url).includes('agent_events')) { const b = JSON.parse(o.body); events.push({ id: b.id }); }
+    return { ok: true, json: async () => [{ id: 'new' }], text: async () => '' };
+  };
+  try {
+    const AP = require('../api/_autopilot');
+    const p = Object.assign({}, app);
+    await AP.englishProfiles([p]);
+    assert.deepEqual(patched, [{ idealMentee: 'People of any age moving into tech', certifications: ['Data certificate'] }]); // unchanged fields and anything else are ignored
+    assert.equal(p.name, 'زویا');
+    await AP.englishProfiles([p]);
+    assert.equal(calls, 1);              // the English version is remembered, not sent again
   } finally { global.fetch = savedFetch; delete require.cache[apPath]; delete require.cache[mailPath]; delete require.cache[aiPath]; }
 });

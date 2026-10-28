@@ -32,6 +32,14 @@ module.exports = async (req, res) => {
     const site = M.SITE();
     const adminEmail = (process.env.ADMIN_EMAIL || 'naeimeh.alaghehband@gmail.com').toLowerCase();
 
+    // ---- a live mentor edited their profile: show it to the public in English ----
+    if (event === 'profile_saved') {
+      const p = await M.fullProfile(me.id);
+      if (p.role !== 'mentor' || p.approved === false) { res.status(200).json({ ok: true }); return; }
+      try { await require('./_autopilot').englishProfiles([p]); } catch (e) { console.error('english-on-save', e.message); }
+      res.status(200).json({ ok: true }); return;
+    }
+
     // ---- mentor applications ----
     if (event === 'mentor_applied') {
       const p = await M.fullProfile(me.id);
