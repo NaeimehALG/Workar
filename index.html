@@ -2503,7 +2503,7 @@ const I18N = {
     hiw2_t:'2. Match with a mentor', hiw2_b:'Search by job title, read real reviews, and request a conversation.',
     hiw3_t:'3. Get AI coaching too', hiw3_b:'Between sessions, get instant feedback on your resume and career questions.',
     onboard_title:'Set up your profile',
-    msg_cant_delete:'This message can\'t be deleted.', toast_rereview:'Saved. Your updated profile is being checked and will be visible again shortly.', draft_t:'Your mentor profile is not finished yet. It goes live once it is complete.', draft_btn:'Finish my mentor profile', auth_i_am:'I want to', auth_role_client:'Find a mentor', auth_role_mentor:'Become a mentor', auth_pick_role:'Please choose whether you want to find a mentor or become a mentor.', lbl_full_name:'Full name', ph_full_name:'e.g. Sara Ahmadi', ob_quick_t:'One last detail', ob_quick_s:'Add your name and you can start browsing mentors right away. Your goals and resume can be added later from your dashboard.', ob_quick_btn:'Start browsing mentors', toast_client_ready:'Your account is ready. Find a mentor who fits your goals.',
+    adm_paystat:'Check payment setup (Stripe, Daily)', msg_cant_delete:'This message can\'t be deleted.', toast_rereview:'Saved. Your updated profile is being checked and will be visible again shortly.', draft_t:'Your mentor profile is not finished yet. It goes live once it is complete.', draft_btn:'Finish my mentor profile', auth_i_am:'I want to', auth_role_client:'Find a mentor', auth_role_mentor:'Become a mentor', auth_pick_role:'Please choose whether you want to find a mentor or become a mentor.', lbl_full_name:'Full name', ph_full_name:'e.g. Sara Ahmadi', ob_quick_t:'One last detail', ob_quick_s:'Add your name and you can start browsing mentors right away. Your goals and resume can be added later from your dashboard.', ob_quick_btn:'Start browsing mentors', toast_client_ready:'Your account is ready. Find a mentor who fits your goals.',
     role_client_t:"I'm looking for a mentor", role_client_s:'Get guidance on your resume, interviews, or career path.',
     role_mentor_t:"I'm a mentor", role_mentor_s:'Share your experience and help someone with your job.',
     pick_to_continue:'Pick one to continue.',
@@ -2944,7 +2944,7 @@ const I18N = {
     hiw2_t:'۲. با یک منتور آشنا شوید', hiw2_b:'بر اساس عنوان شغلی جستجو کنید، نظرهای واقعی را بخوانید و درخواست گفتگو بدهید.',
     hiw3_t:'۳. از مربی هوش مصنوعی هم کمک بگیرید', hiw3_b:'بین جلسه‌ها برای رزومه و سؤال‌های شغلی‌تان بازخورد فوری بگیرید.',
     onboard_title:'پروفایلتان را بسازید',
-    msg_cant_delete:'این پیام قابل حذف نیست.', toast_rereview:'ذخیره شد. پروفایل به‌روزشده‌ی شما در حال بررسی است و به‌زودی دوباره نمایش داده می‌شود.', draft_t:'پروفایل منتوری شما هنوز کامل نشده و بعد از تکمیل نمایش داده می‌شود.', draft_btn:'تکمیل پروفایل منتوری', auth_i_am:'می‌خواهم', auth_role_client:'منتور پیدا کنم', auth_role_mentor:'منتور شوم', auth_pick_role:'لطفاً انتخاب کنید که می‌خواهید منتور پیدا کنید یا منتور شوید.', lbl_full_name:'نام و نام خانوادگی', ph_full_name:'مثلاً سارا احمدی', ob_quick_t:'فقط یک مورد مانده', ob_quick_s:'نامتان را وارد کنید تا همین الان منتورها را ببینید. هدف‌ها و رزومه‌تان را بعداً هم می‌توانید از داشبورد اضافه کنید.', ob_quick_btn:'دیدن منتورها', toast_client_ready:'حسابتان آماده است. منتوری متناسب با هدف‌تان پیدا کنید.',
+    adm_paystat:'بررسی تنظیمات پرداخت (Stripe، Daily)', msg_cant_delete:'این پیام قابل حذف نیست.', toast_rereview:'ذخیره شد. پروفایل به‌روزشده‌ی شما در حال بررسی است و به‌زودی دوباره نمایش داده می‌شود.', draft_t:'پروفایل منتوری شما هنوز کامل نشده و بعد از تکمیل نمایش داده می‌شود.', draft_btn:'تکمیل پروفایل منتوری', auth_i_am:'می‌خواهم', auth_role_client:'منتور پیدا کنم', auth_role_mentor:'منتور شوم', auth_pick_role:'لطفاً انتخاب کنید که می‌خواهید منتور پیدا کنید یا منتور شوید.', lbl_full_name:'نام و نام خانوادگی', ph_full_name:'مثلاً سارا احمدی', ob_quick_t:'فقط یک مورد مانده', ob_quick_s:'نامتان را وارد کنید تا همین الان منتورها را ببینید. هدف‌ها و رزومه‌تان را بعداً هم می‌توانید از داشبورد اضافه کنید.', ob_quick_btn:'دیدن منتورها', toast_client_ready:'حسابتان آماده است. منتوری متناسب با هدف‌تان پیدا کنید.',
     role_client_t:'دنبال منتور هستم', role_client_s:'برای رزومه، مصاحبه یا مسیر شغلی‌تان راهنمایی بگیرید.',
     role_mentor_t:'منتور هستم', role_mentor_s:'تجربه‌تان را به اشتراک بگذارید و به کسی در همان شغل کمک کنید.',
     pick_to_continue:'برای ادامه یکی را انتخاب کنید.',
@@ -4698,6 +4698,7 @@ function adminView(){
       <div class="muted" style="font-size:12.5px;margin-top:6px;">${esc(T('adm_share_hint'))}</div>
     </div>
   </div>
+  <div style="margin:18px 0 0;"><button type="button" class="btn btn-sm btn-outline" id="adm-paystat-btn">${esc(T('adm_paystat'))}</button><pre id="adm-paystat" style="display:none;white-space:pre-wrap;font-size:12px;max-height:320px;overflow:auto;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:10px;margin-top:10px;"></pre></div>
 ` : ''}
 
   ${tab==='bookings' ? `  <div class="panel wide" style="margin-bottom:28px;">
@@ -7675,6 +7676,18 @@ function canReport(r){
   if(!r || r.clientId!==uid || !r.paid || (r.problemReportedAt && !r.problemResolvedAt) || r.payoutDone) return false;
   const i = reqInstant(r); return !i || Date.now() < i.getTime() + 7*86400000;
 }
+// Admin: payment setup check (GET /api/create-checkout, admin sign-in required)
+document.addEventListener('click', async e=>{
+  const b = e.target.closest && e.target.closest('#adm-paystat-btn'); if(!b) return;
+  const out = document.getElementById('adm-paystat'); if(!out) return;
+  b.disabled = true; out.style.display = 'block'; out.textContent = '…';
+  try{
+    const { data } = await sb.auth.getSession(); const tok = data && data.session && data.session.access_token;
+    const r = await fetch('/api/create-checkout', { headers:{ Authorization:'Bearer '+(tok||'') } });
+    out.textContent = JSON.stringify(await r.json().catch(()=>({ status:r.status })), null, 2);
+  }catch(err){ out.textContent = String(err && err.message || err); }
+  b.disabled = false;
+});
 document.addEventListener('click', async e=>{
   const o = e.target.closest && e.target.closest('[data-prob-open]');
   if(o){ state.probOpen = o.getAttribute('data-prob-open') || null; render(); const t = document.getElementById('prob-note'); if(t) t.focus(); return; }

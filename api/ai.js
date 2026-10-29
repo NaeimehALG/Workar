@@ -36,7 +36,7 @@ async function overDailyLimit(userId) {
   return false;
 }
 
-const MAX_TURNS = 40, MAX_TURN_CHARS = 6000, MAX_INPUT_CHARS = 20000;
+const MAX_TURNS = 40, MAX_TURN_CHARS = 12000, MAX_INPUT_CHARS = 20000;
 // The coach chat as the page sends it: the person's turns and the coach's earlier replies, alternating,
 // starting and ending with the person. Anything else (two assistant turns in a row, a conversation
 // that ends with an "assistant" turn, other roles) is not something the page sends, so it is refused;
@@ -47,7 +47,7 @@ function coachTurns(turns, prompt) {
     const one = String(prompt || '').trim();
     return one ? [{ role: 'user', content: one.slice(0, MAX_TURN_CHARS) }] : [];
   }
-  if (turns.length > MAX_TURNS * 2) return null;
+  if (turns.length > MAX_TURNS * 2) turns = turns.slice(-MAX_TURNS * 2);   // long chats: only the latest turns are sent on
   const msgs = [];
   for (const t of turns) {
     if (!t || (t.role !== 'user' && t.role !== 'assistant') || typeof t.content !== 'string') return null;
