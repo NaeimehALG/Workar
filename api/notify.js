@@ -36,7 +36,7 @@ module.exports = async (req, res) => {
     if (event === 'profile_saved') {
       const p = await M.fullProfile(me.id);
       if (p.role !== 'mentor' || p.approved === false) { res.status(200).json({ ok: true }); return; }
-      try { await require('./_autopilot').englishProfiles([p]); } catch (e) { console.error('english-on-save', e.message); }
+      try { const AP = require('./_autopilot'); await AP.englishProfiles([p]); await AP.fillDetails([p]); } catch (e) { console.error('english-on-save', e.message); }
       res.status(200).json({ ok: true }); return;
     }
 

@@ -100,7 +100,9 @@ async function assessApplications(apps) {
         `You help the admin of Workar, a career mentorship marketplace, review mentor applications.
 For each application judge: is the profile complete and specific, is the experience plausible and relevant to mentoring,
 are there red flags (empty or copy-paste bio, inconsistent claims, unprofessional content, contact details or payment requests in the bio, missing LinkedIn).
-Never ask the applicant to fill in "bestFor" (Best For), their mentoring approach, or other optional extras: "bestFor" is written automatically from their bio.
+Never ask the applicant for "bestFor" (Best For), skills, tools or technologies, industries, field, seniority, the services they help with, more education details, their mentoring approach, availability, or other optional extras:
+Workar fills those in automatically from what they wrote, and the mentor sets their availability after approval. A bio that is honest and relevant is enough; do not ask for more detail in it.
+Ask only when something a client truly needs is missing or doubtful (for example an empty or one-line bio, or a role that does not match the experience they claim).
 Use "approve" only when you would be comfortable showing this mentor to paying clients today.
 Use "decline" ONLY for spam, abusive, offensive or clearly fake profiles. Every other profile that is not ready is "ask".
 Return an array with one entry per application, using the exact "id" given: [{"id": "...", "verdict": "approve" | "ask" | "decline", "summary": one sentence,
@@ -258,7 +260,9 @@ Return a JSON array: [{"id": "...", "changes": {"<field>": "<English text>"}}]. 
 // Live mentors are checked in the daily run too, so a profile edited after approval is still shown in English.
 async function englishLiveMentors() {
   const live = await M.rowsStrict(`profiles?role=eq.mentor&approved=eq.true&select=*`);
-  await englishProfiles((Array.isArray(live) ? live : []).filter(p => !p.banned));
+  const list = (Array.isArray(live) ? live : []).filter(p => !p.banned);
+  await englishProfiles(list);
+  await fillDetails(list);
 }
 
 // "Best For" is never asked of applicants: when it is empty, the AI writes one short sentence from the bio (admin's decision, Oct 27 2026).
@@ -284,11 +288,79 @@ Return an array: [{"id": "...", "bestFor": "..."}]`,
     }
   } catch (e) { console.error('best-for-failed', e.message); }
 }
+// The profile details a mentor would otherwise be asked for (field, seniority, industries, skills, the services
+// they help with) are filled in automatically from what they already wrote, when they are empty
+// (admin's decision, Oct 28 2026). Only facts the profile states or plainly implies; the mentor can change them.
+// Each version of a profile is looked at once (agent_events "details:<id>:<fingerprint>").
+const DETAIL_KEYS = ['field', 'seniority', 'industries', 'skills', 'helpsWith'];
+const isEmpty = v => v == null || (Array.isArray(v) ? !v.filter(x => String(x || '').trim()).length : !String(v).trim());
+const detailsGap = p => DETAIL_KEYS.filter(k => isEmpty(p[k]));
+const detailPrint = p => require('crypto').createHash('sha1').update(JSON.stringify(['headline', 'profession', 'company', 'experience', 'bio', 'education', 'degree', 'university', 'certifications', 'idealMentee'].map(k => p[k] == null ? null : p[k]).concat([detailsGap(p)]))).digest('hex').slice(0, 16);
+function detailsClean(a, p) {
+  const out = {}, gap = detailsGap(p);
+  if (!a || typeof a !== 'object') return out;
+  const list = (v, n, len, allowed) => {
+    if (!Array.isArray(v)) return [];
+    const seen = new Set(), r = [];
+    v.forEach(x => { const s = String(x || '').trim().slice(0, len); if (!s || seen.has(s.toLowerCase()) || (allowed && !allowed.includes(s)) || r.length >= n) return; seen.add(s.toLowerCase()); r.push(s); });
+    return r;
+  };
+  if (gap.includes('field') && DETAIL_FIELDS.includes(a.field)) out.field = a.field;
+  if (gap.includes('seniority') && DETAIL_SENIORITY.includes(a.seniority)) out.seniority = a.seniority;
+  if (gap.includes('industries')) { const v = list(a.industries, 5, 50); if (v.length) out.industries = v; }
+  if (gap.includes('skills')) { const v = list(a.skills, 8, 60); if (v.length) out.skills = v; }
+  if (gap.includes('helpsWith')) { const v = list(a.helpsWith, 4, 40, DETAIL_SERVICES); if (v.length) out.helpsWith = v; }
+  return out;
+}
+const DETAIL_FIELDS = ['Technology & Data', 'Business & Management', 'Finance & Accounting', 'Engineering', 'Healthcare & Life Sciences', 'Marketing & Sales', 'Design & Creative', 'Education & Research', 'Law & Public Sector', 'Operations & Trades', 'Other'];
+const DETAIL_SENIORITY = ['early-career', 'mid-level', 'senior', 'lead-or-manager', 'executive'];
+const DETAIL_SERVICES = ['resume_review', 'interview_prep', 'career_switch', 'job_search_strategy', 'salary_negotiation', 'promotion_and_growth', 'leadership', 'newcomer_career_start', 'certification_prep', 'portfolio_review', 'linkedin_and_networking'];
+async function fillDetails(list) {
+  if (!process.env.ANTHROPIC_API_KEY) return;
+  const items = (list || []).filter(p => p && p.id && detailsGap(p).length && String(p.bio || '').trim().length >= 80).map(p => ({ p, h: detailPrint(p) }));
+  if (!items.length) return;
+  const done = new Set();
+  try {
+    const r = await M.rowsStrict(`agent_events?id=in.(${items.map(x => encodeURIComponent(`"details:${x.p.id}:${x.h}"`)).join(',')})&select=id`);
+    (Array.isArray(r) ? r : []).forEach(e => e && done.add(e.id));
+  } catch (e) { console.error('details-memory', e.message); return; }
+  const need = items.filter(x => !done.has(`details:${x.p.id}:${x.h}`));
+  for (let i = 0; i < need.length && i < 20; i += 5) {
+    const batch = need.slice(i, i + 5);
+    let out;
+    try {
+      out = await AI.askJSON(
+        `Workar is a career mentorship marketplace. For each mentor, fill in ONLY the listed "missing" profile details, using only what their profile states or plainly implies. Write in English.
+- "field": exactly one of ${JSON.stringify(DETAIL_FIELDS)}.
+- "seniority": exactly one of ${JSON.stringify(DETAIL_SENIORITY)}, from their title and years of experience.
+- "industries": 1 to 4 short industry names (for example "Software", "Financial Services", "Construction").
+- "skills": 3 to 8 short skill areas their role and education clearly show (for example "Software engineering", "Data science", "Career change into tech"). Never name a specific tool, programming language, product or certification they did not mention.
+- "helpsWith": 1 to 4 of ${JSON.stringify(DETAIL_SERVICES)}: the kinds of help their bio says or clearly implies they offer.
+Never invent employers, degrees, tools or achievements. Leave a detail out when the profile gives no basis for it.
+Return a JSON array: [{"id": "...", "field": "...", "seniority": "...", "industries": [...], "skills": [...], "helpsWith": [...]}], with only the missing details for each mentor.`,
+        JSON.stringify(batch.map(({ p }) => ({ id: p.id, missing: detailsGap(p), title: p.profession || '', headline: p.headline || '', company: p.company || '', yearsExperience: p.experience || p.yearsExperience || '',
+          education: [p.education, p.degree, p.university].filter(Boolean).join(', '), certifications: p.certifications || [], bestFor: p.idealMentee || '', bio: String(p.bio || '').slice(0, 1500) }))),
+        { maxTokens: 350 * batch.length + 200, timeoutMs: 30000 });
+    } catch (e) { console.error('details-failed', e.message); continue; }
+    const res = Array.isArray(out) ? out : (out && (out.mentors || out.results)) || [];
+    for (const x of batch) {
+      const ch = detailsClean(res.find(r => r && r.id === x.p.id), x.p);
+      if (Object.keys(ch).length) {
+        const r = await M.patch(`profiles?id=eq.${encodeURIComponent(x.p.id)}`, ch);
+        if (!r.ok) { console.error('details-save', x.p.id, r.status); continue; }
+        Object.assign(x.p, ch);
+      }
+      await once('details', `${x.p.id}:${detailPrint(x.p)}`).catch(() => {});
+    }
+  }
+}
+
 async function mentorApplications(rep, ctx, onlyId) {
   const filter = onlyId ? `&id=eq.${encodeURIComponent(onlyId)}` : '';
   const apps = (await M.rowsStrict(`profiles?role=eq.mentor&approved=eq.false${filter}&select=*`)).filter(p => !p.banned);
   await englishProfiles(apps);
   await fillBestFor(apps);
+  await fillDetails(apps);
   ctx.apps = apps;
   ctx.results = ctx.results || {};
   if (ctx.approvedNow == null) ctx.approvedNow = await approvedToday();
@@ -594,4 +666,4 @@ async function run(extraErrors) {
   return Object.assign({ emails: rep.emails }, out);
 }
 
-module.exports = { _assess: (a) => assessApplications(a), run, reviewOne, profileComplete, once, missingBasics, mentorApplications, linkedInSlug, englishProfiles };
+module.exports = { _assess: (a) => assessApplications(a), run, reviewOne, profileComplete, once, missingBasics, mentorApplications, linkedInSlug, englishProfiles, fillDetails, _detailsClean: detailsClean };
