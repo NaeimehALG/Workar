@@ -26,12 +26,45 @@ async function overDailyLimit(userId) {
   try {
     const c = await fetch(`${url}/rest/v1/agent_events?kind=eq.coach&ref=eq.${encodeURIComponent(userId)}&createdAt=gte.${encodeURIComponent(since)}&select=id`,
       { method: 'HEAD', headers: Object.assign({ Prefer: 'count=exact' }, h) });
-    const used = Number(((c.headers.get('content-range') || '').split('/')[1]) || 0);
-    if (used >= DAILY_LIMIT()) return true;
-    await fetch(`${url}/rest/v1/agent_events`, { method: 'POST', headers: Object.assign({ Prefer: 'return=minimal' }, h),
+    if (!c || !c.ok) return true;
+    const used = Number(String((c.headers && c.headers.get('content-range')) || '').split('/')[1]);
+    if (!Number.isFinite(used) || used >= DAILY_LIMIT()) return true;
+    const w = await fetch(`${url}/rest/v1/agent_events`, { method: 'POST', headers: Object.assign({ Prefer: 'return=minimal' }, h),
       body: JSON.stringify({ id: `coach_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`, kind: 'coach', ref: userId }) });
-  } catch (e) { /* never block someone because the counter is unavailable */ }
+    if (!w || !w.ok) return true;
+  } catch (e) { console.error('coach-limit', e.message); return true; } // fail closed: no counter, no AI call
   return false;
+}
+
+const MAX_TURNS = 40, MAX_TURN_CHARS = 6000, MAX_INPUT_CHARS = 20000;
+// The coach chat as the page sends it: the person's turns and the coach's earlier replies, alternating,
+// starting and ending with the person. Anything else (two assistant turns in a row, a conversation
+// that ends with an "assistant" turn, other roles) is not something the page sends, so it is refused;
+// this stops a caller from writing a long fake "assistant" script. Two person turns in a row are joined.
+// The total is capped by dropping the oldest turns.
+function coachTurns(turns, prompt) {
+  if (!(Array.isArray(turns) && turns.length)) {
+    const one = String(prompt || '').trim();
+    return one ? [{ role: 'user', content: one.slice(0, MAX_TURN_CHARS) }] : [];
+  }
+  if (turns.length > MAX_TURNS * 2) return null;
+  const msgs = [];
+  for (const t of turns) {
+    if (!t || (t.role !== 'user' && t.role !== 'assistant') || typeof t.content !== 'string') return null;
+    const content = t.content.slice(0, MAX_TURN_CHARS);
+    if (!content.trim()) continue;
+    const last = msgs[msgs.length - 1];
+    if (last && last.role === t.role) {
+      if (t.role === 'assistant') return null;        // the coach never answers twice in a row
+      last.content = (last.content + '\n\n' + content).slice(0, MAX_TURN_CHARS); continue; // a retried question
+    }
+    msgs.push({ role: t.role, content });
+  }
+  let out = msgs.slice(-MAX_TURNS);
+  while (out.length && out[0].role !== 'user') out.shift();
+  while (out.length > 1 && out.reduce((n, m) => n + m.content.length, 0) > MAX_INPUT_CHARS) { out.shift(); while (out.length && out[0].role !== 'user') out.shift(); }
+  if (!out.length || out[out.length - 1].role !== 'user') return null;
+  return out;
 }
 
 module.exports = async (req, res) => {
@@ -42,6 +75,10 @@ module.exports = async (req, res) => {
 
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) { res.status(500).json({ error: 'ANTHROPIC_API_KEY is not set on the server' }); return; }
+
+  // Check the conversation before anything is counted against the daily limit.
+  const preview = coachTurns(turns, prompt);
+  if (!preview || !preview.length) { res.status(400).json({ error: 'empty' }); return; }
 
   const me = await M.userFromToken((req.headers.authorization || '').replace(/^Bearer\s+/i, ''));
   if (!me || me.is_anonymous) { res.status(401).json({ error: 'sign-in-required' }); return; }
@@ -56,11 +93,8 @@ module.exports = async (req, res) => {
   if (!isAdmin && await overDailyLimit(me.id)) { res.status(429).json({ error: 'daily-limit' }); return; }
 
   try {
-    const messages = (Array.isArray(turns) && turns.length
-      ? turns.map(t => ({ role: t.role === 'user' ? 'user' : 'assistant', content: String(t.content || '').slice(0, 12000) }))
-      : [{ role: 'user', content: String(prompt || '').slice(0, 12000) }]).slice(-40);
-    while (messages.length && messages[0].role !== 'user') messages.shift();
-    if (!messages.length) { res.status(400).json({ error: 'empty' }); return; }
+    const messages = coachTurns(turns, prompt);
+    if (!messages || !messages.length) { res.status(400).json({ error: 'empty' }); return; }
 
     const data = await AI.callClaude({ system: coachingSystem(mode, interviewRole), messages, maxTokens: 1000, timeoutMs: 25000 });
     const text = AI.textOf(data);
@@ -68,6 +102,9 @@ module.exports = async (req, res) => {
 
     res.status(200).json({ text, aiCreditsRemaining: null });
   } catch (e) {
-    res.status(500).json({ error: String(e) });
+    console.error('coach-failed', e && e.message);
+    res.status(500).json({ error: 'ai-error' });
   }
 };
+
+module.exports.coachTurns = coachTurns; // for tests

@@ -29,52 +29,42 @@ const DEFAULT_PACKAGES = {
 
 const DEFAULT_PREP_BUNDLE_PRICE = 24.99;
 
-// GET /api/create-checkout → payment setup health (no secrets): key mode, live charges, webhook secret, Connect.
+// GET /api/create-checkout (also /payment-status) → payment setup health, for the admin only:
+// the admin's own sign-in token, or "Authorization: Bearer <CRON_SECRET>". No secrets are returned, and
+// nothing is ever created on Stripe from here.
+const ADMIN_EMAIL = () => String(process.env.ADMIN_EMAIL || 'naeimeh.alaghehband@gmail.com').toLowerCase();
+async function healthAllowed(req) {
+  const token = String((req.headers || {}).authorization || '').replace(/^Bearer\s+/i, '').trim();
+  if (!token) return false;
+  const cron = process.env.CRON_SECRET;
+  if (cron && cron.length >= 16 && token === cron) return true;
+  try { const me = await userFromToken(token); return !!(me && !me.is_anonymous && String(me.email || '').toLowerCase() === ADMIN_EMAIL()); }
+  catch (e) { return false; }
+}
 async function health(res) {
   const key = process.env.STRIPE_SECRET_KEY || '';
   const out = { mode: key.startsWith('sk_live_') || key.startsWith('rk_live_') ? 'live' : (key ? 'test' : 'missing'), webhookSecret: !!process.env.STRIPE_WEBHOOK_SECRET };
   const E = process.env; // which services are configured (true/false only, never the values)
   out.services = { database: !!E.SUPABASE_SERVICE_ROLE_KEY, email: !!E.RESEND_API_KEY, ai: !!E.ANTHROPIC_API_KEY, voice: !!E.OPENAI_API_KEY, cron: !!E.CRON_SECRET, video: E.DAILY_API_KEY ? 'daily' : 'jitsi' };
   // Video: confirm the Daily key is accepted (a read-only call; no room is created).
-  // If it is missing or rejected, sessions still get a working Jitsi link, but outside Workar.
   if (E.DAILY_API_KEY) {
     try { const d = await fetch('https://api.daily.co/v1/', { headers: { Authorization: 'Bearer ' + E.DAILY_API_KEY } }); out.videoKeyWorks = d.ok; if (!d.ok) out.videoKeyStatus = d.status; }
     catch (e) { out.videoKeyWorks = null; }
   }
   if (key) {
+    // Read-only checks; the account id and name are not returned.
     const get = async path => { const r = await fetch('https://api.stripe.com/v1/' + path, { headers: { Authorization: 'Bearer ' + key } }); return { ok: r.ok, body: await r.json().catch(() => ({})) }; };
-    try { const a = await get('account'); out.chargesEnabled = a.ok ? !!a.body.charges_enabled : null; out.accountId = a.ok ? (a.body.id || null) : null; if (a.ok && a.body.requirements) out.disabledReason = a.body.requirements.disabled_reason || null; out.accountName = a.ok ? ((a.body.settings && a.body.settings.dashboard && a.body.settings.dashboard.display_name) || null) : null; } catch (e) { out.chargesEnabled = null; }
-    try { const c = await get('accounts?limit=1'); out.connect = c.ok ? true : String((c.body.error && c.body.error.message) || 'unavailable').slice(0, 160); } catch (e) { out.connect = null; }
-  }
-  // Test mode only: try creating (then delete) a mentor payout account to surface Connect setup problems
-  if (out.mode === 'test' && /probe=connect/.test(String((res.req && res.req.url) || ''))) {
-    try {
-      const H = { Authorization: 'Bearer ' + key, 'Stripe-Version': process.env.STRIPE_V2_VERSION || '2026-09-30.endive', 'Content-Type': 'application/json' };
-      const combos = [['express','application','application', process.env.STRIPE_V2_VERSION || '2026-09-30.endive']];
-      out.connectProbe = {};
-      await Promise.all(combos.map(async ([dash, fees, losses, ver]) => {
-        const Hh = Object.assign({}, H, { 'Stripe-Version': ver });
-        const r = await fetch('https://api.stripe.com/v2/core/accounts', { method: 'POST', headers: Hh, body: JSON.stringify({
-          dashboard: dash, contact_email: 'probe@workar.me', identity: { country: 'ca', entity_type: 'individual' },
-          configuration: { recipient: { capabilities: { stripe_balance: { stripe_transfers: { requested: true } } } } },
-          defaults: { responsibilities: { fees_collector: fees, losses_collector: losses } } }) });
-        const j = await r.json().catch(() => ({}));
-        let res = r.ok ? 'ok' : String((j.error && (j.error.code + ' ' + (j.error.message||''))) || r.status).slice(0, 300);
-        if (r.ok && j.id) {
-          const l = await fetch('https://api.stripe.com/v2/core/account_links', { method: 'POST', headers: Hh, body: JSON.stringify({ account: j.id, use_case: { type: 'account_onboarding', account_onboarding: { refresh_url: 'https://www.workar.me/?payouts=refresh', return_url: 'https://www.workar.me/?payouts=done' } } }) });
-          const lj = await l.json().catch(() => ({}));
-          res += ' / link ' + (l.ok && lj.url ? 'ok' : String((lj.error && (lj.error.code + ' ' + lj.error.message)) || l.status).slice(0,200));
-          fetch('https://api.stripe.com/v2/core/accounts/' + j.id + '/close', { method: 'POST', headers: Hh, body: '{}' }).catch(() => {});
-        }
-        out.connectProbe[dash + '|' + fees + '|' + losses + '|' + ver] = res;
-      }));
-    } catch (e) { out.connectProbe = 'probe-failed'; }
+    try { const a = await get('account'); out.chargesEnabled = a.ok ? !!a.body.charges_enabled : null; if (a.ok && a.body.requirements) out.disabledReason = a.body.requirements.disabled_reason || null; } catch (e) { out.chargesEnabled = null; }
+    try { const c = await get('accounts?limit=1'); out.connect = c.ok; if (!c.ok) console.error('health-connect', String((c.body.error && c.body.error.message) || '').slice(0, 200)); } catch (e) { out.connect = null; }
   }
   res.status(200).json(out);
 }
 
 module.exports = async (req, res) => {
-  if (req.method === 'GET') { res.req = res.req || req; return health(res); }
+  if (req.method === 'GET') {
+    if (!(await healthAllowed(req))) { res.status(401).json({ error: 'admin-only' }); return; }
+    return health(res);
+  }
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'method not allowed' });
     return;
@@ -272,12 +262,13 @@ module.exports = async (req, res) => {
       const msg = String((data && data.error && data.error.message) || '');
       // A Stripe account that hasn't finished activation can't take real payments yet
       const code = /cannot currently make live charges|activate|account.*(not|isn't).*(enabled|active)/i.test(msg) ? 'payments-not-activated' : 'stripe-error';
-      console.error('stripe-checkout-failed', msg);
-      res.status(502).json({ error: code, detail: data && data.error });
+      console.error('stripe-checkout-failed', r.status, data && data.error && data.error.type, msg);
+      res.status(502).json({ error: code }); // Stripe's own message stays in the server log
       return;
     }
     res.status(200).json({ url: data.url });
   } catch (e) {
-    res.status(500).json({ error: String(e) });
+    console.error('checkout-failed', e && e.message);
+    res.status(500).json({ error: 'checkout-failed' });
   }
 };

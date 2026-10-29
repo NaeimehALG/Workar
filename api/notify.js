@@ -16,11 +16,18 @@ module.exports = async (req, res) => {
     const row = Array.isArray(used) && used[0];
     if (!row || Date.now() - Date.parse(row.createdAt || 0) > 3600 * 1000) { res.status(404).end(); return; }
     try {
-      const AP = require('./_autopilot'), rep = { done: [], needs: [], emails: 0, errors: [] };
+      const AP = require('./_autopilot'), rep = { done: [], needs: [], emails: 0, errors: [], capped: 0, noRecipient: 0, mailOff: false };
+      // 120 s function limit: AI calls stop with less than a minute left (see timeLeft in _autopilot.js).
       await AP.mentorApplications(rep, { deadline: Date.now() + 105000 });
-      if (rep.errors.length) console.error('review-now-errors', JSON.stringify(rep.errors));
-      res.status(200).json({ ok: true, done: rep.done.length, emails: rep.emails, errors: rep.errors.length });
-    } catch (e) { console.error('review-now-failed', e.message); res.status(500).json({ ok: false }); }
+      // This run sends no report of its own: its problems are stored for the daily digest ("Needs you").
+      const problems = AP.mailProblems(rep).concat(rep.errors);
+      if (problems.length) { console.error('review-now-errors', JSON.stringify(problems)); await AP.recordErrors('Mentor review (every 15 minutes)', problems); }
+      res.status(200).json({ ok: true, done: rep.done.length, emails: rep.emails, errors: problems.length });
+    } catch (e) {
+      console.error('review-now-failed', e.message);
+      try { await require('./_autopilot').recordErrors('Mentor review (every 15 minutes)', ['the review run failed: ' + String(e.message || e).slice(0, 200)]); } catch (x) { /* logged above */ }
+      res.status(500).json({ ok: false });
+    }
     return;
   }
   if (req.method !== 'POST') { res.status(405).end(); return; }
@@ -36,7 +43,7 @@ module.exports = async (req, res) => {
     if (event === 'profile_saved') {
       const p = await M.fullProfile(me.id);
       if (p.role !== 'mentor' || p.approved === false) { res.status(200).json({ ok: true }); return; }
-      try { const AP = require('./_autopilot'); await AP.englishProfiles([p]); await AP.fillDetails([p]); } catch (e) { console.error('english-on-save', e.message); }
+      try { const AP = require('./_autopilot'), ctx = { deadline: Date.now() + 105000 }; await AP.englishProfiles([p], ctx); await AP.fillDetails([p], ctx); } catch (e) { console.error('english-on-save', e.message); }
       res.status(200).json({ ok: true }); return;
     }
 
@@ -49,6 +56,7 @@ module.exports = async (req, res) => {
       // daily digest); she gets an email only when an application needs attention.
       let out = { verdict: 'pending' };
       try { out = await require('./_autopilot').reviewOne(me.id); } catch (e) { console.error('review-one-failed', e.message); out = { verdict: 'pending', errors: [e.message] }; }
+      if ((out.errors || []).length) { try { await require('./_autopilot').recordErrors('Review on submit', out.errors); } catch (e) { console.error('record-errors', e.message); } }
       if (out.verdict !== 'approve' && out.verdict !== 'waiting' && out.verdict !== 'ask') { // 'ask' already sends the admin a copy
         const what = out.verdict === 'ask' ? `The profile is not live yet. We emailed ${M.esc(p.name)} to ask for: <b>${M.esc(out.question || 'more detail')}</b>`
           : out.verdict === 'decline' ? `The AI did not approve this profile. It stays hidden, and no email was sent to ${M.esc(p.name)}. ${M.esc(out.summary || '')}`
