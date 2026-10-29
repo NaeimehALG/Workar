@@ -141,6 +141,14 @@ module.exports = async (req, res) => {
     } catch (e) { res.status(503).send('database-down'); }
     return;
   }
+  // One-off setup emails the admin asked for: only with the private SETUP_NOW_KEY (set in Vercel, removed afterwards).
+  if (req.query && req.query.task === 'setup_now') {
+    const k = String(process.env.SETUP_NOW_KEY || '');
+    if (k.length < 32 || String(req.query.key || '') !== k) { res.status(401).end(); return; }
+    try { res.status(200).json({ results: await require('./_autopilot').setupNow(String(req.query.ids || '').split(',').map(x => x.trim()).filter(Boolean)) }); }
+    catch (e) { console.error('setup-now-failed', e); res.status(500).json({ error: String(e.message || e) }); }
+    return;
+  }
   const secret = process.env.CRON_SECRET;
   if (secret && req.headers.authorization !== 'Bearer ' + secret) { res.status(401).end(); return; }
   const out = {}, problems = [];

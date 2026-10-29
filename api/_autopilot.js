@@ -662,6 +662,47 @@ async function confirmLink(email) {
   const j = await r.json().catch(() => ({}));
   return r.ok ? (j.action_link || (j.properties && j.properties.action_link) || '') : '';
 }
+// Sends a fresh confirmation link (the caller has already claimed 'confirm-nudge' for this person).
+async function sendConfirmNudge(rep, u) {
+  const url = await confirmLink(u.email);
+  if (!url) { await forget('confirm-nudge', u.id); return false; }
+  rep.emails++;
+  // A sign-in link, so no team copy (whoever has the copy could open the account).
+  const sent = await M.sendMail(u.email, 'Confirm your email to finish joining Workar', M.layout('Please confirm your email',
+    ['You started creating a Workar account, but your email address has not been confirmed yet.', 'Use the button below to confirm it and continue. If you did not sign up for Workar, you can safely ignore this email.'],
+    { text: 'Confirm my email', url }), null, { noCopy: true });
+  if (sent && (sent.ok || sent.skipped)) { rep.done.push(`Sent a new confirmation link to ${M.esc(u.email)}, who had not confirmed their email.`); return true; }
+  await forget('confirm-nudge', u.id); rep.errors.push(`A confirmation reminder to ${u.email} could not be sent; it will be retried.`);
+  return false;
+}
+
+// One-off "finish setting up" email, sent on the admin's request to the listed accounts (api/reminders.js, task=setup_now).
+// Skips anyone who already has a profile or was already sent it; the day-1 reminder is then not sent again.
+async function setupNow(ids) {
+  const rep = newReport(), site = M.SITE(), out = [];
+  if (!(await checkMemory())) throw new Error('agent_events table is missing');
+  for (const id of [...new Set(ids)].slice(0, 10)) {
+    if (!/^[0-9a-f-]{36}$/.test(id)) { out.push({ id, result: 'bad-id' }); continue; }
+    const ur = await fetch(`${process.env.SUPABASE_URL}/auth/v1/admin/users/${id}`, { headers: svc() });
+    if (!ur.ok) { out.push({ id, result: 'not-found' }); continue; }
+    const u = await ur.json();
+    if (!u.email) { out.push({ id, result: 'no-email' }); continue; }
+    if ((await M.rowsStrict(`profiles?id=eq.${id}&select=id`)).length) { out.push({ id, result: 'has-profile' }); continue; }
+    if (!u.email_confirmed_at) {
+      if (!(await once('confirm-nudge', id))) { out.push({ id, result: 'confirm-already-sent' }); continue; }
+      out.push({ id, result: (await sendConfirmNudge(rep, u)) ? 'confirm-link-sent' : 'failed' }); continue;
+    }
+    if (!(await once('setup-now', id))) { out.push({ id, result: 'already-sent' }); continue; }
+    const ok = await mail(rep, u.email, 'Your Workar account is one step away', 'Your Workar account is one step away',
+      ['Hi,', 'Thank you for creating a Workar account. Your account is not set up yet, and it only takes about a minute to finish.',
+        'Would you like to find a mentor, or share your experience as a mentor? Choose one, and we will take you straight to the next step.'],
+      { text: 'Finish setting up', url: site + '/?go=onboard' });
+    if (ok) { await once('finish-profile', id); out.push({ id, result: 'sent' }); }
+    else { await forget('setup-now', id); out.push({ id, result: 'failed' }); }
+  }
+  return out;
+}
+
 async function signups(rep, ctx) {
   const now = Date.now(), site = M.SITE();
   const r = await fetch(`${process.env.SUPABASE_URL}/auth/v1/admin/users?page=1&per_page=1000`, { headers: svc() });
@@ -683,15 +724,7 @@ async function signups(rep, ctx) {
     if (!u.email_confirmed_at) {
       if (age < 1 * DAY || age > 7 * DAY || !on('AUTOPILOT_CONFIRM_NUDGE')) continue;
       if (rep.emails >= MAX_EMAILS_PER_RUN || !(await once('confirm-nudge', u.id))) continue;
-      const url = await confirmLink(u.email);
-      if (!url) { await forget('confirm-nudge', u.id); continue; }
-      rep.emails++;
-      // A sign-in link, so no team copy (whoever has the copy could open the account).
-      const sent = await M.sendMail(u.email, 'Confirm your email to finish joining Workar', M.layout('Please confirm your email',
-        ['You started creating a Workar account, but your email address has not been confirmed yet.', 'Use the button below to confirm it and continue. If you did not sign up for Workar, you can safely ignore this email.'],
-        { text: 'Confirm my email', url }), null, { noCopy: true });
-      if (sent && (sent.ok || sent.skipped)) rep.done.push(`Sent a new confirmation link to ${M.esc(u.email)}, who had not confirmed their email.`);
-      else { await forget('confirm-nudge', u.id); rep.errors.push(`A confirmation reminder to ${u.email} could not be sent; it will be retried.`); }
+      await sendConfirmNudge(rep, u);
       continue;
     }
     if (!p) {
@@ -797,4 +830,4 @@ async function run(extraErrors, opts = {}) {
   return Object.assign({ emails: rep.emails }, out);
 }
 
-module.exports = { _assess: (a) => assessApplications(a), run, reviewOne, profileComplete, once, missingBasics, mentorApplications, linkedInSlug, englishProfiles, fillDetails, _detailsClean: detailsClean, _resumeClean: resumeClean, fillFromResume };
+module.exports = { setupNow, _assess: (a) => assessApplications(a), run, reviewOne, profileComplete, once, missingBasics, mentorApplications, linkedInSlug, englishProfiles, fillDetails, _detailsClean: detailsClean, _resumeClean: resumeClean, fillFromResume };
