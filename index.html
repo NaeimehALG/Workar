@@ -1223,6 +1223,9 @@
   .legal-tabs a{font-size:13px;font-weight:700;padding:6px 14px;border-radius:999px;border:1px solid var(--border);color:var(--muted);cursor:pointer;text-decoration:none;}
   .legal-tabs a.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);}
   .legal section{margin-bottom:22px;}
+  .legal-jump{font-size:13.5px;margin:-12px 0 22px;} .legal-jump a{color:var(--accent);font-weight:600;}
+  .legal-part{margin-top:38px;padding-top:26px;border-top:1px solid var(--border);scroll-margin-top:90px;}
+  .legal-part-h{font-size:22px !important;margin:0 0 16px !important;}
   .legal h2{font-size:16.5px;font-weight:700;margin:0 0 6px;}
   .legal p{font-size:14.5px;line-height:1.75;margin:0;color:var(--text);}
   .foot-links{display:inline-block;margin:0;font-size:12.5px;}
@@ -2527,7 +2530,6 @@ const I18N = {
     prep_new_exam:'New exam', prep_create:'Create (as draft)', prep_need_title:'Please enter a title',
     prep_csv_none:'No valid questions found in the file', prep_csv_done:'{n} questions uploaded', prep_csv_skipped:'skipped rows {r}',
     hiw_title:'How it works',
-    new_mentor:'New on Workar',
     why_title:'Why Workar?', why_sub:"Advice is everywhere. Guidance from someone who has already walked your path is rare.",
     why_b1:'mentors who have done the job', why_b2:'fields & industries', why_b3:'languages spoken',
     why_b4:'AI coach for resumes & interviews', why_b5:'private video & voice sessions',
@@ -2644,7 +2646,7 @@ const I18N = {
     need_access:'Workar needs workspace access to load profiles and mentors.', try_open:'Try opening this from within your Claude organization.',
     yrs_exp:'yrs experience', linkedin_link:'LinkedIn ↗',
     bm_card_t:'Want to become a mentor?', bm_card_s:'If you have the experience, you can switch to a mentor profile in a few minutes.', bm_btn:'Become a mentor',
-    bm_title:'Switch to a mentor profile', bm_sub:'Complete your mentor details below. Your messages stay the same. Your profile will appear in Find a mentor once it has been reviewed.', bm_cancel:'Cancel', bm_submit:'Switch to mentor',
+    bm_title:'Switch to a mentor profile', bm_sub:'Complete your mentor details below. Your messages stay the same. Your profile appears in Find a mentor once it is complete.', bm_cancel:'Cancel', bm_submit:'Switch to mentor',
     lang_switch:'فارسی',
     api_key_btn:'API key', api_key_prompt:'Enter your Anthropic API key to power AI coaching and matching.\nStored only in this browser — leave blank to clear.',
     api_key_saved:'API key saved', api_key_cleared:'API key cleared',
@@ -2683,7 +2685,7 @@ const I18N = {
     pj_cam_is_off:'Your camera is off', pj_mute:'Mute microphone', pj_unmute:'Unmute microphone', pj_cam_off:'Turn camera off', pj_cam_on:'Turn camera on', pj_join:'Join now', dt_btn:'Test camera & mic', dt_title:'Test your camera, mic and connection', dt_sub:'A 30-second check with the same video system your sessions use. Nobody else can see or hear you.', dt_dev_ok:'Camera and microphone are working. Say something: the bars should move.', dt_dev_fail:'We could not use your camera or microphone. Allow access in your browser settings, close other apps that use the camera, and try again.', dt_net_checking:'Checking your connection… (about 30 seconds)', dt_net_good:'Your connection is good. You are ready for your session.', dt_net_warning:'Your connection is OK, but video may be choppy. Try moving closer to Wi-Fi or closing other apps.', dt_net_bad:'Your connection is weak. Try another network, or use a voice call instead of video.', dt_net_failed:'We could not reach the video service. Check your internet, or try another network or browser.', dt_again:'Test again', dt_done:'Done', pj_note_daily:'Your call opens right here in Workar. No app or sign-in needed.', call_end:'Leave call', call_loading:'Connecting your call…', call_with:'Call with {n}', pj_note:'Your Jitsi session opens in a new tab. Keep the link confidential and enable the lobby to admit only your mentor or client. The first participant may need to sign in to Jitsi.',
     cal_free:'Free', cal_booked:'Booked', cal_na:'Not available', cal_off:'No times on this day. Pick a highlighted date.', cal_picked:'Selected: {d} at {t}', cal_busy_on:'Already booked that day: {t}', cal_none_busy:'Nothing booked that day yet.', cal_clash:'That time is already booked — please pick another.', cal_taken:'Someone just booked that time. Please pick another.',
     ft_privacy:'Privacy', ft_terms:'Terms', ft_refunds:'Refunds', legal_back:'← Back to Workar', legal_updated:'Last updated: {d}',
-    auth_agree:'I agree to the {t}, the {p} and the {c}.', lbl_timezone:'Your time zone', tz_hint:'Your weekly availability is in this time zone. Clients see times converted to their own zone.',
+    auth_agree:'I agree to the {t} and the {p}.', lbl_timezone:'Your time zone', tz_hint:'Your weekly availability is in this time zone. Clients see times converted to their own zone.',
     cal_tz_same:'Times are in your time zone ({z}).', cal_tz_diff:'Times are shown in your time zone ({z}). The mentor is in {m}.', cal_tz_own:'Times are shown in your own time zone ({z}).', cal_past:'That time has already passed — please choose a later one.',
     mp_tz:'Mentor\'s time zone: {z}', mentor_not_available:'This mentor profile isn\'t available yet.', pending_review:'Your mentor profile is being set up. Workar will email you as soon as it\'s live in Find a mentor.',
     review_after_session:'You can leave a review after your first session with {n}.', review_done:'Thank you, you have already reviewed {n}.',
@@ -2987,7 +2989,6 @@ const I18N = {
     prep_new_exam:'آزمون جدید', prep_create:'ساخت (به‌صورت پیش‌نویس)', prep_need_title:'لطفاً عنوان رو وارد کن',
     prep_csv_none:'سؤال معتبری در فایل پیدا نشد', prep_csv_done:'{n} سؤال آپلود شد', prep_csv_skipped:'ردیف‌های ردشده: {r}',
     hiw_title:'چطور کار می‌کند',
-    new_mentor:'تازه به Workar پیوسته',
     why_title:'چرا Workar؟', why_sub:'توصیه همه‌جا پیدا می‌شود؛ اما راهنمایی از کسی که همین مسیر را رفته کمیاب است.',
     why_b1:'منتوری که همین کار را انجام داده', why_b2:'رشته و صنعت', why_b3:'زبان',
     why_b4:'مربی هوش مصنوعی برای رزومه و مصاحبه', why_b5:'جلسه‌ی خصوصی تصویری و صوتی',
@@ -3104,7 +3105,7 @@ const I18N = {
     need_access:'Workar برای بارگذاری پروفایل‌ها و منتورها به دسترسی Workspace نیاز دارد.', try_open:'آن را از داخل سازمان Claude خودتان باز کنید.',
     yrs_exp:'سال تجربه', linkedin_link:'لینکدین ↗',
     bm_card_t:'می‌خواهید منتور شوید؟', bm_card_s:'اگر تجربه‌اش را دارید، می‌توانید در چند دقیقه پروفایل‌تان را به پروفایل منتور تغییر دهید.', bm_btn:'منتور شوید',
-    bm_title:'تغییر به پروفایل منتور', bm_sub:'اطلاعات منتوری‌تان را در فرم زیر کامل کنید. پیام‌هایتان همان‌طور می‌مانند. پروفایل شما پس از بررسی در فهرست منتورها نمایش داده می‌شود.', bm_cancel:'انصراف', bm_submit:'تغییر به منتور',
+    bm_title:'تغییر به پروفایل منتور', bm_sub:'اطلاعات منتوری‌تان را در فرم زیر کامل کنید. پیام‌هایتان همان‌طور می‌مانند. پروفایل شما پس از تکمیل، در فهرست منتورها نمایش داده می‌شود.', bm_cancel:'انصراف', bm_submit:'تغییر به منتور',
     lang_switch:'English',
     api_key_btn:'کلید API', api_key_prompt:'کلید Anthropic API خود را وارد کنید تا کوچینگ و پیشنهاد منتور با هوش مصنوعی فعال شود.\nفقط در همین مرورگر ذخیره می‌شود؛ برای پاک کردن، خالی بگذارید.',
     api_key_saved:'کلید ذخیره شد', api_key_cleared:'کلید پاک شد',
@@ -3143,7 +3144,7 @@ const I18N = {
     pj_cam_is_off:'دوربین شما خاموش است', pj_mute:'قطع میکروفون', pj_unmute:'وصل میکروفون', pj_cam_off:'خاموش کردن دوربین', pj_cam_on:'روشن کردن دوربین', pj_join:'ورود به جلسه', dt_btn:'تست دوربین و میکروفون', dt_title:'تست دوربین، میکروفون و اینترنت', dt_sub:'یک بررسی ۳۰ ثانیه‌ای با همان سیستم تصویری جلسه‌ها. کسی شما را نمی‌بیند و صدایتان را نمی‌شنود.', dt_dev_ok:'دوربین و میکروفون کار می‌کنند. چیزی بگویید: خط‌ها باید حرکت کنند.', dt_dev_fail:'نتوانستیم از دوربین یا میکروفون استفاده کنیم. در تنظیمات مرورگر اجازه بدهید، برنامه‌های دیگری را که از دوربین استفاده می‌کنند ببندید و دوباره امتحان کنید.', dt_net_checking:'در حال بررسی اینترنت… (حدود ۳۰ ثانیه)', dt_net_good:'اینترنت شما خوب است. برای جلسه آماده‌اید.', dt_net_warning:'اینترنت قابل قبول است، اما ممکن است تصویر قطع‌ووصل شود. به Wi-Fi نزدیک‌تر شوید یا برنامه‌های دیگر را ببندید.', dt_net_bad:'اینترنت ضعیف است. شبکه‌ی دیگری را امتحان کنید، یا به جای تصویری، تماس صوتی بگیرید.', dt_net_failed:'به سرویس تصویری وصل نشدیم. اینترنت را بررسی کنید یا شبکه یا مرورگر دیگری را امتحان کنید.', dt_again:'تست دوباره', dt_done:'تمام', pj_note_daily:'تماس همین‌جا داخل Workar باز می‌شود؛ بدون نصب برنامه یا ورود به حساب.', call_end:'خروج از تماس', call_loading:'در حال اتصال تماس…', call_with:'تماس با {n}', pj_note:'جلسه در یک زبانه‌ی جدید Jitsi باز می‌شود. لینک را به کسی ندهید و لابی را برای تأیید ورود روشن کنید. ممکن است نفر اول لازم باشد وارد حساب Jitsi شود.',
     cal_free:'آزاد', cal_booked:'رزرو شده', cal_na:'در دسترس نیست', cal_off:'در این روز زمان آزادی نیست. یکی از تاریخ‌های رنگی را انتخاب کنید.', cal_picked:'انتخاب شد: {d} ساعت {t}', cal_busy_on:'در این روز رزرو شده: {t}', cal_none_busy:'هنوز رزروی برای این روز نیست.', cal_clash:'این زمان قبلاً رزرو شده است. زمان دیگری انتخاب کنید.', cal_taken:'همین الان کسی این زمان را رزرو کرد. زمان دیگری انتخاب کنید.',
     ft_privacy:'حریم خصوصی', ft_terms:'شرایط استفاده', ft_refunds:'بازپرداخت', legal_back:'→ بازگشت به Workar', legal_updated:'آخرین به‌روزرسانی: {d}',
-    auth_agree:'{t}، {p} و {c} را می‌پذیرم.', lbl_timezone:'منطقه‌ی زمانی شما', tz_hint:'زمان‌های آزاد هفتگی شما به این منطقه‌ی زمانی است. مراجعان زمان را به وقت خودشان می‌بینند.',
+    auth_agree:'{t} و {p} را می‌پذیرم.', lbl_timezone:'منطقه‌ی زمانی شما', tz_hint:'زمان‌های آزاد هفتگی شما به این منطقه‌ی زمانی است. مراجعان زمان را به وقت خودشان می‌بینند.',
     cal_tz_same:'زمان‌ها به وقت شماست ({z}).', cal_tz_diff:'زمان‌ها به وقت شما ({z}) نمایش داده می‌شوند. منتور در {m} است.', cal_tz_own:'ساعت‌ها به وقت خود شما ({z}) نمایش داده می‌شوند.', cal_past:'این زمان گذشته است — زمان دیرتری انتخاب کنید.',
     mp_tz:'منطقه‌ی زمانی منتور: {z}', mentor_not_available:'این پروفایل منتور هنوز در دسترس نیست.', pending_review:'پروفایل منتوری شما در حال آماده‌سازی است. به محض اینکه در فهرست منتورها نمایش داده شود، Workar به شما ایمیل می‌زند.',
     review_after_session:'بعد از اولین جلسه با {n} می‌توانید نظر بنویسید.', review_done:'ممنون، شما قبلاً برای {n} نظر نوشته‌اید.',
@@ -3518,7 +3519,7 @@ terms: { title:'Terms of Service', sections:[
  ['What Workar is','Workar is a platform that connects people looking for career guidance ("clients") with experienced professionals ("mentors"). Mentors are independent professionals, not employees or agents of Workar. Workar does not guarantee any job, interview, promotion or other outcome.'],
  ['Not professional advice','Mentoring sessions and the AI coach offer general career guidance only. They are not legal, immigration, financial, medical or other regulated professional advice. For those matters, please consult a licensed professional.'],
  ['Accounts','You must be at least 18, give accurate information and keep your password secure. You are responsible for activity on your account. One person, one account.'],
- ['Mentors','Mentor profiles are reviewed by Workar before they appear publicly. Mentors must describe their experience honestly, keep their availability up to date, attend confirmed sessions on time and treat clients respectfully. Mentors receive their share of each paid booking as shown in their dashboard; Workar keeps the remainder as a platform fee. Mentors are responsible for their own taxes.'],
+ ['Mentors','A mentor profile appears publicly once it is complete. Mentors must describe their experience honestly, keep their availability up to date, attend confirmed sessions on time and treat clients respectfully. Mentors receive their share of each paid booking as shown in their dashboard; Workar keeps the remainder as a platform fee. Mentors are responsible for their own taxes.'],
  ['Bookings and payments','Clients request a time; the booking is confirmed once the mentor accepts it and the client pays. Prices are shown before you pay and are charged in Canadian dollars (CAD) through Stripe. Cancellations and refunds follow our Refund & Cancellation Policy.'],
  ['Sessions','Sessions take place by video or voice call through Workar. Do not record a session without the other person\'s consent. Please do not move payment for Workar bookings outside the platform.'],
  ['Acceptable use','Do not harass, discriminate against or mislead others; share anyone\'s personal information without permission; post unlawful, hateful or sexual content; attempt to access other users\' data; or misuse the AI coach. We may remove content or suspend accounts that break these rules.'],
@@ -3558,7 +3559,7 @@ terms: { title:'شرایط استفاده', sections:[
  ['Workar چیست','Workar افرادی را که به راهنمایی شغلی نیاز دارند به متخصصان باتجربه وصل می‌کند. منتورها متخصصان مستقل هستند، نه کارمند Workar. Workar هیچ نتیجه‌ای مانند استخدام یا مصاحبه را تضمین نمی‌کند.'],
  ['مشاوره‌ی تخصصی نیست','جلسات و مربی هوش مصنوعی فقط راهنمایی عمومی شغلی هستند و مشاوره‌ی حقوقی، مهاجرتی، مالی یا پزشکی محسوب نمی‌شوند.'],
  ['حساب کاربری','باید حداقل ۱۸ سال داشته باشید، اطلاعات درست وارد کنید و از رمز خود محافظت کنید. هر نفر یک حساب.'],
- ['منتورها','پروفایل منتورها پیش از نمایش عمومی توسط Workar بررسی می‌شود. منتورها باید تجربه‌ی خود را صادقانه بیان کنند، زمان‌های آزاد را به‌روز نگه دارند و به‌موقع در جلسات حاضر شوند. سهم منتور از هر رزرو در داشبورد نمایش داده می‌شود و باقی‌مانده کارمزد Workar است. مسئولیت مالیات با خود منتور است.'],
+ ['منتورها','پروفایل منتور پس از تکمیل به‌صورت عمومی نمایش داده می‌شود. منتورها باید تجربه‌ی خود را صادقانه بیان کنند، زمان‌های آزاد را به‌روز نگه دارند و به‌موقع در جلسات حاضر شوند. سهم منتور از هر رزرو در داشبورد نمایش داده می‌شود و باقی‌مانده کارمزد Workar است. مسئولیت مالیات با خود منتور است.'],
  ['رزرو و پرداخت','رزرو پس از تأیید منتور و پرداخت مراجعه‌کننده قطعی می‌شود. قیمت‌ها پیش از پرداخت نمایش داده می‌شود و به دلار کانادا از طریق Stripe دریافت می‌شود.'],
  ['جلسات','جلسات از طریق تماس تصویری یا صوتی Workar برگزار می‌شود. بدون رضایت طرف مقابل جلسه را ضبط نکنید و پرداخت را خارج از Workar انجام ندهید.'],
  ['استفاده‌ی مجاز','آزار، تبعیض، فریب، انتشار اطلاعات شخصی دیگران، محتوای غیرقانونی یا نفرت‌آمیز و سوءاستفاده از سیستم ممنوع است و ممکن است به تعلیق حساب منجر شود.'],
@@ -3607,16 +3608,27 @@ LEGAL.fa.conduct = { title:'منشور رفتاری', updated:'October 14, 2026'
  ['اقدام‌های ما','همه‌ی گزارش‌ها را بررسی می‌کنیم. بسته به آنچه رخ داده، ممکن است هشدار دهیم، پروفایل را پنهان کنیم، حساب را تعلیق یا برای همیشه ببندیم، رزروهای آینده را لغو کنیم و پرداخت آن جلسه را نگه داریم یا بازپرداخت کنیم. اگر کسی در خطر آسیب باشد، ممکن است اطلاعات را با مقامات در میان بگذاریم.'],
  ['امنیت شما در اولویت است','اگر احساس ناامنی کردید، هر زمان و بدون نیاز به توضیح می‌توانید تماس را ترک کنید. اگر شما یا کس دیگری در خطر فوری هستید، ابتدا با خدمات اضطراری محلی (۹۱۱ در کانادا) تماس بگیرید و سپس به ما خبر دهید.']
 ]};
+// The Code of Conduct is part of the Terms of Service (one page); old ?go=conduct links open Terms at that part.
+LEGAL.en.terms.updated = 'October 29, 2026'; LEGAL.fa.terms.updated = 'October 29, 2026';
 function legalView(page){
-  const L = (LEGAL[state.lang] || LEGAL.en)[page] || LEGAL.en[page];
+  if(page==='conduct') page = 'terms';
+  const LL = LEGAL[state.lang] || LEGAL.en, L = LL[page] || LEGAL.en[page];
+  const secs = list=>list.map(([h,t],i)=>`<section><h2>${i+1}. ${esc(h)}</h2><p>${esc(t)}</p></section>`).join('');
+  const C = page==='terms' ? (LL.conduct || LEGAL.en.conduct) : null;
   return `<article class="legal">
-    <a class="mp-back" data-nav="home">${esc(T('legal_back'))}</a>
+    <a class="mp-back" href="/" data-nav="home">${esc(T('legal_back'))}</a>
     <h1>${esc(L.title)}</h1>
     <p class="legal-date">${esc(T('legal_updated').replace('{d}', L.updated || LEGAL_UPDATED))}</p>
-    <nav class="legal-tabs">${['privacy','terms','refunds','conduct'].map(k=>`<a data-nav="${k}" class="${k===page?'on':''}">${esc(((LEGAL[state.lang]||LEGAL.en)[k]).title)}</a>`).join('')}</nav>
-    ${L.sections.map(([h,t],i)=>`<section><h2>${i+1}. ${esc(h)}</h2><p>${esc(t)}</p></section>`).join('')}
+    <nav class="legal-tabs">${['privacy','terms','refunds'].map(k=>`<a href="${navHref(k)}" data-nav="${k}" class="${k===page?'on':''}"${k===page?' aria-current="page"':''}>${esc(LL[k].title)}</a>`).join('')}</nav>
+    ${C ? `<p class="legal-jump"><a href="#conduct" data-legal-jump="conduct">${esc(C.title)}</a></p>` : ''}
+    ${secs(L.sections)}
+    ${C ? `<div class="legal-part" id="conduct"><h2 class="legal-part-h">${esc(C.title)}</h2>${secs(C.sections)}</div>` : ''}
   </article>`;
 }
+document.addEventListener('click', e=>{
+  const a = e.target.closest && e.target.closest('[data-legal-jump]'); if(!a) return;
+  e.preventDefault(); const t = document.getElementById(a.getAttribute('data-legal-jump')); if(t) t.scrollIntoView({ behavior:'smooth', block:'start' });
+});
 
 // ---------- time zones ----------
 const MY_TZ = (()=>{ try{ return Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/Vancouver'; }catch(e){ return 'America/Vancouver'; } })();
@@ -6509,7 +6521,7 @@ function authView(){
         ${pwField('password','lbl_password', mode==='signup'?'ph_password_new':'ph_password', mode==='signup'?'new-password':'current-password')}
         ${mode==='signup' ? pwField('password2','lbl_confirm_password_signup','ph_confirm_password','new-password') : ''}
         ${mode==='login' ? `<div class="auth-forgot"><a href="#" id="auth-forgot">${esc(T('forgot_link'))}</a></div>` : ''}`}
-        ${mode==='signup' ? `<label class="auth-agree"><input type="checkbox" id="auth-agree" required> <span>${T('auth_agree').replace('{t}', `<a data-nav="terms">${esc(T('ft_terms'))}</a>`).replace('{p}', `<a data-nav="privacy">${esc(T('ft_privacy'))}</a>`).replace('{c}', `<a data-nav="conduct">${esc(T('ft_conduct'))}</a>`)}</span></label>` : ''}
+        ${mode==='signup' ? `<label class="auth-agree"><input type="checkbox" id="auth-agree" required> <span>${T('auth_agree').replace('{t}', `<a href="${navHref('terms')}" data-nav="terms">${esc(T('ft_terms'))}</a>`).replace('{p}', `<a href="${navHref('privacy')}" data-nav="privacy">${esc(T('ft_privacy'))}</a>`)}</span></label>` : ''}
         ${state.authError ? `<div class="form-err">${esc(state.authError)}</div>` : ''}
         <button class="btn btn-primary auth-submit" type="submit" ${state.authBusy?'disabled':''}>${esc(mode==='signup' ? T('btn_signup') : mode==='forgot' ? T('btn_send_reset') : T('btn_login'))}</button>
       </form>
@@ -6733,7 +6745,7 @@ function mentorPreviewCard(){
       <div class="card-top"><div class="avatar" id="pv-av">?</div><div><h3 id="pv-name">${esc(T('ob_pv_name'))}</h3><div class="prof" id="pv-head">${esc(T('ob_pv_head'))}</div></div></div>
       <div class="card-meta" id="pv-meta"></div>
       <p class="bio" id="pv-bio">${esc(T('ob_pv_bio'))}</p>
-      <div class="card-foot"><span class="muted">${esc(T('new_mentor'))}</span><b id="pv-rate">$${minRate()}</b></div>
+      <div class="card-foot"><span></span><b id="pv-rate">$${minRate()}</b></div>
     </div>
     <p class="ob-preview-note">${esc(T('ob_preview_note'))}</p>
   </div>`;
