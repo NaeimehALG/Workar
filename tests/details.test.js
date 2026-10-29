@@ -37,3 +37,27 @@ test('resume fill never replaces a real bio', () => {
   const p = { id: 's', bio: 'x'.repeat(200), experience: '5', headline: 'h', profession: 'p', company: 'c', degree: 'd', university: 'u', certifications: ['a'], languages: ['English'] };
   assert.deepEqual(AP._resumeClean({ bio: 'y'.repeat(200), yearsExperience: 9 }, p), {});
 });
+
+test('resume files are only read from plain "<owner>/<file>" paths', async () => {
+  const { resumeBlock } = require('../api/agents');
+  const saved = global.fetch; let called = 0;
+  global.fetch = async () => { called++; return { ok: false }; };
+  try {
+    for (const bad of ['../../../auth/v1/admin/users', 'abc/../other/cv.pdf', 'cv.pdf', 'abc//cv.pdf', 'abc/./cv.pdf']) {
+      await assert.rejects(resumeBlock(bad), /file-not-found/);
+    }
+    assert.equal(called, 0);
+  } finally { global.fetch = saved; }
+});
+
+test('the optional fill steps stop when the time limit is near', async () => {
+  const AP = require('../api/_autopilot');
+  const saved = global.fetch; let called = 0;
+  global.fetch = async () => { called++; return { ok: true, json: async () => [] }; };
+  process.env.ANTHROPIC_API_KEY = 'k';
+  try {
+    await AP.fillFromResume([{ id: 'u1', resumePath: 'u1/cv.pdf', bio: '' }], { deadline: Date.now() + 1000 });
+    await AP.fillFromResume([{ id: 'u2', resumePath: 'someone-else/cv.pdf', bio: '' }], {});
+    assert.equal(called, 0);
+  } finally { global.fetch = saved; }
+});

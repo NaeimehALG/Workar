@@ -23,6 +23,8 @@ const M = require('./_mail');
 const AI = require('./_ai');
 
 const DAY = 24 * 3600 * 1000, HOUR = 3600 * 1000;
+// Time left before the function's limit (ctx.deadline); the optional AI fill steps are skipped when it runs short.
+const timeLeft = ctx => (ctx && ctx.deadline ? ctx.deadline - Date.now() : Infinity);
 const ms = v => (v == null ? 0 : (typeof v === 'number' ? v : (isNaN(Number(v)) ? Date.parse(v) : Number(v)))) || 0;
 const on = name => String(process.env[name] || 'on').toLowerCase() !== 'off';
 const svc = () => ({ apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: 'Bearer ' + process.env.SUPABASE_SERVICE_ROLE_KEY, 'Content-Type': 'application/json' });
@@ -248,21 +250,24 @@ Return a JSON array: [{"id": "...", "changes": {"<field>": "<English text>"}}]. 
       const a = res.find(r => r && r.id === x.p.id);
       if (!a) continue;
       const ch = enClean(a.changes, x.p);
-      if (Object.keys(ch).length) {
-        const r = await M.patch(`profiles?id=eq.${encodeURIComponent(x.p.id)}`, ch);
-        if (!r.ok) { console.error('english-save', x.p.id, r.status); continue; }
-        Object.assign(x.p, ch);
-      }
-      await once('en', `${x.p.id}:${enPrint(x.p)}`).catch(() => {});
+      try {
+        if (Object.keys(ch).length) {
+          const r = await M.patch(`profiles?id=eq.${encodeURIComponent(x.p.id)}`, ch);
+          if (!r.ok) { console.error('english-save', x.p.id, r.status); continue; }
+          Object.assign(x.p, ch);
+        }
+        await once('en', `${x.p.id}:${enPrint(x.p)}`).catch(() => {});
+      } catch (e) { console.error('english-save', x.p.id, e.message); }
     }
   }
 }
 // Live mentors are checked in the daily run too, so a profile edited after approval is still shown in English.
-async function englishLiveMentors() {
+async function englishLiveMentors(rep, ctx) {
+  if (timeLeft(ctx) < 90000) return;   // tomorrow's run catches up
   const live = await M.rowsStrict(`profiles?role=eq.mentor&approved=eq.true&select=*`);
   const list = (Array.isArray(live) ? live : []).filter(p => !p.banned);
   await englishProfiles(list);
-  await fillDetails(list);
+  if (timeLeft(ctx) > 60000) await fillDetails(list);
 }
 
 // "Best For" is never asked of applicants: when it is empty, the AI writes one short sentence from the bio (admin's decision, Oct 27 2026).
@@ -345,12 +350,16 @@ Return a JSON array: [{"id": "...", "field": "...", "seniority": "...", "industr
     const res = Array.isArray(out) ? out : (out && (out.mentors || out.results)) || [];
     for (const x of batch) {
       const ch = detailsClean(res.find(r => r && r.id === x.p.id), x.p);
-      if (Object.keys(ch).length) {
-        const r = await M.patch(`profiles?id=eq.${encodeURIComponent(x.p.id)}`, ch);
-        if (!r.ok) { console.error('details-save', x.p.id, r.status); continue; }
-        Object.assign(x.p, ch);
-      }
-      await once('details', `${x.p.id}:${detailPrint(x.p)}`).catch(() => {});
+      try {
+        if (Object.keys(ch).length) {
+          const r = await M.patch(`profiles?id=eq.${encodeURIComponent(x.p.id)}`, ch);
+          if (!r.ok) { console.error('details-save', x.p.id, r.status); continue; }
+          Object.assign(x.p, ch);
+        }
+        // Both versions are remembered: if the mentor later clears a filled detail, it is not filled again.
+        await once('details', `${x.p.id}:${x.h}`).catch(() => {});
+        await once('details', `${x.p.id}:${detailPrint(x.p)}`).catch(() => {});
+      } catch (e) { console.error('details-save', x.p.id, e.message); }
     }
   }
 }
@@ -361,7 +370,8 @@ Return a JSON array: [{"id": "...", "field": "...", "seniority": "...", "industr
 // document are used. Each version of a profile is read once (agent_events "resume:<id>:<fingerprint>").
 const RESUME_TEXT = { headline: 90, profession: 80, company: 120, degree: 120, university: 160 };
 function resumeGaps(p) {
-  const g = Object.keys(RESUME_TEXT).filter(k => !String(p[k] || '').trim());
+  const hasEdu = !!String(p.education || '').trim();   // older profiles keep the degree and school in "education" only
+  const g = Object.keys(RESUME_TEXT).filter(k => !String(p[k] || '').trim() && !(hasEdu && (k === 'degree' || k === 'university')));
   if (String(p.bio || '').trim().length < 80) g.push('bio');
   if (!(parseFloat(String(p.experience || '').replace(/[^0-9.]/g, '')) > 0)) g.push('experience');
   if (!(Array.isArray(p.certifications) && p.certifications.length)) g.push('certifications');
@@ -383,9 +393,11 @@ function resumeClean(j, p) {
 }
 async function fillFromResume(apps, ctx) {
   if (!process.env.ANTHROPIC_API_KEY) return;
-  const need = apps.filter(p => p.resumePath && resumeGaps(p).length);
+  // Only the mentor's own uploaded file ("<their id>/…"); each file is read once.
+  const need = apps.filter(p => p.resumePath && String(p.resumePath).startsWith(p.id + '/') && resumeGaps(p).length);
   for (const p of need.slice(0, 6)) {
-    const key = `${p.id}:${profilePrint(p)}`;
+    if (timeLeft(ctx) < 75000) break;
+    const key = `${p.id}:${require('crypto').createHash('sha1').update(String(p.resumePath)).digest('hex').slice(0, 16)}`;
     try {
       const seen = await M.rowsStrict(`agent_events?id=eq.${encodeURIComponent('resume:' + key)}&select=id`);
       if (Array.isArray(seen) && seen.length) continue;
@@ -420,9 +432,9 @@ async function mentorApplications(rep, ctx, onlyId) {
   const filter = onlyId ? `&id=eq.${encodeURIComponent(onlyId)}` : '';
   const apps = (await M.rowsStrict(`profiles?role=eq.mentor&approved=eq.false${filter}&select=*`)).filter(p => !p.banned);
   await fillFromResume(apps, ctx);
-  await englishProfiles(apps);
-  await fillBestFor(apps);
-  await fillDetails(apps);
+  if (timeLeft(ctx) > 70000) await englishProfiles(apps);
+  if (timeLeft(ctx) > 60000) await fillBestFor(apps);
+  if (timeLeft(ctx) > 60000) await fillDetails(apps);
   ctx.apps = apps;
   ctx.results = ctx.results || {};
   if (ctx.approvedNow == null) ctx.approvedNow = await approvedToday();
@@ -711,15 +723,15 @@ async function digest(rep, ctx, extra) {
 // Review one applicant right away (called when a mentor submits or updates a pending profile).
 // The admin only hears about it when something needs attention; approvals show up in the daily digest.
 async function reviewOne(id) {
-  const rep = newReport(), ctx = {};
+  const rep = newReport(), ctx = { deadline: Date.now() + 105000 };   // api/notify.js may run 120 s
   await checkMemory();
   await mentorApplications(rep, ctx, id);
   return Object.assign({ errors: rep.errors }, (ctx.results || {})[id] || { verdict: 'none' });
 }
 
 // ---------- entry point ----------
-async function run(extraErrors) {
-  const rep = newReport(), ctx = {};
+async function run(extraErrors, opts = {}) {
+  const rep = newReport(), ctx = { deadline: opts.deadline };
   await checkMemory();
   const steps = [['applications', mentorApplications], ['english', englishLiveMentors], ['bookings', bookings], ['reviews', reviews], ['signups', signups]];
   for (const [name, fn] of steps) {

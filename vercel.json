@@ -10,7 +10,7 @@
       "maxDuration": 300
     },
     "api/notify.js": {
-      "maxDuration": 60
+      "maxDuration": 120
     },
     "api/agents.js": {
       "maxDuration": 60

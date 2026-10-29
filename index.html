@@ -3953,7 +3953,8 @@ async function routeNewAccount(){
   if(__routedNew || !uid) return; __routedNew = true;
   try{
     const { data, error } = await sb.from('profiles').select('id').eq('id', uid).maybeSingle();
-    if(error || data) return;
+    if(error){ __routedNew = false; return; }   // checked again on the next sign-in or page load
+    if(data){ clearIntent(); return; }
     state.noProfile = true;
     const it = readIntent();
     if(it.role && !state.role) state.role = it.role;
@@ -3962,8 +3963,18 @@ async function routeNewAccount(){
     else render();   // on another page (a mentor's profile, the AI coach…): the setup banner shows instead
   }catch(e){ console.error('route-new-account', e); }
 }
+// Everything tied to the signed-in person is cleared on sign-out, so the next account on this browser starts clean.
+let __profUnsub = null;
+function resetAccountState(){
+  if(__profUnsub){ try{ __profUnsub(); }catch(e){} __profUnsub = null; }
+  uid = null; userEmail = null; myProfile = null;
+  __routedNew = false; liSynced = false;
+  state.noProfile = false; state.role = null; state.returnMentorId = null; state.obResume = null; state.obPhoto = null;
+  try{ clearFormDrafts('ob'); clearFormDrafts('dash'); }catch(e){}
+  clearIntent();
+}
 function setupBanner(){
-  if(!uid || myProfile || !state.noProfile || ['onboard','dashboard','auth'].includes(state.view) || state.recoveryMode) return '';
+  if(!uid || myProfile || !state.noProfile || ['onboard','dashboard','messages','requests'].includes(state.view) || state.recoveryMode) return '';
   return `<div class="banner bm-banner setup-banner"><span><b>${esc(T('setup_t'))}</b></span><span class="setup-btns"><button type="button" class="btn btn-primary btn-sm" data-nav="onboard" data-role="client">${esc(T('setup_client'))}</button><button type="button" class="btn btn-outline btn-sm" data-nav="onboard" data-role="mentor">${esc(T('setup_mentor'))}</button></span></div>`;
 }
 function resumeOnboardAfterLinkedIn(session){
@@ -3993,7 +4004,10 @@ function onSignedIn(session){
   prep.loaded = false;
   const viaLinkedIn = ((session.user && session.user.identities) || []).some(i=>i && i.provider==='linkedin_oidc');
   liSignupName = viaLinkedIn ? String((session.user.user_metadata||{}).name || (session.user.user_metadata||{}).full_name || '') : '';
-  window.__db.doc('profiles/'+uid).onSnapshot(doc=>{
+  if(__profUnsub){ try{ __profUnsub(); }catch(e){} }
+  const myId = uid;
+  __profUnsub = window.__db.doc('profiles/'+uid).onSnapshot(doc=>{
+    if(uid !== myId) return;
     myProfile = doc && doc.data ? doc.data : null;
     if(viaLinkedIn && myProfile && !myProfile.linkedinVerified && !liSynced){ liSynced = true; syncLinkedIn(); }
     // the profile finished loading after the visitor clicked "Book a session": skip setup and open booking
@@ -4079,7 +4093,7 @@ async function init(){
       return;
     }
     if(event==='SIGNED_OUT'){
-      uid = null; userEmail = null; myProfile = null;
+      resetAccountState();
       state.view = 'home';
       render();
     } else if(event==='SIGNED_IN' && session && !uid){
@@ -7443,7 +7457,7 @@ async function handleResume(where, file, existing){
   if(where==='ob') state.obResume = { path:a.path, name:a.name };
   else if(!existing){
     try{ await saveProfileSafe({ resumePath:a.path, resumeName:a.name }, 'update'); myProfile.resumePath = a.path; myProfile.resumeName = a.name; toast(T('rs_saved')); if(myProfile.role==='mentor' && myProfile.approved===false) notify('mentor_applied'); }
-    catch(e){ console.error('resume save failed', e); }
+    catch(e){ console.error('resume save failed', e); toast(T('toast_save_fail')); state.resumeBusy = null; render(); return; }
   }
   state.resumeBusy = { where, key:'rs_reading' }; render();
   try{
@@ -9139,9 +9153,11 @@ function wire(){
     }
     try{
       state.onboardError = '';
+      const back = state.returnMentorId;
       if(state.obPhoto && state.obPhoto.url && !state.obPhoto.li) doc.avatarUrl = state.obPhoto.url;
       await saveProfileSafe(doc, 'set');
       clearFormDrafts('ob');
+      try{ const { data: fresh } = await sb.from('profiles').select('*').eq('id', uid).maybeSingle(); if(fresh) myProfile = fresh; }catch(e){}
       if(state.role==='mentor' && myProfile) myProfile = Object.assign({}, myProfile, doc, { approved: false });
       clearIntent(); state.noProfile = false;
       toast(T('toast_profile_created'));
@@ -9149,8 +9165,8 @@ function wire(){
       state.obPhoto = null;
       if(wantLiPhoto) await syncLinkedIn();   // photo first, so the instant review sees it
       if(state.role==='mentor'){ notify('mentor_applied'); if(!hadPhoto) setTimeout(()=>photoNudge(true), 600); }
-      if(state.role==='client' && state.returnMentorId){
-        const back = state.returnMentorId; state.returnMentorId = null;
+      if(state.role==='client' && back){
+        state.returnMentorId = null;
         nav('mentor', { mentorId: back, bookingOpen: true });
       } else {
         nav(state.role==='mentor' ? 'dashboard' : 'browse');
@@ -9393,7 +9409,7 @@ function wire(){
       if(!r.ok) throw new Error(j.detail || j.error || ('HTTP '+r.status));
       toast(T('toast_profile_deleted'));
       try{ await sb.auth.signOut(); }catch(e){}
-      uid = null; userEmail = null; myProfile = null;
+      resetAccountState();
       state.view = 'home'; render();
     }catch(err){
       console.error('profile delete failed:', err);

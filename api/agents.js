@@ -599,6 +599,9 @@ const RESUME_MAX_BYTES = 9 * 1024 * 1024;
 const STAGES = ['student', 'entry', 'mid', 'senior', 'switch'];
 
 async function storageFile(path) {
+  // Read with the service key, so only plain "<owner id>/<file>" paths are accepted (no "." or ".." segments).
+  const parts = String(path || '').split('/');
+  if (parts.length < 2 || parts.some(x => !x || x === '.' || x === '..') || path.length > 300) throw Object.assign(new Error('file-not-found'), { status: 404 });
   const url = `${process.env.SUPABASE_URL}/storage/v1/object/files/${path.split('/').map(encodeURIComponent).join('/')}`;
   const r = await fetch(url, { headers: { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: 'Bearer ' + process.env.SUPABASE_SERVICE_ROLE_KEY } });
   if (!r.ok) throw Object.assign(new Error('file-not-found'), { status: 404 });

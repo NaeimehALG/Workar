@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
     if (!row || Date.now() - Date.parse(row.createdAt || 0) > 3600 * 1000) { res.status(404).end(); return; }
     try {
       const AP = require('./_autopilot'), rep = { done: [], needs: [], emails: 0, errors: [] };
-      await AP.mentorApplications(rep, {});
+      await AP.mentorApplications(rep, { deadline: Date.now() + 105000 });
       if (rep.errors.length) console.error('review-now-errors', JSON.stringify(rep.errors));
       res.status(200).json({ ok: true, done: rep.done.length, emails: rep.emails, errors: rep.errors.length });
     } catch (e) { console.error('review-now-failed', e.message); res.status(500).json({ ok: false }); }
@@ -54,7 +54,7 @@ module.exports = async (req, res) => {
           : out.verdict === 'decline' ? `The AI did not approve this profile. It stays hidden, and no email was sent to ${M.esc(p.name)}. ${M.esc(out.summary || '')}`
           : 'The automatic review could not run just now; it will try again in the next daily run. Nothing is needed from you.';
         await M.sendMail(M.CONTACT_EMAIL(), `Mentor application needs attention: ${p.name}`,
-          M.layout(`About ${M.esc(p.name)}'s mentor application`, [what].concat((out.concerns || []).length ? [`Notes: ${M.esc(out.concerns.join('; '))}`] : []), { text: 'Open the admin panel', url: site + '/?go=admin' }));
+          M.layout(`About ${p.name}'s mentor application`, [what].concat((out.concerns || []).length ? [`Notes: ${M.esc(out.concerns.join('; '))}`] : []), { text: 'Open the admin panel', url: site + '/?go=admin' }));
       }
       res.status(200).json({ ok: true, verdict: out.verdict }); return;
     }

@@ -175,7 +175,7 @@ module.exports = async (req, res) => {
   // Weekly off-site backup emailed to the admin (Sundays, api/_backup.js)
   if (late()) skip('The weekly backup'); else try { Object.assign(out, await require('./_backup').run(problems)); } catch (e) { console.error('backup-failed', e); problems.push('Weekly backup failed: ' + (e.message || e)); }
   // Autopilot agents + the daily digest to the admin (always sent, even on a quiet day)
-  try { Object.assign(out, await require('./_autopilot').run(problems)); } catch (e) { console.error('autopilot-failed', e); out.autopilotError = String(e.message || e); }
+  try { Object.assign(out, await require('./_autopilot').run(problems, { deadline: t0 + 270 * 1000 })); } catch (e) { console.error('autopilot-failed', e); out.autopilotError = String(e.message || e); }
   // A failed digest shows as a failed cron run in Vercel, so it is noticed.
   res.status(out.autopilotError || out.digest === 'failed' ? 500 : 200).json(out);
 };
