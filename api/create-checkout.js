@@ -263,7 +263,8 @@ module.exports = async (req, res) => {
     const data = await r.json();
     if (r.ok && saveSession && requestId) {
       // remember the session so the booking can be confirmed even if the client closes the tab
-      await fetch(`${process.env.SUPABASE_URL}/rest/v1/requests?id=eq.${encodeURIComponent(requestId)}`, { method: 'PATCH',
+      // (only while unpaid: a checkout from a second tab must not replace the session that was already paid)
+      await fetch(`${process.env.SUPABASE_URL}/rest/v1/requests?id=eq.${encodeURIComponent(requestId)}&paid=is.false`, { method: 'PATCH',
         headers: { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: 'Bearer ' + process.env.SUPABASE_SERVICE_ROLE_KEY, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
         body: JSON.stringify({ stripeSessionId: data.id }) }).catch(e => console.error('session-save-failed', e.message));
     }
