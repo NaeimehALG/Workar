@@ -2599,7 +2599,7 @@ const I18N = {
     api_key_saved:'API key saved', api_key_cleared:'API key cleared',
     offline_notice:'General tips (not personalized AI feedback):',
     lbl_price_usd:'Price to charge via card (USD)', price_usd_hint:'e.g. 40 — leave blank for free sessions',
-    pay_to_confirm:'Confirm with card · $${amount}', pay_hold_note:"Nothing is charged now — your card is charged only after the session takes place.", prob_nocharge:"Don't charge", prob_nocharge_q:"Don't charge the client for this session? Their card hold is released (or the charge refunded) and the mentor isn't paid for it.", prob_nocharged:'Done. The client will not be charged.', waiting_for_payment:'Waiting for the client to confirm with their card…',
+    pay_to_confirm:'Confirm with card · $${amount}', pay_hold_note:"Nothing is charged now — your card is charged only after the session takes place.", prob_nocharge:"Don't charge", prob_nocharge_q:"Don't charge the client? Their card is not charged (or is refunded) for this session and any sessions not yet completed, and the mentor isn't paid for them. Completed sessions stay paid.", time_ask_mentor:'Your session is confirmed. To change the time, message your mentor and ask them to suggest new times.', prob_nocharged:'Done. The client will not be charged.', waiting_for_payment:'Waiting for the client to confirm with their card…',
     earn_title:'Your earnings', earn_note:'You keep {p}% of every paid booking. Workar holds the payment securely and sends your share to your bank automatically 7 days after the session.', earn_total:'Earned', earn_paid:'Paid to you', earn_owed:'On its way to you',
     sess_progress_m:'{d} of {t} sessions done', sess_progress_c:'{l} of {t} sessions left', sess_all_done:'All sessions done', sess_mark:'Mark a session done', sess_mark_one:'Mark session done', sess_completed:'Completed', sess_saved:'Session recorded', sess_next_time:'Saved. Now choose the time for the next session.', sess_fail:'Could not save — check that the payouts SQL has been run',
     po_err_connect_admin:'Stripe needs one more step before mentors can add bank details: in Stripe open Settings → Connect → Platform profile (dashboard.stripe.com/settings/connect/platform-profile) and complete the loss-liability acknowledgement.',
@@ -3040,7 +3040,7 @@ const I18N = {
     api_key_saved:'کلید ذخیره شد', api_key_cleared:'کلید پاک شد',
     offline_notice:'نکات کلی (نه فیدبک اختصاصی هوش مصنوعی):',
     lbl_price_usd:'مبلغ پرداخت با کارت (دلار)', price_usd_hint:'مثلاً ۴۰؛ برای جلسه‌ی رایگان خالی بگذارید',
-    pay_to_confirm:'تأیید با کارت · ${amount} دلار کانادا', pay_hold_note:'الان چیزی کسر نمی‌شود؛ مبلغ فقط بعد از برگزاری جلسه از کارت کسر می‌شود.', prob_nocharge:'کسر نشود', prob_nocharge_q:'برای این جلسه از مراجع پولی کسر نشود؟ hold کارتش آزاد می‌شود (یا مبلغ برگشت داده می‌شود) و به منتور هم پرداختی نمی‌شود.', prob_nocharged:'انجام شد. از مراجع چیزی کسر نمی‌شود.', waiting_for_payment:'منتظر تأیید کارت مراجع…',
+    pay_to_confirm:'تأیید با کارت · ${amount} دلار کانادا', pay_hold_note:'الان چیزی کسر نمی‌شود؛ مبلغ فقط بعد از برگزاری جلسه از کارت کسر می‌شود.', prob_nocharge:'کسر نشود', prob_nocharge_q:'از مراجع پولی کسر نشود؟ برای این جلسه و جلسه‌هایی که هنوز برگزار نشده‌اند چیزی از کارتش کسر نمی‌شود (یا برگشت داده می‌شود) و به منتور هم پرداختی برای آن‌ها انجام نمی‌شود. جلسه‌های برگزارشده پرداخت‌شده باقی می‌مانند.', time_ask_mentor:'جلسه‌ی شما قطعی شده است. برای تغییر زمان، به منتورتان پیام بدهید تا زمان‌های تازه پیشنهاد کند.', prob_nocharged:'انجام شد. از مراجع چیزی کسر نمی‌شود.', waiting_for_payment:'منتظر تأیید کارت مراجع…',
     earn_title:'درآمد شما', earn_note:'{p}٪ از هر رزرو پرداخت‌شده سهم شماست. Workar پرداخت را به‌صورت امن نگه می‌دارد و سهم شما را ۷ روز بعد از جلسه خودکار به حساب بانکی‌تان واریز می‌کند.', earn_total:'کل درآمد', earn_paid:'پرداخت‌شده به شما', earn_owed:'در راه واریز',
     sess_progress_m:'{d} از {t} جلسه برگزار شد', sess_progress_c:'{l} از {t} جلسه باقی مانده', sess_all_done:'همه‌ی جلسات برگزار شد', sess_mark:'ثبت برگزاری یک جلسه', sess_mark_one:'ثبت برگزاری جلسه', sess_completed:'تمام‌شده', sess_saved:'جلسه ثبت شد', sess_next_time:'ثبت شد. حالا زمان جلسه‌ی بعدی را انتخاب کنید.', sess_fail:'ذخیره نشد؛ مطمئن شوید SQL پرداخت منتورها اجرا شده است',
     po_err_connect_admin:'Stripe پیش از ثبت اطلاعات بانکی منتورها یک مرحله‌ی دیگر لازم دارد: در Stripe به Settings → Connect → Platform profile بروید و تأیید مسئولیت زیان (loss liability) را کامل کنید.',
@@ -3655,7 +3655,7 @@ function tzAbbr(tz, date){ try{ const x = new Intl.DateTimeFormat('en-US',{ time
 function tzCity(tz){ return String(tz||'').split('/').pop().replace(/_/g,' '); }
 function mentorTz(id){ const p = cache.profiles[id] || (id===uid ? myProfile : null); return (p && p.timezone) || 'America/Vancouver'; }
 // A session can be marked done once it has started (15 min grace), and each session needs its own time.
-function sessStarted(r){ const t = reqInstant(r); if(!t || t.getTime() > Date.now() + 15*60*1000) return false; return !r.lastDoneStartsAt || t.getTime() > new Date(r.lastDoneStartsAt).getTime(); }
+function sessStarted(r){ const t = reqInstant(r); if(!t || t.getTime() > Date.now()) return false; return !r.lastDoneStartsAt || t.getTime() > new Date(r.lastDoneStartsAt).getTime(); }
 // After marking a session done in a multi-session package, open the time editor for the next one.
 function afterSessDone(id){ const r = (cache.requests||[]).find(q=>q.id===id); const done = r ? (Number(r.sessionsDone)||0) : 0;
   if(r && done < reqSessionsTotal(r)){ state.reqEdit = id; toast(T('sess_next_time'), 5000); } else toast(T('sess_saved')); }
@@ -4455,7 +4455,9 @@ function reqSessionsTotal(r){ const pk = getPackages().find(x=>x.key===r.package
 function reqIsActive(r){ return r.status==='accepted' && (!r.amountCents || r.paid); }
 // card-hold bookings whose hold was released, failed or refunded: the client paid nothing
 function reqNotCharged(r){ return r.status==='refunded' || ['released','failed','expired','refunded'].includes(r.holdStatus); }
-function reqMentorCents(r){ return Math.round((Number(r.amountCents)||0) * mentorSharePct() / 100); }
+function reqMentorCents(r){ const pct = Number(r && r.mentorSharePct) > 0 ? Number(r.mentorSharePct) : mentorSharePct(); return Math.round((Number(r.amountCents)||0) * pct / 100); }
+// Once the client's card is held or charged, only the mentor can change the time (the client accepts one of their suggestions).
+function clientTimeLocked(r){ return !!(r && (r.paid || ['saved','authorized','captured'].includes(r.holdStatus))); }
 function fmtMoney(c){ const v = (Number(c)||0)/100; return '$' + (Number.isInteger(v) ? v.toFixed(0) : v.toFixed(2)); }
 function basePrice(){ const pk = getPackages()[0]; return pk ? Math.round(pk.price/pk.sessions) : 0; }
 function minRate(){ return basePrice() || 30; }
@@ -7247,7 +7249,8 @@ function reqCard(r, isMentor, grouped){
       <span class="req-more">
         <button class="req-dots" data-menu="${esc(r.id)}" aria-label="${esc(T('mg_more'))}"><svg viewBox="0 0 20 20" width="18" height="18"><circle cx="4" cy="10" r="1.7" fill="currentColor"/><circle cx="10" cy="10" r="1.7" fill="currentColor"/><circle cx="16" cy="10" r="1.7" fill="currentColor"/></svg></button>
         ${state.reqMenu===r.id ? `<div class="req-menu">
-          ${st>=0 && st<3 ? `<button data-edit-time="${esc(r.id)}">${esc(T('mg_time'))}</button>` : ''}
+          ${st>=0 && st<3 && (isMentor || !clientTimeLocked(r)) ? `<button data-edit-time="${esc(r.id)}">${esc(T('mg_time'))}</button>` : ''}
+          ${st>=0 && st<3 && !isMentor && clientTimeLocked(r) ? `<div class="muted" style="font-size:12.5px;padding:6px 10px;max-width:220px;">${esc(T('time_ask_mentor'))}</div>` : ''}
           ${st>=0 && st<2 ? `<button data-set-status="${esc(r.id)}" data-to="cancelled" class="danger">${esc(T(isMentor?'mg_cancel_m':'mg_cancel_c'))}</button>` : ''}
           ${st===2 && isMentor ? `<button data-set-status="${esc(r.id)}" data-to="cancelled" class="danger">${esc(T('mg_cancel_paid'))}</button>` : ''}
           <button data-hide="${esc(r.id)}">${esc(T(st<0||st===3 ? 'mg_remove' : 'mg_hide'))}</button>
@@ -7660,7 +7663,7 @@ function sessionEnded(r){ const i = reqInstant(r); return !!(i && Date.now() > i
 function checkInFor(r){
   if(!r || !r.paid || r.status!=='accepted' || !sessionEnded(r)) return '';
   if(r.clientId===uid && r.mentorId!==uid){
-    if(r.problemReportedAt) return '';
+    if(r.problemReportedAt && !r.problemResolvedAt) return '';
     if(!r.clientConfirmedAt) return 'happened';
     if(!r.clientReviewedAt && !state.ciSkip[r.id]) return 'review';
     return '';
@@ -7669,7 +7672,7 @@ function checkInFor(r){
   return '';
 }
 function canReport(r){
-  if(!r || r.clientId!==uid || !r.paid || r.problemReportedAt || r.payoutDone) return false;
+  if(!r || r.clientId!==uid || !r.paid || (r.problemReportedAt && !r.problemResolvedAt) || r.payoutDone) return false;
   const i = reqInstant(r); return !i || Date.now() < i.getTime() + 7*86400000;
 }
 document.addEventListener('click', async e=>{
@@ -8711,7 +8714,8 @@ function ivMiniRow(r, asMentor){
     <div class="iv-act">${act}<button type="button" class="iv-ic" data-dm="${esc(o)}" title="${esc(T('msg_btn'))}" aria-label="${esc(T('msg_btn'))}">${HUB_IC.msg}</button>
       <span class="req-more"><button class="req-dots" data-menu="${esc(r.id)}" aria-label="${esc(T('mg_more'))}"><svg viewBox="0 0 20 20" width="18" height="18"><circle cx="4" cy="10" r="1.7" fill="currentColor"/><circle cx="10" cy="10" r="1.7" fill="currentColor"/><circle cx="16" cy="10" r="1.7" fill="currentColor"/></svg></button>
       ${state.reqMenu===r.id ? `<div class="req-menu">
-        ${st>=0 && st<2 ? `<button data-edit-time="${esc(r.id)}">${esc(T('mg_time'))}</button>` : ''}
+        ${st>=0 && st<2 && (asMentor || !clientTimeLocked(r)) ? `<button data-edit-time="${esc(r.id)}">${esc(T('mg_time'))}</button>` : ''}
+        ${st>=0 && st<2 && !asMentor && clientTimeLocked(r) ? `<div class="muted" style="font-size:12.5px;padding:6px 10px;max-width:220px;">${esc(T('time_ask_mentor'))}</div>` : ''}
         ${st>=0 && st<2 ? `<button data-set-status="${esc(r.id)}" data-to="cancelled" class="danger">${esc(T(asMentor?'mg_cancel_m':'mg_cancel_c'))}</button>` : ''}
         <button data-hide="${esc(r.id)}">${esc(T('mg_hide'))}</button></div>` : ''}</span>
     </div>

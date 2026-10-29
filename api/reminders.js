@@ -96,7 +96,7 @@ async function reengage() {
 
 // ---------- Mentor payouts (Stripe Connect) ----------
 const P = require('./_payouts');
-const usd = c => '$' + (Number(c || 0) / 100).toFixed(2);
+const usd = c => 'CA$' + (Number(c || 0) / 100).toFixed(2);
 async function payoutMail(kind, r, cents) {
   const client = await M.profile(r.clientId);
   const to = await M.emailOf(r.mentorId);
@@ -104,13 +104,13 @@ async function payoutMail(kind, r, cents) {
   if (kind === 'paid') {
     await M.sendMail(to, `You've been paid ${usd(cents)} for your Workar session`,
       M.layout('Your payout is on its way', [
-        `Your share for the session with <b>${M.esc(client.name)}</b> (<b>${usd(cents)}</b>) has been sent to your bank account.`,
+        `Your share for your completed session(s) with <b>${M.esc(client.name)}</b> (<b>${usd(cents)}</b>) has been sent to your bank account.`,
         `It usually arrives within a few business days. You can see every payout in your Workar earnings.`
       ], { text: 'See your earnings', url: M.SITE() + '/?go=dashboard' }));
   } else {
     await M.sendMail(to, `You have ${usd(cents)} waiting on Workar`,
       M.layout('Add your bank details to get paid', [
-        `Your share for the session with <b>${M.esc(client.name)}</b> (<b>${usd(cents)}</b>) is ready to be paid.`,
+        `Your share for your completed session(s) with <b>${M.esc(client.name)}</b> (<b>${usd(cents)}</b>) is ready to be paid.`,
         `Add your bank details once, through Stripe, our payment partner. It takes about 5 minutes, and after that every payout is sent to you automatically.`
       ], { text: 'Add my bank details', url: M.SITE() + '/?go=dashboard' }));
   }
