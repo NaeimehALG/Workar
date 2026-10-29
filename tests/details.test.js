@@ -18,3 +18,22 @@ test('unknown field or seniority values are dropped', () => {
   const p = { id: 'b', field: null, seniority: '' };
   assert.deepEqual(AP._detailsClean({ field: 'Tech', seniority: 'junior' }, p), {});
 });
+
+test('resume fill: only empty fields, bio only when missing, no invented shapes', () => {
+  const p = { id: 'r', name: 'R', headline: 'Engineer', profession: '', company: 'Acme', bio: 'short', experience: '', degree: '', university: '', certifications: [], languages: ['English'] };
+  const out = AP._resumeClean({ headline: 'Other', profession: 'Software Engineer', company: 'Other Co', yearsExperience: '7',
+    degree: 'B.Sc. Computer Science', university: 'UBC', certifications: ['AWS Certified', 'AWS Certified'], languages: ['French'], bio: 'I am a software engineer. '.repeat(5) }, p);
+  assert.equal(out.headline, undefined);          // already filled by the mentor
+  assert.equal(out.company, undefined);
+  assert.equal(out.languages, undefined);
+  assert.equal(out.profession, 'Software Engineer');
+  assert.equal(out.experience, '7');
+  assert.equal(out.education, 'B.Sc. Computer Science, UBC');
+  assert.deepEqual(out.certifications, ['AWS Certified']);
+  assert.ok(out.bio.length >= 80);
+});
+
+test('resume fill never replaces a real bio', () => {
+  const p = { id: 's', bio: 'x'.repeat(200), experience: '5', headline: 'h', profession: 'p', company: 'c', degree: 'd', university: 'u', certifications: ['a'], languages: ['English'] };
+  assert.deepEqual(AP._resumeClean({ bio: 'y'.repeat(200), yearsExperience: 9 }, p), {});
+});

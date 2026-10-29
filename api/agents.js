@@ -951,3 +951,4 @@ module.exports = async (req, res) => {
   }
 };
 module.exports.docxText = docxText; // for tests
+module.exports.resumeBlock = resumeBlock; // the autopilot fills incomplete mentor applications from an uploaded resume

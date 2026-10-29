@@ -7442,7 +7442,7 @@ async function handleResume(where, file, existing){
   }
   if(where==='ob') state.obResume = { path:a.path, name:a.name };
   else if(!existing){
-    try{ await saveProfileSafe({ resumePath:a.path, resumeName:a.name }, 'update'); myProfile.resumePath = a.path; myProfile.resumeName = a.name; toast(T('rs_saved')); }
+    try{ await saveProfileSafe({ resumePath:a.path, resumeName:a.name }, 'update'); myProfile.resumePath = a.path; myProfile.resumeName = a.name; toast(T('rs_saved')); if(myProfile.role==='mentor' && myProfile.approved===false) notify('mentor_applied'); }
     catch(e){ console.error('resume save failed', e); }
   }
   state.resumeBusy = { where, key:'rs_reading' }; render();
