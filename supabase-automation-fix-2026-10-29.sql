@@ -1,4 +1,4 @@
--- 2026-10-29: automation fixes. NOT YET APPLIED: the apply_migration call (name automation_fix_2026_10_29) was
+-- 2026-10-29: automation fixes. APPLIED on 2026-10-29 (approved by the owner); earlier note:: the apply_migration call (name automation_fix_2026_10_29) was
 -- declined at the approval prompt. Run this whole file once in Supabase (SQL editor) to apply it.
 -- Already done live: the Vault secret "digest_check_key" was created on 2026-10-29.
 -- 1. Missing-digest alert: every day at 17:30 UTC (the daily run starts at 16:00 UTC and may run 5 minutes),

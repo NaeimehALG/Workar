@@ -147,7 +147,7 @@ begin
   return new;
 end $function$;
 
--- ============ 3. payments_fix_2026_10_29_insert_and_paid_start (NOT APPLIED YET) ============
+-- ============ 3. payments_fix_2026_10_29_insert_and_paid_start (applied 2026-10-29) ============
 CREATE OR REPLACE FUNCTION public.protect_request_insert()
  RETURNS trigger
  LANGUAGE plpgsql

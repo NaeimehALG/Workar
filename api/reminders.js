@@ -47,7 +47,7 @@ async function sessionReminders(deadline) {
       }
       paras.push(`Your call link: ${M.link(url, url)}. We recommend testing your camera and microphone a few minutes before you join.`);
       await M.sendMail(await M.emailOf(who.id), `Reminder: your Workar session with ${other.name}`,
-        M.layout('Your session is coming up', paras, { text: 'Join the call', url }), null, { noCopy: true }); // has the private call link
+        M.layout('Your session is coming up', paras, { text: 'Join the call', url })); // team inbox gets a copy too (owner's decision, Oct 29 2026)
     }
     const upd = { remindedAt: new Date().toISOString() };
     if (brief && !r.prepBrief) upd.prepBrief = brief;

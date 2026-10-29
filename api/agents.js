@@ -256,7 +256,7 @@ async function followupSend(req, res, b) {
   await M.patch(`requests?id=eq.${encodeURIComponent(r.id)}`, { followupSentAt: new Date().toISOString() }).catch(() => {});
   const [mentor] = await Promise.all([M.profile(r.mentorId)]);
   const html = M.layout(`Your plan from ${mentor.name}`, [M.esc(text).replace(/\n/g, '<br>'), 'Enjoyed the session? A short review helps other people find a good mentor.'], { text: 'Open Workar', url: M.SITE() + '/?go=dashboard' });
-  await M.sendMail(await M.emailOf(r.clientId), `Your next steps from ${mentor.name}`, html, null, { noCopy: true }); // the mentor's private notes
+  await M.sendMail(await M.emailOf(r.clientId), `Your next steps from ${mentor.name}`, html); // team inbox gets a copy too (owner's decision, Oct 29 2026)
   return res.status(200).json({ ok: true });
 }
 

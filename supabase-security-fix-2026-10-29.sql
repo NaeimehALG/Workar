@@ -1,4 +1,4 @@
--- Workar security fixes, 2026-10-29. NOT YET APPLIED to the live project (jgbjhzhbdsdhssyakpgq):
+-- Workar security fixes, 2026-10-29. APPLIED on 2026-10-29 (approved by the owner); earlier note: to the live project (jgbjhzhbdsdhssyakpgq):
 -- the apply_migration call ("security_fix_2026_10_29") was cancelled. Run this whole file once in the
 -- Supabase SQL editor (or apply it as that migration). Safe to re-run.
 -- The live protect_request / protect_request_insert functions are NOT changed here.
