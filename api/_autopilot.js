@@ -722,9 +722,8 @@ async function setupReminder(rep, u, step) {
 const SETUP_FIRST_AFTER = HOUR; // long enough that someone still filling in the form is not emailed
 
 // Hourly sweep (Supabase pg_cron calls api/reminders?task=setup_sweep): about an hour after someone signs up,
-//  - an account with no profile gets the first setup email;
-//  - a mentor who started but left their profile incomplete gets the usual "please add …" email
-//    (the same review the daily run does, so nothing is sent twice).
+// an account with no profile gets the first setup email. Mentors who started but left their profile incomplete
+// are handled by the 15-minute mentor review job (supabase-review-new-mentors.sql), which asks them what to add.
 async function setupSweep(opts = {}) {
   const rep = newReport(), now = Date.now();
   if (!(await checkMemory())) throw new Error('agent_events table is missing');
@@ -734,16 +733,6 @@ async function setupSweep(opts = {}) {
   const has = new Set((await M.rowsStrict(`profiles?select=id`)).map(p => p.id));
   const recent = users.filter(u => u.email && u.email_confirmed_at && now - Date.parse(u.created_at) <= 14 * DAY);
   for (const u of recent) if (!has.has(u.id)) await setupReminder(rep, u, 0);
-  // Mentors who left their profile incomplete, an hour or more after signing up, and were not asked yet
-  const userAge = {}; users.forEach(u => { userAge[u.id] = now - Date.parse(u.created_at); });
-  const pending = (await M.rowsStrict(`profiles?role=eq.mentor&approved=eq.false&select=*`))
-    .filter(p => !p.banned && (userAge[p.id] || 0) >= SETUP_FIRST_AFTER && (userAge[p.id] || 0) <= 14 * DAY && missingBasics(p).length);
-  if (pending.length) {
-    const asked = new Set((await M.rowsStrict(`agent_events?id=in.(${pending.map(p => encodeURIComponent('"ask:' + p.id + '"')).join(',')})&select=id`)).map(e => e.id));
-    for (const p of pending.filter(p => !asked.has('ask:' + p.id)).slice(0, 5)) {
-      try { await mentorApplications(rep, { deadline: opts.deadline || now + 100000 }, p.id); } catch (e) { rep.errors.push('mentor follow-up failed: ' + (e.message || e)); }
-    }
-  }
   return { emails: rep.emails, done: rep.done, errors: rep.errors };
 }
 

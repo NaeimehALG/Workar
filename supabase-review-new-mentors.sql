@@ -39,3 +39,6 @@ select cron.schedule('workar-review-new-mentors', '*/15 * * * *', $$select publi
 -- Oct 25 2026: also re-review applicants whose current profile version has no AI verdict yet
 -- (edited after being asked, or an earlier AI call failed). Applied live as migration review_changed_mentor_profiles.
 -- See that migration for workar_profile_print() and the updated workar_review_new_mentors().
+
+-- Oct 29 2026 (migration mentor_drafts_wait_an_hour): mentor profiles created at sign-up with only a name
+-- (no bio, no LinkedIn) are reviewed only after an hour, so nobody is emailed while still filling in the form.
