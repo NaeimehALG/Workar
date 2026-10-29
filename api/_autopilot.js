@@ -571,7 +571,7 @@ async function signups(rep, ctx) {
   const booked = new Set((ctx.requests || []).map(q => q.clientId));
   for (const u of users) {
     const age = now - Date.parse(u.created_at);
-    if (!u.email || !u.email_confirmed_at || age < 2 * DAY || age > 14 * DAY) continue;
+    if (!u.email || !u.email_confirmed_at || age < 1 * DAY || age > 14 * DAY) continue;
     const p = profiles[u.id];
     if (!p) {
       if (!(await once('finish-profile', u.id))) continue;
