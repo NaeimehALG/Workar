@@ -253,6 +253,10 @@ function meetsAutoLimits(p) {
   return years >= MIN_YEARS() && String(p.company || '').trim().length > 0;
 }
 
+async function isRereview(id) {
+  try { const r = await M.rowsStrict(`agent_events?id=eq.${encodeURIComponent('rereview:' + id)}&select=id`); return Array.isArray(r) && r.some(x => x && x.id === 'rereview:' + id); } catch (e) { return false; }
+}
+
 // ---------- 1. mentor applications ----------
 // Fully hands-off: the AI decides every application. Nothing waits for the admin; she only sees it in the digest.
 //   approve  → profile live + welcome email (within the quality bar and the daily cap; over the cap waits for tomorrow's run)
@@ -582,7 +586,10 @@ async function mentorApplications(rep, ctx, onlyId) {
     if (!prior && assess[p.id]) await rememberVerdict(p.id, prints[p.id], a.verdict === 'approve' || a.verdict === 'decline' ? a.verdict : 'ask|' + String(a.askThem || '').slice(0, 400));
     ctx.results[p.id] = { verdict, summary: a.summary || '', concerns: a.concerns || [], question: miss.length ? `Please add ${miss.join(', ')}.` : (a.askThem || '') };
     if (verdict === 'approve' && !on('AUTO_APPROVE_MENTORS')) { rep.needs.push({ kind: 'app', text: `<b>${M.esc(p.name)}</b> looks ready to approve (automatic approval is switched off). ${M.esc(a.summary || '')}` }); continue; }
-    if (verdict === 'approve' && (ctx.approvedNow || 0) >= DAILY_MAX()) { ctx.results[p.id].verdict = 'waiting'; rep.done.push(`<b>${M.esc(p.name)}</b> is ready; today's limit of ${DAILY_MAX()} approvals was reached, so tomorrow's run approves them.`); continue; }
+    // A live mentor who edited their name, role, bio or LinkedIn is hidden again until this review (database rule
+    // protect_profile_approval writes "rereview:<id>"); they get "updates" wording and don't count toward the daily cap.
+    const rereview = await isRereview(p.id);
+    if (verdict === 'approve' && !rereview && (ctx.approvedNow || 0) >= DAILY_MAX()) { ctx.results[p.id].verdict = 'waiting'; rep.done.push(`<b>${M.esc(p.name)}</b> is ready; today's limit of ${DAILY_MAX()} approvals was reached, so tomorrow's run approves them.`); continue; }
     if (verdict === 'approve') {
       // The profile goes live first and the 'approve' event is recorded after, so a run that is stopped in between
       // never leaves 'approve' recorded for a mentor who is still hidden (the next run would then skip them).
@@ -590,6 +597,13 @@ async function mentorApplications(rep, ctx, onlyId) {
       const r = await M.patch(`profiles?id=eq.${encodeURIComponent(p.id)}`, { approved: true });
       if (!r.ok) { ctx.results[p.id].verdict = 'error'; rep.errors.push(`Could not approve ${p.name}; it will be retried on the next run`); continue; }
       if (!(await once('approve', p.id))) continue;                         // another run already welcomed them
+      if (rereview) {
+        await forget('rereview', p.id);
+        const sent = await mailOrQueue(rep, p.id, 'Your Workar profile updates are live', `Thank you, ${first(p.name)}`,
+          ['Your updated mentor profile is now live again and visible to people looking for guidance.'], { text: 'Open my profile', url: site + '/?go=dashboard' });
+        rep.done.push(`Put <b>${M.esc(p.name)}</b>'s edited mentor profile live again${sent ? '' : ' (the email is queued and retried)'}.`);
+        continue;
+      }
       const welcomed = await mailOrQueue(rep, p.id, 'Your Workar mentor profile is live', `Welcome aboard, ${p.name}`,
         ['Thank you for joining Workar. Your mentor profile is now live and visible to people looking for guidance.',
           (ctx.bioFromResume || []).includes(p.id) ? 'We wrote your profile bio from the resume you uploaded. Please read it, and edit it anytime from your dashboard.' : '',
@@ -599,7 +613,10 @@ async function mentorApplications(rep, ctx, onlyId) {
       rep.done.push(`Approved ${welcomed ? 'and welcomed ' : ''}mentor <b>${M.esc(p.name)}</b> (${M.esc(p.profession || '')}).${welcomed ? '' : ' The welcome email is queued and retried on the next runs.'} ${M.esc(a.summary || '')}`);
     } else if (verdict === 'decline') {
       // No "not at this time" email is ever sent to the applicant (admin's decision, Oct 2026): the profile simply stays hidden.
-      if (await once('decline', p.id)) {
+      if (rereview && await once('decline', p.id)) {
+        // An existing mentor's edit did not pass: their profile stays hidden, and the admin decides (no email to them).
+        rep.needs.push({ kind: 'app', text: `<b>${M.esc(p.name || '')}</b> edited their live mentor profile and the new version did not pass the automatic check, so it is hidden. ${M.esc(a.summary || '')}${a.concerns && a.concerns.length ? ' (' + M.esc(a.concerns.join('; ')) + ')' : ''} Open the admin panel to restore or keep it hidden.` });
+      } else if (await once('decline', p.id)) {
         rep.done.push(`Did not approve mentor applicant <b>${M.esc(p.name || '')}</b>; the profile stays hidden and no email was sent to them. ${M.esc(a.summary || '')}${a.concerns && a.concerns.length ? ' (' + M.esc(a.concerns.join('; ')) + ')' : ''}`);
       }
     } else {
@@ -608,7 +625,7 @@ async function mentorApplications(rep, ctx, onlyId) {
       if (firstAsk) await once('ask', p.id + ':' + prints[p.id]);
       if (firstAsk) {
         const askParas = [`Hi ${M.esc(first(p.name))},`,
-          'Welcome to Workar, and thank you for joining us as a mentor.',
+          rereview ? 'Thank you for updating your mentor profile. While the update is checked, your profile is hidden from Find a mentor.' : 'Welcome to Workar, and thank you for joining us as a mentor.',
           miss.length === 1 ? `Your profile is almost ready to go live. To publish it, please add ${M.esc(miss[0])}.` : miss.length ? 'Your profile is almost ready to go live. To publish it, please add:' : `Your profile is almost ready to go live. ${M.esc(q)}`,
           miss.length > 1 ? M.list(miss) : '',
           p.avatarUrl ? '' : PHOTO_TIP,

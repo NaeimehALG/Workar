@@ -2503,7 +2503,7 @@ const I18N = {
     hiw2_t:'2. Match with a mentor', hiw2_b:'Search by job title, read real reviews, and request a conversation.',
     hiw3_t:'3. Get AI coaching too', hiw3_b:'Between sessions, get instant feedback on your resume and career questions.',
     onboard_title:'Set up your profile',
-    draft_t:'Your mentor profile is not finished yet. It goes live once it is complete.', draft_btn:'Finish my mentor profile', auth_i_am:'I want to', auth_role_client:'Find a mentor', auth_role_mentor:'Become a mentor', auth_pick_role:'Please choose whether you want to find a mentor or become a mentor.', lbl_full_name:'Full name', ph_full_name:'e.g. Sara Ahmadi', ob_quick_t:'One last detail', ob_quick_s:'Add your name and you can start browsing mentors right away. Your goals and resume can be added later from your dashboard.', ob_quick_btn:'Start browsing mentors', toast_client_ready:'Your account is ready. Find a mentor who fits your goals.',
+    msg_cant_delete:'This message can\'t be deleted.', toast_rereview:'Saved. Your updated profile is being checked and will be visible again shortly.', draft_t:'Your mentor profile is not finished yet. It goes live once it is complete.', draft_btn:'Finish my mentor profile', auth_i_am:'I want to', auth_role_client:'Find a mentor', auth_role_mentor:'Become a mentor', auth_pick_role:'Please choose whether you want to find a mentor or become a mentor.', lbl_full_name:'Full name', ph_full_name:'e.g. Sara Ahmadi', ob_quick_t:'One last detail', ob_quick_s:'Add your name and you can start browsing mentors right away. Your goals and resume can be added later from your dashboard.', ob_quick_btn:'Start browsing mentors', toast_client_ready:'Your account is ready. Find a mentor who fits your goals.',
     role_client_t:"I'm looking for a mentor", role_client_s:'Get guidance on your resume, interviews, or career path.',
     role_mentor_t:"I'm a mentor", role_mentor_s:'Share your experience and help someone with your job.',
     pick_to_continue:'Pick one to continue.',
@@ -2944,7 +2944,7 @@ const I18N = {
     hiw2_t:'۲. با یک منتور آشنا شوید', hiw2_b:'بر اساس عنوان شغلی جستجو کنید، نظرهای واقعی را بخوانید و درخواست گفتگو بدهید.',
     hiw3_t:'۳. از مربی هوش مصنوعی هم کمک بگیرید', hiw3_b:'بین جلسه‌ها برای رزومه و سؤال‌های شغلی‌تان بازخورد فوری بگیرید.',
     onboard_title:'پروفایلتان را بسازید',
-    draft_t:'پروفایل منتوری شما هنوز کامل نشده و بعد از تکمیل نمایش داده می‌شود.', draft_btn:'تکمیل پروفایل منتوری', auth_i_am:'می‌خواهم', auth_role_client:'منتور پیدا کنم', auth_role_mentor:'منتور شوم', auth_pick_role:'لطفاً انتخاب کنید که می‌خواهید منتور پیدا کنید یا منتور شوید.', lbl_full_name:'نام و نام خانوادگی', ph_full_name:'مثلاً سارا احمدی', ob_quick_t:'فقط یک مورد مانده', ob_quick_s:'نامتان را وارد کنید تا همین الان منتورها را ببینید. هدف‌ها و رزومه‌تان را بعداً هم می‌توانید از داشبورد اضافه کنید.', ob_quick_btn:'دیدن منتورها', toast_client_ready:'حسابتان آماده است. منتوری متناسب با هدف‌تان پیدا کنید.',
+    msg_cant_delete:'این پیام قابل حذف نیست.', toast_rereview:'ذخیره شد. پروفایل به‌روزشده‌ی شما در حال بررسی است و به‌زودی دوباره نمایش داده می‌شود.', draft_t:'پروفایل منتوری شما هنوز کامل نشده و بعد از تکمیل نمایش داده می‌شود.', draft_btn:'تکمیل پروفایل منتوری', auth_i_am:'می‌خواهم', auth_role_client:'منتور پیدا کنم', auth_role_mentor:'منتور شوم', auth_pick_role:'لطفاً انتخاب کنید که می‌خواهید منتور پیدا کنید یا منتور شوید.', lbl_full_name:'نام و نام خانوادگی', ph_full_name:'مثلاً سارا احمدی', ob_quick_t:'فقط یک مورد مانده', ob_quick_s:'نامتان را وارد کنید تا همین الان منتورها را ببینید. هدف‌ها و رزومه‌تان را بعداً هم می‌توانید از داشبورد اضافه کنید.', ob_quick_btn:'دیدن منتورها', toast_client_ready:'حسابتان آماده است. منتوری متناسب با هدف‌تان پیدا کنید.',
     role_client_t:'دنبال منتور هستم', role_client_s:'برای رزومه، مصاحبه یا مسیر شغلی‌تان راهنمایی بگیرید.',
     role_mentor_t:'منتور هستم', role_mentor_s:'تجربه‌تان را به اشتراک بگذارید و به کسی در همان شغل کمک کنید.',
     pick_to_continue:'برای ادامه یکی را انتخاب کنید.',
@@ -7617,8 +7617,9 @@ async function sendDm(o, text){
   else guardMsg(row);
 }
 async function deleteMyMsg(id){
-  const { error } = await sb.from('messages').delete().eq('id', id).eq('senderId', uid);
+  const { data, error } = await sb.from('messages').delete().eq('id', id).eq('senderId', uid).select('id');
   if(error){ toast(T('toast_update_fail')); return; }
+  if(!data || !data.length){ toast(T('msg_cant_delete')); return; }   // kept by the database (e.g. the conversation was reported)
   Object.values(cache.dms).forEach(l=>{ const i = l.findIndex(m=>m.id===id); if(i>=0) l.splice(i,1); });
   Object.values(cache.msgs).forEach(l=>{ const i = l.findIndex(m=>m.id===id); if(i>=0) l.splice(i,1); });
   render();
@@ -9505,7 +9506,16 @@ function wire(){
     if(priceEl) patch.priceUsd = priceEl.value==='' ? null : Math.max(0, Number(priceEl.value)||0);
     if(document.getElementById('av-exact')) patch.availability = [...avDraft()].sort((a,b)=>AVAIL_DAYS.indexOf(a.split('@')[0]) - AVAIL_DAYS.indexOf(b.split('@')[0]) || a.localeCompare(b));
     state.saveBusy = true; saveBtn.disabled = true;
-    try{ await saveProfileSafe(patch, 'update'); state.saveBusy = false; myProfile = Object.assign({}, myProfile, patch); state.avDraft = null; clearFormDrafts('dash'); toast(T('toast_saved')); render(); if(myProfile.role==='mentor' && myProfile.approved===false) notify('mentor_applied'); else if(myProfile.role==='mentor') notify('profile_saved'); setTimeout(()=>photoNudge(), 400); }
+    try{
+      const wasLive = myProfile.role==='mentor' && myProfile.approved!==false;
+      await saveProfileSafe(patch, 'update'); state.saveBusy = false; myProfile = Object.assign({}, myProfile, patch);
+      // Editing your name, role, workplace, bio or LinkedIn as a live mentor sends the profile for a quick re-check.
+      if(wasLive){ try{ const { data: f } = await sb.from('profiles').select('approved').eq('id', uid).maybeSingle(); if(f && f.approved===false) myProfile.approved = false; }catch(e){} }
+      state.avDraft = null; clearFormDrafts('dash');
+      toast(T(wasLive && myProfile.approved===false ? 'toast_rereview' : 'toast_saved'), wasLive && myProfile.approved===false ? 6000 : undefined); render();
+      if(myProfile.role==='mentor' && myProfile.approved===false) notify('mentor_applied'); else if(myProfile.role==='mentor') notify('profile_saved');
+      setTimeout(()=>photoNudge(), 400);
+    }
     catch(err){
       console.error('profile save failed:', err);
       state.saveBusy = false; { const b = document.getElementById('save-profile'); if(b) b.disabled = false; }
