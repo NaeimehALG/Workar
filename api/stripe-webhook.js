@@ -3,6 +3,7 @@ process.env.SUPABASE_URL = String(process.env.SUPABASE_URL || 'https://jgbjhzhbd
 // result in Supabase using the SERVICE ROLE key — which must only ever live here, as a Vercel
 // Environment Variable, never in index.html or any client-side code.
 //
+// Also handles charge.dispute.created, charge.refunded and payment_intent.canceled (see handleMoneyEvent).
 // Handles three kinds of purchase (set in metadata[kind] by /api/create-checkout):
 //   booking    — marks the mentoring request as paid, records the mentor's share for the automatic
 //                payout, creates the private call link, and emails mentor + client the link with a calendar invite
@@ -49,6 +50,72 @@ function verifyStripeSignature(rawBody, sigHeader, secret) {
   }
 }
 
+// ---------- money events after the payment: disputes, refunds, expired holds ----------
+// Finds the booking, marks it, takes back the mentor's transfer when the money is gone, and leaves a
+// money_alert row (agent_events) for the admin's daily digest. Returns a short text of what was done.
+const idOf = x => (x && typeof x === 'object' ? x.id : x) || null;
+async function findBooking(sb, h, { requestId, paymentIntent, charge }) {
+  const tries = [];
+  if (requestId) tries.push(`id=eq.${encodeURIComponent(requestId)}`);
+  if (paymentIntent) tries.push(`stripePaymentIntentId=eq.${encodeURIComponent(paymentIntent)}`);
+  if (charge) tries.push(`stripeChargeId=eq.${encodeURIComponent(charge)}`);
+  for (const q of tries) {
+    const r = await fetch(`${sb}/rest/v1/requests?${q}&select=*&limit=1`, { headers: h });
+    if (!r.ok) throw new Error('database-read-failed ' + r.status);
+    const rows = await r.json();
+    if (rows && rows[0]) return rows[0];
+  }
+  return null;
+}
+async function patchBooking(sb, h, id, body) {
+  const r = await fetch(`${sb}/rest/v1/requests?id=eq.${encodeURIComponent(id)}`, { method: 'PATCH', headers: Object.assign({ Prefer: 'return=minimal' }, h), body: JSON.stringify(body) });
+  if (!r.ok) throw new Error('database-write-failed ' + r.status);
+}
+const cad = c => 'CA$' + (Number(c || 0) / 100).toFixed(2);
+
+async function handleMoneyEvent(event, sb, h) {
+  const P = require('./_payouts');
+  const o = event.data && event.data.object || {};
+  const md = o.metadata || {};
+  if (event.type === 'charge.dispute.created') {
+    const r = await findBooking(sb, h, { paymentIntent: idOf(o.payment_intent), charge: idOf(o.charge) });
+    if (!r) { await P.moneyAlert('evt:' + event.id, `Stripe dispute ${o.id} (${cad(o.amount)}) on charge ${idOf(o.charge)}: no Workar booking found. Check it in Stripe.`); return 'dispute-unmatched'; }
+    await patchBooking(sb, h, r.id, { payoutError: 'the client disputed the payment' });
+    let rev = '';
+    try { const n = await P.reverseTransfers(r, 0, 'dispute'); if (n > 0) rev = ` Took back ${cad(n)} from the mentor's payout.`; }
+    catch (e) { rev = ` Could not take back the mentor's payout (${String(e.message || e).slice(0, 120)}): do it in Stripe.`; }
+    await P.moneyAlert('evt:' + event.id, `Dispute opened on booking ${r.id} (${cad(o.amount)}, reason: ${o.reason || 'unknown'}). Mentor payout blocked.${rev} Respond in Stripe before the deadline.`);
+    return 'dispute';
+  }
+  if (event.type === 'charge.refunded') {
+    const r = await findBooking(sb, h, { requestId: md.requestId, paymentIntent: idOf(o.payment_intent), charge: o.id });
+    if (!r) return 'refund-unmatched';
+    // a refund of some other payment for this booking (e.g. a duplicate checkout Workar released): not the booking's money
+    const pi = idOf(o.payment_intent);
+    if (!((pi && pi === r.stripePaymentIntentId) || (o.id && o.id === r.stripeChargeId))) return 'refund-other-payment';
+    // Workar's own refunds: "Don't charge" (status refunded) and unused package sessions; the cron already handled the mentor side
+    if (r.sessionsKept != null && (r.status === 'refunded' || P.chargeCovers(r, o))) return 'refund-own';
+    const amount = Number(o.amount_captured != null ? o.amount_captured : o.amount) || 0;
+    const left = Math.max(0, (Number(o.amount) || 0) - (Number(o.amount_refunded) || 0)); // uncaptured rest counts as refunded
+    const keep = amount > 0 ? Math.min(1, left / amount) : 0;
+    await patchBooking(sb, h, r.id, Object.assign({ payoutError: 'the payment was refunded' }, keep === 0 && r.holdStatus ? { holdStatus: 'refunded' } : {}));
+    let rev = '';
+    try { const n = await P.reverseTransfers(r, keep, 'refund-' + (Number(o.amount_refunded) || 0)); if (n > 0) rev = ` Took back ${cad(n)} from the mentor's payout.`; }
+    catch (e) { rev = ` Could not take back the mentor's payout (${String(e.message || e).slice(0, 120)}): do it in Stripe.`; }
+    await P.moneyAlert('evt:' + event.id, `Booking ${r.id} was refunded outside Workar's normal flow (${cad(o.amount_refunded)} of ${cad(amount)}). Mentor payout held.${rev}`);
+    return 'refund';
+  }
+  if (event.type === 'payment_intent.canceled') {
+    if (['abandoned', 'duplicate'].includes(o.cancellation_reason)) return 'cancel-own'; // Workar released it itself
+    const r = await findBooking(sb, h, { paymentIntent: o.id });
+    if (!r || r.stripePaymentIntentId !== o.id || r.holdStatus !== 'authorized') return 'cancel-ignored';
+    await patchBooking(sb, h, r.id, { holdStatus: 'expired', holdError: 'the card hold was cancelled by Stripe (' + (o.cancellation_reason || 'expired') + ') before it was charged' });
+    await P.moneyAlert('evt:' + event.id, `The card hold for booking ${r.id} (${cad(o.amount)}) was cancelled by Stripe (${o.cancellation_reason || 'expired'}) before it was charged. The client was not charged and the mentor will not be paid unless you arrange it.`);
+    return 'hold-cancelled';
+  }
+  return 'ignored';
+}
+
 async function handler(req, res) {
   if (req.method !== 'POST') {
     res.status(405).end();
@@ -81,6 +148,12 @@ async function handler(req, res) {
     Authorization: 'Bearer ' + serviceKey,
     'Content-Type': 'application/json'
   };
+
+  if (['charge.dispute.created', 'charge.refunded', 'payment_intent.canceled'].includes(event.type)) {
+    try { const what = await handleMoneyEvent(event, supabaseUrl, h); res.status(200).json({ received: true, handled: what }); }
+    catch (e) { console.error('money-event-failed', event.type, e.message); res.status(500).json({ error: 'update-failed' }); } // Stripe will retry
+    return;
+  }
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
@@ -115,10 +188,11 @@ async function handler(req, res) {
       } else {
         const requestId = md.requestId || session.client_reference_id;
         if (requestId) {
-          await checkedFetch(`${supabaseUrl}/rest/v1/requests?id=eq.${encodeURIComponent(requestId)}`, {
+          // only the first time it becomes paid (a re-sent webhook must not reset the payout bookkeeping)
+          await checkedFetch(`${supabaseUrl}/rest/v1/requests?id=eq.${encodeURIComponent(requestId)}&paid=is.false`, {
             method: 'PATCH',
             headers: Object.assign({ Prefer: 'return=minimal' }, h),
-            body: JSON.stringify({ paid: true, stripeSessionId: session.id })
+            body: JSON.stringify(Object.assign(await require('./_payouts').paymentLockFields(), { paid: true, stripeSessionId: session.id }))
           });
           // lock in the mentor's share and remember the Stripe charge for the automatic payout later
           try {
@@ -144,3 +218,4 @@ async function handler(req, res) {
 module.exports = handler;
 // Must be set AFTER module.exports is assigned, or Vercel ignores it
 module.exports.config = { api: { bodyParser: false } };
+module.exports.handleMoneyEvent = handleMoneyEvent;

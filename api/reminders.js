@@ -16,16 +16,19 @@ const S = require('./_session');
 const AI = require('./_ai');
 
 const MAX_AI_BRIEFS = 10; // keeps the daily run inside the time limit; extra sessions get a plain reminder
+// Gives up waiting after ms (the brief's own AI call has a 20 s timeout and one retry; this caps the total).
+const withTimeout = (p, ms) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error('timed out')), ms).unref())]);
 
-async function sessionReminders() {
+// deadline: AI briefs are only started with more than a minute left, so they can never push the run past its limit.
+async function sessionReminders(deadline) {
   const now = new Date(), soon = new Date(Date.now() + 30 * 3600 * 1000);
   const list = await M.rows(`requests?status=eq.accepted&remindedAt=is.null&startsAt=gte.${now.toISOString()}&startsAt=lte.${soon.toISOString()}&select=*`);
   let sent = 0, briefs = 0;
   for (const r of list) {
     if (r.amountCents > 0 && !r.paid) continue;
     let brief = r.prepBrief || null;
-    if (!brief && briefs < MAX_AI_BRIEFS && process.env.ANTHROPIC_API_KEY) {
-      try { brief = await S.makePrepBrief(r); briefs++; } catch (e) { console.error('prep-brief-failed', r.id, e.message); }
+    if (!brief && briefs < MAX_AI_BRIEFS && process.env.ANTHROPIC_API_KEY && (!deadline || deadline - Date.now() > 60000)) {
+      try { brief = await withTimeout(S.makePrepBrief(r), 25000); briefs++; } catch (e) { console.error('prep-brief-failed', r.id, e.message); }
     }
     const url = MT.meetingUrlFor(r);
     const [mentor, client] = await Promise.all([M.profile(r.mentorId), M.profile(r.clientId)]);
@@ -93,7 +96,7 @@ async function reengage() {
 
 // ---------- Mentor payouts (Stripe Connect) ----------
 const P = require('./_payouts');
-const usd = c => '$' + (Number(c || 0) / 100).toFixed(2);
+const usd = c => 'CA$' + (Number(c || 0) / 100).toFixed(2);
 async function payoutMail(kind, r, cents) {
   const client = await M.profile(r.clientId);
   const to = await M.emailOf(r.mentorId);
@@ -101,13 +104,13 @@ async function payoutMail(kind, r, cents) {
   if (kind === 'paid') {
     await M.sendMail(to, `You've been paid ${usd(cents)} for your Workar session`,
       M.layout('Your payout is on its way', [
-        `Your share for the session with <b>${M.esc(client.name)}</b> (<b>${usd(cents)}</b>) has been sent to your bank account.`,
+        `Your share for your completed session(s) with <b>${M.esc(client.name)}</b> (<b>${usd(cents)}</b>) has been sent to your bank account.`,
         `It usually arrives within a few business days. You can see every payout in your Workar earnings.`
       ], { text: 'See your earnings', url: M.SITE() + '/?go=dashboard' }));
   } else {
     await M.sendMail(to, `You have ${usd(cents)} waiting on Workar`,
       M.layout('Add your bank details to get paid', [
-        `Your share for the session with <b>${M.esc(client.name)}</b> (<b>${usd(cents)}</b>) is ready to be paid.`,
+        `Your share for your completed session(s) with <b>${M.esc(client.name)}</b> (<b>${usd(cents)}</b>) is ready to be paid.`,
         `Add your bank details once, through Stripe, our payment partner. It takes about 5 minutes, and after that every payout is sent to you automatically.`
       ], { text: 'Add my bank details', url: M.SITE() + '/?go=dashboard' }));
   }
@@ -145,8 +148,26 @@ module.exports = async (req, res) => {
   if (req.query && req.query.task === 'setup_sweep') {
     const k = String(process.env.SETUP_SWEEP_KEY || '');
     if (k.length < 32 || String(req.headers['x-sweep-key'] || '') !== k) { res.status(401).end(); return; }
-    try { const r = await require('./_autopilot').setupSweep({ deadline: Date.now() + 100000 }); if (r.errors.length) console.error('setup-sweep-errors', JSON.stringify(r.errors)); res.status(200).json({ emails: r.emails, done: r.done.length, errors: r.errors.length }); }
-    catch (e) { console.error('setup-sweep-failed', e); res.status(500).json({ error: String(e.message || e) }); }
+    const AP = require('./_autopilot');
+    try {
+      const r = await AP.setupSweep({ deadline: Date.now() + 100000 });
+      // The sweep sends no report: its problems are stored for the daily digest ("Needs you").
+      if (r.errors.length) { console.error('setup-sweep-errors', JSON.stringify(r.errors)); await AP.recordErrors('Hourly setup sweep', r.errors); }
+      res.status(200).json({ emails: r.emails, done: r.done.length, errors: r.errors.length });
+    } catch (e) {
+      console.error('setup-sweep-failed', e);
+      await AP.recordErrors('Hourly setup sweep', ['the sweep failed: ' + String(e.message || e).slice(0, 200)]).catch(() => {});
+      res.status(500).json({ error: String(e.message || e) });
+    }
+    return;
+  }
+  // Missing-digest alert, called by Supabase pg_cron at 17:30 UTC (workar_digest_check) only when today's
+  // "digest:<date>" row is missing, with the private DIGEST_CHECK_KEY (header x-digest-key). Emails the team inbox.
+  if (req.query && req.query.task === 'digest_check') {
+    const k = String(process.env.DIGEST_CHECK_KEY || '');
+    if (k.length < 32 || String(req.headers['x-digest-key'] || '') !== k) { res.status(401).end(); return; }
+    try { res.status(200).json(await require('./_autopilot').digestMissingAlert()); }
+    catch (e) { console.error('digest-check-failed', e); res.status(500).json({ error: String(e.message || e) }); }
     return;
   }
   // One-off setup emails the admin asked for: only with the private SETUP_NOW_KEY (set in Vercel, removed afterwards).
@@ -157,14 +178,16 @@ module.exports = async (req, res) => {
     catch (e) { console.error('setup-now-failed', e); res.status(500).json({ error: String(e.message || e) }); }
     return;
   }
+  // The daily job sends emails and moves money: it never runs without CRON_SECRET (Vercel sends it automatically).
   const secret = process.env.CRON_SECRET;
-  if (secret && req.headers.authorization !== 'Bearer ' + secret) { res.status(401).end(); return; }
+  if (!secret) { console.error('daily-run-refused: CRON_SECRET is not set'); res.status(503).json({ error: 'CRON_SECRET is not set' }); return; }
+  if (req.headers.authorization !== 'Bearer ' + secret) { res.status(401).end(); return; }
   const out = {}, problems = [];
   // Vercel stops this job at 300s. Optional steps are skipped when time runs short, so the mentor review
   // and the daily report (which come last) always run, and the report says what was skipped.
   const t0 = Date.now(), late = () => Date.now() - t0 > 170 * 1000;
   const skip = what => problems.push(`${what} was skipped today because the daily job ran short of time; it runs again tomorrow.`);
-  try { Object.assign(out, await sessionReminders()); } catch (e) { console.error('reminders-failed', e); problems.push('Session reminders failed: ' + (e.message || e)); }
+  try { Object.assign(out, await sessionReminders(t0 + 150 * 1000)); } catch (e) { console.error('reminders-failed', e); problems.push('Session reminders failed: ' + (e.message || e)); }
   try { Object.assign(out, await reengage()); } catch (e) { console.error('reengage-failed', e); problems.push('Re-engagement emails failed: ' + (e.message || e)); }
   // Backup for the Stripe webhook: confirm any paid booking that wasn't marked paid yet
   try {

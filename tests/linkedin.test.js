@@ -21,6 +21,7 @@ test('queued posts become scheduled Typefully drafts with their image; late ones
     url = String(url); calls.push({ url, opt });
     const j = (b, s = 200) => ({ ok: s < 300, status: s, json: async () => b, arrayBuffer: async () => new ArrayBuffer(4) });
     if (url.includes('/linkedin_queue?status=eq.queued')) return j(rows);
+    if (url.includes('/profiles?select=name')) return j([{ name: 'Sara Ahmadi' }]);
     if (url.includes('/linkedin_queue?id=eq.')) { patches.push({ id: decodeURIComponent(url.split('id=eq.')[1]), body: JSON.parse(opt.body) }); return j({}); }
     if (url.endsWith('/social-sets?limit=50')) return j({ results: [{ id: 's1', name: 'Workar' }] });
     if (url.endsWith('/media/upload')) return j({ media_id: 'm1', upload_url: 'https://upload.test/x' }, 201);
@@ -33,7 +34,8 @@ test('queued posts become scheduled Typefully drafts with their image; late ones
   try {
     const problems = [];
     const out = await L.run(problems);
-    assert.equal(out.linkedinScheduled, 2); assert.deepEqual(problems, []);
+    assert.equal(out.linkedinScheduled, 2);
+    assert.equal(problems.length, 1); assert.match(problems[0], /already passed/);   // the skipped late post is reported
     const drafts = calls.filter(c => c.url.endsWith('/drafts')).map(c => JSON.parse(c.opt.body));
     assert.deepEqual(drafts[0].platforms.linkedin.posts[0].media_ids, ['m1']);
     assert.equal(drafts[1].platforms.linkedin.posts[0].media_ids, undefined);

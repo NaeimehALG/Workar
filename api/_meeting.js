@@ -119,4 +119,49 @@ function googleCalendarLink({ r, title, description, url }) {
   return 'https://calendar.google.com/calendar/render?' + p.toString();
 }
 
-module.exports = { SESSION_MINUTES, isDaily, callWindow, createMeeting, rescheduleMeeting, meetingUrlFor, buildIcs, icsAttachment, googleCalendarLink };
+// ---------- Attendance (money decisions) ----------
+// Did BOTH people join the call for one session? Used before charging the client and before paying
+// the mentor for each session. Matches Daily participants by the display name Workar joins them with.
+//   both | mentor-absent | client-absent | none | unclear | unavailable (no Daily record: never blocks money)
+const PRESENT_MIN = 5; // minutes in the call to count as present
+const norm = s => String(s || '').trim().toLowerCase().replace(/\s+/g, ' ');
+function classifyAttendance(meetings, names = {}, startMs = NaN) {
+  const lo = Number.isFinite(startMs) ? startMs / 1000 - 30 * 60 : -Infinity, hi = Number.isFinite(startMs) ? startMs / 1000 + 3 * 3600 : Infinity;
+  const mins = {};
+  for (const m of meetings || []) {
+    for (const p of m.participants || []) {
+      const t = Number(p.join_time) || Number(m.start_time) || 0;
+      if (t && (t < lo || t > hi)) continue; // a different session of the same package
+      const k = norm(p.user_name) || '(unnamed)';
+      mins[k] = (mins[k] || 0) + (Number(p.duration) || 0) / 60;
+    }
+  }
+  const mentor = norm(names.mentor), client = norm(names.client);
+  const present = Object.keys(mins).filter(k => mins[k] >= PRESENT_MIN);
+  const m = !!mentor && present.includes(mentor), c = !!client && present.includes(client) && client !== mentor;
+  const others = present.filter(k => k !== mentor && k !== client);
+  const minutes = Object.keys(mins).map(k => `${k}: ${Math.round(mins[k])} min`).join(', ') || 'nobody joined';
+  let status;
+  if (m && c) status = 'both';
+  else if (!present.length) status = 'none';
+  else if (others.length) status = 'unclear';
+  else status = m ? 'client-absent' : 'mentor-absent';
+  return { status, note: minutes };
+}
+
+async function sessionAttendance(r, startsAt, names) {
+  if (!r || !r.meetingUrl || !isDaily(r.meetingUrl)) return { status: 'unavailable', note: 'no Daily call record (Jitsi or no link)' };
+  if (!process.env.DAILY_API_KEY) return { status: 'unavailable', note: 'DAILY_API_KEY is not set' };
+  const start = startsAt ? Date.parse(startsAt) : NaN;
+  const room = r.meetingRoom || String(r.meetingUrl).split('/').pop().split('?')[0];
+  const q = new URLSearchParams({ room, limit: '100' });
+  if (Number.isFinite(start)) { q.set('timeframe_start', String(Math.floor(start / 1000) - 3600)); q.set('timeframe_end', String(Math.floor(start / 1000) + 4 * 3600)); }
+  try {
+    const res = await fetch('https://api.daily.co/v1/meetings?' + q.toString(), { headers: { Authorization: 'Bearer ' + process.env.DAILY_API_KEY } });
+    const d = await res.json().catch(() => ({}));
+    if (!res.ok) return { status: 'unavailable', note: 'Daily answered ' + res.status };
+    return classifyAttendance(d.data || [], names, start);
+  } catch (e) { return { status: 'unavailable', note: 'Daily could not be reached: ' + String(e.message || e).slice(0, 100) }; }
+}
+
+module.exports = { SESSION_MINUTES, isDaily, callWindow, createMeeting, rescheduleMeeting, meetingUrlFor, buildIcs, icsAttachment, googleCalendarLink, classifyAttendance, sessionAttendance };

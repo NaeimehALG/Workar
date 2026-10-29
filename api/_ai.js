@@ -58,11 +58,22 @@ function extractJSON(text) {
 
 // Ask for JSON only, and parse it even if the model wraps it in ``` fences or adds
 // commentary. One retry if the reply still can't be parsed.
+// opts.deadline (ms timestamp, optional): no call is started that could run past it; each call's timeout is
+// shortened to fit, and the retry is skipped when there is no time left for it.
+const MIN_CALL_MS = 8000;
 async function askJSON(system, userText, opts = {}) {
   const sys = system + '\n\nRespond with exactly one valid JSON value only. No markdown, no code fences, no commentary before or after it.';
+  const { deadline } = opts;
   let lastErr;
   for (let attempt = 0; attempt < 2; attempt++) {
-    const data = await callClaude(Object.assign({ system: sys, messages: [{ role: 'user', content: userText }] }, opts));
+    const o = Object.assign({}, opts);
+    delete o.deadline;
+    if (deadline) {
+      const left = deadline - Date.now();
+      if (left < MIN_CALL_MS) throw lastErr || new Error('out of time for the AI call');
+      o.timeoutMs = Math.min(o.timeoutMs || 25000, left);
+    }
+    const data = await callClaude(Object.assign({ system: sys, messages: [{ role: 'user', content: userText }] }, o));
     try { return extractJSON(textOf(data)); } catch (e) { lastErr = e; }
   }
   throw lastErr;

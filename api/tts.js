@@ -37,19 +37,22 @@ export default async function handler(req, res) {
   const ADMIN = (process.env.ADMIN_EMAIL || "naeimeh.alaghehband@gmail.com").toLowerCase();
   const DAILY_LIMIT = Number(process.env.TTS_DAILY_LIMIT) || 60;
   const SERVICE = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  // When the counter is configured but fails, the paid voice is not used (fail closed; the page falls back to the browser voice).
   if ((me.email || "").toLowerCase() !== ADMIN && SERVICE) {
     const sh = { apikey: SERVICE, Authorization: `Bearer ${SERVICE}`, "Content-Type": "application/json" };
     const since = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
     try {
       const c = await fetch(`${SUPABASE_URL}/rest/v1/agent_events?kind=eq.tts&ref=eq.${encodeURIComponent(me.id)}&createdAt=gte.${encodeURIComponent(since)}&select=id`,
         { method: "HEAD", headers: Object.assign({ Prefer: "count=exact" }, sh) });
-      const used = Number(((c.headers.get("content-range") || "").split("/")[1]) || 0);
+      const used = c && c.ok ? Number(String(c.headers.get("content-range") || "").split("/")[1]) : NaN;
+      if (!Number.isFinite(used)) return res.status(429).json({ error: "voice limit unavailable" });
       if (used >= DAILY_LIMIT) return res.status(429).json({ error: "daily voice limit reached" });
-      await fetch(`${SUPABASE_URL}/rest/v1/agent_events`, {
+      const w = await fetch(`${SUPABASE_URL}/rest/v1/agent_events`, {
         method: "POST", headers: Object.assign({ Prefer: "return=minimal" }, sh),
         body: JSON.stringify({ id: `tts_${me.id}_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`, kind: "tts", ref: me.id }),
       });
-    } catch (e) { /* never block the voice because of the counter */ }
+      if (!w || !w.ok) return res.status(429).json({ error: "voice limit unavailable" });
+    } catch (e) { console.error("tts-limit", e && e.message); return res.status(429).json({ error: "voice limit unavailable" }); }
   }
 
   // 2) Turn the text into speech: a warm, natural voice (gpt-4o-mini-tts), falling back to tts-1
@@ -73,8 +76,9 @@ export default async function handler(req, res) {
   }
 
   if (!ttsRes.ok) {
-    const err = await ttsRes.text();
-    return res.status(502).json({ error: "tts failed", detail: err });
+    const err = await ttsRes.text().catch(() => "");
+    console.error("tts-failed", ttsRes.status, String(err).slice(0, 300));
+    return res.status(502).json({ error: "tts failed", detail: "status " + ttsRes.status });
   }
 
   const audio = Buffer.from(await ttsRes.arrayBuffer());

@@ -20,6 +20,10 @@
     },
     "api/create-checkout.js": {
       "maxDuration": 30
+    },
+    "api/mentor-page.js": {
+      "maxDuration": 10,
+      "includeFiles": "index.html"
     }
   },
   "crons": [
@@ -105,6 +109,14 @@
     }
   ],
   "rewrites": [
+    {
+      "source": "/mentor/:id",
+      "destination": "/api/mentor-page?id=:id"
+    },
+    {
+      "source": "/mentors-sitemap.xml",
+      "destination": "/api/mentor-page?sitemap=1"
+    },
     {
       "source": "/ops/review",
       "destination": "/api/notify"

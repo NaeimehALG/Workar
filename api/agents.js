@@ -22,11 +22,11 @@ const KNOWLEDGE = require('./_knowledge');
 const PRICING = require('../pricing');
 
 async function priceRecommendation(req, res, b) {
-  const me = await M.userFromToken(bearer(req));
+  const me = await realUser(req);
   if (!me) return res.status(401).json({ error: 'Sign in first.' });
   const p = await M.fullProfile(me.id);
   if (p.role && p.role !== 'mentor') return res.status(403).json({ error: 'This is for mentors.' });
-  if (await overPublicLimit(req, 'price_recommend')) return res.status(429).json({ error: 'Please try again later.' });
+  if (await overPublicLimit(req, 'price_recommend') || await overUserLimit(me.id, 'ai_price', AI_LIMITS.price_recommend)) return res.status(429).json({ error: 'Please try again later.' });
   const settings = await M.rows('site_settings?id=eq.main&select=data');
   const data = settings[0] && settings[0].data || {};
   const single = (data.packages || []).find(pk=>pk.key==='single');
@@ -59,6 +59,23 @@ function cleanTurns(list, maxTurns, maxChars) {
   return msgs;
 }
 const bearer = req => (req.headers.authorization || '').replace(/^Bearer\s+/i, '');
+// AI tasks: a real (non-anonymous) account only.
+async function realUser(req) {
+  const me = await M.userFromToken(bearer(req)).catch(() => null);
+  return me && me.id && !me.is_anonymous ? me : null;
+}
+// Total characters sent to the AI from the browser in one call (keeps a single request from costing a lot).
+const MAX_INPUT_CHARS = 20000;
+const turnChars = m => typeof m.content === 'string' ? m.content.length : JSON.stringify(m.content || '').length;
+// Drops the oldest turns until the conversation fits; the conversation still starts with the person's turn.
+function capTurns(msgs, max = MAX_INPUT_CHARS) {
+  const out = msgs.slice();
+  while (out.length > 1 && out.reduce((n, m) => n + turnChars(m), 0) > max) out.shift();
+  while (out.length && out[0].role === 'assistant') out.shift();
+  return out;
+}
+// Per-account hourly caps for each signed-in AI task.
+const AI_LIMITS = { onboard: 60, request_note: 20, profile_review: 10, reply_draft: 40, followup_draft: 20, resume_read: 10, price_recommend: 20 };
 
 // =====================================================================
 // 1. Mentor onboarding assistant
@@ -182,11 +199,12 @@ async function runOnboard(messages, draft, opts = {}) {
 }
 
 async function onboard(req, res, b) {
-  const me = await M.userFromToken(bearer(req));
+  const me = await realUser(req);
   if (!me) return res.status(401).json({ error: 'Sign in to use the assistant.' });
   if (Array.isArray(b.messages) && b.messages.length > MAX_MSG) return res.status(400).json({ error: 'This chat is long. Press "Start over" to begin again.' });
-  const messages = cleanTurns(b.messages, MAX_MSG, MAX_CHARS);
+  const messages = capTurns(cleanTurns(b.messages, MAX_MSG, MAX_CHARS));
   if (!messages.length || messages[messages.length - 1].role !== 'user') return res.status(400).json({ error: 'Send a message first.' });
+  if (await overUserLimit(me.id, 'ai_onboard', AI_LIMITS.onboard)) return res.status(429).json({ error: 'Please try again in a little while.' });
   const { reply, draft, missing } = await runOnboard(messages, applyDraft({}, b.draft || {}));
   return res.status(200).json({ reply, draft, missing, ready: !missing.length });
 }
@@ -195,7 +213,7 @@ async function onboard(req, res, b) {
 // 2. Follow-up agent (mentor notes -> action plan the mentor reviews, then sends)
 // =====================================================================
 async function loadOwnRequest(req, b) {
-  const me = await M.userFromToken(bearer(req));
+  const me = await realUser(req);
   if (!me) return { error: [401, 'Sign in first.'] };
   const r = (await M.rows(`requests?id=eq.${encodeURIComponent(b.requestId || '')}&select=*`))[0];
   if (!r) return { error: [404, 'Booking not found.'] };
@@ -209,6 +227,7 @@ async function followupDraft(req, res, b) {
   if (error) return res.status(error[0]).json({ error: error[1] });
   const notes = String(b.notes || '').trim().slice(0, 4000);
   if (notes.length < 10) return res.status(400).json({ error: 'Write a few notes from the session first.' });
+  if (await overUserLimit(r.mentorId, 'ai_followup', AI_LIMITS.followup_draft)) return res.status(429).json({ error: 'Please try again in a little while.' });
   const [mentor, client] = await Promise.all([M.fullProfile(r.mentorId), M.fullProfile(r.clientId)]);
   const data = await AI.callClaude({
     system: `You turn a mentor's rough notes from a career mentoring session into a short follow-up message the mentor will send to their client.
@@ -233,7 +252,7 @@ async function followupSend(req, res, b) {
     headers: { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: 'Bearer ' + process.env.SUPABASE_SERVICE_ROLE_KEY, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
     body: JSON.stringify({ id: msgId, requestId: r.id, senderId: me.id, text, createdAt: new Date().toISOString() })
   });
-  if (!ins.ok) return res.status(500).json({ error: 'Could not save the message.', detail: await ins.text() });
+  if (!ins.ok) { console.error('followup-save', ins.status, await ins.text()); return res.status(500).json({ error: 'Could not save the message.' }); }
   await M.patch(`requests?id=eq.${encodeURIComponent(r.id)}`, { followupSentAt: new Date().toISOString() }).catch(() => {});
   const [mentor] = await Promise.all([M.profile(r.mentorId)]);
   const html = M.layout(`Your plan from ${mentor.name}`, [M.esc(text).replace(/\n/g, '<br>'), 'Enjoyed the session? A short review helps other people find a good mentor.'], { text: 'Open Workar', url: M.SITE() + '/?go=dashboard' });
@@ -318,7 +337,7 @@ async function createTicket(input, me, ctx, messages) {
 }
 
 async function help(req, res, b) {
-  const messages = cleanTurns(b.messages, 16, 1500);
+  const messages = capTurns(cleanTurns(b.messages, 16, 1500));
   if (!messages.length || messages[messages.length - 1].role !== 'user') return res.status(400).json({ error: 'Please type a question first.' });
   const me = await M.userFromToken(bearer(req)).catch(() => null);
   let ctx = null;
@@ -389,8 +408,9 @@ Return: [{"id":"...","reason":"..."}]. Return [] if nobody fits.`,
 // 5. Booking note helper (client): turns a rough goal into a clear request for the mentor
 // =====================================================================
 async function requestNote(req, res, b) {
-  const me = await M.userFromToken(bearer(req));
+  const me = await realUser(req);
   if (!me) return res.status(401).json({ error: 'Sign in first.' });
+  if (await overUserLimit(me.id, 'ai_note', AI_LIMITS.request_note)) return res.status(429).json({ error: 'Please try again in a little while.' });
   const rough = String(b.text || '').trim().slice(0, 1500);
   const [client, mentor] = await Promise.all([M.fullProfile(me.id), b.mentorId ? M.fullProfile(String(b.mentorId)) : Promise.resolve({})]);
   const data = await AI.callClaude({
@@ -398,7 +418,7 @@ async function requestNote(req, res, b) {
 Write 2 to 4 short sentences in first person: where they are now, what they want from this session, and one specific thing they'd like help with.
 Use only what's given. If the rough text is empty or very short, write a good note from their profile and keep it general. Never invent employers, numbers or facts.
 Write in the same language as the rough text (or English if it's empty). Plain text only. Return only the note.`,
-    messages: [{ role: 'user', content: JSON.stringify({ roughText: rough, client: { targetRole: client.profession, currentRole: client.currentProfession, careerStage: client.careerStage, goals: client.goals, aboutTheirGoal: client.bio }, mentor: { profession: mentor.profession, headline: mentor.headline }, package: b.packageKey || '' }) }],
+    messages: [{ role: 'user', content: JSON.stringify({ roughText: rough, client: { targetRole: client.profession, currentRole: client.currentProfession, careerStage: client.careerStage, goals: client.goals, aboutTheirGoal: client.bio }, mentor: { profession: mentor.profession, headline: mentor.headline }, package: String(b.packageKey || '').slice(0, 40) }) }],
     maxTokens: 400, timeoutMs: 15000
   });
   return res.status(200).json({ note: AI.textOf(data) });
@@ -408,10 +428,11 @@ Write in the same language as the rough text (or English if it's empty). Plain t
 // 6. Profile coach (mentor): honest suggestions to get more bookings
 // =====================================================================
 async function profileReview(req, res, b) {
-  const me = await M.userFromToken(bearer(req));
+  const me = await realUser(req);
   if (!me) return res.status(401).json({ error: 'Sign in first.' });
   const p = await M.fullProfile(me.id);
   if (p.role !== 'mentor') return res.status(403).json({ error: 'This is for mentor profiles.' });
+  if (await overUserLimit(me.id, 'ai_review', AI_LIMITS.profile_review)) return res.status(429).json({ error: 'Please try again in a little while.' });
   const reviews = await M.rows(`reviews?mentorId=eq.${encodeURIComponent(me.id)}&select=rating,text&limit=20`);
   const out = await AI.askJSON(
     `You review a mentor's profile on Workar, a career mentorship marketplace, and help them get more bookings.
@@ -436,8 +457,9 @@ Write in the same language as their bio.`,
 // 7. Reply helper (inbox): drafts a courteous reply the user edits and sends
 // =====================================================================
 async function replyDraft(req, res, b) {
-  const me = await M.userFromToken(bearer(req));
+  const me = await realUser(req);
   if (!me) return res.status(401).json({ error: 'Please sign in again.' });
+  if (await overUserLimit(me.id, 'ai_reply', AI_LIMITS.reply_draft)) return res.status(429).json({ error: 'Please try again in a little while.' });
   const [mine, other] = await Promise.all([M.fullProfile(me.id), b.otherId ? M.fullProfile(String(b.otherId)) : Promise.resolve({})]);
   const msgs = (Array.isArray(b.messages) ? b.messages : []).slice(-14).map(m => ({ from: m.from === 'me' ? 'me' : 'them', text: String(m.text || '').slice(0, 800) }));
   const data = await AI.callClaude({
@@ -451,6 +473,17 @@ Write in the same language as the conversation (English if unclear). Plain text 
     maxTokens: 350, timeoutMs: 15000
   });
   return res.status(200).json({ reply: AI.textOf(data).trim() });
+}
+
+// The storage path of a profile photo, only when it is inside this person's own folder ("<id>/...").
+// avatarUrl is written by the browser, so it could point at someone else's photo; the service key must not delete that.
+function ownAvatarPath(userId, avatarUrl) {
+  const raw = String(avatarUrl || '').split('/avatars/')[1];
+  if (!raw || !userId) return '';
+  let path; try { path = decodeURIComponent(raw.split(/[?#]/)[0]); } catch (e) { return ''; }
+  const parts = path.split('/');
+  if (!path.startsWith(userId + '/') || parts.length < 2 || parts.some(x => !x || x === '.' || x === '..' || x.includes('\\'))) return '';
+  return path;
 }
 
 // Account deletion: removes the profile and the sign-in account, so the person can't log back in to an empty account.
@@ -473,8 +506,8 @@ async function deleteAccount(req, res) {
   // Remove the profile photo and the Stripe payout link stored for this person.
   try {
     const pr = (await M.rows(`profiles?id=eq.${idq}&select=avatarUrl`))[0];
-    const path = pr && pr.avatarUrl ? String(pr.avatarUrl).split('/avatars/')[1] : '';
-    if (path) await fetch(`${url}/storage/v1/object/avatars`, { method: 'DELETE', headers: h, body: JSON.stringify({ prefixes: [decodeURIComponent(path.split('?')[0])] }) });
+    const path = ownAvatarPath(me.id, pr && pr.avatarUrl);
+    if (path) await fetch(`${url}/storage/v1/object/avatars`, { method: 'DELETE', headers: h, body: JSON.stringify({ prefixes: [path] }) });
   } catch (e) { /* the account is still deleted if the photo can't be removed */ }
   await fetch(`${url}/rest/v1/mentor_payout_accounts?mentorId=eq.${idq}`, { method: 'DELETE', headers: Object.assign({ Prefer: 'return=minimal' }, h) }).catch(() => {});
   const d = await fetch(`${url}/rest/v1/profiles?id=eq.${encodeURIComponent(me.id)}`, { method: 'DELETE', headers: Object.assign({ Prefer: 'return=minimal' }, h) });
@@ -575,6 +608,13 @@ async function authEmail(req, res, b) {
   return res.status(200).json({ sent: true });
 }
 
+// Row count from a HEAD request with Prefer: count=exact, or null when the counter could not be read.
+function countOf(c) {
+  if (!c || !c.ok || !c.headers) return null;
+  const n = Number((String(c.headers.get('content-range') || '').split('/')[1]));
+  return Number.isFinite(n) ? n : null;
+}
+
 // Public AI tasks (usable without an account) get a per-visitor hourly limit so nobody can run up the AI bill.
 async function overPublicLimit(req, task) {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY, url = process.env.SUPABASE_URL;
@@ -585,11 +625,12 @@ async function overPublicLimit(req, task) {
   try {
     const c = await fetch(`${url}/rest/v1/agent_events?kind=eq.pub_ai&ref=eq.${encodeURIComponent(ip)}&createdAt=gte.${encodeURIComponent(since)}&select=id`,
       { method: 'HEAD', headers: Object.assign({ Prefer: 'count=exact' }, h) });
-    const used = Number(((c.headers.get('content-range') || '').split('/')[1]) || 0);
-    if (used >= (Number(process.env.PUBLIC_AI_HOURLY_LIMIT) || 40)) return true;
-    await fetch(`${url}/rest/v1/agent_events`, { method: 'POST', headers: Object.assign({ Prefer: 'return=minimal' }, h),
+    const used = countOf(c);
+    if (used === null || used >= (Number(process.env.PUBLIC_AI_HOURLY_LIMIT) || 40)) return true;
+    const w = await fetch(`${url}/rest/v1/agent_events`, { method: 'POST', headers: Object.assign({ Prefer: 'return=minimal' }, h),
       body: JSON.stringify({ id: `pub_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`, kind: 'pub_ai', ref: ip }) });
-  } catch (e) { /* never block real visitors because of the counter */ }
+    if (!w || !w.ok) return true;
+  } catch (e) { console.error('public-limit', e.message); return true; } // fail closed: no counter, no AI call
   return false;
 }
 
@@ -649,11 +690,11 @@ async function resumeBlock(path) {
 }
 
 async function resumeRead(req, res, b) {
-  const me = await M.userFromToken(bearer(req));
+  const me = await realUser(req);
   if (!me) return res.status(401).json({ error: 'Sign in first.' });
   const path = String(b.path || '');
   if (!path.startsWith(me.id + '/') || path.includes('..') || path.length > 300) return res.status(403).json({ error: 'You can only read your own file.' });
-  if (await overPublicLimit(req, 'resume_read')) return res.status(429).json({ error: 'Please try again in a little while.' });
+  if (await overPublicLimit(req, 'resume_read') || await overUserLimit(me.id, 'ai_resume', AI_LIMITS.resume_read)) return res.status(429).json({ error: 'Please try again in a little while.' });
   let doc;
   try { doc = await resumeBlock(path); }
   catch (e) {
@@ -767,17 +808,18 @@ async function overUserLimit(userId, kind, max) {
   try {
     const c = await fetch(`${url}/rest/v1/agent_events?kind=eq.${encQ(kind)}&ref=eq.${encQ(userId)}&createdAt=gte.${encQ(since)}&select=id`,
       { method: 'HEAD', headers: Object.assign({ Prefer: 'count=exact' }, h) });
-    const used = Number(((c.headers.get('content-range') || '').split('/')[1]) || 0);
-    if (used >= max) return true;
-    await fetch(`${url}/rest/v1/agent_events`, { method: 'POST', headers: Object.assign({ Prefer: 'return=minimal' }, h),
+    const used = countOf(c);
+    if (used === null || used >= max) return true;
+    const w = await fetch(`${url}/rest/v1/agent_events`, { method: 'POST', headers: Object.assign({ Prefer: 'return=minimal' }, h),
       body: JSON.stringify({ id: `${kind}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`, kind, ref: userId }) });
-  } catch (e) { console.error('user-limit', e.message); }
+    if (!w || !w.ok) return true;
+  } catch (e) { console.error('user-limit', e.message); return true; } // fail closed: no counter, no AI call
   return false;
 }
 
 // 1. Prep brief in the app: the mentor sees the full brief, the client sees the tips meant for them.
 async function prepBrief(req, res, b) {
-  const me = await M.userFromToken(bearer(req));
+  const me = await realUser(req);
   if (!me) return res.status(401).json({ error: 'Please sign in again.' });
   const r = (await M.rows(`requests?id=eq.${encQ(String(b.requestId || ''))}&select=*`))[0];
   if (!r) return res.status(404).json({ error: 'Booking not found.' });
@@ -796,7 +838,7 @@ async function prepBrief(req, res, b) {
 // 2. Translate one message into the reader's language. Only the two people in the thread can ask.
 const LANG_NAMES = { en: 'English', fa: 'Persian (Farsi)', fr: 'French', ar: 'Arabic', es: 'Spanish', de: 'German', pt: 'Portuguese', tr: 'Turkish', ru: 'Russian', zh: 'Simplified Chinese', hi: 'Hindi', ur: 'Urdu' };
 async function translateMsg(req, res, b) {
-  const me = await M.userFromToken(bearer(req));
+  const me = await realUser(req);
   if (!me) return res.status(401).json({ error: 'Please sign in again.' });
   const lang = LANG_NAMES[b.lang] ? b.lang : 'en';
   const m = (await M.rows(`messages?id=eq.${encQ(String(b.messageId || ''))}&select=id,requestId,senderId,text`))[0];
@@ -834,7 +876,7 @@ If a field is already in ${LANG_NAMES[lang]}, return it unchanged. Return JSON: 
 //    (or contact meant to arrange payment) outside Workar. Flagged messages go to the admin's Reports tab.
 const PAY_HINT = /(e-?\s?transfer|interac|paypal|venmo|zelle|\bwise\b|western\s?union|money\s?gram|bank\s?(transfer|account|details)|wire\s?transfer|crypto|bitcoin|usdt|cash\s?app|\bcash\b|pay\s+(you|me)\s+directly|directly\s+to\s+me|outside\s+(of\s+)?workar|off\s+(the\s+)?(platform|site|workar)|skip\s+workar|avoid\s+(the\s+)?(fee|commission)|whats\s?app|telegram|signal|wechat|my\s+(number|phone|email)|@[a-z0-9-]+\.[a-z]{2,}|\+?\d[\d\s().-]{8,}\d|کارت\s?به\s?کارت|شماره\s?(کارت|حساب|شبا|تلفن|موبایل)|واتس\s?[آا]پ|واتساپ|تلگرام|خارج\s+از\s+(سایت|ورکار|workar)|مستقیم|پول\s?نقد|کمیسیون)/i;
 async function msgCheck(req, res, b) {
-  const me = await M.userFromToken(bearer(req));
+  const me = await realUser(req);
   if (!me) return res.status(401).json({ error: 'Please sign in again.' });
   const m = (await M.rows(`messages?id=eq.${encQ(String(b.messageId || ''))}&select=id,requestId,senderId,text,createdAt`))[0];
   if (!m || m.senderId !== me.id) return res.status(200).json({ flagged: false });
@@ -953,8 +995,10 @@ module.exports = async (req, res) => {
     }
   } catch (e) {
     console.error('agents-error', b.task, e);
-    return res.status(500).json({ error: 'The assistant hit an error. Try again in a moment.', detail: String(e.message || e) });
+    return res.status(500).json({ error: 'The assistant hit an error. Try again in a moment.' });
   }
 };
 module.exports.docxText = docxText; // for tests
+module.exports._ownAvatarPath = ownAvatarPath; // for tests
+module.exports._capTurns = capTurns; // for tests
 module.exports.resumeBlock = resumeBlock; // the autopilot fills incomplete mentor applications from an uploaded resume
