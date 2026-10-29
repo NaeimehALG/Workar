@@ -66,7 +66,6 @@ async function checkMemory() {
   return r.ok;
 }
 
-const RESUME_TIP = 'The quickest way: upload your resume or your LinkedIn profile as a PDF (on LinkedIn, open your profile, choose More, then Save to PDF) from your dashboard, and we will complete the rest of your profile for you.';
 const PHOTO_TIP = 'We also recommend adding a profile photo. A friendly, professional photo helps clients feel confident choosing you.';
 
 
@@ -481,7 +480,6 @@ async function mentorApplications(rep, ctx, onlyId) {
           'Welcome to Workar, and thank you for joining us as a mentor.',
           miss.length === 1 ? `Your profile is almost ready to go live. To publish it, please add ${M.esc(miss[0])}.` : miss.length ? 'Your profile is almost ready to go live. To publish it, please add:' : `Your profile is almost ready to go live. ${M.esc(q)}`,
           miss.length > 1 ? M.list(miss) : '',
-          p.resumePath ? '' : RESUME_TIP,
           p.avatarUrl ? '' : PHOTO_TIP,
           'As soon as you save your changes, we will review your profile and let you know when it is live.',
           'We are glad to have you with us.<br>The Workar team'];
@@ -496,8 +494,7 @@ async function mentorApplications(rep, ctx, onlyId) {
             'Thank you for updating your mentor profile. We have reviewed it again.',
             miss.length === 1 ? `To publish it, please add ${M.esc(miss[0])}.` : miss.length ? 'To publish it, please add:' : M.esc(q),
             miss.length > 1 ? M.list(miss) : '',
-            p.resumePath ? '' : RESUME_TIP,
-            'As soon as you save your changes, we will review it again and let you know when it is live.',
+              'As soon as you save your changes, we will review it again and let you know when it is live.',
             'Kind regards,<br>The Workar team'], { text: 'Complete my profile', url: site + '/?go=dashboard' }))) { await forget('ask', p.id + ':' + prints[p.id]); continue; }
         rep.done.push(`Asked mentor applicant <b>${M.esc(p.name)}</b> again after their update: “${M.esc(q)}”`);
       } else if (await askedLongAgo(p.id) && await once('ask_close', p.id)) {
