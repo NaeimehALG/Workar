@@ -757,6 +757,14 @@
   .auth-sub{margin:0 0 22px;font-size:14.5px;}
   .auth-note{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;margin:0 0 18px;font-size:13.5px;}
   .auth-forgot{text-align:end;margin:-8px 0 14px;}
+  .auth-roles{margin:0 0 18px;}
+  .auth-roles-l{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:8px;}
+  .auth-roles-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .auth-role{font:inherit;font-size:14.5px;font-weight:600;color:var(--text);background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:12px 10px;cursor:pointer;transition:border-color .15s,background .15s;}
+  .auth-role:hover{border-color:var(--accent);}
+  .auth-roles.need .auth-role{border-color:#b3412c;}
+  .auth-roles.need .auth-roles-l{color:#b3412c;}
+  .auth-role.on{border-color:var(--accent);background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--accent);}
   .auth-li{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;margin:4px 0 14px;}
   .auth-li svg{color:#0A66C2;}
   .auth-li-note{font-size:12.5px;margin:-6px 0 14px;text-align:center;}
@@ -809,6 +817,7 @@
 
   /* ===== onboarding ===== */
   .ob-head{margin-bottom:22px;max-width:640px;}
+  .ob-quick{max-width:480px;}
   .ob-head h2{font-size:28px;font-weight:700;margin:0 0 6px;letter-spacing:-.01em;}
   .ob-head p{margin:0;font-size:15px;}
   .ob-roles{max-width:calc(100% - 348px);margin-bottom:26px;}
@@ -2543,6 +2552,7 @@ const I18N = {
     hiw2_t:'2. Match with a mentor', hiw2_b:'Search by job title, read real reviews, and request a conversation.',
     hiw3_t:'3. Get AI coaching too', hiw3_b:'Between sessions, get instant feedback on your resume and career questions.',
     onboard_title:'Set up your profile',
+    auth_i_am:'I want to', auth_role_client:'Find a mentor', auth_role_mentor:'Become a mentor', auth_pick_role:'Please choose whether you want to find a mentor or become a mentor.', lbl_full_name:'Full name', ph_full_name:'e.g. Sara Ahmadi', ob_quick_t:'One last detail', ob_quick_s:'Add your name and you can start browsing mentors right away. Your goals and resume can be added later from your dashboard.', ob_quick_btn:'Start browsing mentors', toast_client_ready:'Your account is ready. Find a mentor who fits your goals.',
     role_client_t:"I'm looking for a mentor", role_client_s:'Get guidance on your resume, interviews, or career path.',
     role_mentor_t:"I'm a mentor", role_mentor_s:'Share your experience and help someone with your job.',
     pick_to_continue:'Pick one to continue.',
@@ -2649,7 +2659,7 @@ const I18N = {
     adm_share:'Mentor share (%)', adm_share_hint:'The part of each booking that goes to the mentor. Workar keeps the rest. A change applies to new bookings only.',
     pay_title:'Mentor payouts', pay_hint:"Clients' cards are held, not charged, and charged only after the session takes place (when the client confirms it, or 24 hours after the start with no problem reported). The mentor is paid automatically 7 days after the session, once they've added bank details. If the client reports a problem, nothing is charged until you choose: Release payout (charge the client and pay the mentor) or Don't charge (release the hold).", pay_c_bank:'Bank', pay_bank_on:'Automatic', pay_bank_off:'Not set up', pay_held:'On hold', pay_loading:'Loading payouts…', pay_error:'Could not load payouts — check that the payouts SQL has been run.', pay_none:'No paid bookings yet.', pay_tot_owed:'Owed to mentors', pay_tot_keep:'Workar keeps',
     pay_c_mentor:'Mentor', pay_c_n:'Paid bookings', pay_c_collected:'Collected', pay_c_share:'Mentor share', pay_c_owed:'Owed now', pay_mark:'Mark as paid', pay_settled:'Settled', pay_confirm:'Record that you paid {a} to {n}?', pay_done:'Payout recorded', pay_fail:'Could not record the payout — check that the payouts SQL has been run',
-    auth_side_h:'Every step of your career, with someone who knows the way.', auth_side_p:'From a stronger resume to a confident interview to the offer, your mentor walks each step with you.', map_you:'You', map_1:'Resume', map_2:'Interview', map_3:'Offer', map_goal:'Next role', auth_f1_t:'Experienced professionals', auth_f1_s:'Real experience in the roles you are targeting.', auth_f2_t:'Structured sessions', auth_f2_s:'30-minute video or voice sessions, arranged by message.', auth_f3_t:'Secure payment', auth_f3_s:'Charged only after your session takes place.', auth_pt1:'Book a 30-minute video or voice session in a few clicks', auth_pt2:'Chat with your mentor before you meet', auth_pt3:'Charged only after your session takes place', auth_tab_signup:'Sign up', auth_h_login:'Welcome back', auth_h_signup:'Create your account', auth_sub_login:'Log in to manage your sessions and messages.', auth_sub_signup:'Create your account with an email and password. You will set up your profile next.', auth_forgot_h:'Reset your password', auth_fine_login:'New to Workar? Choose Sign up above.', auth_fine_signup:'Free to join — no card needed.', pw_show:'Show password', pw_hide:'Hide password',
+    auth_side_h:'Every step of your career, with someone who knows the way.', auth_side_p:'From a stronger resume to a confident interview to the offer, your mentor walks each step with you.', map_you:'You', map_1:'Resume', map_2:'Interview', map_3:'Offer', map_goal:'Next role', auth_f1_t:'Experienced professionals', auth_f1_s:'Real experience in the roles you are targeting.', auth_f2_t:'Structured sessions', auth_f2_s:'30-minute video or voice sessions, arranged by message.', auth_f3_t:'Secure payment', auth_f3_s:'Charged only after your session takes place.', auth_pt1:'Book a 30-minute video or voice session in a few clicks', auth_pt2:'Chat with your mentor before you meet', auth_pt3:'Charged only after your session takes place', auth_tab_signup:'Sign up', auth_h_login:'Welcome back', auth_h_signup:'Create your account', auth_sub_login:'Log in to manage your sessions and messages.', auth_sub_signup:'Create your free account in under a minute.', auth_forgot_h:'Reset your password', auth_fine_login:'New to Workar? Choose Sign up above.', auth_fine_signup:'Free to join — no card needed.', pw_show:'Show password', pw_hide:'Hide password',
     ob_sub:'Tell us who you are. It takes about two minutes and you can change everything later.', ob_s_about:'About you', ob_preview:'How clients will see you', ob_preview_note:'This card appears in Find a mentor. A clear headline and a bio written to a mentee get the most bookings.', ob_pv_name:'Your name', ob_pv_head:'Your title and company', ob_pv_bio:'Your bio will appear here.', ob_next:'What happens next', ob_next1_t:'Finish your profile', ob_next1_s:'So your mentor knows where you are and where you want to go.', ob_next2_t:'Pick a mentor and a time', ob_next2_s:'Choose a package and a slot that suits you.', ob_next3_t:'Meet on Workar', ob_next3_s:'Once the mentor accepts, join by video or voice right here.', ob_submit_book:'Save and pick a time',
     mp_s_exp:'Years of experience', mp_s_reviews:'{n} reviews', mp_s_new_v:'New', mp_s_new_l:'Recently joined Workar', mp_s_min:'Minutes per session', mp_s_lang:'Languages', mp_more:'Read more', mp_less:'Show less', mp_best:'Best for', mp_li_view:'LinkedIn profile', mp_about_n:'About {n}', mp_loading:'Loading…', filter_field:'Field', filter_all_fields:'All fields', sort_by:'Sort by', sort_best:'Recommended', sort_exp:'Most experience', sort_price_low:'Price: low to high', sort_price_high:'Price: high to low', bf_count:'{n} mentors', bf_count1:'1 mentor', bf_more:'Show {n} more', bf_showing:'Showing {a} of {b}', mc_book:'Book', trp_see:'See translation', trp_orig:'See original', trp_fail:'The translation is not available right now. Please try again.', mp_best_n:'Works best with', mp_f_exp:'Experience', mp_f_rate:'Rating', mp_f_lang:'Languages', mp_f_sess:'Sessions', mp_f_sess_both:'{m} min, video or voice', mp_f_sess_video:'{m} min, video', mp_f_sess_voice:'{m} min, voice', mp_f_tz:'Time zone', mp_h_exp_v:'{n}+ years', mp_h_exp_l:'Professional experience', mp_h_lang_v:'{n} languages', mp_h_lang1:'{n} language', mp_h_fmt_v:'Video & voice', mp_h_fmt_l:'Private 30-minute sessions', mp_h_tz_l:'Mentor\'s time zone', mp_how_t:'How booking works', mp_how1:'Choose a package and a time that suits you', mp_how2:'{n} confirms your request', mp_how3:'Meet online. Your card is charged only after the session', mp_best_t:'Is this mentor right for you?', mp_skills:'Skills and expertise', mp_industries:'Industries', setup_t:'Your account is ready. One step left:', setup_client:'Find a mentor', setup_mentor:'Become a mentor',
     mp_back:'← All mentors', mp_back_chat:'← Back to chat', mp_speaks:'Speaks', mp_about:'About', mp_help:'Can help you with', mp_per:'per 30-min session', mp_per_short:'/ session', mp_tier_suffix:'mentor',
@@ -3002,6 +3012,7 @@ const I18N = {
     hiw2_t:'۲. با یک منتور آشنا شوید', hiw2_b:'بر اساس عنوان شغلی جستجو کنید، نظرهای واقعی را بخوانید و درخواست گفتگو بدهید.',
     hiw3_t:'۳. از مربی هوش مصنوعی هم کمک بگیرید', hiw3_b:'بین جلسه‌ها برای رزومه و سؤال‌های شغلی‌تان بازخورد فوری بگیرید.',
     onboard_title:'پروفایلتان را بسازید',
+    auth_i_am:'می‌خواهم', auth_role_client:'منتور پیدا کنم', auth_role_mentor:'منتور شوم', auth_pick_role:'لطفاً انتخاب کنید که می‌خواهید منتور پیدا کنید یا منتور شوید.', lbl_full_name:'نام و نام خانوادگی', ph_full_name:'مثلاً سارا احمدی', ob_quick_t:'فقط یک مورد مانده', ob_quick_s:'نامتان را وارد کنید تا همین الان منتورها را ببینید. هدف‌ها و رزومه‌تان را بعداً هم می‌توانید از داشبورد اضافه کنید.', ob_quick_btn:'دیدن منتورها', toast_client_ready:'حسابتان آماده است. منتوری متناسب با هدف‌تان پیدا کنید.',
     role_client_t:'دنبال منتور هستم', role_client_s:'برای رزومه، مصاحبه یا مسیر شغلی‌تان راهنمایی بگیرید.',
     role_mentor_t:'منتور هستم', role_mentor_s:'تجربه‌تان را به اشتراک بگذارید و به کسی در همان شغل کمک کنید.',
     pick_to_continue:'برای ادامه یکی را انتخاب کنید.',
@@ -3108,7 +3119,7 @@ const I18N = {
     adm_share:'سهم منتور (٪)', adm_share_hint:'سهمی از هر رزرو که به منتور می‌رسد. بقیه سهم Workar است. تغییر فقط روی رزروهای جدید اعمال می‌شود.',
     pay_title:'پرداخت به منتورها', pay_hint:'کارت مراجع فقط hold می‌شود و مبلغ بعد از برگزاری جلسه کسر می‌شود (وقتی مراجع برگزاری را تأیید کند، یا ۲۴ ساعت بعد از شروع اگر مشکلی گزارش نشده باشد). سهم منتور ۷ روز بعد از جلسه خودکار واریز می‌شود، به شرط اینکه اطلاعات بانکی‌اش را ثبت کرده باشد. اگر مراجع مشکلی گزارش کند، تا تصمیم شما چیزی کسر نمی‌شود: «آزاد کردن پرداخت» (کسر از کارت مراجع و پرداخت به منتور) یا «کسر نشود» (آزاد کردن hold کارت).', pay_c_bank:'حساب بانکی', pay_bank_on:'خودکار', pay_bank_off:'ثبت نشده', pay_held:'متوقف', pay_loading:'در حال بارگذاری…', pay_error:'بارگذاری نشد؛ مطمئن شوید SQL پرداخت منتورها اجرا شده است.', pay_none:'هنوز رزرو پرداخت‌شده‌ای نیست.', pay_tot_owed:'بدهی به منتورها', pay_tot_keep:'سهم Workar',
     pay_c_mentor:'منتور', pay_c_n:'رزروهای پرداخت‌شده', pay_c_collected:'دریافتی', pay_c_share:'سهم منتور', pay_c_owed:'بدهی فعلی', pay_mark:'ثبت پرداخت', pay_settled:'تسویه‌شده', pay_confirm:'ثبت شود که {a} به {n} پرداخت کرده‌اید؟', pay_done:'پرداخت ثبت شد', pay_fail:'ثبت نشد؛ مطمئن شوید SQL پرداخت منتورها اجرا شده است',
-    auth_side_h:'هر قدم مسیر شغلی‌تان، کنار کسی که راه را می‌شناسد.', auth_side_p:'از رزومه‌ای قوی‌تر تا مصاحبه‌ای مطمئن و پیشنهاد کاری، منتورتان در هر قدم کنار شماست.', map_you:'شما', map_1:'رزومه', map_2:'مصاحبه', map_3:'پیشنهاد کاری', map_goal:'شغل بعدی', auth_f1_t:'متخصصان باتجربه', auth_f1_s:'تجربه‌ی واقعی در نقش‌هایی که هدف شماست.', auth_f2_t:'جلسات ساختارمند', auth_f2_s:'جلسه‌های ۳۰ دقیقه‌ای تصویری یا صوتی، با هماهنگی از طریق پیام.', auth_f3_t:'پرداخت امن', auth_f3_s:'پرداخت فقط بعد از برگزاری جلسه.', auth_pt1:'با چند کلیک یک جلسه‌ی ۳۰ دقیقه‌ای تصویری یا صوتی رزرو کنید', auth_pt2:'قبل از جلسه به منتورتان پیام بدهید', auth_pt3:'پرداخت فقط بعد از برگزاری جلسه', auth_tab_signup:'ثبت‌نام', auth_h_login:'خوشحالیم که برگشتید', auth_h_signup:'حسابتان را بسازید', auth_sub_login:'برای مدیریت جلسه‌ها و پیام‌هایتان وارد شوید.', auth_sub_signup:'با ایمیل و رمز عبور حساب بسازید. در قدم بعد پروفایلتان را کامل می‌کنید.', auth_forgot_h:'بازیابی رمز عبور', auth_fine_login:'تازه وارد هستید؟ بالای صفحه «ثبت‌نام» را بزنید.', auth_fine_signup:'عضویت رایگان است و کارت بانکی لازم نیست.', pw_show:'نمایش رمز', pw_hide:'پنهان کردن رمز',
+    auth_side_h:'هر قدم مسیر شغلی‌تان، کنار کسی که راه را می‌شناسد.', auth_side_p:'از رزومه‌ای قوی‌تر تا مصاحبه‌ای مطمئن و پیشنهاد کاری، منتورتان در هر قدم کنار شماست.', map_you:'شما', map_1:'رزومه', map_2:'مصاحبه', map_3:'پیشنهاد کاری', map_goal:'شغل بعدی', auth_f1_t:'متخصصان باتجربه', auth_f1_s:'تجربه‌ی واقعی در نقش‌هایی که هدف شماست.', auth_f2_t:'جلسات ساختارمند', auth_f2_s:'جلسه‌های ۳۰ دقیقه‌ای تصویری یا صوتی، با هماهنگی از طریق پیام.', auth_f3_t:'پرداخت امن', auth_f3_s:'پرداخت فقط بعد از برگزاری جلسه.', auth_pt1:'با چند کلیک یک جلسه‌ی ۳۰ دقیقه‌ای تصویری یا صوتی رزرو کنید', auth_pt2:'قبل از جلسه به منتورتان پیام بدهید', auth_pt3:'پرداخت فقط بعد از برگزاری جلسه', auth_tab_signup:'ثبت‌نام', auth_h_login:'خوشحالیم که برگشتید', auth_h_signup:'حسابتان را بسازید', auth_sub_login:'برای مدیریت جلسه‌ها و پیام‌هایتان وارد شوید.', auth_sub_signup:'حساب رایگانتان را در کمتر از یک دقیقه بسازید.', auth_forgot_h:'بازیابی رمز عبور', auth_fine_login:'تازه وارد هستید؟ بالای صفحه «ثبت‌نام» را بزنید.', auth_fine_signup:'عضویت رایگان است و کارت بانکی لازم نیست.', pw_show:'نمایش رمز', pw_hide:'پنهان کردن رمز',
     ob_sub:'خودتان را معرفی کنید. حدود دو دقیقه طول می‌کشد و بعداً می‌توانید همه‌چیز را تغییر دهید.', ob_s_about:'درباره‌ی شما', ob_preview:'مراجعان شما را این‌طور می‌بینند', ob_preview_note:'این کارت در صفحه‌ی پیدا کردن منتور نمایش داده می‌شود. عنوانی واضح و معرفی‌ای که خطاب به مراجع نوشته شده باشد، بیشترین رزرو را می‌گیرد.', ob_pv_name:'نام شما', ob_pv_head:'عنوان شغلی و شرکت', ob_pv_bio:'معرفی شما اینجا نمایش داده می‌شود.', ob_next:'قدم‌های بعدی', ob_next1_t:'پروفایلتان را کامل کنید', ob_next1_s:'تا منتور بداند الان کجا هستید و می‌خواهید به کجا برسید.', ob_next2_t:'منتور و زمان را انتخاب کنید', ob_next2_s:'پکیج و زمانی را که برایتان مناسب است انتخاب کنید.', ob_next3_t:'جلسه را در Workar برگزار کنید', ob_next3_s:'بعد از تأیید منتور، همین‌جا با تماس تصویری یا صوتی وصل شوید.', ob_submit_book:'ذخیره و انتخاب زمان',
     mp_s_exp:'سال سابقه‌ی کار', mp_s_reviews:'{n} نظر', mp_s_new_v:'جدید', mp_s_new_l:'به‌تازگی به Workar پیوسته', mp_s_min:'دقیقه در هر جلسه', mp_s_lang:'زبان', mp_more:'ادامه‌ی متن', mp_less:'نمایش کمتر', mp_best:'مناسب برای', mp_li_view:'پروفایل لینکدین', mp_about_n:'درباره‌ی {n}', mp_loading:'در حال بارگذاری…', filter_field:'رشته', filter_all_fields:'همه‌ی رشته‌ها', sort_by:'مرتب‌سازی', sort_best:'پیشنهادی', sort_exp:'بیشترین سابقه', sort_price_low:'قیمت: کم به زیاد', sort_price_high:'قیمت: زیاد به کم', bf_count:'{n} منتور', bf_count1:'۱ منتور', bf_more:'نمایش {n} منتور دیگر', bf_showing:'نمایش {a} از {b}', mc_book:'رزرو', trp_see:'مشاهده‌ی ترجمه', trp_orig:'مشاهده‌ی متن اصلی', trp_fail:'ترجمه الان در دسترس نیست. لطفاً دوباره امتحان کنید.', mp_best_n:'مناسب چه کسانی است', mp_f_exp:'سابقه', mp_f_rate:'امتیاز', mp_f_lang:'زبان‌ها', mp_f_sess:'جلسه‌ها', mp_f_sess_both:'{m} دقیقه، تصویری یا صوتی', mp_f_sess_video:'{m} دقیقه، تصویری', mp_f_sess_voice:'{m} دقیقه، صوتی', mp_f_tz:'منطقه‌ی زمانی', mp_h_exp_v:'{n}+ سال', mp_h_exp_l:'سابقه‌ی حرفه‌ای', mp_h_lang_v:'{n} زبان', mp_h_lang1:'{n} زبان', mp_h_fmt_v:'تصویری و صوتی', mp_h_fmt_l:'جلسه‌های خصوصی ۳۰ دقیقه‌ای', mp_h_tz_l:'منطقه‌ی زمانی منتور', mp_how_t:'رزرو چطور انجام می‌شود', mp_how1:'یک پکیج و زمان مناسب انتخاب کنید', mp_how2:'{n} درخواست شما را تأیید می‌کند', mp_how3:'جلسه آنلاین برگزار می‌شود و مبلغ فقط بعد از جلسه از کارت کسر می‌شود', mp_best_t:'این منتور برای شما مناسب است؟', mp_skills:'مهارت‌ها و تخصص', mp_industries:'صنایع', setup_t:'حساب شما ساخته شد. فقط یک قدم مانده:', setup_client:'پیدا کردن منتور', setup_mentor:'منتور شدن',
     mp_back:'→ همه‌ی منتورها', mp_back_chat:'→ برگشت به گفتگو', mp_speaks:'زبان‌ها:', mp_about:'درباره', mp_help:'زمینه‌های کمک', mp_per:'برای هر جلسه‌ی ۳۰ دقیقه‌ای', mp_per_short:'/ جلسه', mp_tier_suffix:'',
@@ -3386,7 +3397,7 @@ let state = { view:'home', mentorId:null, coachMode:'resume', chatMsgs:[], sendi
   authMode:'login', authError:'', authCheckEmail:false, authBusy:false,
   lang:'en', query:'', role:null, voiceMode:false, listening:false, outOfCredits:false };
 try{ const __qs = new URLSearchParams(location.search), __dr = __qs.get('r'); if(__qs.get('go')==='dispute' && __dr){ state.view = 'dispute'; state.disputeReq = __dr.slice(0,120); history.replaceState(null, '', location.pathname + location.hash); } }catch(e){}
-try{ const __qs2 = new URLSearchParams(location.search), __go = __qs2.get('go'), __m = (__qs2.get('m')||'').slice(0,80); if(__go && ['dashboard','admin','privacy','terms','refunds','conduct','browse','coach','prep','requests','messages','mentor','onboard'].includes(__go) && (__go!=='mentor' || __m)){ if(__go==='requests'){ state.ibPreferAction = true; } state.view = __go==='requests' ? 'messages' : __go; if(__go==='mentor') state.mentorId = __m; } }catch(e){}
+try{ const __qs2 = new URLSearchParams(location.search), __go = __qs2.get('go'), __m = (__qs2.get('m')||'').slice(0,80); if(__go && ['dashboard','admin','privacy','terms','refunds','conduct','browse','coach','prep','requests','messages','mentor','onboard'].includes(__go) && (__go!=='mentor' || __m)){ if(__go==='requests'){ state.ibPreferAction = true; } state.view = __go==='requests' ? 'messages' : __go; if(__go==='mentor') state.mentorId = __m; if(__go==='onboard' && ['client','mentor'].includes(__qs2.get('r'))){ state.role = __qs2.get('r'); saveIntent(state.role, ''); } } }catch(e){}
 state.ciSkip = state.ciSkip || {}; state.ciStars = state.ciStars || {};
 let cache = { profiles:{}, reviews:{}, requests:[], names:{}, people:{}, msgs:{}, busy:{}, busyLoaded:{} };
 
@@ -3893,7 +3904,7 @@ function makeSupabaseDB(){
   };
 }
 
-let liSynced = false, liSignupName = '';
+let liSynced = false, liSignupName = '', signupMeta = {};
 document.addEventListener('click', async e=>{
   const b = e.target.closest && e.target.closest('#li-connect'); if(!b || !sb) return;
   b.disabled = true;
@@ -3957,17 +3968,39 @@ async function routeNewAccount(){
     if(data){ clearIntent(); return; }
     state.noProfile = true;
     const it = readIntent();
-    if(it.role && !state.role) state.role = it.role;
+    const metaRole = ['client','mentor'].includes(signupMeta.role) ? signupMeta.role : '';
+    if(!state.role) state.role = it.role || metaRole || null;
     if(it.returnMentorId && !state.returnMentorId) state.returnMentorId = it.returnMentorId;
+    // People looking for a mentor don't need a setup form: their account is ready as soon as we know their name.
+    if(state.role==='client' && !state.returnMentorId && knownName()){ await quickClient(knownName()); return; }
     if(['home','browse','dashboard','onboard'].includes(state.view)) nav('onboard');
     else render();   // on another page (a mentor's profile, the AI coach…): the setup banner shows instead
   }catch(e){ console.error('route-new-account', e); }
+}
+// The name we already have for a new account: from LinkedIn, or typed on the sign-up form.
+function knownName(){ return String(liSignupName || signupMeta.name || signupMeta.full_name || '').trim().slice(0, 80); }
+// Creates a client account in one step (name only); goals, resume and the rest can be added later from the dashboard.
+let __quickBusy = false;
+async function quickClient(name){
+  name = String(name || '').trim().slice(0, 80);
+  if(__quickBusy || myProfile || !uid || !name) return; __quickBusy = true;
+  try{
+    await saveProfileSafe({ role:'client', name, aiCredits:5, timezone: MY_TZ }, 'set');
+    try{ const { data: fresh } = await sb.from('profiles').select('*').eq('id', uid).maybeSingle(); if(fresh) myProfile = fresh; }catch(e){}
+    clearIntent(); try{ clearFormDrafts('ob'); }catch(e){}
+    state.noProfile = false;
+    toast(T('toast_client_ready'), 4000);
+    nav('browse');
+  }catch(err){
+    console.error('quick-client-failed', err);
+    state.noProfile = true; toast(T('toast_save_fail')); nav('onboard');
+  }finally{ __quickBusy = false; }
 }
 // Everything tied to the signed-in person is cleared on sign-out, so the next account on this browser starts clean.
 let __profUnsub = null;
 function resetAccountState(){
   if(__profUnsub){ try{ __profUnsub(); }catch(e){} __profUnsub = null; }
-  uid = null; userEmail = null; myProfile = null;
+  uid = null; userEmail = null; myProfile = null; signupMeta = {};
   __routedNew = false; liSynced = false;
   state.noProfile = false; state.role = null; state.returnMentorId = null; state.obResume = null; state.obPhoto = null;
   try{ clearFormDrafts('ob'); clearFormDrafts('dash'); }catch(e){}
@@ -4004,6 +4037,7 @@ function onSignedIn(session){
   prep.loaded = false;
   const viaLinkedIn = ((session.user && session.user.identities) || []).some(i=>i && i.provider==='linkedin_oidc');
   liSignupName = viaLinkedIn ? String((session.user.user_metadata||{}).name || (session.user.user_metadata||{}).full_name || '') : '';
+  signupMeta = (session.user && session.user.user_metadata) || {};
   if(__profUnsub){ try{ __profUnsub(); }catch(e){} }
   const myId = uid;
   __profUnsub = window.__db.doc('profiles/'+uid).onSnapshot(doc=>{
@@ -6438,10 +6472,18 @@ function authView(){
         <button type="button" class="btn btn-outline btn-sm" id="auth-resend" ${state.resendBusy?'disabled':''}>${esc(state.resendDone ? T('auth_resent') : T('auth_resend'))}</button>
       </div>` : ''}
       ${state.authInfo ? `<div class="auth-note">${esc(state.authInfo)}</div>` : ''}
+      ${mode==='signup' ? `<div class="auth-roles" role="radiogroup" aria-label="${esc(T('auth_i_am'))}">
+        <span class="auth-roles-l">${esc(T('auth_i_am'))}</span>
+        <div class="auth-roles-btns">
+          <button type="button" role="radio" aria-checked="${state.role==='client'}" class="auth-role ${state.role==='client'?'on':''}" data-signup-role="client">${esc(T('auth_role_client'))}</button>
+          <button type="button" role="radio" aria-checked="${state.role==='mentor'}" class="auth-role ${state.role==='mentor'?'on':''}" data-signup-role="mentor">${esc(T('auth_role_mentor'))}</button>
+        </div>
+      </div>` : ''}
       ${state.liLogin && mode!=='forgot' ? `<button type="button" class="btn btn-outline auth-li" id="auth-li"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45z"/></svg><span>${esc(T('auth_li'))}</span></button>
       <p class="muted auth-li-note">${esc(T('auth_li_note'))}</p>
       <div class="auth-or"><span>${esc(T('auth_or'))}</span></div>` : ''}
       <form id="auth-form">
+        ${mode==='signup' ? `<div class="field"><label>${esc(T('lbl_full_name'))}</label><input name="fullname" required autocomplete="name" maxlength="80" placeholder="${esc(T('ph_full_name'))}" value="${esc(state.authName||'')}"></div>` : ''}
         <div class="field"><label>${esc(T('lbl_email'))}</label><input name="email" type="email" required autocomplete="email" placeholder="${esc(T('ph_email'))}" value="${esc(state.authEmail||'')}"></div>
         ${mode==='forgot' ? '' : `
         ${pwField('password','lbl_password', mode==='signup'?'ph_password_new':'ph_password', mode==='signup'?'new-password':'current-password')}
@@ -6501,6 +6543,12 @@ function wireAuth(){
     const inp = b.parentNode.querySelector('input'); const show = inp.type==='password';
     inp.type = show ? 'text' : 'password'; b.classList.toggle('on', show); b.setAttribute('aria-label', T(show ? 'pw_hide' : 'pw_show'));
   }));
+  // Choosing a role only updates the buttons (no re-render), so nothing already typed is lost.
+  document.querySelectorAll('[data-signup-role]').forEach(b=>b.addEventListener('click', ()=>{
+    state.role = b.getAttribute('data-signup-role'); saveIntent(state.role, state.returnMentorId);
+    document.querySelectorAll('[data-signup-role]').forEach(x=>{ const on = x===b; x.classList.toggle('on', on); x.setAttribute('aria-checked', String(on)); });
+    const box = document.querySelector('.auth-roles'); if(box) box.classList.remove('need');
+  }));
   const toggle = document.getElementById('auth-toggle');
   if(toggle) toggle.addEventListener('click', (e)=>{
     e.preventDefault();
@@ -6510,6 +6558,8 @@ function wireAuth(){
   });
   const liBtn = document.getElementById('auth-li');
   if(liBtn) liBtn.addEventListener('click', async ()=>{
+    if(state.authMode==='signup' && !state.role){ state.authError = T('auth_pick_role'); render(); return; }
+    if(state.role) saveIntent(state.role, state.returnMentorId);
     liBtn.disabled = true;
     try{
       const { error } = await sb.auth.signInWithOAuth({ provider:'linkedin_oidc', options:{ redirectTo: location.origin + location.pathname } });
@@ -6542,6 +6592,13 @@ function wireAuth(){
     const fd = new FormData(form);
     const email = (fd.get('email')||'').trim();
     const password = fd.get('password')||'';
+    // The role is checked before anything re-renders, so the typed passwords are not lost.
+    if(state.authMode==='signup' && !state.role){
+      const box = document.querySelector('.auth-roles');
+      if(box){ box.classList.add('need'); box.scrollIntoView({ block:'center', behavior:'smooth' }); }
+      toast(T('auth_pick_role')); return;
+    }
+    if(state.authMode==='signup') state.authName = String(fd.get('fullname')||'').trim().slice(0, 80);
     state.authBusy = true; state.authError = ''; render();
     try{
       if(state.authMode==='forgot'){
@@ -6552,6 +6609,7 @@ function wireAuth(){
         return;
       }
       if(state.authMode==='signup'){
+        saveIntent(state.role, state.returnMentorId);
         if(password !== (fd.get('password2')||'')){
           state.authBusy = false; state.authError = T('pw_mismatch'); render();
           const em = document.querySelector('#auth-form input[name="email"]'); if(em) em.value = email;
@@ -6563,7 +6621,7 @@ function wireAuth(){
           return;
         }
         state.authEmail = email;
-        const viaUs = await authMail('auth_signup', { email, password });
+        const viaUs = await authMail('auth_signup', { email, password, role: state.role, name: state.authName });
         if(viaUs && viaUs.already){
           state.authBusy = false; state.authMode = 'login'; state.authCheckEmail = false;
           state.authInfo = T('auth_already_registered'); render(); return;
@@ -6572,7 +6630,7 @@ function wireAuth(){
           state.authBusy = false; state.authMode = 'login'; state.authCheckEmail = true;
           state.resendDone = false; state.authInfo = ''; render(); return;
         }
-        const { data, error } = await withTimeout(sb.auth.signUp({ email, password, options:{ emailRedirectTo: window.location.origin } }), 8000, 'signUp');
+        const { data, error } = await withTimeout(sb.auth.signUp({ email, password, options:{ emailRedirectTo: window.location.origin, data:{ role: state.role, name: state.authName } } }), 8000, 'signUp');
         if(error) throw (isWeakPwError(error) ? new Error(T('auth_weak_pw')) : error);
         if(data.session){
           onSignedIn(data.session);
@@ -6686,7 +6744,13 @@ function onboardView(){
     <div class="role-opt ${preset==='client'?'selected':''}" data-role="client"><span class="role-ic">${ICON_SEEK}</span><b>${esc(T('role_client_t'))}</b><span>${esc(T('role_client_s'))}</span></div>
     <div class="role-opt ${preset==='mentor'?'selected':''}" data-role="mentor"><span class="role-ic">${ICON_GUIDE}</span><b>${esc(T('role_mentor_t'))}</b><span>${esc(T('role_mentor_s'))}</span></div>
   </div>`}
-  ${preset ? `
+  ${preset==='client' && !state.returnMentorId ? `
+  <form id="quick-client-form" class="panel ob-quick">
+    <h3 style="margin:0 0 6px;">${esc(T('ob_quick_t'))}</h3>
+    <p class="muted" style="margin:0 0 16px;">${esc(T('ob_quick_s'))}</p>
+    <div class="field"><label>${esc(T('lbl_full_name'))}</label><input name="name" required autocomplete="name" maxlength="80" placeholder="${esc(T('ph_full_name'))}" value="${esc(knownName())}"></div>
+    <button class="btn btn-primary ob-submit" type="submit">${esc(T('ob_quick_btn'))}</button>
+  </form>` : preset ? `
   ${preset==='mentor' ? '<div id="ob-ai"></div>' : ''}
   <div class="ob-grid">
     <form id="onboard-form" class="panel wide ob-form">
@@ -9098,10 +9162,16 @@ function wire(){
   if(signoutBtn) signoutBtn.addEventListener('click', async ()=>{ await sb.auth.signOut(); });
 
   document.querySelectorAll('.role-opt').forEach(node=>{
-    node.addEventListener('click', ()=>{ state.role = node.getAttribute('data-role'); saveIntent(state.role, state.returnMentorId); render(); });
+    node.addEventListener('click', ()=>{
+      state.role = node.getAttribute('data-role'); saveIntent(state.role, state.returnMentorId);
+      if(state.role==='client' && !state.returnMentorId && knownName()){ quickClient(knownName()); return; }
+      render();
+    });
   });
 
   wireFirstJob(); wireMentorPreview();
+  const qcf = document.getElementById('quick-client-form');
+  if(qcf) qcf.addEventListener('submit', e=>{ e.preventDefault(); const b = qcf.querySelector('button[type="submit"]'); if(b) b.disabled = true; quickClient(new FormData(qcf).get('name')); });
   const dEdit = document.querySelector('.dash-edit'); if(dEdit) dEdit.addEventListener('toggle', ()=>{ state.dashEditOpen = dEdit.open; });
   const form = document.getElementById('onboard-form');
   if(form && obSwitching()){

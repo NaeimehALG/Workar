@@ -633,6 +633,35 @@ async function reviews(rep, ctx) {
 }
 
 // ---------- 6. new sign-ups ----------
+// Accounts without a profile get up to two short emails (day 1, then a last one from day 5), worded for what they
+// chose on the sign-up form. Accounts that never confirmed their email get one fresh confirmation link.
+const SETUP_COPY = {
+  client: [
+    ['Your Workar account is ready', 'You are one step away from your first mentor',
+      ['Thank you for joining Workar. To start browsing mentors, just add your name. It takes less than a minute.', 'Your goals and resume are optional and can be added at any time from your dashboard.'], 'Find a mentor'],
+    ['Still looking for career guidance?', 'Your Workar account is waiting for you',
+      ['Experienced professionals are available for private 30-minute video or voice sessions, and your card is charged only after the session takes place.', 'This is our last reminder. If you have any questions, simply reply to this email.'], 'Find a mentor']
+  ],
+  mentor: [
+    ['Finish your Workar mentor profile', 'Your mentor profile is almost ready',
+      ['Thank you for your interest in mentoring on Workar. Your profile is not complete yet, so clients cannot find you.', 'It takes a few minutes: add your LinkedIn profile and a few lines about your experience, and we help fill in the rest.'], 'Complete my mentor profile'],
+    ['Clients cannot find you on Workar yet', 'One step left to start mentoring',
+      ['Your mentor profile is still incomplete, so it is not visible to clients.', 'This is our last reminder. If anything is unclear, simply reply to this email and our team will help.'], 'Complete my mentor profile']
+  ],
+  none: [
+    ['Finish setting up your Workar account', 'You are one step away',
+      ['Thank you for creating a Workar account. Your account is not set up yet.', 'Choose whether you would like to find a mentor or become a mentor. It takes about a minute.'], 'Finish setting up'],
+    ['Your Workar account is waiting for you', 'Find a mentor, or become one',
+      ['Your Workar account is still not set up. You can find an experienced mentor for a 30-minute session, or share your own experience as a mentor.', 'This is our last reminder. If you have any questions, simply reply to this email.'], 'Finish setting up']
+  ]
+};
+async function confirmLink(email) {
+  const r = await fetch(`${process.env.SUPABASE_URL}/auth/v1/admin/generate_link`, {
+    method: 'POST', headers: svc(), body: JSON.stringify({ type: 'magiclink', email, redirect_to: M.SITE() })
+  });
+  const j = await r.json().catch(() => ({}));
+  return r.ok ? (j.action_link || (j.properties && j.properties.action_link) || '') : '';
+}
 async function signups(rep, ctx) {
   const now = Date.now(), site = M.SITE();
   const r = await fetch(`${process.env.SUPABASE_URL}/auth/v1/admin/users?page=1&per_page=1000`, { headers: svc() });
@@ -644,17 +673,43 @@ async function signups(rep, ctx) {
   (await M.rowsStrict(`profiles?select=id,name,role,approved,banned`)).forEach(p => { profiles[p.id] = p; });
   ctx.profiles = profiles;
   const booked = new Set((ctx.requests || []).map(q => q.clientId));
+  ctx.noProfile = 0;
   for (const u of users) {
+    if (!u.email) continue;
     const age = now - Date.parse(u.created_at);
-    if (!u.email || !u.email_confirmed_at || age < 1 * DAY || age > 14 * DAY) continue;
     const p = profiles[u.id];
+    if (!p && age < 30 * DAY) ctx.noProfile++;
+    // Never confirmed their email: one fresh link (the first one may have gone to spam or expired).
+    if (!u.email_confirmed_at) {
+      if (age < 1 * DAY || age > 7 * DAY || !on('AUTOPILOT_CONFIRM_NUDGE')) continue;
+      if (rep.emails >= MAX_EMAILS_PER_RUN || !(await once('confirm-nudge', u.id))) continue;
+      const url = await confirmLink(u.email);
+      if (!url) { await forget('confirm-nudge', u.id); continue; }
+      rep.emails++;
+      // A sign-in link, so no team copy (whoever has the copy could open the account).
+      const sent = await M.sendMail(u.email, 'Confirm your email to finish joining Workar', M.layout('Please confirm your email',
+        ['You started creating a Workar account, but your email address has not been confirmed yet.', 'Use the button below to confirm it and continue. If you did not sign up for Workar, you can safely ignore this email.'],
+        { text: 'Confirm my email', url }), null, { noCopy: true });
+      if (sent && (sent.ok || sent.skipped)) rep.done.push(`Sent a new confirmation link to ${M.esc(u.email)}, who had not confirmed their email.`);
+      else { await forget('confirm-nudge', u.id); rep.errors.push(`A confirmation reminder to ${u.email} could not be sent; it will be retried.`); }
+      continue;
+    }
     if (!p) {
-      if (!(await once('finish-profile', u.id))) continue;
-      await mail(rep, u.email, 'Finish setting up your Workar profile', 'You are one step away',
-        ['Thank you for creating a Workar account. Your profile is not finished yet.', 'It takes about two minutes, and lets us suggest mentors who have faced the same challenge as you, or lets clients find you if you would like to mentor.'],
-        { text: 'Finish my profile', url: site + '/?go=dashboard' });
-      rep.done.push(`Reminded a new sign-up (${M.esc(u.email)}) to finish their profile.`);
-    } else if (p.role !== 'mentor' && !booked.has(u.id) && age > 3 * DAY) {
+      const meta = u.user_metadata || {};
+      const kind = ['client', 'mentor'].includes(meta.role) ? meta.role : 'none';
+      const go = site + '/?go=onboard' + (kind === 'none' ? '' : '&r=' + kind);
+      let sentFirst = false;
+      if (age >= 1 * DAY && age <= 14 * DAY && await once('finish-profile', u.id)) {
+        const [subject, title, paras, cta] = SETUP_COPY[kind][0];
+        if (await mail(rep, u.email, subject, title, paras, { text: cta, url: go })) { sentFirst = true; rep.done.push(`Reminded a new sign-up (${M.esc(u.email)}) to finish setting up their account.`); }
+        else await forget('finish-profile', u.id);
+      }
+      if (!sentFirst && age >= 5 * DAY && age <= 30 * DAY && await once('finish-profile-2', u.id)) {
+        const [subject, title, paras, cta] = SETUP_COPY[kind][1];
+        if (await mail(rep, u.email, subject, title, paras, { text: cta, url: go })) rep.done.push(`Sent a last setup reminder to ${M.esc(u.email)}.`);
+        else await forget('finish-profile-2', u.id);
+      }
+    } else if (p.role !== 'mentor' && !booked.has(u.id) && age > 3 * DAY && age <= 14 * DAY) {
       if (!(await once('first-booking', u.id))) continue;
       await mail(rep, u.email, 'Not sure which mentor to choose?', `We can help you choose, ${first(p.name)}`,
         ['Describe your situation in a sentence or two on the Find a mentor page, and Workar suggests the mentors best placed to help.', 'If you do not see your field yet, reply to this email and we will look for the right mentor for you.'],
@@ -690,6 +745,7 @@ async function digest(rep, ctx, extra) {
   paras.push(h3('Last 24 hours'));
   paras.push(M.list([
     ctx.users ? `${newUsers} new sign-up${newUsers === 1 ? '' : 's'}` : 'New sign-ups: unknown (see Needs you)',
+    ctx.users ? `${ctx.noProfile || 0} account${ctx.noProfile === 1 ? '' : 's'} from the last 30 days not set up yet (reminders go out automatically)` : '',
     `${newReqs} new booking request${newReqs === 1 ? '' : 's'}`,
     ctx.profiles ? `${Math.max(0, mentorsLive)} mentor${mentorsLive === 1 ? '' : 's'} live, ${waiting} application${waiting === 1 ? '' : 's'} waiting` : `Mentors live: unknown, ${waiting} application${waiting === 1 ? '' : 's'} waiting`,
     `${today.length} session${today.length === 1 ? '' : 's'} in the next 24 hours`

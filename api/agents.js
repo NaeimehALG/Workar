@@ -556,7 +556,10 @@ async function authEmail(req, res, b) {
   if (b.task === 'auth_signup') {
     // Same rules as Supabase Authentication > Email: 10+ characters with letters and digits (leaked passwords are refused there).
     if (password.length < 10 || password.length > 72 || !/[A-Za-z]/.test(password) || !/\d/.test(password)) return res.status(400).json({ error: 'weak-password' });
-    const g = await genLink({ type: 'signup', email, password }, origin);
+    // What they chose on the sign-up form, so the next step is right even if they confirm on another device.
+    const role = ['client', 'mentor'].includes(b.role) ? b.role : undefined;
+    const name = String(b.name || '').replace(/[<>]/g, '').trim().slice(0, 80) || undefined;
+    const g = await genLink({ type: 'signup', email, password, data: { role, name } }, origin);
     if (!g.ok && /weak_password|weak|pwned|leaked|compromised/i.test(JSON.stringify(g.j))) return res.status(400).json({ error: 'weak-password' });
     if (g.ok && linkOf(g.j)) { await mailAuth(email, 'confirm', linkOf(g.j), lang); return res.status(200).json({ sent: true }); }
     if (!/already|registered|exists/i.test(JSON.stringify(g.j))) { console.error('auth-signup-link-failed', g.status, JSON.stringify(g.j).slice(0, 300)); return res.status(502).json({ error: 'fallback' }); }
