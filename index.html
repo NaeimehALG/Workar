@@ -2552,7 +2552,7 @@ const I18N = {
     hiw2_t:'2. Match with a mentor', hiw2_b:'Search by job title, read real reviews, and request a conversation.',
     hiw3_t:'3. Get AI coaching too', hiw3_b:'Between sessions, get instant feedback on your resume and career questions.',
     onboard_title:'Set up your profile',
-    auth_i_am:'I want to', auth_role_client:'Find a mentor', auth_role_mentor:'Become a mentor', auth_pick_role:'Please choose whether you want to find a mentor or become a mentor.', lbl_full_name:'Full name', ph_full_name:'e.g. Sara Ahmadi', ob_quick_t:'One last detail', ob_quick_s:'Add your name and you can start browsing mentors right away. Your goals and resume can be added later from your dashboard.', ob_quick_btn:'Start browsing mentors', toast_client_ready:'Your account is ready. Find a mentor who fits your goals.',
+    draft_t:'Your mentor profile is not finished yet. It goes live once it is complete.', draft_btn:'Finish my mentor profile', auth_i_am:'I want to', auth_role_client:'Find a mentor', auth_role_mentor:'Become a mentor', auth_pick_role:'Please choose whether you want to find a mentor or become a mentor.', lbl_full_name:'Full name', ph_full_name:'e.g. Sara Ahmadi', ob_quick_t:'One last detail', ob_quick_s:'Add your name and you can start browsing mentors right away. Your goals and resume can be added later from your dashboard.', ob_quick_btn:'Start browsing mentors', toast_client_ready:'Your account is ready. Find a mentor who fits your goals.',
     role_client_t:"I'm looking for a mentor", role_client_s:'Get guidance on your resume, interviews, or career path.',
     role_mentor_t:"I'm a mentor", role_mentor_s:'Share your experience and help someone with your job.',
     pick_to_continue:'Pick one to continue.',
@@ -3012,7 +3012,7 @@ const I18N = {
     hiw2_t:'۲. با یک منتور آشنا شوید', hiw2_b:'بر اساس عنوان شغلی جستجو کنید، نظرهای واقعی را بخوانید و درخواست گفتگو بدهید.',
     hiw3_t:'۳. از مربی هوش مصنوعی هم کمک بگیرید', hiw3_b:'بین جلسه‌ها برای رزومه و سؤال‌های شغلی‌تان بازخورد فوری بگیرید.',
     onboard_title:'پروفایلتان را بسازید',
-    auth_i_am:'می‌خواهم', auth_role_client:'منتور پیدا کنم', auth_role_mentor:'منتور شوم', auth_pick_role:'لطفاً انتخاب کنید که می‌خواهید منتور پیدا کنید یا منتور شوید.', lbl_full_name:'نام و نام خانوادگی', ph_full_name:'مثلاً سارا احمدی', ob_quick_t:'فقط یک مورد مانده', ob_quick_s:'نامتان را وارد کنید تا همین الان منتورها را ببینید. هدف‌ها و رزومه‌تان را بعداً هم می‌توانید از داشبورد اضافه کنید.', ob_quick_btn:'دیدن منتورها', toast_client_ready:'حسابتان آماده است. منتوری متناسب با هدف‌تان پیدا کنید.',
+    draft_t:'پروفایل منتوری شما هنوز کامل نشده و بعد از تکمیل نمایش داده می‌شود.', draft_btn:'تکمیل پروفایل منتوری', auth_i_am:'می‌خواهم', auth_role_client:'منتور پیدا کنم', auth_role_mentor:'منتور شوم', auth_pick_role:'لطفاً انتخاب کنید که می‌خواهید منتور پیدا کنید یا منتور شوید.', lbl_full_name:'نام و نام خانوادگی', ph_full_name:'مثلاً سارا احمدی', ob_quick_t:'فقط یک مورد مانده', ob_quick_s:'نامتان را وارد کنید تا همین الان منتورها را ببینید. هدف‌ها و رزومه‌تان را بعداً هم می‌توانید از داشبورد اضافه کنید.', ob_quick_btn:'دیدن منتورها', toast_client_ready:'حسابتان آماده است. منتوری متناسب با هدف‌تان پیدا کنید.',
     role_client_t:'دنبال منتور هستم', role_client_s:'برای رزومه، مصاحبه یا مسیر شغلی‌تان راهنمایی بگیرید.',
     role_mentor_t:'منتور هستم', role_mentor_s:'تجربه‌تان را به اشتراک بگذارید و به کسی در همان شغل کمک کنید.',
     pick_to_continue:'برای ادامه یکی را انتخاب کنید.',
@@ -3963,9 +3963,13 @@ let __routedNew = false;
 async function routeNewAccount(){
   if(__routedNew || !uid) return; __routedNew = true;
   try{
-    const { data, error } = await sb.from('profiles').select('id').eq('id', uid).maybeSingle();
+    const { data, error } = await sb.from('profiles').select('id,role,approved,bio,linkedin').eq('id', uid).maybeSingle();
     if(error){ __routedNew = false; return; }   // checked again on the next sign-in or page load
-    if(data){ clearIntent(); return; }
+    if(data){
+      // A mentor who started signing up but hasn't filled in their profile yet: take them back to it.
+      if(isMentorDraft(data)){ state.role = 'mentor'; if(['home','browse','dashboard','onboard'].includes(state.view)) nav('onboard'); else render(); return; }
+      clearIntent(); return;
+    }
     state.noProfile = true;
     const it = readIntent();
     const metaRole = ['client','mentor'].includes(signupMeta.role) ? signupMeta.role : '';
@@ -3973,6 +3977,9 @@ async function routeNewAccount(){
     if(it.returnMentorId && !state.returnMentorId) state.returnMentorId = it.returnMentorId;
     // People looking for a mentor don't need a setup form: their account is ready as soon as we know their name.
     if(state.role==='client' && !state.returnMentorId && knownName()){ await quickClient(knownName()); return; }
+    // Future mentors get their (hidden, unapproved) profile right away, so the account is never left without one;
+    // they then fill in the mentor form as before.
+    if(state.role==='mentor' && knownName()) await quickMentorDraft(knownName());
     if(['home','browse','dashboard','onboard'].includes(state.view)) nav('onboard');
     else render();   // on another page (a mentor's profile, the AI coach…): the setup banner shows instead
   }catch(e){ console.error('route-new-account', e); }
@@ -3996,6 +4003,17 @@ async function quickClient(name){
     state.noProfile = true; toast(T('toast_save_fail')); nav('onboard');
   }finally{ __quickBusy = false; }
 }
+// A mentor profile that was only started (created at sign-up with just a name): the mentor form always adds a bio and LinkedIn.
+function isMentorDraft(p){ return !!(p && p.role==='mentor' && p.approved===false && !String(p.bio||'').trim() && !String(p.linkedin||'').trim()); }
+async function quickMentorDraft(name){
+  name = String(name || '').trim().slice(0, 80);
+  if(myProfile || !uid || !name) return;
+  try{
+    await saveProfileSafe({ role:'mentor', name, aiCredits:5, timezone: MY_TZ }, 'set');
+    try{ const { data: fresh } = await sb.from('profiles').select('*').eq('id', uid).maybeSingle(); if(fresh) myProfile = fresh; }catch(e){}
+    state.noProfile = false;
+  }catch(err){ console.error('mentor-draft-failed', err); }   // the mentor form still works without it
+}
 // Everything tied to the signed-in person is cleared on sign-out, so the next account on this browser starts clean.
 let __profUnsub = null;
 function resetAccountState(){
@@ -4007,6 +4025,8 @@ function resetAccountState(){
   clearIntent();
 }
 function setupBanner(){
+  if(uid && isMentorDraft(myProfile) && state.view!=='onboard' && !state.recoveryMode)
+    return `<div class="banner bm-banner setup-banner"><span><b>${esc(T('draft_t'))}</b></span><span class="setup-btns"><button type="button" class="btn btn-primary btn-sm" data-nav="onboard" data-role="mentor">${esc(T('draft_btn'))}</button></span></div>`;
   if(!uid || myProfile || !state.noProfile || ['onboard','dashboard','messages','requests'].includes(state.view) || state.recoveryMode) return '';
   return `<div class="banner bm-banner setup-banner"><span><b>${esc(T('setup_t'))}</b></span><span class="setup-btns"><button type="button" class="btn btn-primary btn-sm" data-nav="onboard" data-role="client">${esc(T('setup_client'))}</button><button type="button" class="btn btn-outline btn-sm" data-nav="onboard" data-role="mentor">${esc(T('setup_mentor'))}</button></span></div>`;
 }
@@ -6731,8 +6751,8 @@ function clientNextSteps(){
 // A signed-in client (not the admin) who opens setup is switching their account to a mentor profile.
 function obSwitching(){ return !!(myProfile && myProfile.role==='client' && !myProfile.isAdmin); }
 function onboardView(){
-  const switching = obSwitching();
-  if(switching) state.role = 'mentor';
+  const switching = obSwitching(), draft = isMentorDraft(myProfile);
+  if(switching || draft) state.role = 'mentor';
   const preset = state.role;
   return `
   <div class="ob-head">
@@ -6740,7 +6760,7 @@ function onboardView(){
     <p class="muted">${switching ? esc(T('bm_sub')) : state.returnMentorId ? esc(T('onboard_book_note').replace('{m}', nameOf(state.returnMentorId))) : esc(T('ob_sub'))}</p>
     ${switching ? `<button type="button" class="btn btn-ghost btn-sm" data-nav="dashboard">${esc(T('bm_cancel'))}</button>` : ''}
   </div>
-  ${switching ? '' : `<div class="role-pick ob-roles">
+  ${switching || draft ? '' : `<div class="role-pick ob-roles">
     <div class="role-opt ${preset==='client'?'selected':''}" data-role="client"><span class="role-ic">${ICON_SEEK}</span><b>${esc(T('role_client_t'))}</b><span>${esc(T('role_client_s'))}</span></div>
     <div class="role-opt ${preset==='mentor'?'selected':''}" data-role="mentor"><span class="role-ic">${ICON_GUIDE}</span><b>${esc(T('role_mentor_t'))}</b><span>${esc(T('role_mentor_s'))}</span></div>
   </div>`}
@@ -6758,7 +6778,7 @@ function onboardView(){
       ${preset==='mentor' ? `
         ${obSection(1,'ob_s_about')}
         ${obPhotoField()}
-        <div class="field"><label>${esc(T('lbl_name'))}</label><input name="name" required autocomplete="name" placeholder="${esc(T('ph_name'))}" value="${esc(liSignupName)}"></div>
+        <div class="field"><label>${esc(T('lbl_name'))}</label><input name="name" required autocomplete="name" placeholder="${esc(T('ph_name'))}" value="${esc(liSignupName || (draft && myProfile.name) || '')}"></div>
         <div class="field-row">
           <div class="field"><label>${esc(T('lbl_title_m'))}</label><input name="profession" required placeholder="${esc(T('ph_title_m'))}"></div>
           <div class="field"><label>${esc(T('lbl_company'))}</label><input name="company" required placeholder="${esc(T('ph_company'))}"></div>

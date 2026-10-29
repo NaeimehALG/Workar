@@ -703,6 +703,50 @@ async function setupNow(ids) {
   return out;
 }
 
+// The setup reminders for an account without a profile: step 0 from one hour after sign-up (the hourly sweep
+// usually sends it), step 1 is the last one, from day 5. Each is sent once. Returns true when an email went out.
+async function setupReminder(rep, u, step) {
+  const age = Date.now() - Date.parse(u.created_at);
+  if (step === 0 && (age < SETUP_FIRST_AFTER || age > 14 * DAY)) return false;
+  if (step === 1 && (age < 5 * DAY || age > 30 * DAY)) return false;
+  const tag = step === 0 ? 'finish-profile' : 'finish-profile-2';
+  if (!(await once(tag, u.id))) return false;
+  const meta = u.user_metadata || {};
+  const kind = ['client', 'mentor'].includes(meta.role) ? meta.role : 'none';
+  const [subject, title, paras, cta] = SETUP_COPY[kind][step];
+  const ok = await mail(rep, u.email, subject, title, paras, { text: cta, url: M.SITE() + '/?go=onboard' + (kind === 'none' ? '' : '&r=' + kind) });
+  if (!ok) { await forget(tag, u.id); return false; }
+  rep.done.push(step === 0 ? `Reminded a new sign-up (${M.esc(u.email)}) to finish setting up their account.` : `Sent a last setup reminder to ${M.esc(u.email)}.`);
+  return true;
+}
+const SETUP_FIRST_AFTER = HOUR; // long enough that someone still filling in the form is not emailed
+
+// Hourly sweep (Supabase pg_cron calls api/reminders?task=setup_sweep): about an hour after someone signs up,
+//  - an account with no profile gets the first setup email;
+//  - a mentor who started but left their profile incomplete gets the usual "please add …" email
+//    (the same review the daily run does, so nothing is sent twice).
+async function setupSweep(opts = {}) {
+  const rep = newReport(), now = Date.now();
+  if (!(await checkMemory())) throw new Error('agent_events table is missing');
+  const r = await fetch(`${process.env.SUPABASE_URL}/auth/v1/admin/users?page=1&per_page=1000`, { headers: svc() });
+  if (!r.ok) throw new Error('could not read the sign-up list (' + r.status + ')');
+  const users = ((await r.json()) || {}).users || [];
+  const has = new Set((await M.rowsStrict(`profiles?select=id`)).map(p => p.id));
+  const recent = users.filter(u => u.email && u.email_confirmed_at && now - Date.parse(u.created_at) <= 14 * DAY);
+  for (const u of recent) if (!has.has(u.id)) await setupReminder(rep, u, 0);
+  // Mentors who left their profile incomplete, an hour or more after signing up, and were not asked yet
+  const userAge = {}; users.forEach(u => { userAge[u.id] = now - Date.parse(u.created_at); });
+  const pending = (await M.rowsStrict(`profiles?role=eq.mentor&approved=eq.false&select=*`))
+    .filter(p => !p.banned && (userAge[p.id] || 0) >= SETUP_FIRST_AFTER && (userAge[p.id] || 0) <= 14 * DAY && missingBasics(p).length);
+  if (pending.length) {
+    const asked = new Set((await M.rowsStrict(`agent_events?id=in.(${pending.map(p => encodeURIComponent('"ask:' + p.id + '"')).join(',')})&select=id`)).map(e => e.id));
+    for (const p of pending.filter(p => !asked.has('ask:' + p.id)).slice(0, 5)) {
+      try { await mentorApplications(rep, { deadline: opts.deadline || now + 100000 }, p.id); } catch (e) { rep.errors.push('mentor follow-up failed: ' + (e.message || e)); }
+    }
+  }
+  return { emails: rep.emails, done: rep.done, errors: rep.errors };
+}
+
 async function signups(rep, ctx) {
   const now = Date.now(), site = M.SITE();
   const r = await fetch(`${process.env.SUPABASE_URL}/auth/v1/admin/users?page=1&per_page=1000`, { headers: svc() });
@@ -728,20 +772,8 @@ async function signups(rep, ctx) {
       continue;
     }
     if (!p) {
-      const meta = u.user_metadata || {};
-      const kind = ['client', 'mentor'].includes(meta.role) ? meta.role : 'none';
-      const go = site + '/?go=onboard' + (kind === 'none' ? '' : '&r=' + kind);
-      let sentFirst = false;
-      if (age >= 1 * DAY && age <= 14 * DAY && await once('finish-profile', u.id)) {
-        const [subject, title, paras, cta] = SETUP_COPY[kind][0];
-        if (await mail(rep, u.email, subject, title, paras, { text: cta, url: go })) { sentFirst = true; rep.done.push(`Reminded a new sign-up (${M.esc(u.email)}) to finish setting up their account.`); }
-        else await forget('finish-profile', u.id);
-      }
-      if (!sentFirst && age >= 5 * DAY && age <= 30 * DAY && await once('finish-profile-2', u.id)) {
-        const [subject, title, paras, cta] = SETUP_COPY[kind][1];
-        if (await mail(rep, u.email, subject, title, paras, { text: cta, url: go })) rep.done.push(`Sent a last setup reminder to ${M.esc(u.email)}.`);
-        else await forget('finish-profile-2', u.id);
-      }
+      const sentFirst = await setupReminder(rep, u, 0);
+      if (!sentFirst) await setupReminder(rep, u, 1);
     } else if (p.role !== 'mentor' && !booked.has(u.id) && age > 3 * DAY && age <= 14 * DAY) {
       if (!(await once('first-booking', u.id))) continue;
       await mail(rep, u.email, 'Not sure which mentor to choose?', `We can help you choose, ${first(p.name)}`,
@@ -830,4 +862,4 @@ async function run(extraErrors, opts = {}) {
   return Object.assign({ emails: rep.emails }, out);
 }
 
-module.exports = { setupNow, _assess: (a) => assessApplications(a), run, reviewOne, profileComplete, once, missingBasics, mentorApplications, linkedInSlug, englishProfiles, fillDetails, _detailsClean: detailsClean, _resumeClean: resumeClean, fillFromResume };
+module.exports = { setupNow, setupSweep, _assess: (a) => assessApplications(a), run, reviewOne, profileComplete, once, missingBasics, mentorApplications, linkedInSlug, englishProfiles, fillDetails, _detailsClean: detailsClean, _resumeClean: resumeClean, fillFromResume };

@@ -141,6 +141,14 @@ module.exports = async (req, res) => {
     } catch (e) { res.status(503).send('database-down'); }
     return;
   }
+  // Hourly setup sweep, called by Supabase pg_cron with the private SETUP_SWEEP_KEY (header x-sweep-key).
+  if (req.query && req.query.task === 'setup_sweep') {
+    const k = String(process.env.SETUP_SWEEP_KEY || '');
+    if (k.length < 32 || String(req.headers['x-sweep-key'] || '') !== k) { res.status(401).end(); return; }
+    try { const r = await require('./_autopilot').setupSweep({ deadline: Date.now() + 100000 }); if (r.errors.length) console.error('setup-sweep-errors', JSON.stringify(r.errors)); res.status(200).json({ emails: r.emails, done: r.done.length, errors: r.errors.length }); }
+    catch (e) { console.error('setup-sweep-failed', e); res.status(500).json({ error: String(e.message || e) }); }
+    return;
+  }
   // One-off setup emails the admin asked for: only with the private SETUP_NOW_KEY (set in Vercel, removed afterwards).
   if (req.query && req.query.task === 'setup_now') {
     const k = String(process.env.SETUP_NOW_KEY || '');
