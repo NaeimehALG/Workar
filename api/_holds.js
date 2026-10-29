@@ -50,11 +50,27 @@ function holdNowAtCheckout(startsAt, now = Date.now()) {
   return !Number.isFinite(s) || s - now <= HOLD_NOW_DAYS * 24 * HOUR;
 }
 
-function lateClientCancel(r) {
-  if (r.status !== 'cancelled' || !r.cancelledBy || r.cancelledBy !== r.clientId) return false;
-  const s = startOf(r), c = ms(r.cancelledAt);
-  return Number.isFinite(s) && Number.isFinite(c) && s - c < LATE_CANCEL_HOURS * HOUR;
+// A client cancellation less than LATE_CANCEL_HOURS before the start. The client can't move the start of a
+// paid/held booking on their own any more (protect_request), so the start is the one the booking was paid for.
+const lateClientCancel = r => P.lateClientCancel(r);
+
+// How many sessions of the booking the client pays for when it ends early:
+//   "Don't charge" (status refunded): the sessions used before the reported one (0 for a single session)
+//   late client cancellation: the sessions used plus the cancelled one
+//   otherwise: the whole booking
+function keepFor(r) {
+  const total = P.sessionsIn(r);
+  if (r.sessionsKept != null && Number.isFinite(Number(r.sessionsKept))) return Math.max(0, Math.min(total, Number(r.sessionsKept)));
+  if (r.status === 'refunded') {
+    if (total <= 1) return 0;
+    const used = P.usedSessions(r), reported = Number(r.problemSession) || 0;
+    return reported > 0 ? Math.min(used, reported - 1) : used;
+  }
+  if (lateClientCancel(r)) return total <= 1 ? 1 : Math.min(total, P.usedSessions(r) + 1);
+  return total;
 }
+const centsFor = (r, keep) => Math.floor((Number(r.amountCents) || Number(r.holdAmountCents) || 0) * keep / P.sessionsIn(r));
+const latestCharge = pi => (pi && pi.latest_charge && typeof pi.latest_charge === 'object' ? pi.latest_charge : null);
 
 // What the daily job should do with one booking. Pure, so it can be tested.
 //   authorize | charge (hold + capture at once) | capture | release | refund | rehold | warn-expiring | wait | none
@@ -65,9 +81,15 @@ function decide(r, now = Date.now()) {
   const cb = ms(r.holdCaptureBefore);
 
   if (['cancelled', 'declined', 'refunded'].includes(r.status)) {
-    if (r.status === 'refunded') return hs === 'captured' ? 'refund' : 'release';
-    if (lateClientCancel(r)) return hs === 'saved' ? 'charge' : hs === 'authorized' ? 'capture' : 'none';
-    if (hs === 'captured') return 'none'; // money already taken: the admin decides about a refund
+    if (r.status === 'refunded') {
+      if (hs === 'captured') return 'refund';
+      return hs === 'authorized' && keepFor(r) > 0 ? 'capture' : 'release'; // a package keeps the sessions used
+    }
+    if (lateClientCancel(r)) {
+      if (hs === 'captured') return keepFor(r) < P.sessionsIn(r) && r.sessionsKept == null ? 'refund' : 'none'; // package: refund the unused sessions
+      return hs === 'saved' ? 'charge' : 'capture';
+    }
+    if (hs === 'captured') return r.cancelAlertAt ? 'none' : 'alert-cancelled'; // money already taken: the admin decides about a refund (no payout)
     return 'release';
   }
   if (hs === 'captured') return 'none';
@@ -122,7 +144,7 @@ async function customerFor(user) {
 async function secureFromSession(requestId, session) {
   const md = session.metadata || {};
   if (session.status && session.status !== 'complete') return { paid: false };
-  const upd = { paid: true, stripeSessionId: session.id, holdAt: new Date().toISOString(), holdError: null };
+  const upd = Object.assign(await P.paymentLockFields(), { paid: true, stripeSessionId: session.id, holdAt: new Date().toISOString(), holdError: null });
   if (session.mode === 'setup') {
     const si = await P.stripe('GET', 'setup_intents/' + encodeURIComponent(idOf(session.setup_intent)));
     if (si.status !== 'succeeded') return { paid: false };
@@ -164,20 +186,39 @@ async function secureFromSession(requestId, session) {
 }
 
 // ---------- the daily job ----------
+// A PaymentIntent this booking already created for this attempt (e.g. the run crashed before saving it)
+async function existingIntent(r, attempt, kind) {
+  if (!r.stripeCustomerId) return null;
+  const res = await P.stripe('GET', 'payment_intents', { customer: r.stripeCustomerId, limit: 100, expand: ['data.latest_charge'] });
+  const mine = ((res && res.data) || []).filter(pi => pi && pi.metadata && pi.metadata.requestId === r.id && String(pi.metadata.attempt) === String(attempt) && (!kind || pi.metadata.holdKind === kind));
+  return mine.find(pi => ['requires_capture', 'succeeded', 'processing'].includes(pi.status)) || null;
+}
+
 async function authorize(r, { charge = false } = {}) {
-  const amount = Number(r.holdAmountCents) || Number(r.amountCents) || 0;
+  const full = Number(r.holdAmountCents) || Number(r.amountCents) || 0;
+  const keep = charge ? keepFor(r) : P.sessionsIn(r);
+  const amount = charge && keep < P.sessionsIn(r) ? centsFor(r, keep) : full;
   if (!(amount >= 50)) throw new Error('booking has no amount to hold');
   if (!r.stripeCustomerId || !r.stripePaymentMethodId) throw new Error('no saved card for this booking');
-  const params = {
-    amount, currency: CURRENCY, customer: r.stripeCustomerId, payment_method: r.stripePaymentMethodId,
-    off_session: true, confirm: true, capture_method: charge ? 'automatic' : 'manual',
-    description: charge ? 'Workar session (late cancellation)' : 'Workar mentoring session',
-    metadata: { requestId: r.id, kind: 'booking' }, expand: ['latest_charge']
-  };
-  const key = `workar-hold-${r.id}-${charge ? 'charge' : 'auth'}-${r.startsAt || ''}-${r.stripePaymentIntentId || 'first'}`;
-  const pi = await P.stripe('POST', 'payment_intents', params, key);
+  const attempt = Number(r.holdAttempt) || 0, kind = charge ? 'charge' : 'auth';
+  let pi = await existingIntent(r, attempt, kind);
+  if (!pi) {
+    const params = {
+      amount, currency: CURRENCY, customer: r.stripeCustomerId, payment_method: r.stripePaymentMethodId,
+      off_session: true, confirm: true, capture_method: charge ? 'automatic' : 'manual',
+      description: charge ? 'Workar session (late cancellation)' : 'Workar mentoring session',
+      metadata: { requestId: r.id, kind: 'booking', attempt, holdKind: kind }, expand: ['latest_charge']
+    };
+    // unique per attempt: a replay can never hand back a hold that was cancelled before (see rehold)
+    const created = await P.stripe('POST', 'payment_intents', params, `workar-hold-${r.id}-${kind}-a${attempt}-${r.stripePaymentMethodId}`);
+    // the create answer may be an idempotent replay: read the PaymentIntent's status as it is now
+    pi = await P.stripe('GET', 'payment_intents/' + encodeURIComponent(created.id), { expand: ['latest_charge'] }).catch(() => created);
+    if (!pi || !pi.id) pi = created;
+  }
   if (charge && pi.status === 'succeeded') {
-    await dbPatch(idq(r.id), { holdStatus: 'captured', stripePaymentIntentId: pi.id, capturedAt: new Date().toISOString(), holdAmountCents: amount, holdError: null, stripeChargeId: idOf(pi.latest_charge) });
+    const upd = { holdStatus: 'captured', stripePaymentIntentId: pi.id, capturedAt: new Date().toISOString(), holdAmountCents: full, holdError: null, stripeChargeId: idOf(pi.latest_charge) };
+    if (keep < P.sessionsIn(r)) upd.sessionsKept = keep;
+    await dbPatch(idq(r.id), upd);
     await P.recordPayment(r.id, { amount_total: pi.amount_received || amount, payment_intent: pi.id });
     return 'captured';
   }
@@ -188,8 +229,14 @@ async function authorize(r, { charge = false } = {}) {
 
 async function capture(r) {
   let pi;
+  const total = P.sessionsIn(r), keep = keepFor(r);
+  const held = Number(r.holdAmountCents) || Number(r.amountCents) || 0;
+  const part = keep < total ? Math.min(held, centsFor(r, keep)) : null; // a package that ended early: charge only the sessions kept
+  if (part != null) await dbPatch(idq(r.id), { sessionsKept: keep }); // saved first, so the webhook knows the uncaptured rest is expected
   try {
-    pi = await P.stripe('POST', `payment_intents/${encodeURIComponent(r.stripePaymentIntentId)}/capture`, { expand: ['latest_charge'] }, 'workar-capture-' + r.stripePaymentIntentId);
+    const params = { expand: ['latest_charge'] };
+    if (part != null) params.amount_to_capture = part;
+    pi = await P.stripe('POST', `payment_intents/${encodeURIComponent(r.stripePaymentIntentId)}/capture`, params, 'workar-capture-' + r.stripePaymentIntentId + (part != null ? '-' + part : ''));
   } catch (e) {
     const cur = await P.stripe('GET', 'payment_intents/' + encodeURIComponent(r.stripePaymentIntentId), { expand: ['latest_charge'] }).catch(() => null);
     if (cur && cur.status === 'succeeded') pi = cur;
@@ -198,14 +245,15 @@ async function capture(r) {
       throw new Error('the card hold expired before it could be charged — the client was not charged');
     } else throw e;
   }
-  await dbPatch(idq(r.id), { holdStatus: 'captured', capturedAt: new Date().toISOString(), holdError: null });
+  // "Don't charge" on a package: the used sessions were charged, the rest of the hold is released
+  await dbPatch(idq(r.id), { holdStatus: r.status === 'refunded' ? 'refunded' : 'captured', capturedAt: new Date().toISOString(), holdError: null });
   await P.recordPayment(r.id, { amount_total: pi.amount_received || pi.amount, payment_intent: pi.id });
   return pi;
 }
 
 async function cancelHold(r) {
   if (!r.stripePaymentIntentId) return;
-  try { await P.stripe('POST', `payment_intents/${encodeURIComponent(r.stripePaymentIntentId)}/cancel`, {}, 'workar-release-' + r.stripePaymentIntentId); }
+  try { await P.stripe('POST', `payment_intents/${encodeURIComponent(r.stripePaymentIntentId)}/cancel`, { cancellation_reason: 'abandoned' }, 'workar-release-' + r.stripePaymentIntentId); }
   catch (e) {
     const cur = await P.stripe('GET', 'payment_intents/' + encodeURIComponent(r.stripePaymentIntentId)).catch(() => null);
     if (!cur || cur.status !== 'canceled') throw e;
@@ -219,18 +267,52 @@ async function release(r) {
 
 async function rehold(r) {
   await cancelHold(r);
-  await dbPatch(idq(r.id), { holdStatus: 'saved', stripePaymentIntentId: null, holdCaptureBefore: null });
+  // next hold is a new attempt, with its own idempotency key
+  await dbPatch(idq(r.id), { holdStatus: 'saved', stripePaymentIntentId: null, holdCaptureBefore: null, holdAttempt: (Number(r.holdAttempt) || 0) + 1 });
 }
 
+// Refund what the client didn't use: everything for a single session, the unused sessions of a package.
+// If the mentor was already paid for more than the client keeps, the extra is taken back from the mentor's transfer.
 async function refund(r) {
-  if (r.stripeTransferId || r.payoutDone) throw new Error('the mentor was already paid for this booking — refund it in Stripe and recover the transfer by hand');
-  await P.stripe('POST', 'refunds', { payment_intent: r.stripePaymentIntentId, metadata: { requestId: r.id } }, 'workar-refund-' + r.stripePaymentIntentId);
-  await dbPatch(idq(r.id), { holdStatus: 'refunded', holdError: null });
+  const total = P.sessionsIn(r), keep = keepFor(r);
+  if (!r.stripePaymentIntentId) throw new Error('no Stripe payment found for this booking');
+  await dbPatch(idq(r.id), { sessionsKept: keep }); // saved first, so the webhook knows this refund is Workar's own
+  // How much is still charged, read from Stripe (so a retry after a crash never refunds twice)
+  const pi = await P.stripe('GET', 'payment_intents/' + encodeURIComponent(r.stripePaymentIntentId), { expand: ['latest_charge'] });
+  const ch = latestCharge(pi);
+  // Stripe counts the uncaptured rest of a partial capture as refunded, so: amount - amount_refunded
+  const net = ch ? Math.max(0, (Number(ch.amount) || 0) - (Number(ch.amount_refunded) || 0)) : Number(pi.amount_received) || 0;
+  const amount = Math.max(0, net - (keep > 0 ? centsFor(r, keep) : 0));
+  if (amount > 0) await P.stripe('POST', 'refunds', { payment_intent: r.stripePaymentIntentId, amount, metadata: { requestId: r.id, kind: 'workar-unused-sessions' } }, `workar-refund-${r.stripePaymentIntentId}-k${keep}-${net}`);
+  const paid = P.paidSessions(r);
+  const upd = { holdStatus: r.status === 'refunded' ? 'refunded' : 'captured', holdError: null };
+  if (paid > keep) {
+    const sent = P.mentorCentsFor(r, paid), owed = P.mentorCentsFor(r, keep);
+    await P.reverseTransfers(r, sent > 0 ? owed / sent : 0, 'refund-k' + keep); // keep only what the used sessions earned
+    Object.assign(upd, { payoutSessions: keep, payoutDone: true });
+  }
+  await dbPatch(idq(r.id), upd);
+  return { keep, total, amount };
+}
+
+// Before charging: did the mentor actually join? (Daily only; without a record the charge goes ahead)
+function needsAttendanceCheck(r, now = Date.now()) {
+  if (r.status !== 'accepted' || r.clientConfirmedAt || r.problemResolvedAt) return false;
+  const s = startOf(r);
+  return Number.isFinite(s) && s <= now;
+}
+async function mentorShowed(r) {
+  const MT = require('./_meeting');
+  if (!MT.isDaily(r.meetingUrl) || !process.env.DAILY_API_KEY) return { ok: true };
+  let names = {};
+  try { const M = require('./_mail'); const [m, c] = await Promise.all([M.profile(r.mentorId), M.profile(r.clientId)]); names = { mentor: m && m.name, client: c && c.name }; } catch (e) {}
+  const a = await MT.sessionAttendance(r, r.startsAt, names);
+  return { ok: !['mentor-absent', 'none'].includes(a.status), status: a.status, note: a.note };
 }
 
 async function cardFailed(r, err, mail) {
   const msg = String((err && err.message) || err || 'card declined').slice(0, 300);
-  await dbPatch(idq(r.id), { holdStatus: 'failed', holdError: msg, paid: false, stripeSessionId: null, stripePaymentIntentId: null });
+  await dbPatch(idq(r.id), { holdStatus: 'failed', holdError: msg, paid: false, stripeSessionId: null, stripePaymentIntentId: null, holdAttempt: (Number(r.holdAttempt) || 0) + 1 });
   if (mail) { try { await mail('card-failed', r); } catch (e) { console.error('card-failed-mail', r.id, e.message); } }
 }
 
@@ -255,7 +337,31 @@ async function runHolds({ mail } = {}) {
       } else if (what === 'charge') {
         try { await authorize(r, { charge: true }); out.charged++; }
         catch (e) { if (e.stripe) { await dbPatch(idq(r.id), { holdStatus: 'failed', holdError: String(e.message).slice(0, 300) }); out.problems.push(`Late-cancellation charge failed for ${label}: ${e.message}`); } else throw e; }
-      } else if (what === 'capture') { await capture(r); out.charged++; }
+      } else if (what === 'capture') {
+        if (needsAttendanceCheck(r, now)) {
+          const a = await mentorShowed(r);
+          if (!a.ok) {
+            const msg = `Not charged: Daily shows the mentor did not join (${String(a.note || '').slice(0, 120)})`;
+            if (Number.isFinite(ms(r.holdCaptureBefore)) && ms(r.holdCaptureBefore) < now) {
+              await dbPatch(idq(r.id), { holdStatus: 'expired', holdError: msg + '; the hold has expired' });
+              continue;
+            }
+            if (r.holdError !== msg) {
+              await dbPatch(idq(r.id), { holdError: msg });
+              out.problems.push(`The client was NOT charged for ${label}: Daily shows the mentor did not join the call (${a.note}). The card hold stays until it expires${r.holdCaptureBefore ? ' on ' + new Date(r.holdCaptureBefore).toUTCString() : ''}. If the session did happen, choose "Release payout" in Admin → Mentor payouts; otherwise choose "Don't charge".`);
+            }
+            continue;
+          }
+        }
+        await capture(r); out.charged++;
+      }
+      else if (what === 'alert-cancelled') {
+        const who = r.cancelledBy ? (r.cancelledBy === r.mentorId ? 'by the mentor' : r.cancelledBy === r.clientId ? 'by the client' : 'by the admin') : 'by an unknown person';
+        const pay = r.cancelledBy ? 'The mentor is not paid for it.' : 'Older booking: the payout continues unless you choose "Don\'t charge".';
+        out.problems.push(`${label} was cancelled ${who} after the client's card was charged. ${pay} If the client should get their money back, choose "Don't charge" in Admin → Mentor payouts.`);
+        await P.moneyAlert('cancelled-after-charge:' + r.id, `Booking ${r.id} was cancelled ${who} after the client was charged. ${pay} Refund decision needed.`);
+        await dbPatch(idq(r.id), { cancelAlertAt: new Date().toISOString() });
+      }
       else if (what === 'release') { await release(r); out.released++; }
       else if (what === 'rehold') { await rehold(r); out.reheld++; }
       else if (what === 'refund') { await refund(r); out.refunded++; }
@@ -273,5 +379,5 @@ async function runHolds({ mail } = {}) {
 
 module.exports = {
   HOLD_NOW_DAYS, AUTH_AHEAD_HOURS, CAPTURE_AFTER_HOURS, LATE_CANCEL_HOURS,
-  holdNowAtCheckout, lateClientCancel, decide, customerFor, secureFromSession, runHolds, captureBeforeOf
+  holdNowAtCheckout, lateClientCancel, keepFor, decide, customerFor, secureFromSession, runHolds, captureBeforeOf, authorize, capture, refund, rehold
 };

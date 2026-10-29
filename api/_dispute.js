@@ -34,7 +34,14 @@ async function dbInsert(table, body) {
 }
 const idq = id => `requests?id=eq.${encodeURIComponent(id)}`;
 const getReq = async id => (await M.rows(`${idq(id)}&select=*`))[0];
-const statementsOf = id => M.rows(`dispute_statements?requestId=eq.${encodeURIComponent(id)}&select=*&order=createdAt.asc`).catch(() => []);
+const allStatementsOf = id => M.rows(`dispute_statements?requestId=eq.${encodeURIComponent(id)}&select=*&order=createdAt.asc`).catch(() => []);
+// A client can report again (another session) once a report is resolved: only this report's statements count.
+const statementsOf = async (id, r) => {
+  const list = await allStatementsOf(id);
+  const since = r && r.problemReportedAt ? Date.parse(r.problemReportedAt) - 60000 : NaN;
+  return Number.isFinite(since) ? list.filter(s => !s.createdAt || Date.parse(s.createdAt) >= since) : list;
+};
+const reportKey = r => (r.problemReportedAt ? String(Date.parse(r.problemReportedAt) || '').slice(0, 13) : '');
 const formUrl = r => `${M.SITE()}/?go=dispute&r=${encodeURIComponent(r.id)}`;
 const isOpen = r => !!(r && r.problemReportedAt && !r.problemResolvedAt);
 
@@ -95,7 +102,7 @@ async function open(r) {
   const rows = await dbPatch(`${idq(r.id)}&disputeOpenedAt=is.null`, { disputeOpenedAt: new Date().toISOString(), disputeEvidence: { attendance: att } });
   if (!rows.length) return { skipped: true }; // another call opened it first
   if (r.problemNote) {
-    await dbInsert('dispute_statements', { id: 'ds_' + r.id + '_report', requestId: r.id, authorId: r.clientId, role: 'client', text: String(r.problemNote).slice(0, 4000) }).catch(() => {});
+    await dbInsert('dispute_statements', { id: 'ds_' + r.id + (r.problemSession ? '_' + reportKey(r) : '') + '_report', requestId: r.id, authorId: r.clientId, role: 'client', text: String(r.problemNote).slice(0, 4000) }).catch(() => {});
   }
   const url = formUrl(r);
   const [toMentor, toClient] = await Promise.all([M.emailOf(r.mentorId), M.emailOf(r.clientId)]);
@@ -119,7 +126,7 @@ async function open(r) {
     ], { text: 'Add details', url }));
   await M.sendMail(M.CONTACT_EMAIL(), `Problem reported: ${client.name} → ${mentor.name}`,
     M.layout('A client reported a problem with a session', [
-      `<b>${M.esc(client.name)}</b> reported a problem with the session with <b>${M.esc(mentor.name)}</b> on ${M.esc(M.when(r))} (${r.amountCents ? '$' + (r.amountCents / 100).toFixed(2) + ' CAD' : 'free'}).`,
+      `<b>${M.esc(client.name)}</b> reported a problem with the session with <b>${M.esc(mentor.name)}</b> on ${M.esc(M.when(r))} (${r.amountCents ? 'CA$' + (r.amountCents / 100).toFixed(2) : 'free'}${r.problemSession ? ', session ' + Number(r.problemSession) : ''}).`,
       r.problemNote ? `Their note: “${M.esc(String(r.problemNote).slice(0, 800))}”` : '',
       `<b>Call attendance:</b> ${M.esc(attendanceText(att, r.startsAt))}`,
       `The dispute agent has asked both sides for their account. You will receive its summary and recommendation once the mentor replies, or within ${STATEMENT_WAIT_HOURS} hours. The payment stays on hold until you approve a decision.`
@@ -136,7 +143,7 @@ async function statement(me, requestId, text) {
   if (!isOpen(r)) return { status: 409, error: 'This report has already been reviewed.' };
   const clean = String(text || '').trim().slice(0, 4000);
   if (clean.length < 3) return { status: 400, error: 'Please write a few words.' };
-  const mine = (await statementsOf(r.id)).filter(s => s.authorId === me.id && !String(s.id).endsWith('_report'));
+  const mine = (await statementsOf(r.id, r)).filter(s => s.authorId === me.id && !String(s.id).endsWith('_report'));
   if (mine.length >= 3) return { status: 429, error: 'You have already sent your side. The Workar team will be in touch.' };
   await dbInsert('dispute_statements', { id: 'ds_' + r.id + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), requestId: r.id, authorId: me.id, role, text: clean });
   // Mentor's side in: the picture is complete enough to analyze now (a later note re-analyzes).
@@ -151,7 +158,7 @@ async function info(me, requestId) {
   const role = me.id === r.mentorId ? 'mentor' : me.id === r.clientId ? 'client' : null;
   if (!role) return { status: 403, error: 'Only the mentor and the client of this booking can open this page.' };
   const [mentor, client] = await Promise.all([M.profile(r.mentorId), M.profile(r.clientId)]);
-  const sent = (await statementsOf(r.id)).filter(s => s.authorId === me.id && !String(s.id).endsWith('_report')).length;
+  const sent = (await statementsOf(r.id, r)).filter(s => s.authorId === me.id && !String(s.id).endsWith('_report')).length;
   return { status: 200, role, open: isOpen(r), startsAt: r.startsAt || null, date: r.date || null, time: r.time || null,
     other: role === 'mentor' ? client.name : mentor.name, problemNote: role === 'mentor' ? (r.problemNote || '') : '', sent };
 }
@@ -160,7 +167,7 @@ async function info(me, requestId) {
 async function analyze(requestId) {
   const r = await getReq(requestId);
   if (!isOpen(r)) return { skipped: true };
-  const [mentor, client, stmts] = await Promise.all([M.profile(r.mentorId), M.profile(r.clientId), statementsOf(r.id)]);
+  const [mentor, client, stmts] = await Promise.all([M.profile(r.mentorId), M.profile(r.clientId), statementsOf(r.id, r)]);
   const ev = (r.disputeEvidence && typeof r.disputeEvidence === 'object') ? r.disputeEvidence : {};
   const att = ev.attendance || await attendance(r, { mentor: mentor.name, client: client.name });
   const facts = {
@@ -187,7 +194,7 @@ Return JSON: {"summary": "4 to 7 plain sentences: what each side says and what t
   const label = { release: 'Release the payment (charge the client, pay the mentor)', refund: 'Do not charge the client', unclear: 'Not clear yet: please look into it' }[rec];
   await M.sendMail(M.CONTACT_EMAIL(), `${first ? 'Review ready' : 'Review updated'}: ${client.name} → ${mentor.name} (${rec})`,
     M.layout('The dispute agent has reviewed a reported session', [
-      `Session: <b>${M.esc(client.name)}</b> with <b>${M.esc(mentor.name)}</b>, ${M.esc(M.when(r))}, ${r.amountCents ? '$' + (r.amountCents / 100).toFixed(2) + ' CAD' : 'free'}.`,
+      `Session: <b>${M.esc(client.name)}</b> with <b>${M.esc(mentor.name)}</b>, ${M.esc(M.when(r))}, ${r.amountCents ? 'CA$' + (r.amountCents / 100).toFixed(2) : 'free'}.`,
       `<b>Summary:</b> ${M.esc(summary)}`,
       `<b>Call attendance:</b> ${M.esc(facts.attendance)}`,
       facts.mentorAnswered ? '' : `<b>Note:</b> the mentor did not reply within ${STATEMENT_WAIT_HOURS} hours.`,
