@@ -4087,10 +4087,10 @@ function onSignedIn(session){
       nav('mentor', { mentorId: back, bookingOpen: myProfile.role==='client' }); return;
     }
     if(myProfile) state.noProfile = false;
-    render();
+    render(); bootMark('me');
   });
   render();
-  routeNewAccount();
+  Promise.resolve(routeNewAccount()).catch(()=>{}).finally(()=>bootMark('route'));
 
   if(__cameFromEmailLink){
     toast(T('toast_email_confirmed'), 4000);
@@ -4124,20 +4124,21 @@ async function init(){
   document.addEventListener('click', ()=>{ if(state.langMenu || state.langOpen || state.reqMenu){ state.langMenu = false; state.langOpen = false; state.reqMenu = null; render(); } });
   if(!sb){
     document.getElementById('app').innerHTML = `<div class="empty" style="margin-top:80px;">Workar isn't connected to a database yet.<br>Add your Supabase URL and key in the code to enable it.</div>`;
-    return;
+    bootDone(true); return;
   }
 
   // Public data — visible to everyone, signed in or not.
+  __bootTimer = setTimeout(()=>bootDone(), 3000);   // never wait longer than this for the first view
   const db = makeSupabaseDB();
   window.__db = db;
   db.doc('site_settings/main').onSnapshot(d=>{
     siteSettings = (d && d.data && d.data.data) || {};
-    render();
+    render(); bootMark('settings');
   });
   db.collection('profiles').where('role','==','mentor').onSnapshot(list=>{
     cache.profiles = {};
     (list||[]).forEach(d=>{ cache.profiles[d.id] = d.data; });
-    render();
+    render(); bootMark('mentors');
   });
 
   // Show "Continue with LinkedIn" only once that sign-in is switched on in Supabase
@@ -4149,15 +4150,18 @@ async function init(){
     session = res.data.session;
   }catch(e){
     console.error('Could not connect:', e);
+    bootDone(true);
     document.getElementById('app').innerHTML = `<div class="empty" style="margin-top:80px;">${esc(T('err_connect'))}<br><button type="button" class="btn btn-outline btn-sm" style="margin-top:14px;" onclick="location.reload()">${esc(T('err_retry'))}</button></div>`;
     return;
   }
   if(IS_RECOVERY_LINK) state.recoveryMode = true;
   if(session){
+    __bootWait.me = true; __bootWait.route = true;   // also wait for my own profile and where to send me
     onSignedIn(session);
   } else {
     render(); // home/browse are visible; only onboard/dashboard prompt for login
   }
+  bootMark('session');
   sb.auth.onAuthStateChange((event, session)=>{
     if(event==='PASSWORD_RECOVERY'){
       state.recoveryMode = true;
@@ -4314,7 +4318,36 @@ function restoreFormDrafts(){
   document.querySelectorAll('.rate-w').forEach(w=>{ const n = w.querySelector('.rate-number'), h = w.querySelector('input[type="hidden"]'); if(n && h && __formDrafts[draftKey(n)]) h.value = n.value; });
 }
 
+// Startup: draw the page once, after the first data has arrived, instead of rebuilding it for every
+// piece (settings, mentors, session, own profile). Otherwise a refresh looks like it loads two or three times.
+// After the essentials are in, wait until no more data has arrived for a moment (follow-up loads such as
+// requests, payouts and blocks) so it all lands in one draw. Never longer than 3 seconds in total.
+var __booting = true, __bootTimer = null, __bootQuiet = null;   // var: render() may be called before this line runs
+var __bootWait = { settings:true, mentors:true, session:true };
+function bootSettle(){ if(Object.keys(__bootWait).length) return; clearTimeout(__bootQuiet); __bootQuiet = setTimeout(()=>bootDone(), 400); }
+function bootMark(k){
+  if(!__booting) return;
+  delete __bootWait[k];
+  bootSettle();
+}
+// Start the loads the page would start after its first draw (normally in wire()), so they are part of it.
+function bootPrefetch(){
+  try{
+    if(state.view==='mentor' && state.mentorId) loadReviews(state.mentorId);
+    if(!myProfile) return;
+    if(['dashboard','messages','requests'].includes(state.view)) loadRequests();
+    if(state.view==='dashboard' && myProfile.role==='mentor' && uid && !state.payoutAcctLoading && (state.payoutAcct === undefined || state.payoutAcctFor !== uid)){
+      state.payoutAcctLoading = true; loadPayoutAcct().finally(()=>{ state.payoutAcctLoading = false; });
+    }
+  }catch(e){}
+}
+function bootDone(skipRender){
+  if(!__booting) return;
+  __booting = false; clearTimeout(__bootTimer); clearTimeout(__bootQuiet);
+  if(!skipRender) render();
+}
 function render(){
+  if(__booting){ bootPrefetch(); bootSettle(); return; }
   const __act = document.activeElement, __focusKey = __act ? draftKey(__act) : null;
   let __sel = null; try{ __sel = __focusKey ? [__act.selectionStart, __act.selectionEnd] : null; }catch(e){}
   applyDir();
