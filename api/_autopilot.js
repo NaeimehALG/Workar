@@ -109,7 +109,7 @@ function profilePrint(p) {
 async function rememberVerdict(id, print, verdict) {
   try {
     await fetch(`${process.env.SUPABASE_URL}/rest/v1/agent_events?on_conflict=id`, {
-      method: 'POST', headers: Object.assign({ Prefer: 'resolution=ignore-duplicates,return=minimal' }, svc()),
+      method: 'POST', headers: Object.assign({ Prefer: 'resolution=merge-duplicates,return=minimal' }, svc()),
       body: JSON.stringify({ id: `verdict:${id}:${print}`, kind: 'verdict', ref: verdict, createdAt: new Date().toISOString() })
     });
   } catch (e) { console.error('verdict-save-failed', id, e.message); }
@@ -532,6 +532,9 @@ Respond with valid JSON only: {"headline":"","profession":"","company":"","years
   }
 }
 
+// When the review rules change, verdicts given before this time are ignored and the profile is reviewed again.
+// Oct 29 2026 05:00 UTC: the AI stopped asking applicants for extras (education, tools, more bio detail).
+const REVIEW_RULES_SINCE = Date.parse('2026-10-29T05:00:00Z');
 async function mentorApplications(rep, ctx, onlyId) {
   const filter = onlyId ? `&id=eq.${encodeURIComponent(onlyId)}` : '';
   const apps = (await M.rowsStrict(`profiles?role=eq.mentor&approved=eq.false${filter}&select=*`)).filter(p => !p.banned);
@@ -550,8 +553,9 @@ async function mentorApplications(rep, ctx, onlyId) {
   const prints = {}; apps.forEach(p => { prints[p.id] = profilePrint(p); });
   const known = {};
   const wanted = apps.map(p => `verdict:${p.id}:${prints[p.id]}`);
-  const past = wanted.length ? await M.rowsStrict(`agent_events?id=in.(${wanted.map(w => encodeURIComponent('"' + w + '"')).join(',')})&select=id,ref`) : [];
-  past.forEach(e => { known[e.id] = e.ref; });
+  const past = wanted.length ? await M.rowsStrict(`agent_events?id=in.(${wanted.map(w => encodeURIComponent('"' + w + '"')).join(',')})&select=id,ref,createdAt`) : [];
+  // A verdict given under older, stricter review rules is not reused: the profile is reviewed again under the current rules.
+  past.forEach(e => { if (!(Date.parse(e.createdAt) < REVIEW_RULES_SINCE)) known[e.id] = e.ref; });
   const verdictOf = ref => String(ref || '').split('|')[0], questionOf = ref => String(ref || '').split('|').slice(1).join('|');
   // Backoff: a profile version the AI failed to review AI_MAX_FAILS times is not sent again until it changes
   // (agent_events "review_fail", ref "<id>:<fingerprint>|<time>"); the digest lists it under "Needs you".
