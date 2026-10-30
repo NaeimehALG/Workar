@@ -811,6 +811,23 @@
 
   /* ===== onboarding ===== */
   .ob-head{margin-bottom:22px;max-width:640px;}
+  .ob-progress{list-style:none;display:flex;flex-wrap:wrap;gap:6px 22px;margin:0 0 18px;padding:0;font-size:13px;color:var(--muted);}
+  .ob-progress li{display:flex;align-items:center;gap:8px;}
+  .ob-progress li + li::before{content:"";width:18px;height:1px;background:var(--border);margin-inline-end:4px;}
+  .ob-st-n{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;border:1px solid var(--border);font-size:11.5px;font-weight:600;background:#fff;}
+  .ob-progress li.done{color:var(--text);}
+  .ob-progress li.done .ob-st-n{background:var(--accent-2);border-color:var(--accent-2);color:#fff;}
+  .ob-progress li.on{color:var(--text);font-weight:600;}
+  .ob-progress li.on .ob-st-n{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .ob-more{margin:30px 0 8px;padding-top:22px;border-top:1px solid var(--border);}
+  .ob-more > summary{cursor:pointer;font-weight:600;font-size:15px;list-style:none;display:flex;align-items:center;gap:8px;}
+  .ob-more > summary::-webkit-details-marker{display:none;}
+  .ob-more > summary::before{content:"+";display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;border:1px solid var(--border);font-weight:600;}
+  .ob-more[open] > summary::before{content:"−";}
+  .ob-more-body{padding-top:14px;}
+  .ob-more-body h4{margin:14px 0 10px;font-size:14px;}
+  .ob-fast{display:flex;gap:8px;align-items:flex-start;margin:20px 0 4px;padding:12px 14px;border-radius:12px;background:#F6EFE6;color:var(--text);font-size:13.5px;line-height:1.5;}
+  .ob-fast span{color:var(--accent);font-weight:700;}
   .ob-quick{max-width:480px;}
   .ob-head h2{font-size:28px;font-weight:700;margin:0 0 6px;letter-spacing:-.01em;}
   .ob-head p{margin:0;font-size:15px;}
@@ -2609,6 +2626,8 @@ const I18N = {
     pay_title:'Mentor payouts', pay_hint:"Clients' cards are held, not charged, and charged only after the session takes place (when the client confirms it, or 24 hours after the start with no problem reported). The mentor is paid automatically 7 days after the session, once they've added bank details. If the client reports a problem, nothing is charged until you choose: Release payout (charge the client and pay the mentor) or Don't charge (release the hold).", pay_c_bank:'Bank', pay_bank_on:'Automatic', pay_bank_off:'Not set up', pay_held:'On hold', pay_loading:'Loading payouts…', pay_error:'Could not load payouts — check that the payouts SQL has been run.', pay_none:'No paid bookings yet.', pay_tot_owed:'Owed to mentors', pay_tot_keep:'Workar keeps',
     pay_c_mentor:'Mentor', pay_c_n:'Paid bookings', pay_c_collected:'Collected', pay_c_share:'Mentor share', pay_c_owed:'Owed now', pay_mark:'Mark as paid', pay_settled:'Settled', pay_confirm:'Record that you paid {a} to {n}?', pay_done:'Payout recorded', pay_fail:'Could not record the payout — check that the payouts SQL has been run',
     auth_side_h:'Every step of your career, with someone who knows the way.', auth_side_p:'From a stronger resume to a confident interview to the offer, your mentor walks each step with you.', map_you:'You', map_1:'Resume', map_2:'Interview', map_3:'Offer', map_goal:'Next role', auth_f1_t:'Experienced professionals', auth_f1_s:'Real experience in the roles you are targeting.', auth_f2_t:'Structured sessions', auth_f2_s:'30-minute video or voice sessions, arranged by message.', auth_f3_t:'Secure payment', auth_f3_s:'Charged only after your session takes place.', auth_pt1:'Book a 30-minute video or voice session in a few clicks', auth_pt2:'Chat with your mentor before you meet', auth_pt3:'Charged only after your session takes place', auth_tab_signup:'Sign up', auth_h_login:'Welcome back', auth_h_signup:'Create your account', auth_sub_login:'Log in to manage your sessions and messages.', auth_sub_signup:'Create your free account in under a minute.', auth_forgot_h:'Reset your password', auth_fine_login:'New to Workar? Choose Sign up above.', auth_fine_signup:'Free to join — no card needed.', pw_show:'Show password', pw_hide:'Hide password',
+    obst_label:'Sign-up progress', obst_1:'Account created', obst_2:'Your profile', obst_3:'Profile goes live',
+    ob_more:'More details (optional)', ob_fast_ready:'Your resume is uploaded, so you can submit now. We will complete any empty fields from it and email you when your profile is live.',
     ob_sub:'Tell us who you are. It takes about two minutes and you can change everything later.', ob_s_about:'About you', ob_preview:'How clients will see you', ob_preview_note:'This card appears in Find a mentor. A clear headline and a bio written to a mentee get the most bookings.', ob_pv_name:'Your name', ob_pv_head:'Your title and company', ob_pv_bio:'Your bio will appear here.', ob_next:'What happens next', ob_next1_t:'Finish your profile', ob_next1_s:'So your mentor knows where you are and where you want to go.', ob_next2_t:'Pick a mentor and a time', ob_next2_s:'Choose a package and a slot that suits you.', ob_next3_t:'Meet on Workar', ob_next3_s:'Once the mentor accepts, join by video or voice right here.', ob_submit_book:'Save and pick a time',
     mp_s_exp:'Years of experience', mp_s_reviews:'{n} reviews', mp_s_new_v:'New', mp_s_new_l:'Recently joined Workar', mp_s_min:'Minutes per session', mp_s_lang:'Languages', mp_more:'Read more', mp_less:'Show less', mp_best:'Best for', mp_li_view:'LinkedIn profile', mp_about_n:'About {n}', mp_loading:'Loading…', filter_field:'Field', filter_all_fields:'All fields', sort_by:'Sort by', sort_best:'Recommended', sort_exp:'Most experience', sort_price_low:'Price: low to high', sort_price_high:'Price: high to low', bf_count:'{n} mentors', bf_count1:'1 mentor', bf_more:'Show {n} more', bf_showing:'Showing {a} of {b}', mc_book:'Book', trp_see:'See translation', trp_orig:'See original', trp_fail:'The translation is not available right now. Please try again.', mp_best_n:'Works best with', mp_f_exp:'Experience', mp_f_rate:'Rating', mp_f_lang:'Languages', mp_f_sess:'Sessions', mp_f_sess_both:'{m} min, video or voice', mp_f_sess_video:'{m} min, video', mp_f_sess_voice:'{m} min, voice', mp_f_tz:'Time zone', mp_h_exp_v:'{n}+ years', mp_h_exp_l:'Professional experience', mp_h_lang_v:'{n} languages', mp_h_lang1:'{n} language', mp_h_fmt_v:'Video & voice', mp_h_fmt_l:'Private 30-minute sessions', mp_h_tz_l:'Mentor\'s time zone', mp_how_t:'How booking works', mp_how1:'Choose a package and a time that suits you', mp_how2:'{n} confirms your request', mp_how3:'Meet online. Your card is charged only after the session', mp_best_t:'Is this mentor right for you?', mp_industries:'Industries', setup_t:'Your account is ready. One step left:', setup_client:'Find a mentor', setup_mentor:'Become a mentor',
     mp_back:'← All mentors', mp_back_chat:'← Back to chat', mp_speaks:'Speaks', mp_about:'About', mp_help:'Can help you with', mp_per:'per 30-min session', mp_per_short:'/ session', mp_tier_suffix:'mentor',
@@ -3050,6 +3069,8 @@ const I18N = {
     pay_title:'پرداخت به منتورها', pay_hint:'کارت مراجع فقط hold می‌شود و مبلغ بعد از برگزاری جلسه کسر می‌شود (وقتی مراجع برگزاری را تأیید کند، یا ۲۴ ساعت بعد از شروع اگر مشکلی گزارش نشده باشد). سهم منتور ۷ روز بعد از جلسه خودکار واریز می‌شود، به شرط اینکه اطلاعات بانکی‌اش را ثبت کرده باشد. اگر مراجع مشکلی گزارش کند، تا تصمیم شما چیزی کسر نمی‌شود: «آزاد کردن پرداخت» (کسر از کارت مراجع و پرداخت به منتور) یا «کسر نشود» (آزاد کردن hold کارت).', pay_c_bank:'حساب بانکی', pay_bank_on:'خودکار', pay_bank_off:'ثبت نشده', pay_held:'متوقف', pay_loading:'در حال بارگذاری…', pay_error:'بارگذاری نشد؛ مطمئن شوید SQL پرداخت منتورها اجرا شده است.', pay_none:'هنوز رزرو پرداخت‌شده‌ای نیست.', pay_tot_owed:'بدهی به منتورها', pay_tot_keep:'سهم Workar',
     pay_c_mentor:'منتور', pay_c_n:'رزروهای پرداخت‌شده', pay_c_collected:'دریافتی', pay_c_share:'سهم منتور', pay_c_owed:'بدهی فعلی', pay_mark:'ثبت پرداخت', pay_settled:'تسویه‌شده', pay_confirm:'ثبت شود که {a} به {n} پرداخت کرده‌اید؟', pay_done:'پرداخت ثبت شد', pay_fail:'ثبت نشد؛ مطمئن شوید SQL پرداخت منتورها اجرا شده است',
     auth_side_h:'هر قدم مسیر شغلی‌تان، کنار کسی که راه را می‌شناسد.', auth_side_p:'از رزومه‌ای قوی‌تر تا مصاحبه‌ای مطمئن و پیشنهاد کاری، منتورتان در هر قدم کنار شماست.', map_you:'شما', map_1:'رزومه', map_2:'مصاحبه', map_3:'پیشنهاد کاری', map_goal:'شغل بعدی', auth_f1_t:'متخصصان باتجربه', auth_f1_s:'تجربه‌ی واقعی در نقش‌هایی که هدف شماست.', auth_f2_t:'جلسات ساختارمند', auth_f2_s:'جلسه‌های ۳۰ دقیقه‌ای تصویری یا صوتی، با هماهنگی از طریق پیام.', auth_f3_t:'پرداخت امن', auth_f3_s:'پرداخت فقط بعد از برگزاری جلسه.', auth_pt1:'با چند کلیک یک جلسه‌ی ۳۰ دقیقه‌ای تصویری یا صوتی رزرو کنید', auth_pt2:'قبل از جلسه به منتورتان پیام بدهید', auth_pt3:'پرداخت فقط بعد از برگزاری جلسه', auth_tab_signup:'ثبت‌نام', auth_h_login:'خوشحالیم که برگشتید', auth_h_signup:'حسابتان را بسازید', auth_sub_login:'برای مدیریت جلسه‌ها و پیام‌هایتان وارد شوید.', auth_sub_signup:'حساب رایگانتان را در کمتر از یک دقیقه بسازید.', auth_forgot_h:'بازیابی رمز عبور', auth_fine_login:'تازه وارد هستید؟ بالای صفحه «ثبت‌نام» را بزنید.', auth_fine_signup:'عضویت رایگان است و کارت بانکی لازم نیست.', pw_show:'نمایش رمز', pw_hide:'پنهان کردن رمز',
+    obst_label:'مراحل ثبت‌نام', obst_1:'حساب ساخته شد', obst_2:'پروفایل شما', obst_3:'انتشار پروفایل',
+    ob_more:'جزئیات بیشتر (اختیاری)', ob_fast_ready:'رزومه‌تان بارگذاری شده، پس همین حالا می‌توانید ثبت کنید. بخش‌های خالی را از روی رزومه کامل می‌کنیم و وقتی پروفایلتان منتشر شد به شما ایمیل می‌زنیم.',
     ob_sub:'خودتان را معرفی کنید. حدود دو دقیقه طول می‌کشد و بعداً می‌توانید همه‌چیز را تغییر دهید.', ob_s_about:'درباره‌ی شما', ob_preview:'مراجعان شما را این‌طور می‌بینند', ob_preview_note:'این کارت در صفحه‌ی پیدا کردن منتور نمایش داده می‌شود. عنوانی واضح و معرفی‌ای که خطاب به مراجع نوشته شده باشد، بیشترین رزرو را می‌گیرد.', ob_pv_name:'نام شما', ob_pv_head:'عنوان شغلی و شرکت', ob_pv_bio:'معرفی شما اینجا نمایش داده می‌شود.', ob_next:'قدم‌های بعدی', ob_next1_t:'پروفایلتان را کامل کنید', ob_next1_s:'تا منتور بداند الان کجا هستید و می‌خواهید به کجا برسید.', ob_next2_t:'منتور و زمان را انتخاب کنید', ob_next2_s:'پکیج و زمانی را که برایتان مناسب است انتخاب کنید.', ob_next3_t:'جلسه را در Workar برگزار کنید', ob_next3_s:'بعد از تأیید منتور، همین‌جا با تماس تصویری یا صوتی وصل شوید.', ob_submit_book:'ذخیره و انتخاب زمان',
     mp_s_exp:'سال سابقه‌ی کار', mp_s_reviews:'{n} نظر', mp_s_new_v:'جدید', mp_s_new_l:'به‌تازگی به Workar پیوسته', mp_s_min:'دقیقه در هر جلسه', mp_s_lang:'زبان', mp_more:'ادامه‌ی متن', mp_less:'نمایش کمتر', mp_best:'مناسب برای', mp_li_view:'پروفایل لینکدین', mp_about_n:'درباره‌ی {n}', mp_loading:'در حال بارگذاری…', filter_field:'رشته', filter_all_fields:'همه‌ی رشته‌ها', sort_by:'مرتب‌سازی', sort_best:'پیشنهادی', sort_exp:'بیشترین سابقه', sort_price_low:'قیمت: کم به زیاد', sort_price_high:'قیمت: زیاد به کم', bf_count:'{n} منتور', bf_count1:'۱ منتور', bf_more:'نمایش {n} منتور دیگر', bf_showing:'نمایش {a} از {b}', mc_book:'رزرو', trp_see:'مشاهده‌ی ترجمه', trp_orig:'مشاهده‌ی متن اصلی', trp_fail:'ترجمه الان در دسترس نیست. لطفاً دوباره امتحان کنید.', mp_best_n:'مناسب چه کسانی است', mp_f_exp:'سابقه', mp_f_rate:'امتیاز', mp_f_lang:'زبان‌ها', mp_f_sess:'جلسه‌ها', mp_f_sess_both:'{m} دقیقه، تصویری یا صوتی', mp_f_sess_video:'{m} دقیقه، تصویری', mp_f_sess_voice:'{m} دقیقه، صوتی', mp_f_tz:'منطقه‌ی زمانی', mp_h_exp_v:'{n}+ سال', mp_h_exp_l:'سابقه‌ی حرفه‌ای', mp_h_lang_v:'{n} زبان', mp_h_lang1:'{n} زبان', mp_h_fmt_v:'تصویری و صوتی', mp_h_fmt_l:'جلسه‌های خصوصی ۳۰ دقیقه‌ای', mp_h_tz_l:'منطقه‌ی زمانی منتور', mp_how_t:'رزرو چطور انجام می‌شود', mp_how1:'یک پکیج و زمان مناسب انتخاب کنید', mp_how2:'{n} درخواست شما را تأیید می‌کند', mp_how3:'جلسه آنلاین برگزار می‌شود و مبلغ فقط بعد از جلسه از کارت کسر می‌شود', mp_best_t:'این منتور برای شما مناسب است؟', mp_industries:'صنایع', setup_t:'حساب شما ساخته شد. فقط یک قدم مانده:', setup_client:'پیدا کردن منتور', setup_mentor:'منتور شدن',
     mp_back:'→ همه‌ی منتورها', mp_back_chat:'→ برگشت به گفتگو', mp_speaks:'زبان‌ها:', mp_about:'درباره', mp_help:'زمینه‌های کمک', mp_per:'برای هر جلسه‌ی ۳۰ دقیقه‌ای', mp_per_short:'/ جلسه', mp_tier_suffix:'',
@@ -4011,7 +4032,7 @@ async function quickClient(name){
   try{
     await saveProfileSafe({ role:'client', name, aiCredits:5, timezone: MY_TZ }, 'set');
     try{ const { data: fresh } = await sb.from('profiles').select('*').eq('id', uid).maybeSingle(); if(fresh) myProfile = fresh; }catch(e){}
-    clearIntent(); try{ clearFormDrafts('ob'); }catch(e){}
+    clearIntent(); try{ clearFormDrafts('ob'); obStoreClear(); }catch(e){}
     state.noProfile = false;
     toast(T('toast_client_ready'), 4000);
     nav('browse');
@@ -4036,7 +4057,7 @@ let __profUnsub = null;
 function resetAccountState(){
   if(__profUnsub){ try{ __profUnsub(); }catch(e){} __profUnsub = null; }
   uid = null; userEmail = null; myProfile = null; signupMeta = {};
-  __routedNew = false; liSynced = false;
+  __routedNew = false; liSynced = false; __obLoadedFor = null; clearTimeout(__obSaveT);
   state.noProfile = false; state.role = null; state.returnMentorId = null; state.obResume = null; state.obPhoto = null;
   try{ clearFormDrafts('ob'); clearFormDrafts('dash'); }catch(e){}
   clearIntent();
@@ -4303,6 +4324,35 @@ function draftKey(e){
 function rememberDraft(ev){
   const e = ev.target, k = draftKey(e); if(!k) return;
   __formDrafts[k] = (e.type==='checkbox' || e.type==='radio') ? { c: e.checked } : { v: e.value };
+  if(k.startsWith('ob|')) obStoreSave();
+}
+// The setup form is also kept in this browser for the signed-in account, so someone who leaves halfway
+// (closes the tab, follows the reminder email later) comes back to what they already typed and uploaded.
+// Cleared once the profile is created. Kept for 30 days.
+let __obLoadedFor = null, __obSaveT = null;
+function obStoreKey(){ return uid ? 'wk-ob-' + uid : ''; }
+function obStoreSave(){
+  if(!obStoreKey()) return;
+  clearTimeout(__obSaveT);
+  __obSaveT = setTimeout(()=>{
+    const key = obStoreKey(); if(!key) return;
+    const drafts = {}; Object.keys(__formDrafts).forEach(k=>{ if(k.startsWith('ob|')) drafts[k] = __formDrafts[k]; });
+    try{ localStorage.setItem(key, JSON.stringify({ drafts, resume: state.obResume || null, role: state.role || '', at: Date.now() })); }catch(e){}
+  }, 400);
+}
+function obStoreLoad(){
+  if(!uid || __obLoadedFor === uid) return;
+  __obLoadedFor = uid;
+  let s = null; try{ s = JSON.parse(localStorage.getItem(obStoreKey()) || 'null'); }catch(e){}
+  if(!s || Date.now() - (s.at||0) > 30*24*3600*1000) return;
+  // the role picked now wins; saved answers only fill a form for the same role
+  if(s.role && state.role && s.role !== state.role) return;
+  Object.entries(s.drafts || {}).forEach(([k, v])=>{ if(!(k in __formDrafts)) __formDrafts[k] = v; });
+  if(!state.obResume && s.resume && s.resume.path && String(s.resume.path).startsWith(uid + '/')) state.obResume = { path: s.resume.path, name: s.resume.name || '', restored: true };
+}
+function obStoreClear(){
+  clearTimeout(__obSaveT);
+  try{ if(obStoreKey()) localStorage.removeItem(obStoreKey()); }catch(e){}
 }
 document.addEventListener('input', rememberDraft, true);
 document.addEventListener('change', rememberDraft, true);
@@ -6782,9 +6832,18 @@ function obSwitching(){ return !!(myProfile && myProfile.role==='client' && !myP
 function onboardView(){
   const switching = obSwitching(), draft = isMentorDraft(myProfile);
   if(switching || draft) state.role = 'mentor';
+  obStoreLoad();
   const preset = state.role;
+  // With a resume or LinkedIn PDF uploaded, only the name and LinkedIn link are needed to submit:
+  // the mentor review completes empty fields from the document before deciding.
+  const rq = state.obResume ? '' : 'required';
+  const steps = preset==='mentor' && !switching ? `<ol class="ob-progress" aria-label="${esc(T('obst_label'))}">
+    <li class="done"><span class="ob-st-n" aria-hidden="true">✓</span>${esc(T('obst_1'))}</li>
+    <li class="on" aria-current="step"><span class="ob-st-n">2</span>${esc(T('obst_2'))}</li>
+    <li><span class="ob-st-n">3</span>${esc(T('obst_3'))}</li></ol>` : '';
   return `
   <div class="ob-head">
+    ${steps}
     <h2>${esc(T(switching ? 'bm_title' : state.returnMentorId ? 'onboard_title_book' : 'onboard_title'))}</h2>
     <p class="muted">${switching ? esc(T('bm_sub')) : state.returnMentorId ? esc(T('onboard_book_note').replace('{m}', nameOf(state.returnMentorId))) : esc(T('ob_sub'))}</p>
     ${switching ? `<button type="button" class="btn btn-ghost btn-sm" data-nav="dashboard">${esc(T('bm_cancel'))}</button>` : ''}
@@ -6809,24 +6868,30 @@ function onboardView(){
         ${obPhotoField()}
         <div class="field"><label for="ob-f-name">${esc(T('lbl_name'))}</label><input id="ob-f-name" name="name" required autocomplete="name" placeholder="${esc(T('ph_name'))}" value="${esc(liSignupName || (draft && myProfile.name) || '')}"></div>
         <div class="field-row">
-          <div class="field"><label for="ob-f-profession">${esc(T('lbl_title_m'))}</label><input id="ob-f-profession" name="profession" required placeholder="${esc(T('ph_title_m'))}"></div>
-          <div class="field"><label for="ob-f-company">${esc(T('lbl_company'))}</label><input id="ob-f-company" name="company" required placeholder="${esc(T('ph_company'))}"></div>
+          <div class="field"><label for="ob-f-profession">${esc(T('lbl_title_m'))}</label><input id="ob-f-profession" name="profession" ${rq} placeholder="${esc(T('ph_title_m'))}"></div>
+          <div class="field"><label for="ob-f-company">${esc(T('lbl_company'))}</label><input id="ob-f-company" name="company" ${rq} placeholder="${esc(T('ph_company'))}"></div>
         </div>
         <div class="field"><label for="ob-f-experience">${esc(T('lbl_experience'))}</label><input id="ob-f-experience" name="experience" type="number" min="0" placeholder="${esc(T('ph_experience'))}"></div>
-        <div class="field"><label for="ob-f-bio">${esc(T('lbl_bio_m'))}</label><textarea id="ob-f-bio" name="bio" required placeholder="${esc(T('ph_bio_m'))}"></textarea></div>
-        <div class="field"><label for="ob-f-languages">${esc(T('lbl_languages'))}</label><input id="ob-f-languages" name="languages" required placeholder="${esc(T('ph_languages'))}"></div>
-        ${obSection(2,'sec_background')}
-        <div class="field-row">
-          <div class="field"><label for="ob-f-degree">${esc(T('lbl_degree'))}</label><input id="ob-f-degree" name="degree" placeholder="${esc(T('ph_degree'))}"></div>
-          <div class="field"><label for="ob-f-university">${esc(T('lbl_university'))}</label><input id="ob-f-university" name="university" placeholder="${esc(T('ph_university'))}"></div>
-        </div>
-        <div class="field"><label for="ob-f-certifications">${esc(T('lbl_certifications'))}</label><input id="ob-f-certifications" name="certifications" placeholder="${esc(T('ph_certifications'))}"></div>
-        ${obSection(3,'sec_mentoring')}
-        <div class="field"><label>${esc(T('lbl_formats_m'))}</label>${optPills('formats', FORMAT_KEYS, 'fmt_', ['video','voice'])}</div>
-        ${obSection(4,'sec_rate')}
-        <div class="field">${rateWidget(minRate(), 0, 'name="sessionRate"')}</div>
-        ${obSection(5,'sec_links_only')}
+        <div class="field"><label for="ob-f-bio">${esc(T('lbl_bio_m'))}</label><textarea id="ob-f-bio" name="bio" ${rq} placeholder="${esc(T('ph_bio_m'))}"></textarea></div>
+        <div class="field"><label for="ob-f-languages">${esc(T('lbl_languages'))}</label><input id="ob-f-languages" name="languages" ${rq} placeholder="${esc(T('ph_languages'))}"></div>
+        ${obSection(2,'sec_links_only')}
         <div class="field"><label for="ob-f-linkedin">${esc(T('lbl_linkedin_req'))}</label><input id="ob-f-linkedin" name="linkedin" type="text" required autocomplete="url" placeholder="${esc(T('ph_linkedin'))}"><div class="hint">${esc(T('hint_linkedin_m'))}</div></div>
+        ${obSection(3,'sec_rate')}
+        <div class="field">${rateWidget(minRate(), 0, 'name="sessionRate"')}</div>
+        <details class="ob-more" ${state.obMoreOpen?'open':''}>
+          <summary>${esc(T('ob_more'))}</summary>
+          <div class="ob-more-body">
+            <h4>${esc(T('sec_background'))}</h4>
+            <div class="field-row">
+              <div class="field"><label for="ob-f-degree">${esc(T('lbl_degree'))}</label><input id="ob-f-degree" name="degree" placeholder="${esc(T('ph_degree'))}"></div>
+              <div class="field"><label for="ob-f-university">${esc(T('lbl_university'))}</label><input id="ob-f-university" name="university" placeholder="${esc(T('ph_university'))}"></div>
+            </div>
+            <div class="field"><label for="ob-f-certifications">${esc(T('lbl_certifications'))}</label><input id="ob-f-certifications" name="certifications" placeholder="${esc(T('ph_certifications'))}"></div>
+            <h4>${esc(T('sec_mentoring'))}</h4>
+            <div class="field"><label>${esc(T('lbl_formats_m'))}</label>${optPills('formats', FORMAT_KEYS, 'fmt_', ['video','voice'])}</div>
+          </div>
+        </details>
+        ${state.obResume ? `<div class="ob-fast" role="status"><span aria-hidden="true">✓</span> ${esc(T('ob_fast_ready'))}</div>` : ''}
       ` : `
         ${obSection(1,'ob_s_about')}
         ${obPhotoField()}
@@ -7567,7 +7632,7 @@ async function handleResume(where, file, existing){
     try{ a = await uploadFile(file, RESUME_EXT); }
     catch(e){ state.resumeBusy = null; render(); toast(e.message, 5000); return; }
   }
-  if(where==='ob') state.obResume = { path:a.path, name:a.name };
+  if(where==='ob'){ state.obResume = { path:a.path, name:a.name }; obStoreSave(); }
   else if(!existing){
     try{ await saveProfileSafe({ resumePath:a.path, resumeName:a.name }, 'update'); myProfile.resumePath = a.path; myProfile.resumeName = a.name; toast(T('rs_saved')); if(myProfile.role==='mentor' && myProfile.approved===false) notify('mentor_applied'); }
     catch(e){ console.error('resume save failed', e); toast(T('toast_save_fail')); state.resumeBusy = null; render(); return; }
@@ -9241,6 +9306,7 @@ function wire(){
   });
 
   wireFirstJob(); wireMentorPreview();
+  const obMore = document.querySelector('.ob-more'); if(obMore) obMore.addEventListener('toggle', ()=>{ state.obMoreOpen = obMore.open; });
   const qcf = document.getElementById('quick-client-form');
   if(qcf) qcf.addEventListener('submit', e=>{ e.preventDefault(); const b = qcf.querySelector('button[type="submit"]'); if(b) b.disabled = true; quickClient(new FormData(qcf).get('name')); });
   const dEdit = document.querySelector('.dash-edit'); if(dEdit) dEdit.addEventListener('toggle', ()=>{ state.dashEditOpen = dEdit.open; });
@@ -9258,7 +9324,7 @@ function wire(){
     const fd = new FormData(form);
     let linkedinVal = (fd.get('linkedin')||'').trim();
     if(linkedinVal && !/^https?:\/\//i.test(linkedinVal)) linkedinVal = 'https://'+linkedinVal;
-    if(state.role==='mentor' && !splitList(fd.get('languages')||'').length){
+    if(state.role==='mentor' && !state.obResume && !splitList(fd.get('languages')||'').length){
       toast(T('err_langs_req')); const li2 = form.querySelector('input[name="languages"]'); if(li2){ li2.scrollIntoView({block:'center'}); li2.focus(); } return;
     }
     if(state.role==='mentor'){
@@ -9300,7 +9366,7 @@ function wire(){
       const back = state.returnMentorId;
       if(state.obPhoto && state.obPhoto.url && !state.obPhoto.li) doc.avatarUrl = state.obPhoto.url;
       await saveProfileSafe(doc, 'set');
-      clearFormDrafts('ob');
+      clearFormDrafts('ob'); obStoreClear();
       try{ const { data: fresh } = await sb.from('profiles').select('*').eq('id', uid).maybeSingle(); if(fresh) myProfile = fresh; }catch(e){}
       if(state.role==='mentor' && myProfile) myProfile = Object.assign({}, myProfile, doc, { approved: false });
       clearIntent(); state.noProfile = false; state.obBusy = false;
@@ -10452,7 +10518,7 @@ init();
     const box = document.getElementById('ob-ai');
     if(box){ mountOb(box); if(Object.keys(ob.draft).length) fillForm(true);
       const rs = typeof state!=='undefined' && state.obResume;
-      if(rs && rs.path && ob.readFor!==rs.path && !ob.busy && !(state.resumeBusy && state.resumeBusy.where==='ob')) setTimeout(()=>readResume(rs, 'mentor', 'ob'), 0); }
+      if(rs && rs.path && !rs.restored && ob.readFor!==rs.path && !ob.busy && !(state.resumeBusy && state.resumeBusy.where==='ob')) setTimeout(()=>readResume(rs, 'mentor', 'ob'), 0); }
     mountNoteHelper();
     mountProfileCoach();
     Object.keys(fu).forEach(placeFu);
