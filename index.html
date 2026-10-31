@@ -427,6 +427,60 @@
   .tx-bundle-r{display:flex;align-items:center;gap:12px;}
   .tx-bundle-r s{color:var(--muted);font-size:13px;} .tx-bundle-r b{font-size:22px;font-weight:700;}
 
+  /* Free tools + HR page + invite box */
+  .tl-head{max-width:720px;margin:8px 0 26px;}
+  .tl-head h1{font-size:clamp(28px,4vw,40px);line-height:1.15;margin:8px 0 10px;color:var(--text);}
+  .tl-head p{margin:0;color:var(--muted);font-size:16.5px;}
+  .tl-kicker{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);background:var(--surface-2);border:1px solid var(--border);border-radius:999px;padding:4px 11px;}
+  .tl-tabs{margin-bottom:16px;}
+  .tl-panel .tl-how{margin:0 0 14px;color:var(--muted);font-size:14.5px;}
+  .tl-up{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;}
+  .tl-up .btn svg{vertical-align:-5px;}
+  .tl-file{display:inline-flex;align-items:center;gap:8px;background:var(--surface-2);border:1px solid var(--border);border-radius:999px;padding:5px 6px 5px 12px;font-size:13.5px;}
+  .tl-x{border:0;background:transparent;color:var(--muted);font-size:18px;line-height:1;cursor:pointer;padding:0 6px;}
+  .tl-or{font-size:13.5px;}
+  .tl-go{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:6px;}
+  .tl-go .muted{font-size:13px;}
+  .tl-err{color:var(--danger);font-size:14px;margin:4px 0 10px;}
+  .tl-result{display:grid;grid-template-columns:180px 1fr;gap:22px 30px;margin-top:26px;padding:28px;border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface);box-shadow:var(--shadow);}
+  .tl-score{position:relative;width:160px;height:160px;}
+  .tl-gauge{width:160px;height:160px;}
+  .tl-num{position:absolute;inset:0;display:flex;align-items:baseline;justify-content:center;padding-top:56px;color:var(--text);}
+  .tl-num b{font-size:44px;font-weight:700;letter-spacing:-.02em;}
+  .tl-num span{font-size:15px;color:var(--muted);margin-inline-start:2px;}
+  .tl-band{display:inline-block;font-weight:600;font-size:13px;color:var(--accent-ink);background:var(--accent);border-radius:999px;padding:3px 12px;}
+  .tl-verdict{font-size:17px;margin:10px 0 4px;color:var(--text);}
+  .tl-sum h4,.tl-fixes h4{font-size:14px;margin:16px 0 8px;color:var(--text);}
+  .tl-good{margin:0;padding-inline-start:20px;color:var(--muted);font-size:14.5px;}
+  .tl-fixes{grid-column:1 / -1;border-top:1px solid var(--border);padding-top:6px;}
+  .tl-fixes ol{margin:0;padding-inline-start:22px;display:grid;gap:12px;}
+  .tl-fixes li b{color:var(--text);}
+  .tl-fixes li p{margin:2px 0 0;color:var(--muted);font-size:14.5px;}
+  .tl-result .tl-cta{grid-column:1 / -1;}
+  .tl-cta{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-md);padding:20px 22px;}
+  .tl-cta b{display:block;font-size:17px;color:var(--text);}
+  .tl-cta p{margin:4px 0 0;color:var(--muted);font-size:14.5px;max-width:520px;}
+  .tl-cta-btns{display:flex;gap:10px;flex-wrap:wrap;}
+  .home-tools{padding:26px 28px;text-align:start;}
+  .home-tools b{font-size:22px;margin-top:10px;}
+  .hr-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;}
+  .hr-card{border:1px solid var(--border);border-radius:var(--radius-md);padding:22px;background:var(--surface);}
+  .hr-card h3{font-size:16.5px;margin:12px 0 6px;color:var(--text);}
+  .hr-card p{margin:0;color:var(--muted);font-size:14.5px;}
+  .hr-empty b{display:block;font-size:17px;color:var(--text);}
+  .hr-empty p{color:var(--muted);margin:6px 0 16px;}
+  .rv-verified{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:var(--accent);background:var(--surface-2);border:1px solid var(--border);border-radius:999px;padding:1px 8px;margin-inline-start:8px;}
+  .inv-box{margin-top:40px;}
+  .inv-top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;}
+  .inv-top h3{margin:0 0 4px;font-size:18px;color:var(--text);}
+  .inv-top p{margin:0;font-size:14px;}
+  .inv-count{text-align:center;min-width:90px;}
+  .inv-count b{display:block;font-size:28px;color:var(--text);line-height:1.1;}
+  .inv-count span{font-size:12px;color:var(--muted);}
+  .inv-row{display:flex;gap:10px;margin-top:14px;}
+  .inv-row input{flex:1;min-width:0;}
+  .inv-share{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+  @media (max-width:720px){ .hr-cards{grid-template-columns:1fr;} .tl-result{grid-template-columns:1fr;justify-items:start;padding:20px;} }
   .lang-wrap{position:relative;}
   .lang-menu{position:absolute;top:calc(100% + 8px);inset-inline-end:0;z-index:60;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 18px 40px -16px rgba(0,0,0,.25);padding:6px;display:grid;grid-template-columns:1fr 1fr;gap:2px;min-width:250px;}
   .lang-opt{border:none;background:none;text-align:start;padding:9px 12px;border-radius:9px;font-family:inherit;font-size:14px;color:var(--text);cursor:pointer;}
@@ -3343,6 +3397,43 @@ Object.assign(I18N.fa, {
   match_title:'هدفتان را بنویسید و در چند ثانیه منتورهای مناسب را ببینید',
   match_badge:'پیشنهاد مناسب'
 });
+// Free tools, HR page, invite links, verified reviews (English-only site)
+Object.assign(I18N.en, {
+  nav_tools:'Free Resume Score', nav_hr:'Talk to HR',
+  tl_kicker:'Free · about 30 seconds', tl_title:'See your resume the way a recruiter does',
+  tl_sub:'Get a score out of 100, what is already working, and the three changes that will make the biggest difference.',
+  tl_tab_resume:'Resume Score', tl_tab_linkedin:'LinkedIn Check',
+  tl_how_resume:'Upload your resume (PDF, Word or text) or paste it below.',
+  tl_how_linkedin:'Paste your headline, About section and recent experience. Or, on your LinkedIn profile, choose More → Save to PDF and upload the file.',
+  tl_upload_resume:'Upload resume', tl_upload_li:'Upload LinkedIn PDF', tl_replace:'Choose another file', tl_remove:'Remove file',
+  tl_or_paste:'or paste the text below',
+  tl_ph_resume:'Paste your resume here…', tl_ph_li:'Headline, About section, and your last one or two roles…',
+  tl_target:'Role you are aiming for (optional)', tl_ph_target:'e.g. Business Analyst, Project Manager',
+  tl_run:'Get my free score', tl_run_signup:'Create a free account to get your score', tl_busy:'Reviewing…',
+  tl_free_note:'Free. Your file stays private.', tl_signup_note:'Free, no card needed.',
+  tl_err:'Something went wrong. Please try again.',
+  tl_err_short_r:'Please upload your resume or paste a bit more of it.', tl_err_short_l:'Please paste your headline, About section and recent experience.',
+  tl_band1:'Needs work', tl_band2:'Good start', tl_band3:'Strong', tl_band4:'Excellent',
+  tl_strengths:'What is working', tl_fixes:'Your top 3 fixes',
+  tl_cta_t:'Want a real recruiter to look at it?', tl_cta_s:'Book a one-on-one session with an HR professional or a mentor in your field.',
+  tl_cta_hr:'Talk to HR & recruiters',
+  hr_kicker:'The other side of the table', hr_title:'Talk to HR & Recruiters',
+  hr_sub:'Hear directly from people who screen resumes and run interviews what makes them say yes, and what quietly takes an application out of the running.',
+  hr_c1_t:'The first screen', hr_c1_s:'Learn what a recruiter checks first on your resume and LinkedIn, and what makes them keep reading.',
+  hr_c2_t:'Behind the hiring process', hr_c2_s:'Applicant tracking systems, hiring managers, salary ranges: understand what happens after you click Apply.',
+  hr_c3_t:'Ask what you cannot ask at work', hr_c3_s:'Why am I not getting callbacks? Is my resume right for this role? How should I answer the salary question?',
+  hr_list_t:'HR & recruiting mentors',
+  hr_empty_t:'Our first HR and recruiting mentors are joining now.',
+  hr_empty_s:'In the meantime, run your resume through the free Resume Score. If you work in HR or recruiting, we would love to have you as a mentor.',
+  hr_try_tools:'Get my free Resume Score', hr_join:'Join as an HR mentor',
+  hr_tools_t:'Not ready to book yet?', hr_tools_s:'Start with a free Resume Score and see your resume the way a recruiter does.',
+  home_tools_t:'Free Resume Score', home_tools_s:'Upload your resume and get a score out of 100, plus the three changes that will make the biggest difference. Free, in about 30 seconds.',
+  home_tools_b:'Score my resume', home_tools_li:'Check my LinkedIn',
+  inv_title:'Invite a friend', inv_sub:'Know someone looking for their next role? Share your personal link.',
+  inv_copy:'Copy link', inv_copied:'Link copied.', inv_joined:'friends joined', inv_joined1:'friend joined',
+  inv_msg:'I have been using Workar for one-on-one career mentoring. Thought it might help you too:', inv_mail_s:'Thought this might help: Workar career mentoring',
+  rv_verified:'Verified session', rv_verified_tip:'Reviews can only be posted after a paid session that took place.'
+});
 let siteSettings = {};
 function T(key){
   const ov = siteSettings && siteSettings.text;
@@ -3363,7 +3454,7 @@ let state = { view:'home', mentorId:null, coachMode:'resume', chatMsgs:[], sendi
   authMode:'login', authError:'', authCheckEmail:false, authBusy:false,
   lang:'en', query:'', role:null, voiceMode:false, listening:false, outOfCredits:false };
 try{ const __qs = new URLSearchParams(location.search), __dr = __qs.get('r'); if(__qs.get('go')==='dispute' && __dr){ state.view = 'dispute'; state.disputeReq = __dr.slice(0,120); history.replaceState(null, '', location.pathname + location.hash); } }catch(e){}
-try{ const __qs2 = new URLSearchParams(location.search), __go = __qs2.get('go'), __m = (__qs2.get('m')||'').slice(0,80); if(__go && ['dashboard','admin','privacy','terms','refunds','conduct','browse','coach','prep','requests','messages','mentor','onboard'].includes(__go) && (__go!=='mentor' || __m)){ if(__go==='requests'){ state.ibPreferAction = true; } state.view = __go==='requests' ? 'messages' : __go; if(__go==='mentor') state.mentorId = __m; if(__go==='onboard' && ['client','mentor'].includes(__qs2.get('r'))){ state.role = __qs2.get('r'); saveIntent(state.role, ''); } } }catch(e){}
+try{ const __qs2 = new URLSearchParams(location.search), __go = __qs2.get('go'), __m = (__qs2.get('m')||'').slice(0,80); if(__go && ['dashboard','admin','privacy','terms','refunds','conduct','browse','coach','tools','hr','prep','requests','messages','mentor','onboard'].includes(__go) && (__go!=='mentor' || __m)){ if(__go==='requests'){ state.ibPreferAction = true; } state.view = __go==='requests' ? 'messages' : __go; if(__go==='mentor') state.mentorId = __m; if(__go==='onboard' && ['client','mentor'].includes(__qs2.get('r'))){ state.role = __qs2.get('r'); saveIntent(state.role, ''); } } }catch(e){}
 try{ const __mp = /^\/mentor\/([^\/?#]{1,120})\/?$/.exec(location.pathname); if(__mp && !new URLSearchParams(location.search).get('go')){ state.view = 'mentor'; state.mentorId = decodeURIComponent(__mp[1]).slice(0,80); } }catch(e){}
 if(state.view==='conduct'){ state.view = 'terms'; state.legalJump = 'conduct'; }
 if(state.view==='terms' && location.hash==='#conduct') state.legalJump = 'conduct';
@@ -3630,6 +3721,8 @@ function updateHead(){
   }
   else if(v==='browse'){ title = T('nav_browse') + sfx; desc = T('dsc_browse'); canon = SITE_ORIGIN + '/?go=browse'; }
   else if(v==='coach'){ title = T('nav_coach') + sfx; desc = T('dsc_coach'); canon = SITE_ORIGIN + '/?go=coach'; }
+  else if(v==='tools'){ title = T('tl_title') + sfx; desc = T('tl_sub'); canon = SITE_ORIGIN + '/?go=tools'; }
+  else if(v==='hr'){ title = T('hr_title') + sfx; desc = T('hr_sub'); canon = SITE_ORIGIN + '/?go=hr'; }
   else if(legal && ['privacy','terms','refunds','conduct'].includes(v)){ title = legal.title + sfx; desc = T('dsc_legal'); canon = SITE_ORIGIN + '/?go=' + (v==='conduct' ? 'terms' : v); }
   else if(v==='messages' || v==='requests') title = T('nav_inbox') + sfx;
   else if(v==='dashboard') title = T(uid ? 'nav_dash' : 'nav_login') + sfx;
@@ -4108,6 +4201,7 @@ function onSignedIn(session){
       nav('mentor', { mentorId: back, bookingOpen: myProfile.role==='client' }); return;
     }
     if(myProfile) state.noProfile = false;
+    if(myProfile) saveRefOnce();
     render(); bootMark('me');
   });
   render();
@@ -4141,7 +4235,7 @@ function onSignedIn(session){
 }
 
 async function init(){
-  initLanguage();
+  initLanguage(); captureRef();
   document.addEventListener('click', ()=>{ if(state.langMenu || state.langOpen || state.reqMenu){ state.langMenu = false; state.langOpen = false; state.reqMenu = null; render(); } });
   if(!sb){
     document.getElementById('app').innerHTML = `<div class="empty" style="margin-top:80px;">Workar isn't connected to a database yet.<br>Add your Supabase URL and key in the code to enable it.</div>`;
@@ -4270,27 +4364,16 @@ function setGoogTrans(code){
   if(parts.length>1){ document.cookie = `googtrans=${v};path=/;domain=.${parts.slice(-2).join('.')}${exp}`; document.cookie = `googtrans=${v};path=/;domain=${host}${exp}`; }
 }
 function setLanguage(code){
-  const prev = currentUiLang();
-  try{ localStorage.setItem('workar_lang', code); }catch(e){}
-  const auto = c => !['en','fa'].includes(c);
-  if(code==='fa' || code==='en'){
-    state.lang = code; setGoogTrans(null);
-    if(auto(prev)){ location.reload(); return; }
-    state.langMenu = false; render(); return;
-  }
-  state.lang = 'en'; setGoogTrans(code); location.reload();
+  // English-only: any old language button just keeps the site in English.
+  state.lang = 'en'; state.langMenu = false; state.langPrompt = false;
+  try{ localStorage.removeItem('workar_lang'); }catch(e){}
+  setGoogTrans(null); render();
 }
 function initLanguage(){
-  const code = getUiLang();
-  if(code==='fa'){ state.lang='fa'; setGoogTrans(null); return; }
-  state.lang = 'en';
-  if(code && code!=='en'){
-    setGoogTrans(code);
-    window.googleTranslateElementInit = function(){ try{ new google.translate.TranslateElement({ pageLanguage:'en', autoDisplay:false }, 'google_translate_element'); }catch(e){} };
-    const holder = document.createElement('div'); holder.id='google_translate_element'; holder.style.display='none'; document.body.appendChild(holder);
-    const sc = document.createElement('script'); sc.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit'; document.body.appendChild(sc);
-  } else { setGoogTrans(null); }
-  if(!code) state.langPrompt = true;
+  // Workar is English-only: clear any language chosen before (Persian or auto-translated) and never show the language prompt.
+  state.lang = 'en'; state.langPrompt = false;
+  try{ localStorage.removeItem('workar_lang'); }catch(e){}
+  setGoogTrans(null);
 }
 function applyDir(){
   const ui = currentUiLang();
@@ -4426,6 +4509,8 @@ function render(){
       case 'messages': body = myProfile ? messagesView() : onboardView(); break;
       case 'requests': body = myProfile ? messagesView() : onboardView(); break;
       case 'coach': body = coachView(); break;
+      case 'tools': body = toolsView(); break;
+      case 'hr': body = hrView(); break;
       case 'dispute': body = disputeView(); break;
       case 'prep': body = prepVisible() ? prepView() : homeView(); break;
       case 'prepAdmin': body = isAdmin() ? prepAdminView() : homeView(); break;
@@ -4446,6 +4531,8 @@ function render(){
   if(state.view==='messages' || state.view==='requests') wireInbox();
   if(window.WorkarAgents) WorkarAgents.afterRender();
   wireRateWidgets();
+  if(state.view==='tools') wireTools();
+  wireInvite();
   setupReveal();
   if(state.view==='admin') wireAdmin();
   if(state.view==='prep' && prepVisible()) wirePrep(); else if(prep.timer){ clearInterval(prep.timer); prep.timer=null; }
@@ -4460,7 +4547,7 @@ function navHtml(){
   const prepItem = prepVisible() ? [['prep', T('nav_prep')]] : [];
   // One fixed order for everyone, so the menu never reshuffles while the profile loads after a refresh:
   // Home · Inbox · My profile · Find a mentor · AI coach (Inbox only when signed in)
-  const items = [['home', T('nav_home')], ['@inbox'], ['dashboard', (uid || myProfile) ? T('nav_dash') : T('nav_start')], ['browse', T('nav_browse')], ...prepItem, ['coach', T('nav_coach')]];
+  const items = [['home', T('nav_home')], ['@inbox'], ['dashboard', (uid || myProfile) ? T('nav_dash') : T('nav_start')], ['browse', T('nav_browse')], ['hr', T('nav_hr')], ['tools', T('nav_tools')], ...prepItem, ['coach', T('nav_coach')]];
   const inboxItem = ()=>{ if(!uid) return ''; const n = requestsNeedingMe() + inboxUnreadTotal(), on = state.view==='requests' || state.view==='messages';
     return `<a class="navlink nav-msg ${on?'active':''}" href="${navHref('messages')}" data-nav="${requestsNeedingMe() ? 'requests' : 'messages'}"${on?' aria-current="page"':''}>${esc(T('nav_inbox'))}<span class="nav-msg-badge" style="${n?'':'display:none'}">${n}</span></a>`; };
   const link = (v, label, cls)=>`<a class="navlink ${cls||''} ${state.view===v?'active':''}" href="${navHref(v)}" data-nav="${v}"${state.view===v?' aria-current="page"':''}>${esc(label)}</a>`;
@@ -4470,7 +4557,7 @@ function navHtml(){
       ${items.map(([v,l])=>v==='@inbox' ? inboxItem() : link(v, l)).join('')}
       ${isAdmin() ? link('admin', T('adm_nav')) : ''}
       ${uid ? `<button type="button" class="navlink" id="signout-btn" title="${esc(T('signed_in_as'))} ${esc(userEmail||'')}">${esc(T('nav_signout'))}</button>` : `<a class="navlink" href="${navHref('dashboard')}" data-nav="dashboard">${esc(T('nav_login'))}</a>`}
-      <div class="lang-wrap notranslate" translate="no"><button type="button" class="lang-switch" id="lang-toggle" aria-haspopup="true" aria-expanded="${state.langMenu?'true':'false'}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-inline-end:5px;"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>${esc(langName(currentUiLang()))}</button>${state.langMenu ? langMenuHtml() : ''}</div>
+      
     </div>
   </nav>`;
 }
@@ -6449,7 +6536,7 @@ function proFooterHtml(){
     <div class="pro-foot-top">
       <div class="pro-foot-brand"><svg class="pro-foot-logo" viewBox="0 0 556 410" role="img" aria-label="Workar"><use href="#wkMark" x="125" y="0" width="306" height="294"/><use href="#wkWord" x="0" y="312" width="556" height="94"/></svg><p>${esc(T('footer_tag'))}</p>
         <a class="ig-link" href="${INSTAGRAM_URL}" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>@workarmentoring</a><a class="ig-link" href="${LINKEDIN_URL}" target="_blank" rel="noopener noreferrer" aria-label="Workar on LinkedIn"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 3a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM3 9h4v12H3V9Zm6 0h4v1.6C13.7 9.5 14.8 9 16.2 9 19 9 21 10.7 21 14v7h-4v-6.3c0-1.7-.7-2.7-2-2.7s-2 1-2 2.7V21H9V9Z"/></svg>LinkedIn</a><a class="ig-link" href="${YOUTUBE_URL}" target="_blank" rel="noopener noreferrer" aria-label="Workar on YouTube" style="margin-inline-start:18px"><svg width="16" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 7s-.2-1.5-.8-2.1C20.4 4.1 19.5 4 19 4c-2.9-.2-7-.2-7-.2s-4.1 0-7 .2c-.5 0-1.4.1-2.2.9C2.2 5.5 2 7 2 7s-.2 1.8-.2 3.5v3c0 1.7.2 3.5.2 3.5s.2 1.5.8 2.1c.8.8 1.8.8 2.4.9 1.7.2 6.8.2 6.8.2s4.1 0 7-.2c.5 0 1.4-.1 2.2-.9.6-.6.8-2.1.8-2.1s.2-1.8.2-3.5v-3C22.2 8.8 22 7 22 7ZM10 15.5v-7l6 3.5-6 3.5Z"/></svg> YouTube</a></div>
-      <div><h4>${esc(T('ft_platform'))}</h4><a data-nav="browse">${esc(T('nav_browse'))}</a><a data-nav="coach">${esc(T('nav_coach'))}</a><a data-nav="onboard" data-role="mentor">${esc(T('cta_become'))}</a></div>
+      <div><h4>${esc(T('ft_platform'))}</h4><a data-nav="browse">${esc(T('nav_browse'))}</a><a data-nav="tools">${esc(T('nav_tools'))}</a><a data-nav="hr">${esc(T('nav_hr'))}</a><a data-nav="coach">${esc(T('nav_coach'))}</a><a data-nav="onboard" data-role="mentor">${esc(T('cta_become'))}</a></div>
       <div><h4>${esc(T('ft_company'))}</h4><a data-nav="privacy">${esc(T('ft_privacy'))}</a><a data-nav="terms">${esc(T('ft_terms'))}</a><a data-nav="refunds">${esc(T('ft_refunds'))}</a></div>
     </div>
     <p class="pro-disclaimer">${esc(T('disclaimer'))}</p>
@@ -6501,6 +6588,11 @@ function homeView(){
     </div>
     <div class="tp-cta"><button type="button" class="btn btn-primary" data-nav="browse">${esc(T('rt_cta'))}</button></div>
   </section>
+
+  <section class="lp-section"><div class="tl-cta home-tools reveal" data-rk="hometools">
+    <div><span class="tl-kicker">${esc(T('tl_kicker'))}</span><b>${esc(T('home_tools_t'))}</b><p>${esc(T('home_tools_s'))}</p></div>
+    <div class="tl-cta-btns"><button class="btn btn-primary" data-nav="tools" data-tool="resume">${esc(T('home_tools_b'))}</button><button class="btn btn-outline" data-nav="tools" data-tool="linkedin">${esc(T('home_tools_li'))}</button></div>
+  </div></section>
 
 
   ${landingSections()}
@@ -6951,6 +7043,207 @@ const BROWSE_PAGE = 10;
 const FIELD_KEYS = ['Technology & Data','Business & Management','Finance & Accounting','Engineering','Healthcare & Life Sciences','Marketing & Sales','Design & Creative','Education & Research','Law & Public Sector','Operations & Trades','Other'];
 const FIELD_FA = {'Technology & Data':'فناوری و داده','Business & Management':'کسب‌وکار و مدیریت','Finance & Accounting':'مالی و حسابداری','Engineering':'مهندسی','Healthcare & Life Sciences':'سلامت و علوم زیستی','Marketing & Sales':'بازاریابی و فروش','Design & Creative':'طراحی و خلاقیت','Education & Research':'آموزش و پژوهش','Law & Public Sector':'حقوق و بخش عمومی','Operations & Trades':'عملیات و حرفه‌های فنی','Other':'سایر'};
 function fieldLabel(f){ return state.lang==='fa' ? (FIELD_FA[f]||f) : f; }
+// ---------- Free tools: Resume Score + LinkedIn Check ----------
+function toolScoreBand(n){ return n>=90 ? 'tl_band4' : n>=75 ? 'tl_band3' : n>=50 ? 'tl_band2' : 'tl_band1'; }
+function toolGauge(n){
+  const r = 52, c = 2*Math.PI*r, off = c*(1 - Math.max(0,Math.min(100,n))/100);
+  return `<svg class="tl-gauge" viewBox="0 0 128 128" aria-hidden="true"><circle cx="64" cy="64" r="${r}" fill="none" stroke="var(--surface-2)" stroke-width="12"/><circle cx="64" cy="64" r="${r}" fill="none" stroke="var(--accent)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}" transform="rotate(-90 64 64)"/></svg>`;
+}
+function toolsView(){
+  const tab = state.toolTab==='linkedin' ? 'linkedin' : 'resume';
+  const tx = (state.toolText||{})[tab] || '', file = (state.toolFile||{})[tab], res = (state.toolResult||{})[tab];
+  const busy = !!state.toolBusy, signedIn = !!uid;
+  const resultHtml = res ? `
+    <div class="tl-result reveal" data-rk="tl-res">
+      <div class="tl-score">${toolGauge(res.score)}<div class="tl-num"><b>${res.score}</b><span>/100</span></div></div>
+      <div class="tl-sum">
+        <span class="tl-band">${esc(T(toolScoreBand(res.score)))}</span>
+        ${res.verdict ? `<p class="tl-verdict">${esc(res.verdict)}</p>` : ''}
+        ${(res.strengths||[]).length ? `<h4>${esc(T('tl_strengths'))}</h4><ul class="tl-good">${res.strengths.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>` : ''}
+      </div>
+      <div class="tl-fixes">
+        <h4>${esc(T('tl_fixes'))}</h4>
+        <ol>${res.fixes.map(f=>`<li><b>${esc(f.title)}</b><p>${esc(f.detail)}</p></li>`).join('')}</ol>
+      </div>
+      <div class="tl-cta">
+        <div><b>${esc(T('tl_cta_t'))}</b><p>${esc(T('tl_cta_s'))}</p></div>
+        <div class="tl-cta-btns"><button class="btn btn-primary" data-nav="hr">${esc(T('tl_cta_hr'))}</button><button class="btn btn-outline" data-nav="browse">${esc(T('cta_browse'))}</button></div>
+      </div>
+    </div>` : '';
+  return `
+  <div class="tl-head">
+    <span class="tl-kicker">${esc(T('tl_kicker'))}</span>
+    <h1>${esc(T('tl_title'))}</h1>
+    <p>${esc(T('tl_sub'))}</p>
+  </div>
+  <div class="coach-modes tl-tabs" role="tablist">
+    <div class="mode-btn ${tab==='resume'?'active':''}" data-tool-tab="resume" role="tab" tabindex="0" aria-selected="${tab==='resume'}">${esc(T('tl_tab_resume'))}</div>
+    <div class="mode-btn ${tab==='linkedin'?'active':''}" data-tool-tab="linkedin" role="tab" tabindex="0" aria-selected="${tab==='linkedin'}">${esc(T('tl_tab_linkedin'))}</div>
+  </div>
+  <div class="panel wide tl-panel">
+    <p class="tl-how">${esc(T(tab==='resume' ? 'tl_how_resume' : 'tl_how_linkedin'))}</p>
+    <div class="tl-up">
+      <button type="button" class="btn btn-outline btn-sm" id="tl-upload" ${busy?'disabled':''}>${FILE_IC} ${esc(T(file ? 'tl_replace' : (tab==='resume' ? 'tl_upload_resume' : 'tl_upload_li')))}</button>
+      ${file ? `<span class="tl-file">${esc(file.name)} <button type="button" class="tl-x" id="tl-file-x" aria-label="${esc(T('tl_remove'))}">×</button></span>` : `<span class="muted tl-or">${esc(T('tl_or_paste'))}</span>`}
+    </div>
+    ${file ? '' : `<div class="field"><textarea id="tl-text" rows="8" placeholder="${esc(T(tab==='resume' ? 'tl_ph_resume' : 'tl_ph_li'))}">${esc(tx)}</textarea></div>`}
+    <div class="field"><label for="tl-target">${esc(T('tl_target'))}</label><input id="tl-target" placeholder="${esc(T('tl_ph_target'))}" value="${esc(state.toolTarget||'')}"></div>
+    ${state.toolErr ? `<p class="tl-err" role="alert">${esc(state.toolErr)}</p>` : ''}
+    <div class="tl-go">
+      <button type="button" class="btn btn-primary" id="tl-run" ${busy?'disabled':''}>${esc(busy ? T('tl_busy') : (signedIn ? T('tl_run') : T('tl_run_signup')))}</button>
+      <span class="muted">${esc(T(signedIn ? 'tl_free_note' : 'tl_signup_note'))}</span>
+    </div>
+  </div>
+  ${resultHtml}`;
+}
+async function runToolScore(){
+  const tab = state.toolTab==='linkedin' ? 'linkedin' : 'resume';
+  if(!uid){ nav('onboard', { role:'client' }); return; }
+  const file = (state.toolFile||{})[tab], text = ((state.toolText||{})[tab]||'').trim();
+  if(!file && text.length < 80){ state.toolErr = T(tab==='resume' ? 'tl_err_short_r' : 'tl_err_short_l'); render(); return; }
+  state.toolBusy = true; state.toolErr = ''; render();
+  try{
+    let tok = null; try{ const { data } = await sb.auth.getSession(); tok = data && data.session ? data.session.access_token : null; }catch(e){}
+    const r = await fetch('/api/agents', { method:'POST', headers:{ 'Content-Type':'application/json', Authorization:'Bearer '+(tok||'') },
+      body: JSON.stringify({ task:'career_score', kind: tab, path: file ? file.path : undefined, text: file ? undefined : text, target: state.toolTarget||'' }) });
+    const d = await r.json().catch(()=>({}));
+    if(r.status===401){ state.toolBusy = false; nav('dashboard'); return; }
+    if(!r.ok) throw new Error(d.error || T('tl_err'));
+    state.toolResult = Object.assign({}, state.toolResult, { [tab]: d });
+  }catch(e){ state.toolErr = e.message || T('tl_err'); }
+  state.toolBusy = false; render();
+  const res = document.querySelector('.tl-result'); if(res) res.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+function wireTools(){
+  document.querySelectorAll('[data-tool-tab]').forEach(b=>{
+    const go = ()=>{ state.toolTab = b.getAttribute('data-tool-tab'); state.toolErr = ''; render(); };
+    b.addEventListener('click', go); b.addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); go(); } });
+  });
+  const tab = state.toolTab==='linkedin' ? 'linkedin' : 'resume';
+  const ta = document.getElementById('tl-text');
+  if(ta) ta.addEventListener('input', ()=>{ state.toolText = Object.assign({}, state.toolText, { [tab]: ta.value }); });
+  const tg = document.getElementById('tl-target');
+  if(tg) tg.addEventListener('input', ()=>{ state.toolTarget = tg.value; });
+  const up = document.getElementById('tl-upload');
+  if(up) up.addEventListener('click', ()=>{
+    if(!uid){ nav('onboard', { role:'client' }); return; }
+    const i = document.createElement('input'); i.type = 'file'; i.accept = '.pdf,.docx,.txt'; i.style.display = 'none';
+    i.addEventListener('change', async ()=>{
+      const f = i.files && i.files[0]; i.remove(); if(!f) return;
+      state.toolBusy = true; state.toolErr = ''; render();
+      try{ const u = await uploadFile(f, RESUME_EXT); state.toolFile = Object.assign({}, state.toolFile, { [tab]: u }); }
+      catch(e){ state.toolErr = e.message || T('tl_err'); }
+      state.toolBusy = false; render();
+    });
+    document.body.appendChild(i); i.click();
+  });
+  const fx = document.getElementById('tl-file-x');
+  if(fx) fx.addEventListener('click', ()=>{ state.toolFile = Object.assign({}, state.toolFile, { [tab]: null }); render(); });
+  const run = document.getElementById('tl-run');
+  if(run) run.addEventListener('click', runToolScore);
+}
+
+// ---------- Talk to HR & Recruiters ----------
+const HR_RE = /\b(hr|h\.r\.|human resources?|recruit\w*|talent\s+(acquisition|partner|sourc\w*|lead|manager)|people\s+(partner|operations|ops|team|lead)|hiring\s+(manager|lead)|staffing|headhunt\w*)\b/i;
+function isHrMentor(p){ return !!p && p.role!=='client' && p.approved!==false && HR_RE.test([p.profession, p.headline, p.bio, p.field].join(' ')); }
+function hrView(){
+  const list = Object.entries(cache.profiles).filter(([id,p])=>isHrMentor(p))
+    .sort(([ia],[ib])=>((avgRating(ib)||0)-(avgRating(ia)||0)) || ((cache.reviews[ib]||[]).length-(cache.reviews[ia]||[]).length));
+  const ic = [
+    '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>',
+    '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M8 7.5l3 8M16 7.5l-3 8M8.5 6h7"/></svg>',
+    '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/><path d="M10 9.5a2 2 0 1 1 2.5 1.9c-.4.1-.5.4-.5.8v.3M12 14.5h.01"/></svg>'
+  ];
+  return `
+  <div class="tl-head">
+    <span class="tl-kicker">${esc(T('hr_kicker'))}</span>
+    <h1>${esc(T('hr_title'))}</h1>
+    <p>${esc(T('hr_sub'))}</p>
+  </div>
+  <div class="hr-cards">${[1,2,3].map((n,i)=>`<div class="hr-card reveal" data-rk="hr${n}" style="--d:${i*0.1}s">${ic[i]}<h3>${esc(T('hr_c'+n+'_t'))}</h3><p>${esc(T('hr_c'+n+'_s'))}</p></div>`).join('')}</div>
+  <div class="section-head" style="margin-top:36px;"><h2>${esc(T('hr_list_t'))}</h2></div>
+  ${list.length ? `<div class="grid">${list.map(([id,p])=>mentorCardHtml(id,p)).join('')}</div>` : `
+  <div class="panel wide hr-empty">
+    <b>${esc(T('hr_empty_t'))}</b>
+    <p>${esc(T('hr_empty_s'))}</p>
+    <div class="tl-cta-btns"><button class="btn btn-primary" data-nav="tools">${esc(T('hr_try_tools'))}</button><button class="btn btn-outline" data-nav="onboard" data-role="mentor">${esc(T('hr_join'))}</button></div>
+  </div>`}
+  ${list.length ? `<div class="tl-cta" style="margin-top:32px;">
+    <div><b>${esc(T('hr_tools_t'))}</b><p>${esc(T('hr_tools_s'))}</p></div>
+    <div class="tl-cta-btns"><button class="btn btn-primary" data-nav="tools">${esc(T('hr_try_tools'))}</button></div>
+  </div>` : ''}`;
+}
+
+// ---------- Invite a friend (referral links) ----------
+function captureRef(){
+  try{
+    const r = (new URLSearchParams(location.search).get('ref')||'').trim();
+    if(r && /^[A-Za-z0-9-]{8,64}$/.test(r)){ localStorage.setItem('workar_ref', r); }
+  }catch(e){}
+}
+function pendingRef(){ try{ const r = localStorage.getItem('workar_ref'); return r && r!==uid ? r : null; }catch(e){ return null; } }
+// Once, after the profile exists: record who invited this person (a person can only ever be recorded once).
+let __refTried = false;
+async function saveRefOnce(){
+  const r = pendingRef();
+  if(__refTried || !r || !sb || !uid || !myProfile) return;
+  __refTried = true;
+  try{
+    const { error } = await sb.from('referrals').insert({ invitee: uid, referrer: r });
+    if(!error || error.code==='23505' || error.code==='42501') localStorage.removeItem('workar_ref');
+  }catch(e){}
+}
+function inviteLink(){ return SITE_ORIGIN + '/?ref=' + encodeURIComponent(uid||''); }
+function inviteHtml(){
+  if(!uid) return '';
+  const n = state.refCount;
+  return `<section class="panel wide inv-box">
+    <div class="inv-top"><div><h3>${esc(T('inv_title'))}</h3><p class="muted">${esc(T('inv_sub'))}</p></div>
+      ${typeof n==='number' ? `<div class="inv-count"><b>${n}</b><span>${esc(T(n===1 ? 'inv_joined1' : 'inv_joined'))}</span></div>` : ''}</div>
+    <div class="inv-row"><input id="inv-link" readonly value="${esc(inviteLink())}" aria-label="${esc(T('inv_title'))}"><button type="button" class="btn btn-primary btn-sm" id="inv-copy">${esc(T('inv_copy'))}</button></div>
+    <div class="inv-share">
+      <a class="btn btn-ghost btn-sm" target="_blank" rel="noopener" href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(inviteLink())}">LinkedIn</a>
+      <a class="btn btn-ghost btn-sm" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(T('inv_msg') + ' ' + inviteLink())}">WhatsApp</a>
+      <a class="btn btn-ghost btn-sm" href="mailto:?subject=${encodeURIComponent(T('inv_mail_s'))}&body=${encodeURIComponent(T('inv_msg') + '\n\n' + inviteLink())}">Email</a>
+    </div>
+  </section>`;
+}
+async function loadRefCount(){
+  if(!sb || !uid || state.refLoading || typeof state.refCount==='number') return;
+  state.refLoading = true;
+  try{ const { data, error } = await sb.rpc('my_referral_count'); if(!error && typeof data==='number'){ state.refCount = data; if(state.view==='dashboard') render(); } }catch(e){}
+  state.refLoading = false;
+}
+function wireInvite(){
+  const b = document.getElementById('inv-copy');
+  if(b) b.addEventListener('click', async ()=>{
+    const v = inviteLink();
+    try{ await navigator.clipboard.writeText(v); }catch(e){ const i = document.getElementById('inv-link'); if(i){ i.select(); try{ document.execCommand('copy'); }catch(_){} } }
+    toast(T('inv_copied'), 3000);
+  });
+  if(document.getElementById('inv-link')) loadRefCount();
+}
+
+function mentorCardHtml(id, p){
+      const avg = avgRating(id);
+      const yrs = String(p.experience||'').trim(), langs = mentorLangs(p);
+      return `<div class="card mc" data-nav="mentor" data-mentor="${id}">
+        <div class="mc-top">
+          <div class="avatar mc-av">${av(id)}</div>
+          <div class="mc-who">
+            <h3 class="mc-name"><a class="mc-link" href="${mentorPath(id)}" data-nav="mentor" data-mentor="${esc(id)}" tabindex="-1">${esc(nameOf(id))}</a></h3>
+            <div class="mc-sub">${[yrs ? esc(T('mp_h_exp_v').replace('{n}', yrs)) : '', esc(tzCity(mentorTz(id)))].filter(Boolean).join('<i aria-hidden="true"></i>')}</div>
+          </div>
+          ${avg ? `<span class="mc-rate">${MP_ICONS.star}${avg.toFixed(1)}</span>` : ''}
+        </div>
+        ${(p.headline||p.profession) ? `<p class="mc-head" dir="auto">${esc(String(p.headline||p.profession).split(/\s*[|•·]\s*/).filter(Boolean).join(' · '))}</p>` : ''}
+        ${langs.length ? `<div class="mc-langs">${langs.slice(0,4).map(l=>`<span>${esc(l)}</span>`).join('')}</div>` : ''}
+        <div class="mc-foot">
+          <div class="mc-price"><b>$${mentorRate(p)}</b> <span>CAD / ${SESSION_MIN} min</span></div>
+          ${id!==uid ? `<button class="btn btn-primary btn-sm mc-book card-book" data-book="${id}">${esc(T('mc_book'))}</button>` : ''}
+        </div>
+      </div>`;
+}
 function browseView(){
   const q = (state.query||'').toLowerCase();
   const lf = Array.isArray(state.langFilter) ? state.langFilter : (state.langFilter ? [state.langFilter] : []);
@@ -7024,26 +7317,7 @@ function browseView(){
   ${allEntries.length ? `<p class="bf-count">${esc(T(allEntries.length===1?'bf_count1':'bf_count').replace('{n}', allEntries.length))}</p>` : ''}
   ${(lf.length || ff) && !entries.length ? `<p class="muted" style="margin:6px 0 18px;">${esc(T('filter_none').replace('{l}', lf.join(', ')))}</p>` : ''}
   ${entries.length ? `<div class="grid">
-    ${entries.map(([id,p])=>{
-      const avg = avgRating(id);
-      const yrs = String(p.experience||'').trim(), langs = mentorLangs(p);
-      return `<div class="card mc" data-nav="mentor" data-mentor="${id}">
-        <div class="mc-top">
-          <div class="avatar mc-av">${av(id)}</div>
-          <div class="mc-who">
-            <h3 class="mc-name"><a class="mc-link" href="${mentorPath(id)}" data-nav="mentor" data-mentor="${esc(id)}" tabindex="-1">${esc(nameOf(id))}</a></h3>
-            <div class="mc-sub">${[yrs ? esc(T('mp_h_exp_v').replace('{n}', yrs)) : '', esc(tzCity(mentorTz(id)))].filter(Boolean).join('<i aria-hidden="true"></i>')}</div>
-          </div>
-          ${avg ? `<span class="mc-rate">${MP_ICONS.star}${avg.toFixed(1)}</span>` : ''}
-        </div>
-        ${(p.headline||p.profession) ? `<p class="mc-head" dir="auto">${esc(String(p.headline||p.profession).split(/\s*[|•·]\s*/).filter(Boolean).join(' · '))}</p>` : ''}
-        ${langs.length ? `<div class="mc-langs">${langs.slice(0,4).map(l=>`<span>${esc(l)}</span>`).join('')}</div>` : ''}
-        <div class="mc-foot">
-          <div class="mc-price"><b>$${mentorRate(p)}</b> <span>CAD / ${SESSION_MIN} min</span></div>
-          ${id!==uid ? `<button class="btn btn-primary btn-sm mc-book card-book" data-book="${id}">${esc(T('mc_book'))}</button>` : ''}
-        </div>
-      </div>`;
-    }).join('')}
+    ${entries.map(([id,p])=>mentorCardHtml(id,p)).join('')}
   </div>
   ${allEntries.length > entries.length ? `<div class="bf-more"><button type="button" class="btn btn-outline" id="browse-more">${esc(T('bf_more').replace('{n}', Math.min(BROWSE_PAGE, allEntries.length-entries.length)))}</button><span>${esc(T('bf_showing').replace('{a}', entries.length).replace('{b}', allEntries.length))}</span></div>` : ''}` : `<div class="empty">${esc(T('no_match'))}</div>`}
   `;
@@ -7241,7 +7515,7 @@ function mentorView(){
         </form>` : ''}
         ${reviews.length ? reviews.slice().reverse().map(r=>`
           <div class="review">
-            <div class="review-head"><b>${esc(nameOf(r.clientId))}</b><span class="stars">${starsStr(r.rating)}</span></div>
+            <div class="review-head"><b>${esc(nameOf(r.clientId))}</b>${(cache.profiles[r.clientId]||{}).isAdmin ? '' : `<span class="rv-verified" title="${esc(T('rv_verified_tip'))}"><svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path d="M3.5 8.3l2.8 2.7L12.5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>${esc(T('rv_verified'))}</span>`}<span class="stars">${starsStr(r.rating)}</span></div>
             <div class="muted" style="font-size:14px;">${esc(r.text)}</div>
           </div>`).join('') : `<p class="muted mp-empty">${esc(T('no_reviews'))}</p>`}
       </section>` : ''}
@@ -9157,6 +9431,7 @@ function dashboardView(){
   ${reqListHtml(myReqs, isMentor)}
   ${isMentor ? (()=>{ const booked = cache.requests.filter(r=>r.clientId===uid && r.mentorId!==uid);
       return booked.length ? `<div class="section-head" style="margin-top:40px;"><h2>${esc(T('your_requests'))}</h2></div>${reqListHtml(booked, false)}` : ''; })() : ''}
+  ${inviteHtml()}
   </div>${dashSide(isMentor)}</div>`;
 }
 
@@ -9278,6 +9553,7 @@ function wire(){
       const params = {};
       if(node.hasAttribute('data-mentor')) { params.mentorId = node.getAttribute('data-mentor'); params.bookingOpen = false; params.mentorFrom = null; }
       if(node.hasAttribute('data-role')) params.role = node.getAttribute('data-role');
+      if(node.hasAttribute('data-tool')) params.toolTab = node.getAttribute('data-tool');
       if(view==='onboard') params.role = node.getAttribute('data-role') || state.role || null;
       nav(view, params);
     });
@@ -9291,7 +9567,7 @@ function wire(){
 
   const langBtn = document.getElementById('lang-toggle');
   if(langBtn) langBtn.addEventListener('click', (e)=>{ e.stopPropagation(); state.langMenu = !state.langMenu; render(); });
-  document.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click', (e)=>{ e.stopPropagation(); state.langPrompt = false; setLanguage(b.getAttribute('data-lang')); }));
+  document.querySelectorAll('button[data-lang]').forEach(b=>b.addEventListener('click', (e)=>{ e.stopPropagation(); state.langPrompt = false; setLanguage(b.getAttribute('data-lang')); }));
 
   const signoutBtn = document.getElementById('signout-btn');
   if(signoutBtn) signoutBtn.addEventListener('click', async ()=>{ await sb.auth.signOut(); });
