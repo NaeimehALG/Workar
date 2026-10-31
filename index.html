@@ -451,14 +451,23 @@
   .rs-sub{background:#E2D5C3;}
   .rs-h{height:8px;background:var(--accent-2);opacity:.75;margin-bottom:12px;}
   .rs-sec{margin-bottom:20px;}
-  .rs-hl::after{content:"";position:absolute;inset:-5px -6px;border-radius:3px;background:rgba(185,141,94,.34);transform-origin:left center;animation:rsMark .7s cubic-bezier(.2,.7,.2,1) .5s both;}
-  .rs-hl2::after{animation-delay:.95s;}
+  .rs-hl::after{content:"";position:absolute;inset:-5px -6px;border-radius:3px;background:rgba(185,141,94,.34);transform-origin:left center;animation:rsMark .7s cubic-bezier(.2,.7,.2,1) 1.5s both;}
+  .rs-hl2::after{animation-delay:1.9s;}
+  .rs-sheet{overflow:visible;}
+  .rs-scan{position:absolute;left:0;right:0;top:0;height:64px;pointer-events:none;border-radius:8px 8px 0 0;
+    background:linear-gradient(180deg,rgba(185,141,94,0) 0%,rgba(185,141,94,.16) 70%,rgba(139,106,76,.0) 100%);border-bottom:2px solid rgba(139,106,76,.55);
+    animation:rsScan 1.35s cubic-bezier(.45,0,.3,1) .15s both;}
+  @keyframes rsScan{0%{transform:translateY(-10px);opacity:0;}12%{opacity:1;}85%{opacity:1;}100%{transform:translateY(calc(var(--sh,380px) - 64px));opacity:0;}}
+  .rs-wrap.done .rs-sheet *,.rs-wrap.done .rs-sheet *::after{animation:none !important;}
+  .rs-wrap.done .rs-scan{display:none;}
+  .rs-wrap:not(.go) .rs-sheet *,.rs-wrap:not(.go) .rs-sheet *::after{animation-play-state:paused !important;}
   .rs-note{position:absolute;right:-30px;font-size:12.5px;font-weight:600;color:var(--accent);background:#fff;border:1px solid var(--border);border-radius:999px;padding:4px 11px;white-space:nowrap;
     box-shadow:0 6px 16px -8px rgba(90,66,49,.3);transform:rotate(2.2deg);animation:rsIn .45s ease-out both;}
-  .rs-note1{top:43%;animation-delay:1.25s;}
-  .rs-note2{top:63%;animation-delay:1.45s;}
+  .rs-note1{top:43%;animation-delay:2.2s;}
+  .rs-note2{top:63%;animation-delay:2.45s;}
   .rs-badge{position:absolute;top:-26px;right:-26px;width:92px;height:92px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:baseline;justify-content:center;padding-top:26px;
-    box-shadow:0 10px 24px -8px rgba(90,66,49,.45);transform:rotate(2.2deg);animation:rsIn .45s ease-out 1.65s both;}
+    box-shadow:0 10px 24px -8px rgba(90,66,49,.45);transform:rotate(2.2deg);animation:rsPop .55s cubic-bezier(.3,1.5,.5,1) 2.7s both;}
+  @keyframes rsPop{from{opacity:0;scale:.6;}to{opacity:1;scale:1;}}
   .rs-badge b{font-size:32px;line-height:1;letter-spacing:-.03em;}
   .rs-badge span{font-size:12px;opacity:.85;margin-left:1px;}
   .rs-wrap.rs-sm{width:240px;}
@@ -542,6 +551,29 @@
   #hr-list .tl-band-dark{margin-top:32px;}
   #hr-list .hr-first{margin-top:0;}
 
+  /* home: dark feature band for the free score */
+  .sb-band{position:relative;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:56px;align-items:center;margin:8px 0 72px;padding:64px 64px 64px 60px;
+    background:#5A4231;border-radius:32px;color:#F7F1E9;overflow:hidden;isolation:isolate;}
+  .sb-band::before{content:"";position:absolute;width:620px;height:620px;right:-140px;top:-160px;border-radius:50%;z-index:-1;
+    background:radial-gradient(closest-side,rgba(185,141,94,.38),rgba(185,141,94,0));}
+  .sb-band::after{content:"";position:absolute;inset:0;z-index:-1;opacity:.5;
+    background-image:radial-gradient(rgba(247,241,233,.08) 1px,transparent 1px);background-size:22px 22px;-webkit-mask-image:linear-gradient(90deg,#000,transparent 70%);mask-image:linear-gradient(90deg,#000,transparent 70%);}
+  .sb-note{margin:0 0 14px;font-size:14px;font-weight:600;color:#D4B48C;}
+  .sb-band h2{margin:0;font-size:clamp(32px,4.4vw,50px);line-height:1.06;letter-spacing:-.03em !important;color:#fff;max-width:13ch;}
+  .sb-lede{margin:18px 0 28px;font-size:17px;line-height:1.6;color:#E9DCCB;max-width:44ch;}
+  .sb-facts{list-style:none;margin:36px 0 0;padding:24px 0 0;border-top:1px solid rgba(247,241,233,.16);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;}
+  .sb-facts b{display:block;font-size:28px;line-height:1;font-weight:700;letter-spacing:-.02em;color:#fff;}
+  .sb-facts span{display:block;margin-top:8px;font-size:13px;line-height:1.45;color:#D9C8B4;}
+  .sb-art{display:flex;justify-content:center;padding:28px 34px 10px 0;}
+  .sb-art .rs-wrap::before{background:#7A5C44;border-color:rgba(247,241,233,.12);}
+  .sb-art .rs-sheet{border-color:transparent;box-shadow:0 30px 60px -20px rgba(0,0,0,.45),0 10px 24px -10px rgba(0,0,0,.3);}
+  .sb-art .rs-badge{background:#D4B48C;color:#4A3526;box-shadow:0 12px 30px -8px rgba(0,0,0,.5);}
+  .sb-band .tl-btn-light:focus-visible,.sb-band .tl-btn-ghost:focus-visible{outline:2px solid #F7F1E9;outline-offset:2px;}
+  @media (max-width:860px){
+    .sb-band{grid-template-columns:1fr;gap:40px;padding:44px 26px 48px;border-radius:24px;}
+    .sb-art{order:-1;padding:24px 30px 0 0;}
+  }
+  @media (max-width:520px){ .sb-facts{gap:12px;} .sb-facts b{font-size:22px;} .sb-facts span{font-size:12px;} }
   /* home: free score */
   .home-tools{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:48px;align-items:center;background:var(--surface-2);border:1px solid var(--border);border-radius:28px;padding:52px 56px;margin:24px 0 64px;}
   .ht-copy h2{margin:0;font-size:clamp(26px,3.4vw,36px);line-height:1.12;color:#5A4231;max-width:16ch;}
@@ -565,10 +597,9 @@
   .nav-free:hover{border-color:var(--accent-2);color:#5A4231;}
   .nav-free.active{background:var(--surface-2);border-color:var(--accent-2);color:#5A4231;}
   .nav-free .nf-tag{margin-inline-end:2px;}
-  .hs-mob{display:none;}
   .nf-tag{font-size:11px;font-weight:700;line-height:1;color:#fff;background:var(--accent);border-radius:999px;padding:4px 7px;}
   /* home hero: score card */
-  .hs-card{position:absolute;left:-64px;bottom:40px;z-index:2;display:flex;align-items:center;gap:14px;width:290px;text-align:start;font:inherit;cursor:pointer;
+  .hs-card{position:relative;display:flex;align-items:center;gap:14px;width:100%;max-width:380px;margin:26px 0 4px;text-align:start;font:inherit;cursor:pointer;
     background:#fff;border:1px solid var(--border);border-radius:18px;padding:14px 18px 14px 14px;color:var(--text);
     box-shadow:0 2px 4px rgba(90,66,49,.05),0 18px 40px -14px rgba(90,66,49,.32);animation:rsIn .5s ease-out .6s both;transition:transform .15s,box-shadow .15s;}
   .hs-card:hover{transform:translateY(-2px);box-shadow:0 2px 4px rgba(90,66,49,.05),0 24px 44px -14px rgba(90,66,49,.38);}
@@ -605,11 +636,10 @@
   @media (max-width:860px){
     .tl-hero-work{grid-template-columns:1fr;gap:28px;}
     .tl-how-sec{grid-template-columns:1fr;gap:36px;padding:36px 24px;}
-    .hs-desk{display:none;}
-    .hs-mob{display:flex;position:static;width:100%;max-width:380px;margin:22px auto 6px;}
+    .hs-mob{margin:22px auto 6px;}
   }
   @media (prefers-reduced-motion: reduce){ .hs-card,.hs-g .tl-arc{animation:none !important;} }
-  @media (prefers-reduced-motion: reduce){ .rs-hl::after,.rs-note,.rs-badge,.hr-bub,.tl-arc{animation:none !important;} }
+  @media (prefers-reduced-motion: reduce){ .rs-hl::after,.rs-note,.rs-badge,.hr-bub,.tl-arc,.rs-scan{animation:none !important;} .rs-scan{display:none;} }
   @media (max-width:860px){
     .tl-hero,.home-tools{grid-template-columns:1fr;gap:44px;}
     .tl-hero{padding-bottom:40px;}
@@ -3562,6 +3592,7 @@ Object.assign(I18N.en, {
   hr_see:'See HR mentors', hr_cover_t:'What a session with HR can cover',
   home_tools_note:'Free, about 30 seconds',
   nf_tag:'Free', nf_label:'Resume Score',
+  sb_f1:'point score, the way a recruiter reads it', sb_f2:'ranked fixes with example rewrites', sb_f3:'from upload to your score',
   hs_t:'What is your resume score?', hs_s:'Find out in 30 seconds, free.', hs_b:'Get my score',
   tl_how_t:'How it works',
   tl_s1_t:'Upload your resume', tl_s1_s:'Or your LinkedIn profile. PDF, Word, or pasted text all work.',
@@ -4699,6 +4730,7 @@ function render(){
   if(state.view==='messages' || state.view==='requests') wireInbox();
   if(window.WorkarAgents) WorkarAgents.afterRender();
   wireRateWidgets();
+  wireSheets();
   if(state.view==='tools') wireTools();
   if(state.view==='hr') wireHr();
   wireInvite();
@@ -6748,9 +6780,23 @@ function homeView(){
     ${heroTrustHtml()}
     </div>
     <div class="ar-hero-wrap">${ART.hero()}
-      ${heroScoreCard('hs-desk')}
     </div>
   </div>
+  <section class="sb-band" aria-label="${esc(T('nf_label'))}">
+    <div class="sb-copy">
+      <p class="sb-note">${esc(T('home_tools_note'))}</p>
+      <h2>${esc(T('tl_title'))}</h2>
+      <p class="sb-lede">${esc(T('home_tools_s'))}</p>
+      <div class="tl-cta-btns"><button class="btn tl-btn-light" data-nav="tools" data-tool="resume">${esc(T('home_tools_b'))}</button><button class="btn tl-btn-ghost" data-nav="tools" data-tool="linkedin">${esc(T('home_tools_li'))}</button></div>
+      <ul class="sb-facts">
+        <li><b>100</b><span>${esc(T('sb_f1'))}</span></li>
+        <li><b>3</b><span>${esc(T('sb_f2'))}</span></li>
+        <li><b>30s</b><span>${esc(T('sb_f3'))}</span></li>
+      </ul>
+    </div>
+    <div class="sb-art">${recruiterSheetHtml(false, 'home')}</div>
+  </section>
+
   <!-- What we help with: simple topic list in the site's own section style. -->
   <section class="lp-section tp">
     <h2 class="lp-title">${esc(T('rt_title_a'))}</h2>
@@ -6767,15 +6813,6 @@ function homeView(){
     <div class="tp-cta"><button type="button" class="btn btn-primary" data-nav="browse">${esc(T('rt_cta'))}</button></div>
   </section>
 
-  <section class="home-tools">
-    <div class="ht-copy">
-      <p class="tl-note">${esc(T('home_tools_note'))}</p>
-      <h2>${esc(T('tl_title'))}</h2>
-      <p>${esc(T('home_tools_s'))}</p>
-      <div class="tl-cta-btns"><button class="btn btn-primary" data-nav="tools" data-tool="resume">${esc(T('home_tools_b'))}</button><button class="btn btn-outline" data-nav="tools" data-tool="linkedin">${esc(T('home_tools_li'))}</button></div>
-    </div>
-    <div class="ht-art">${recruiterSheetHtml(true)}</div>
-  </section>
 
 
   ${landingSections()}
@@ -7233,17 +7270,37 @@ function toolGauge(n, size){
   return `<svg class="tl-gauge" viewBox="0 0 128 128" width="${size||160}" height="${size||160}" aria-hidden="true"><circle cx="64" cy="64" r="${r}" fill="none" stroke="var(--border)" stroke-width="9"/><circle class="tl-arc" cx="64" cy="64" r="${r}" fill="none" stroke="var(--accent)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}" style="--c:${c.toFixed(1)}" transform="rotate(-90 64 64)"/></svg>`;
 }
 // A resume page as a recruiter marks it up: highlighted results, a margin note, the score pinned on top.
-function recruiterSheetHtml(small){
+function recruiterSheetHtml(small, key){
   const L = (w, cls)=>`<i class="rs-l ${cls||''}" style="width:${w}%"></i>`;
-  return `<div class="rs-wrap ${small?'rs-sm':''}" aria-hidden="true"><div class="rs-sheet">
+  return `<div class="rs-wrap ${small?'rs-sm':''} ${(window.__rsPlayed||{})[key||'x'] ? 'go done' : ''}" data-k="${key||'x'}" aria-hidden="true"><div class="rs-sheet">
     <div class="rs-top"><span class="rs-av"></span><div>${L(58,'rs-name')}${L(40,'rs-sub')}</div></div>
     <div class="rs-sec">${L(26,'rs-h')}${L(94)}${L(88,'rs-hl')}${L(72)}</div>
     <div class="rs-sec">${L(32,'rs-h')}${L(90)}${L(84)}${L(66,'rs-hl rs-hl2')}${L(80)}</div>
     <div class="rs-sec">${L(22,'rs-h')}${L(70)}${L(54)}</div>
     <span class="rs-note rs-note1">${esc(T('rs_note1'))}</span>
     <span class="rs-note rs-note2">${esc(T('rs_note2'))}</span>
-    <div class="rs-badge"><b>78</b><span>/100</span></div>
+    <i class="rs-scan"></i>
+    <div class="rs-badge"><b data-to="78">78</b><span>/100</span></div>
   </div></div>`;
+}
+function wireSheets(){
+  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const play = w=>{
+    if(w.classList.contains('go')) return;
+    (window.__rsPlayed = window.__rsPlayed || {})[w.getAttribute('data-k')||'x'] = true; // a later re-render shows the finished page instead of replaying
+    const sh = w.querySelector('.rs-sheet'); if(sh) w.style.setProperty('--sh', sh.offsetHeight + 'px');
+    w.classList.add('go');
+    const b = w.querySelector('.rs-badge b[data-to]'); if(!b || reduce) return;
+    const to = Number(b.getAttribute('data-to'))||0; b.textContent = '0';
+    setTimeout(()=>{ const t0 = performance.now(), dur = 1100;
+      const step = now=>{ const k = Math.min(1,(now-t0)/dur); b.textContent = Math.round(to*(1-Math.pow(1-k,3))); if(k<1) requestAnimationFrame(step); };
+      requestAnimationFrame(step); }, 2750);
+  };
+  const ws = document.querySelectorAll('.rs-wrap:not(.go)');
+  if(!ws.length) return;
+  if(reduce || !('IntersectionObserver' in window)){ ws.forEach(play); return; }
+  const io = new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ play(e.target); io.unobserve(e.target); } }), { threshold:.45 });
+  ws.forEach(w=>io.observe(w));
 }
 function toolsView(){
   const tab = state.toolTab==='linkedin' ? 'linkedin' : 'resume';
@@ -7308,7 +7365,7 @@ function toolsView(){
   ${resultHtml}
   ${res ? '' : `
   <section class="tl-how-sec">
-    <div class="tl-how-art">${recruiterSheetHtml()}</div>
+    <div class="tl-how-art">${recruiterSheetHtml(false, 'tools')}</div>
     <div class="tl-how-copy">
       <h2>${esc(T('tl_how_t'))}</h2>
       <ol class="tl-steps">${[1,2,3].map(n=>`<li><span class="tl-fx-n">${n}</span><div><b>${esc(T('tl_s'+n+'_t'))}</b><p>${esc(T('tl_s'+n+'_s'))}</p></div></li>`).join('')}</ol>
