@@ -2976,8 +2976,16 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .lx-head-left{text-align:start;margin:0 0 40px;max-width:560px;}
   /* How it works: three columns on a thin line */
   .lx-how{padding:96px 0 0;}
-  .lx-how-row+.lx-how-row{margin-top:44px;}
-  .lx-how-lab{margin:0 0 18px;font-size:12.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#A07D56;}
+  .lx-seg{display:flex;width:max-content;max-width:100%;margin:-12px auto 44px;padding:5px;border-radius:999px;background:#F6EFE6;border:1px solid var(--line);}
+  .lx-seg button{border:0;background:transparent;font:inherit;font-size:14.5px;font-weight:600;color:var(--body);padding:11px 24px;border-radius:999px;cursor:pointer;transition:background .25s ease,color .25s ease,box-shadow .25s ease;white-space:nowrap;}
+  .lx-seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(90,66,49,.08),0 6px 16px -8px rgba(90,66,49,.35);}
+  .lx-seg button:focus-visible{outline:2px solid var(--brand);outline-offset:2px;}
+  .lx-how-row[hidden]{display:none;}
+  .lx-how-row li{animation:howIn .5s ease both;animation-delay:calc(var(--i) * 70ms);}
+  @keyframes howIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+  @media (prefers-reduced-motion:reduce){ .lx-how-row li{animation:none;} }
+  .lx-how-cta{display:flex;justify-content:center;margin-top:40px;}
+  @media (max-width:520px){ .lx-seg button{padding:10px 14px;font-size:13.5px;} }
   .lx-how-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px;counter-reset:s;}
   .lx-how-steps li{position:relative;padding-top:28px;border-top:1px solid #D9C6AE;}
   .lx-how-steps li::before{content:"";position:absolute;top:-4px;inset-inline-start:0;width:7px;height:7px;border-radius:50%;background:var(--brand);}
@@ -4094,7 +4102,7 @@ Object.assign(I18N.en, {
   hm_f2_t:'Pick a time', hm_f2_s:'Book a 30-minute session in your own time zone. Your card is charged only after the session takes place.',
   hm_f3_t:'Meet on video', hm_f3_s:'Join a private video call from any device and leave with clear, practical next steps.',
   hm_how_s:'Simple for the people asking for advice, and for the professionals sharing it.',
-  hm_how_c:'If you are looking for advice', hm_how_m:'If you are a professional',
+  hm_how_tc:'I am looking for advice', hm_how_tm:'I am a professional',
   hm_m_f1_t:'Sign up and create your profile', hm_m_f1_s:'Sign up yourself in a few minutes, add your experience and LinkedIn, and set your own rate.',
   hm_m_f2_t:'Choose your hours', hm_m_f2_s:'Open the times that suit you. Clients book 30-minute sessions straight into your calendar.',
   hm_m_f3_t:'Meet and get paid', hm_m_f3_s:'Hold the session by video and get paid for every session you complete.', hm_more_go:'Explore', fq_sub:'Everything you need to know before your first session.',
@@ -7309,6 +7317,11 @@ const LX_IC = {
   coach:`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>`,
   ai:`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="12" rx="3"/><path d="M9 21h6M12 17v4M9 11h.01M15 11h.01"/></svg>`
 };
+document.addEventListener('click', e=>{ const b = e.target.closest && e.target.closest('[data-how]'); if(!b) return;
+  state.howFor = b.getAttribute('data-how')==='pro' ? 'pro' : 'client';
+  document.querySelectorAll('[data-how]').forEach(x=>{ const on = x===b; x.classList.toggle('on', on); x.setAttribute('aria-selected', on); });
+  document.querySelectorAll('[data-how-row]').forEach(r=>{ r.hidden = r.getAttribute('data-how-row') !== state.howFor; });
+});
 function goSearch(q){ q = String(q||'').trim(); state.query = q; state.hrOnly = false; state.browseShown = 0; nav('browse'); window.scrollTo(0,0); }
 document.addEventListener('submit', e=>{ if(e.target && e.target.id==='ts-form'){ e.preventDefault(); const i = document.getElementById('ts-q'); if(i && !i.value.trim()){ i.focus(); return; } goSearch(i ? i.value : ''); } });
 document.addEventListener('click', e=>{ const c = e.target.closest && e.target.closest('[data-ts-q]'); if(c) goSearch(c.getAttribute('data-ts-q')); });
@@ -7354,9 +7367,13 @@ function homeView(){
 
   <section class="lx-how">
     <div class="lx-head"><h2>${esc(T('hiw2_title'))}</h2><p>${esc(T('hm_how_s'))}</p></div>
-    ${[['hm_how_c','hm_f'],['hm_how_m','hm_m_f']].map(([lab,k])=>`<div class="lx-how-row">
-      <p class="lx-how-lab">${esc(T(lab))}</p>
-      <ol class="lx-how-steps">${[1,2,3].map(n=>`<li><span class="lx-how-n">0${n}</span><b>${esc(T(k+n+'_t'))}</b><p>${esc(T(k+n+'_s'))}</p></li>`).join('')}</ol>
+    <div class="lx-seg" role="tablist" aria-label="${esc(T('hiw2_title'))}">
+      <button type="button" role="tab" class="${state.howFor==='pro'?'':'on'}" aria-selected="${state.howFor!=='pro'}" data-how="client">${esc(T('hm_how_tc'))}</button>
+      <button type="button" role="tab" class="${state.howFor==='pro'?'on':''}" aria-selected="${state.howFor==='pro'}" data-how="pro">${esc(T('hm_how_tm'))}</button>
+    </div>
+    ${[['client','hm_f','browse','cta_browse',''],['pro','hm_m_f','onboard','ts_pro_b','mentor']].map(([who,k,v,cta,role])=>`<div class="lx-how-row" data-how-row="${who}" ${(state.howFor==='pro') === (who==='pro') ? '' : 'hidden'}>
+      <ol class="lx-how-steps">${[1,2,3].map(n=>`<li style="--i:${n}"><span class="lx-how-n">0${n}</span><b>${esc(T(k+n+'_t'))}</b><p>${esc(T(k+n+'_s'))}</p></li>`).join('')}</ol>
+      <div class="lx-how-cta"><button class="btn btn-primary lx-b" data-nav="${v}"${role ? ` data-role="${role}"` : ''}>${esc(T(cta))}</button></div>
     </div>`).join('')}
   </section>
 
