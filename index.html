@@ -641,7 +641,7 @@
   .hm-end-m{background:linear-gradient(135deg,#6B4F3A 0%,#8B6A4C 100%);color:#F7F1E9;}
   .hm-end-k{margin:0 0 12px;font-size:14px;font-weight:600;color:var(--accent-2);}
   .hm-end-m .hm-end-k{color:#EDD6B3;}
-  .hm-end h2{margin:0;font-size:clamp(24px,2.8vw,32px);line-height:1.15;color:#5A4231;max-width:16ch;}
+  .hm-end h2{margin:0;font-size:clamp(24px,2.6vw,30px);line-height:1.18;color:#5A4231;max-width:20ch;}
   .hm-end-m h2{color:#fff;}
   .hm-end p:not(.hm-end-k){margin:14px 0 26px;font-size:15.5px;line-height:1.6;color:var(--muted);max-width:42ch;}
   .hm-end .btn{margin-top:auto;}
@@ -2807,6 +2807,24 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   html[dir="rtl"] .bf-sel select{padding:11px 14px 11px 36px;background-position:left 14px center;}
   .bf-sel select:hover{border-color:var(--accent-2);}
   @media (max-width:560px){.bf-sel{flex-wrap:wrap;} .bf-sel select{min-width:0;flex:1;}}
+
+  /* Home: one rhythm. Every block after the hero sits the same distance apart. */
+  #app[data-view="home"] .hm-hero{padding:40px 0 0;}
+  #app[data-view="home"] .hm-how,
+  #app[data-view="home"] .sb-band,
+  #app[data-view="home"] .hm-sec,
+  #app[data-view="home"] .hm-faq,
+  #app[data-view="home"] .hm-end{margin:120px 0 0;padding-top:0;padding-bottom:0;}
+  #app[data-view="home"] .sb-band{padding:64px 64px 64px 60px;}
+  #app[data-view="home"] .hm-end{margin-bottom:96px;}
+  #app[data-view="home"] .hm-head{margin-bottom:40px;}
+  #app[data-view="home"] .hm-faq{gap:64px;}
+  @media (max-width:860px){
+    #app[data-view="home"] .hm-how,#app[data-view="home"] .sb-band,#app[data-view="home"] .hm-sec,#app[data-view="home"] .hm-faq,#app[data-view="home"] .hm-end{margin-top:80px;}
+    #app[data-view="home"] .sb-band{padding:44px 26px 48px;}
+    #app[data-view="home"] .hm-end{margin-bottom:56px;}
+    #app[data-view="home"] .hm-faq{gap:24px;}
+  }
 </style>
 </head>
 <body>
@@ -3243,8 +3261,8 @@ const I18N = {
     qs_t2:"Pay only after a mentor accepts",
     qs_t3:"Private video call for every session",
     fq_kicker:"Your questions",
-    fq_title_a:"Clarity first,",
-    fq_title_b:"then the first step.",
+    fq_title_a:"Questions,",
+    fq_title_b:"answered",
     fq_sub:"If your question is not here, tap the Help button at any time for answers about booking, payments and refunds, or to reach our team.",
     fq_q1:"How does booking work?",
     fq_a1:"Choose a mentor, pick a package and a free time in their calendar, and send your request. Once the mentor accepts, you confirm with your card and you both receive a private call link and a calendar invite. Your card is only charged after the session takes place.",
@@ -7035,17 +7053,6 @@ function homeView(){
     <div class="sb-art">${recruiterSheetHtml(false, 'home')}</div>
   </section>
 
-  <section class="hm-sec">
-    <header class="hm-head"><h2>${esc(T('hm_help_t'))}</h2><p>${esc(T('hm_help_s'))}</p></header>
-    <div class="hm-topics">
-      ${ROUTES.map((r,i)=>`<button type="button" class="hm-topic" data-route-q="${esc(T(r.q))}">
-        <span class="hm-topic-art">${ART.spots[i]()}</span>
-        <b>${esc(T(r.title))}</b>
-        <span class="hm-topic-line">${esc(T(r.line))}</span>
-        <span class="hm-topic-go">${esc(T('hm_topic_go'))}</span>
-      </button>`).join('')}
-    </div>
-  </section>
 
   <section class="hm-sec">
     <header class="hm-head"><h2>${esc(T('hm_more_t'))}</h2><p>${esc(T('hm_more_s'))}</p></header>
@@ -7054,9 +7061,9 @@ function homeView(){
     </div>
   </section>
 
-  <section class="fq hm-sec" data-rk="fq">
+  <section class="fq hm-faq" data-rk="fq">
     <div class="fq-head"><h2 class="lp-title">${esc(T('fq_title_a'))} ${esc(T('fq_title_b'))}</h2><p class="lp-sub">${esc(T('fq_sub'))}</p></div>
-    <div class="fq-list">${[1,2,3,4,5,6].map(n=>`<details class="fq-item"><summary>${esc(T('fq_q'+n))}</summary><p>${esc(T('fq_a'+n))}</p></details>`).join('')}</div>
+    <div class="fq-list">${[1,2,3,5].map(n=>`<details class="fq-item"><summary>${esc(T('fq_q'+n))}</summary><p>${esc(T('fq_a'+n))}</p></details>`).join('')}</div>
   </section>
 
   <section class="hm-end">
