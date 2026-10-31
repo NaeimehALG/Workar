@@ -2061,6 +2061,8 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
     opacity:0;pointer-events:none;z-index:3;background:none !important;box-shadow:none !important;border:0 !important;border-radius:0 !important;padding:0 !important;margin:0 !important;overflow:visible !important;filter:none !important;animation:none !important;}
   /* a thin white outline over the brown shapes makes every line finer and keeps the edges crisp */
   .wkv .wkv-logo svg{display:block;width:100% !important;height:auto !important;overflow:visible;fill:#8B6A4C;stroke:#fff;stroke-width:1.4px;stroke-linejoin:round;box-shadow:none !important;border-radius:0 !important;background:none !important;}
+  @font-face{font-family:'Workar Cinzel';src:url('/fonts/cinzel-400.woff2') format('woff2');font-weight:400;font-display:block;}
+  .wkv .wkv-logo text{font-family:'Workar Cinzel',Georgia,serif;font-size:98px;letter-spacing:11px;fill:#8B6A4C;stroke:none;}
   .wkv .wkv-logo.on,#app .lx-film .wkv .wkv-logo.on{opacity:1;transition:opacity .8s ease;}
   .wkv-video.on{opacity:1;}
   @media (max-width:760px){.hero-arch .ar-hero-wrap{max-width:300px;}}
@@ -11676,12 +11678,12 @@ init();
     v.className = 'wkv-video'; v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true;
     v.setAttribute('muted',''); v.setAttribute('playsinline',''); v.setAttribute('preload','auto'); v.setAttribute('aria-hidden','true');
     v.poster = '/hero-v10-poster.jpg';
-    v.innerHTML = '<source src="/hero-v10.webm?v=white-end-4" type="video/webm"><source src="/hero-v10.mp4?v=white-end-4" type="video/mp4">';
+    v.innerHTML = '<source src="/hero-v10.webm?v=white-end-5" type="video/webm"><source src="/hero-v10.mp4?v=white-end-5" type="video/mp4">';
     v.addEventListener('playing', ()=>v.classList.add('on'));
     // The film ends on white; the logo is drawn on top as a vector so it stays perfectly sharp at any size.
     const logo = document.createElement('div');
     logo.className = 'wkv-logo'; logo.setAttribute('aria-hidden', 'true');
-    logo.innerHTML = '<svg viewBox="0 0 556 410"><use href="#wkMark" x="125" y="0" width="306" height="294"/><use href="#wkWord" x="0" y="312" width="556" height="94"/></svg>';
+    logo.innerHTML = '<svg viewBox="0 0 556 410"><use href="#wkMark" x="125" y="0" width="306" height="294"/><text x="278" y="396" text-anchor="middle">WORKAR</text></svg>';
     const LOGO_AT = 8.05;
     (function tick(){ const show = v.currentTime >= LOGO_AT && !v.paused; if(show !== logo.classList.contains('on')) logo.classList.toggle('on', show); requestAnimationFrame(tick); })();
     function mount(){
