@@ -498,6 +498,15 @@
   .tl-pk-ic{width:42px;height:42px;border-radius:10px;background:var(--surface-2);color:var(--accent);display:grid;place-items:center;flex:none;}
   .tl-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:end;margin-top:22px;}
   .tl-target{margin:0;}
+  .tl-li{margin:0 0 16px;}
+  .tl-li-row{display:flex;gap:8px;}
+  .tl-li-row input{flex:1;min-width:0;}
+  .tl-li-row .btn{flex:none;white-space:nowrap;}
+  .tl-li-steps{list-style:none;margin:12px 0 0;padding:14px 16px;border-radius:12px;background:#FCF9F5;border:1px solid var(--border);display:grid;gap:8px;}
+  .tl-li-steps li{display:grid;grid-template-columns:24px minmax(0,1fr);gap:8px;font-size:14px;color:var(--text);align-items:start;}
+  .tl-li-steps .tl-fx-n{width:22px;height:22px;font-size:12px;}
+  .tl-li-why{margin:8px 0 0;font-size:12.5px;color:var(--muted);}
+  @media (max-width:520px){ .tl-li-row{flex-direction:column;} }
   .tl-run{height:46px;padding:0 24px;}
   .tl-spin{width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;animation:tlSpin .8s linear infinite;}
   @keyframes tlSpin{to{transform:rotate(360deg);}}
@@ -526,6 +535,19 @@
   .tl-fx-n{width:30px;height:30px;border-radius:50%;background:var(--surface-2);color:var(--accent);font-weight:700;font-size:14px;display:grid;place-items:center;}
   .tl-fixes li b{display:block;font-size:15.5px;color:#5A4231;}
   .tl-fixes li p{margin:4px 0 0;font-size:14.5px;line-height:1.6;color:var(--muted);max-width:68ch;}
+  .tl-imp{margin-top:28px;border:1px solid var(--border);border-radius:18px;padding:24px 26px;background:var(--surface-2);}
+  .tl-imp-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+  .tl-imp h3{margin:0;font-size:17px;color:#5A4231;}
+  .tl-imp-head p{margin:4px 0 0;font-size:14.5px;color:var(--muted);max-width:60ch;}
+  .tl-imp-btns{display:flex;gap:10px;flex-wrap:wrap;}
+  .tl-doc{margin-top:18px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:30px 34px;max-height:620px;overflow:auto;color:#222;font-size:14px;line-height:1.55;}
+  .tl-doc h4{margin:0;font-size:22px;color:#222;}
+  .tl-doc h5{margin:18px 0 6px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:#5A4231;border-bottom:1px solid var(--border);padding-bottom:4px;}
+  .tl-doc h6{margin:12px 0 2px;font-size:14.5px;color:#222;}
+  .tl-doc p{margin:4px 0;}
+  .tl-doc ul{margin:4px 0 0;padding-left:20px;}
+  .tl-doc li{margin:2px 0;}
+  @media (max-width:600px){ .tl-imp{padding:20px 16px;} .tl-doc{padding:20px 16px;} }
   .tl-band-dark{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;background:linear-gradient(135deg,#6B4F3A 0%,#8B6A4C 100%);color:#F7F1E9;border-radius:18px;padding:28px 30px;margin-top:28px;}
   .tl-band-dark h3{margin:0;font-size:19px;color:#fff;}
   .tl-band-dark p{margin:6px 0 0;font-size:14.5px;color:#E9DCCB;max-width:52ch;}
@@ -3864,7 +3886,7 @@ Object.assign(I18N.en, {
   tl_f2_t:'Your three biggest fixes', tl_f2_s:'Ranked, with example rewrites you can use.',
   tl_f3_t:'Private to you', tl_f3_s:'Your file is never shown to anyone else.',
   tl_of100:'/100', rs_note1:'Add a number', rs_note2:'Strong result',
-  tl_ready:'Ready to review', tl_lbl_resume:'Your resume', tl_lbl_li:'Your LinkedIn profile',
+  tl_ready:'Ready to review', tl_lbl_resume:'Your resume', tl_lbl_li:'Your LinkedIn profile', tl_li_url:'Your LinkedIn profile link', tl_li_ph:'linkedin.com/in/your-name', tl_li_open:'Get my profile PDF', tl_li_bad:'Please paste your LinkedIn profile link, for example linkedin.com/in/your-name.', tl_li_step1:'Your profile is open in a new tab.', tl_li_step2:'Under your name, click More (or Resources), then Save to PDF.', tl_li_step3:'Drop the downloaded PDF here and get your score.', tl_li_why:'LinkedIn does not let other sites read profiles from a link, so this takes two clicks.',
   tl_back_upload:'Upload a file instead', tl_drop_resume:'Drop your resume here, or choose a file', tl_drop_li:'Drop your LinkedIn PDF here, or choose a file',
   tl_drop_hint_r:'PDF, Word or text, up to 9 MB', tl_drop_hint_l:'On LinkedIn, open your profile and choose More, then Save to PDF',
   tl_paste_r:'Paste the text instead', tl_paste_l:'Paste your headline and About section instead',
@@ -3941,6 +3963,8 @@ Object.assign(I18N.en, {
   tl_err_short_r:'Please upload your resume or paste a bit more of it.', tl_err_short_l:'Please paste your headline, About section and recent experience.',
   tl_band1:'Needs work', tl_band2:'Good start', tl_band3:'Strong', tl_band4:'Excellent',
   tl_strengths:'What is working', tl_fixes:'Your top 3 fixes',
+  tl_imp_t:'Want these fixes applied for you?', tl_imp_s:'Get a rewritten version with the three fixes applied, ready to download as a Word file.', tl_imp_r:'Improve my resume', tl_imp_l:'Improve my LinkedIn', tl_imp_busy:'Rewriting… this can take up to a minute', tl_imp_again:'Rewrite again',
+  tl_impd_r:'Your improved resume', tl_impd_l:'Your improved LinkedIn profile', tl_impd_s:'The three fixes are applied and every fact comes from your original. Please read it through before you use it.', tl_dl:'Download (Word)', tl_copy:'Copy text', tl_copied:'Copied',
   tl_cta_t:'Want a recruiter to go through it with you?', tl_cta_s:'Book a one-on-one session with an HR professional or a mentor in your field.',
   tl_cta_hr:'Talk to HR & recruiters',
   hr_kicker:'Advice from the people who screen applications', hr_title:'Talk to the people who decide who gets interviewed',
@@ -7639,6 +7663,7 @@ function toolsView(){
         <h3>${esc(T('tl_fixes'))}</h3>
         <ol>${res.fixes.map((f,i)=>`<li><span class="tl-fx-n">${i+1}</span><div><b>${esc(f.title)}</b><p>${esc(f.detail)}</p></div></li>`).join('')}</ol>
       </div>
+      ${toolImproveHtml(tab)}
       <div class="tl-band-dark">
         <div><h3>${esc(T('tl_cta_t'))}</h3><p>${esc(T('tl_cta_s'))}</p></div>
         <div class="tl-cta-btns"><button class="btn tl-btn-light" data-nav="hr">${esc(T('tl_cta_hr'))}</button><button class="btn tl-btn-ghost" data-nav="browse">${esc(T('cta_browse'))}</button></div>
@@ -7660,6 +7685,13 @@ function toolsView(){
         <button type="button" class="${tab==='linkedin'?'on':''}" data-tool-tab="linkedin" role="tab" aria-selected="${tab==='linkedin'}">${esc(T('tl_tab_linkedin'))}</button>
       </div>
       <div class="tl-card">
+        ${tab==='linkedin' && !file ? `
+        <div class="field tl-li">
+          <label for="tl-li-url">${esc(T('tl_li_url'))}</label>
+          <div class="tl-li-row"><input id="tl-li-url" type="url" inputmode="url" autocomplete="url" placeholder="${esc(T('tl_li_ph'))}" value="${esc(state.toolLiUrl||'')}"><button type="button" class="btn btn-primary" id="tl-li-open">${esc(T('tl_li_open'))}</button></div>
+          ${state.toolLiErr ? `<p class="tl-err" role="alert">${esc(state.toolLiErr)}</p>` : ''}
+          ${state.toolLiOpened ? `<ol class="tl-li-steps">${[1,2,3].map(n=>`<li><span class="tl-fx-n">${n}</span><span>${esc(T('tl_li_step'+n))}</span></li>`).join('')}</ol><p class="tl-li-why">${esc(T('tl_li_why'))}</p>` : ''}
+        </div>` : ''}
         ${file ? `
         <div class="tl-picked">
           <span class="tl-pk-ic">${FILE_IC}</span>
@@ -7692,6 +7724,108 @@ function toolsView(){
     </div>
   </section>`}`;
 }
+// ---------- After the score: improved version + Word download ----------
+function toolImproveHtml(tab){
+  const imp = (state.toolImproved||{})[tab], busy = state.toolImpBusy === tab;
+  const runBtn = `<button type="button" class="btn ${imp ? 'btn-outline' : 'btn-primary'}" id="tl-imp-run" ${busy?'disabled':''}>${busy ? `<span class="tl-spin" aria-hidden="true"></span>` : ''}${esc(busy ? T('tl_imp_busy') : (imp ? T('tl_imp_again') : T(tab==='linkedin' ? 'tl_imp_l' : 'tl_imp_r')))}</button>`;
+  return `<div class="tl-imp" id="tl-imp">
+    <div class="tl-imp-head">
+      <div><h3>${esc(imp ? T(tab==='linkedin' ? 'tl_impd_l' : 'tl_impd_r') : T('tl_imp_t'))}</h3><p>${esc(imp ? T('tl_impd_s') : T('tl_imp_s'))}</p></div>
+      <div class="tl-imp-btns">${imp ? `<button type="button" class="btn btn-primary" id="tl-dl">${esc(T('tl_dl'))}</button><button type="button" class="btn btn-outline" id="tl-copy">${esc(T('tl_copy'))}</button>` : runBtn}</div>
+    </div>
+    ${state.toolImpErr ? `<p class="tl-err" role="alert">${esc(state.toolImpErr)}</p>` : ''}
+    ${imp ? `<div class="tl-doc" dir="ltr">${docPreviewHtml(imp.text)}</div><div class="tl-imp-btns" style="margin-top:14px;">${runBtn}</div>` : ''}
+  </div>`;
+}
+// The rewrite comes back as plain lines: "# name", "## section", "### role line", "- bullet", other lines are paragraphs.
+function docLines(text){
+  return String(text||'').split(/\r?\n/).map(l=>l.trim()).filter(Boolean).map(l=>{
+    let m;
+    if((m = /^#\s+(.*)$/.exec(l))) return { k:'name', t:m[1] };
+    if((m = /^##\s+(.*)$/.exec(l))) return { k:'sec', t:m[1] };
+    if((m = /^###\s+(.*)$/.exec(l))) return { k:'role', t:m[1] };
+    if((m = /^[-•*]\s+(.*)$/.exec(l))) return { k:'li', t:m[1] };
+    return { k:'p', t:l };
+  });
+}
+function docPreviewHtml(text){
+  let out = '', inList = false;
+  docLines(text).forEach(x=>{
+    if(x.k==='li'){ if(!inList){ out += '<ul>'; inList = true; } out += `<li>${esc(x.t)}</li>`; return; }
+    if(inList){ out += '</ul>'; inList = false; }
+    out += x.k==='name' ? `<h4>${esc(x.t)}</h4>` : x.k==='sec' ? `<h5>${esc(x.t)}</h5>` : x.k==='role' ? `<h6>${esc(x.t)}</h6>` : `<p>${esc(x.t)}</p>`;
+  });
+  return out + (inList ? '</ul>' : '');
+}
+// A real .docx (opens in Word, Google Docs and Pages) built in the browser: three XML parts in an uncompressed zip.
+function docxBlob(text){
+  const x = s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,'');
+  const run = (t, o={})=>`<w:r><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:cs="Calibri"/>${o.b?'<w:b/>':''}${o.caps?'<w:caps/>':''}${o.color?`<w:color w:val="${o.color}"/>`:''}<w:sz w:val="${o.sz||21}"/></w:rPr><w:t xml:space="preserve">${x(t)}</w:t></w:r>`;
+  const para = (inner, pp)=>`<w:p><w:pPr>${pp||''}</w:pPr>${inner}</w:p>`;
+  const body = docLines(text).map(l=>{
+    if(l.k==='name') return para(run(l.t,{b:true,sz:34}), '<w:spacing w:after="40"/>');
+    if(l.k==='sec') return para(run(l.t,{b:true,caps:true,sz:22,color:'5A4231'}), '<w:keepNext/><w:pBdr><w:bottom w:val="single" w:sz="6" w:space="1" w:color="C9B8A6"/></w:pBdr><w:spacing w:before="220" w:after="80"/>');
+    if(l.k==='role') return para(run(l.t,{b:true}), '<w:keepNext/><w:spacing w:before="120" w:after="20"/>');
+    if(l.k==='li') return para(run('•\t')+run(l.t), '<w:tabs><w:tab w:val="left" w:pos="360"/></w:tabs><w:spacing w:after="20"/><w:ind w:left="360" w:hanging="360"/>');
+    return para(run(l.t), '<w:spacing w:after="60"/>');
+  }).join('');
+  const files = {
+    '[Content_Types].xml': '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>',
+    '_rels/.rels': '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>',
+    'word/document.xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${body}<w:sectPr><w:pgSz w:w="12240" w:h="15840"/><w:pgMar w:top="1000" w:right="1000" w:bottom="1000" w:left="1000" w:header="600" w:footer="600" w:gutter="0"/></w:sectPr></w:body></w:document>`
+  };
+  return zipStore(files, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+}
+function zipStore(files, type){
+  const enc = new TextEncoder();
+  const crcT = zipStore.t || (zipStore.t = (()=>{ const t = new Uint32Array(256); for(let n=0;n<256;n++){ let c=n; for(let k=0;k<8;k++) c = c&1 ? 0xEDB88320^(c>>>1) : c>>>1; t[n]=c>>>0; } return t; })());
+  const crc = b=>{ let c = 0xFFFFFFFF; for(let i=0;i<b.length;i++) c = crcT[(c^b[i])&255]^(c>>>8); return (c^0xFFFFFFFF)>>>0; };
+  const u16 = v=>[v&255,(v>>>8)&255], u32 = v=>[v&255,(v>>>8)&255,(v>>>16)&255,(v>>>24)&255];
+  const parts = [], central = []; let off = 0;
+  Object.keys(files).forEach(name=>{
+    const nm = enc.encode(name), data = enc.encode(files[name]), c = crc(data);
+    // version, flags (bit 11 = UTF-8 names), method 0 = stored, time, date, crc, sizes, name length, extra length
+    const head = [...u16(20),...u16(0x0800),...u16(0),...u16(0),...u16(33),...u32(c),...u32(data.length),...u32(data.length),...u16(nm.length),...u16(0)];
+    const local = new Uint8Array([0x50,0x4b,0x03,0x04,...head]);
+    parts.push(local, nm, data);
+    central.push(new Uint8Array([0x50,0x4b,0x01,0x02,...u16(20),...head,...u16(0),...u16(0),...u16(0),...u32(0),...u32(off)]), nm);
+    off += local.length + nm.length + data.length;
+  });
+  const cdSize = central.reduce((a,b)=>a+b.length,0), n = Object.keys(files).length;
+  const end = new Uint8Array([0x50,0x4b,0x05,0x06,...u16(0),...u16(0),...u16(n),...u16(n),...u32(cdSize),...u32(off),...u16(0)]);
+  return new Blob([...parts, ...central, end], { type });
+}
+function docFileName(text, tab){
+  const nm = (docLines(text).find(l=>l.k==='name')||{}).t || '';
+  const base = nm.replace(/[^\p{L}\p{N} ]+/gu,'').trim().replace(/\s+/g,'_').slice(0,60);
+  return (base ? base + '_' : '') + (tab==='linkedin' ? 'LinkedIn_Profile' : 'Resume') + '.docx';
+}
+// Accepts "linkedin.com/in/name", a full URL (any country subdomain) or just the profile name.
+function liProfileUrl(v){
+  let t = String(v||'').trim(); if(!t) return '';
+  if(/^[A-Za-z0-9\-_%]{3,100}$/.test(t)) t = 'linkedin.com/in/' + t;
+  if(!/^https?:\/\//i.test(t)) t = 'https://' + t.replace(/^\/+/, '');
+  const m = /^https?:\/\/(?:[a-z]{2,3}\.|www\.)?linkedin\.com\/in\/([^\/?#\s]{3,100})\/?(?:[?#].*)?$/i.exec(t);
+  return m ? 'https://www.linkedin.com/in/' + m[1] + '/' : '';
+}
+async function runToolImprove(){
+  const tab = state.toolTab==='linkedin' ? 'linkedin' : 'resume';
+  const res = (state.toolResult||{})[tab]; if(!res || state.toolImpBusy) return;
+  if(!uid){ nav('onboard', { role:'client' }); return; }
+  const file = (state.toolFile||{})[tab], text = ((state.toolText||{})[tab]||'').trim();
+  state.toolImpBusy = tab; state.toolImpErr = ''; render();
+  try{
+    let tok = null; try{ const { data } = await sb.auth.getSession(); tok = data && data.session ? data.session.access_token : null; }catch(e){}
+    const r = await fetch('/api/agents', { method:'POST', headers:{ 'Content-Type':'application/json', Authorization:'Bearer '+(tok||'') },
+      body: JSON.stringify({ task:'career_improve', kind: tab, path: file ? file.path : undefined, text: file ? undefined : text, target: state.toolTarget||'', fixes: res.fixes }) });
+    const d = await r.json().catch(()=>({}));
+    if(r.status===401){ state.toolImpBusy = false; nav('dashboard'); return; }
+    if(!r.ok || !d.text) throw new Error(d.error || T('tl_err'));
+    state.toolImproved = Object.assign({}, state.toolImproved, { [tab]: { text: d.text } });
+  }catch(e){ state.toolImpErr = e.message || T('tl_err'); }
+  state.toolImpBusy = false; render();
+  const el = document.getElementById('tl-imp'); if(el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+}
 async function runToolScore(){
   const tab = state.toolTab==='linkedin' ? 'linkedin' : 'resume';
   if(!uid){ nav('onboard', { role:'client' }); return; }
@@ -7706,6 +7840,7 @@ async function runToolScore(){
     if(r.status===401){ state.toolBusy = false; nav('dashboard'); return; }
     if(!r.ok) throw new Error(d.error || T('tl_err'));
     state.toolResult = Object.assign({}, state.toolResult, { [tab]: d });
+    state.toolImproved = Object.assign({}, state.toolImproved, { [tab]: null }); state.toolImpErr = '';
   }catch(e){ state.toolErr = e.message || T('tl_err'); }
   state.toolBusy = false; render();
   const rep = document.getElementById('tl-report'); if(rep) rep.scrollIntoView({ behavior:'smooth', block:'start' });
@@ -7744,6 +7879,29 @@ function wireTools(){
   if(fx) fx.addEventListener('click', ()=>{ state.toolFile = Object.assign({}, state.toolFile, { [tab]: null }); render(); });
   const run = document.getElementById('tl-run');
   if(run) run.addEventListener('click', runToolScore);
+  const lu = document.getElementById('tl-li-url');
+  if(lu) lu.addEventListener('input', ()=>{ state.toolLiUrl = lu.value; });
+  const lo = document.getElementById('tl-li-open');
+  if(lo) lo.addEventListener('click', ()=>{
+    const url = liProfileUrl(lu ? lu.value : state.toolLiUrl);
+    if(!url){ state.toolLiErr = T('tl_li_bad'); state.toolLiOpened = false; render(); return; }
+    state.toolLiUrl = url; state.toolLiErr = ''; state.toolLiOpened = true;
+    window.open(url, '_blank', 'noopener');
+    render();
+    const d = document.getElementById('tl-upload'); if(d) d.scrollIntoView({ behavior:'smooth', block:'center' });
+  });
+  const ir = document.getElementById('tl-imp-run'); if(ir) ir.addEventListener('click', runToolImprove);
+  const imp = (state.toolImproved||{})[tab];
+  const dl = document.getElementById('tl-dl');
+  if(dl && imp) dl.addEventListener('click', ()=>{
+    const a = document.createElement('a'); a.href = URL.createObjectURL(docxBlob(imp.text)); a.download = docFileName(imp.text, tab);
+    document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+  });
+  const cp = document.getElementById('tl-copy');
+  if(cp && imp) cp.addEventListener('click', async ()=>{
+    const plain = docLines(imp.text).map(l=>l.k==='li' ? '• '+l.t : l.k==='sec' ? '\n'+l.t.toUpperCase() : l.t).join('\n').trim();
+    try{ await navigator.clipboard.writeText(plain); cp.textContent = T('tl_copied'); setTimeout(()=>{ cp.textContent = T('tl_copy'); }, 1800); }catch(e){}
+  });
   const top = document.getElementById('tl-top');
   if(top) top.addEventListener('click', ()=>{ const w = document.getElementById('tl-work'); if(w) w.scrollIntoView({ behavior:'smooth', block:'center' }); const d = document.getElementById('tl-upload') || document.getElementById('tl-text'); if(d) setTimeout(()=>d.focus({ preventScroll:true }), 400); });
 }
