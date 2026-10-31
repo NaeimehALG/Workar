@@ -2057,6 +2057,11 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .wkv-slot,.wkv-poster,.wkv-video{position:absolute;inset:0;width:100%;height:100%;}
   .hero-arch .ar-hero-wrap .wkv img.wkv-poster,.hero-arch .ar-hero-wrap .wkv video.wkv-video,.wkv-poster,.wkv-video{object-fit:cover;display:block;border-radius:0;box-shadow:none;filter:none;}
   .wkv-video{opacity:0;transition:opacity .6s ease;}
+  .wkv .wkv-logo,#app .lx-film .wkv .wkv-logo{position:absolute !important;inset:auto !important;left:32% !important;top:50% !important;width:36% !important;height:auto !important;aspect-ratio:auto !important;transform:translateY(-54%) !important;
+    opacity:0;pointer-events:none;z-index:3;background:none !important;box-shadow:none !important;border:0 !important;border-radius:0 !important;padding:0 !important;margin:0 !important;overflow:visible !important;filter:none !important;animation:none !important;}
+  /* a thin white outline over the brown shapes makes every line finer and keeps the edges crisp */
+  .wkv .wkv-logo svg{display:block;width:100% !important;height:auto !important;overflow:visible;fill:#8B6A4C;stroke:#fff;stroke-width:1.4px;stroke-linejoin:round;box-shadow:none !important;border-radius:0 !important;background:none !important;}
+  .wkv .wkv-logo.on,#app .lx-film .wkv .wkv-logo.on{opacity:1;transition:opacity .8s ease;}
   .wkv-video.on{opacity:1;}
   @media (max-width:760px){.hero-arch .ar-hero-wrap{max-width:300px;}}
 
@@ -2835,6 +2840,10 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   html[dir="rtl"] .bf-sel select{padding:8px 12px 8px 30px;background-position:left 12px center;}
   .bf-sel select:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
   .bf-count{margin:-8px 0 14px;font-size:13px;color:var(--muted);}
+  .bf-hr{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:0 0 14px;}
+  .bf-hr .muted{margin:0;font-size:14px;}
+  .bf-hr-chip{display:inline-flex;align-items:center;gap:6px;background:var(--surface-2);border:1px solid var(--border);color:var(--accent);font-weight:600;}
+  .bf-hr-chip button{border:0;background:none;color:inherit;font-size:16px;line-height:1;cursor:pointer;padding:0 2px;}
   .bf-more{display:flex;flex-direction:column;align-items:center;gap:8px;margin:24px auto 0;max-width:900px;}
   .bf-more .btn{border-radius:999px;padding:10px 26px;}
   .bf-more span{font-size:12.5px;color:var(--muted);}
@@ -2957,10 +2966,10 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .lx-card i span{display:inline-block;transition:transform .2s;}
   .lx-card:hover i span{transform:translateX(4px);}
   /* FAQ: centred column in a soft panel */
-  .lx-faq2{margin:96px 0 0;padding:72px 56px;border-radius:28px;background:#FBF7F2;}
+  .lx-faq2{margin:96px 0 0;padding:0;}
   .lx-faq2 .lx-head{margin-bottom:36px;}
-  .lx-faq-list{max-width:760px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:20px;padding:4px 28px;}
-  .lx-faq-list .fq-item:last-child{border-bottom:0;}
+  .lx-faq-list{max-width:760px;margin:0 auto;border-top:1px solid var(--line);}
+  .lx-faq-list .fq-item{border-bottom:1px solid var(--line);}
   .lx-faq-list .fq-item summary{font-size:16px;font-weight:600;color:var(--ink);padding-top:20px;padding-bottom:20px;}
   .lx-faq-list .fq-item p{font-size:15px;}
   @media (max-width:860px){
@@ -2968,8 +2977,7 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
     .lx-how-steps,.lx-cards{grid-template-columns:minmax(0,1fr);gap:28px;}
     .lx-cards{gap:14px;}
     .lx-head{margin-bottom:32px;}
-    .lx-faq2{margin-top:64px;padding:44px 16px;border-radius:22px;}
-    .lx-faq-list{padding:0 18px;}
+    .lx-faq2{margin-top:56px;padding:0;}
   }
   .lx-end{text-align:center;margin:0;padding:72px 0 64px;}
   .lx-end h2{margin:0 auto;font-size:clamp(28px,3.2vw,42px) !important;line-height:1.15 !important;max-width:20ch;}
@@ -2996,7 +3004,7 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .lx-box{margin-top:56px;}
   .lx-sec,.lx-how,.lx-more{padding-top:64px;}
   .lx-score{margin-top:64px;padding:52px 56px;}
-  .lx-faq2{margin-top:64px;padding:56px 48px;}
+  .lx-faq2{margin-top:64px;padding:0;}
   .lx-head{margin-bottom:36px;}
   .lx-head-left{margin-bottom:32px;}
   .lx-how-n{font-size:40px;margin-bottom:14px;}
@@ -3010,7 +3018,7 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
     .lx-box{margin-top:40px;}
     .lx-sec,.lx-how,.lx-more{padding-top:48px;}
     .lx-score{margin-top:48px;padding:32px 22px;}
-    .lx-faq2{margin-top:48px;padding:36px 16px;}
+    .lx-faq2{margin-top:48px;padding:0;}
     .lx-head{margin-bottom:26px;}
     .lx-end{padding:44px 0 32px;}
     .tl-hero{padding-bottom:32px;}
@@ -3018,7 +3026,8 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   /* Header on desktop: logo, tagline and every menu link on one line, sharing one baseline */
   @media (min-width:1025px){
     /* the browser lines up the text baselines itself, so it holds with any font the visitor's computer uses */
-    .nav{flex-wrap:nowrap;align-items:last baseline;}
+    .nav{flex-wrap:nowrap;align-items:last baseline;padding:14px 0 16px;margin-bottom:22px;}
+    #app[data-view="home"] .nav{margin-bottom:8px;}
     .brand{align-items:last baseline;}
     .brand .tag{top:-1px;}
     .navlinks{flex-wrap:nowrap;align-items:baseline;gap:0;position:relative;top:-1px;}
@@ -4095,7 +4104,8 @@ Object.assign(I18N.en, {
   hr_c1_t:'The first screen', hr_c1_s:'Learn what a recruiter checks first on your resume and LinkedIn, and what makes them keep reading.',
   hr_c2_t:'Behind the hiring process', hr_c2_s:'Applicant tracking systems, hiring managers, salary ranges: understand what happens after you click Apply.',
   hr_c3_t:'Questions you cannot ask at work', hr_c3_s:'Get honest, confidential answers on job offers, negotiation, and how to explain a gap or a change of career.',
-  hr_list_t:'HR & recruiting mentors', hr_browse:'Browse HR & recruiters',
+  toast_match_empty:'Describe your goal first, then we will find your matches.', toast_chat_empty:'Type your message first.',
+  hr_list_t:'HR & recruiting mentors', hr_browse:'Browse HR & recruiters', nav_hr_chip:'HR & recruiters', hr_browse_none:'Clear the filter to see all mentors.',
   hr_empty_t:'Our first HR and recruiting mentors are joining now.',
   hr_empty_s:'In the meantime, run your resume through the free Resume Score. If you work in HR or recruiting, we would love to have you as a mentor.',
   hr_try_tools:'Get my free Resume Score', hr_join:'Join as an HR mentor',
@@ -4140,6 +4150,7 @@ function safeHttp(u){ const t=String(u||'').trim(); return /^https?:\/\//i.test(
 function esc(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function toast(msg, ms){ const d=document.createElement('div'); d.className='toast'; d.textContent=msg; document.body.appendChild(d); setTimeout(()=>d.remove(), ms||2600); }
 function nav(view, params, fromHistory){
+  if(view!=='browse') state.hrOnly = false; // the HR filter only lives on Find a mentor
   // Requests and messages live in one inbox; 'requests' opens it on the first conversation that needs you
   if(view==='requests'){ view = 'messages'; params = Object.assign({ ibPreferAction:true, inboxWith:null }, params||{}); }
   // Start a fresh auth entry after leaving the form; keep in-form tab changes intact.
@@ -8128,9 +8139,7 @@ function aboutView(){
 }
 function wireHr(){
   const b = document.getElementById('hr-see'); if(!b) return;
-  b.addEventListener('click', ()=>{
-    const l = document.getElementById('hr-list'); if(l) l.scrollIntoView({ behavior:'smooth', block:'start' });
-  });
+  b.addEventListener('click', ()=>{ state.hrOnly = true; state.browseShown = 0; nav('browse'); window.scrollTo(0,0); });
 }
 
 // ---------- Career & Life Coaching (ICF-credentialed coaches) ----------
@@ -8250,6 +8259,7 @@ function browseView(){
     if(p.role==='client' || p.approved===false) return false;
     if(lf.length && !mentorLangs(p).some(l=>lf.includes(l))) return false;
     if(ff && p.field!==ff) return false;
+    if(state.hrOnly && !isHrMentor(p)) return false;
     if(!q) return true;
     return [nameOf(id), p.profession, p.headline, p.company, p.field, (p.skills||[]).join(' ')].join(' ').toLowerCase().includes(q);
   });
@@ -8309,6 +8319,7 @@ function browseView(){
     <label class="bf-sel"><span>${esc(T('sort_by'))}</span><select id="sort-by">${['best','exp','price_low','price_high'].map(k=>`<option value="${k}" ${k===sortBy?'selected':''}>${esc(T('sort_'+k))}</option>`).join('')}</select></label>
   </div>
   ${allEntries.length ? `<p class="bf-count">${esc(T(allEntries.length===1?'bf_count1':'bf_count').replace('{n}', allEntries.length))}</p>` : ''}
+  ${state.hrOnly ? `<div class="bf-hr"><span class="chip bf-hr-chip">${esc(T('nav_hr_chip'))}<button type="button" id="bf-hr-x" aria-label="${esc(T('filter_clear'))}">×</button></span>${entries.length ? '' : `<p class="muted">${esc(T('hr_empty_t'))} ${esc(T('hr_browse_none'))}</p>`}</div>` : ''}
   ${(lf.length || ff) && !entries.length ? `<p class="muted" style="margin:6px 0 18px;">${esc(T('filter_none').replace('{l}', lf.join(', ')))}</p>` : ''}
   ${entries.length ? `<div class="grid">
     ${entries.map(([id,p])=>mentorCardHtml(id,p)).join('')}
@@ -10682,6 +10693,7 @@ function wire(){
   }
   const ffSel = document.getElementById('field-filter'); if(ffSel) ffSel.addEventListener('change', ()=>{ state.fieldFilter = ffSel.value; state.browseShown = 0; render(); });
   const sortSel = document.getElementById('sort-by'); if(sortSel) sortSel.addEventListener('change', ()=>{ state.sortBy = sortSel.value; render(); });
+  const hrX = document.getElementById('bf-hr-x'); if(hrX) hrX.addEventListener('click', ()=>{ state.hrOnly = false; render(); });
   const moreBtn = document.getElementById('browse-more'); if(moreBtn) moreBtn.addEventListener('click', ()=>{ const y = window.scrollY; state.browseShown = Math.max(BROWSE_PAGE, state.browseShown||BROWSE_PAGE) + BROWSE_PAGE; render(); window.scrollTo(0,y); });
   const searchInput = document.getElementById('search-input');
   if(searchInput){
@@ -11074,8 +11086,8 @@ function wire(){
 
   const matchBtn = document.getElementById('match-btn');
   if(matchBtn) matchBtn.addEventListener('click', async ()=>{
-    const val = document.getElementById('match-input').value.trim();
-    if(!val) return;
+    const mi = document.getElementById('match-input'), val = mi.value.trim();
+    if(!val){ mi.focus(); toast(T('toast_match_empty')); return; }
     const mentorList = Object.entries(cache.profiles).filter(([,p])=>p.role!=='client' && p.approved!==false).map(([id,p])=>({ id, profession:p.profession||'', headline:p.headline||'', bio:(p.bio||'').slice(0,300), skills:p.skills||[], yearsExperience:p.experience||'', languages:mentorLangs(p), field:p.field||'', seniority:p.seniority||'', bestFor:p.idealMentee||'' }));
     if(!mentorList.length){ toast(T('toast_no_mentors')); return; }
     state.matchQuery = val; state.matching = true; state.matchResults = null; render();
@@ -11129,7 +11141,8 @@ async function pushAndRespond(userText){
 async function sendChat(){
   const box = document.getElementById('chat-text');
   const text = box.value.trim();
-  if(!text || state.sending) return;
+  if(state.sending) return;
+  if(!text){ box.focus(); toast(T('toast_chat_empty')); return; }
   box.value=''; await pushAndRespond(text);
 }
 
@@ -11663,11 +11676,19 @@ init();
     v.className = 'wkv-video'; v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true;
     v.setAttribute('muted',''); v.setAttribute('playsinline',''); v.setAttribute('preload','auto'); v.setAttribute('aria-hidden','true');
     v.poster = '/hero-v10-poster.jpg';
-    v.innerHTML = '<source src="/hero-v10.webm?v=white-end-3" type="video/webm"><source src="/hero-v10.mp4?v=white-end-3" type="video/mp4">';
+    v.innerHTML = '<source src="/hero-v10.webm?v=white-end-4" type="video/webm"><source src="/hero-v10.mp4?v=white-end-4" type="video/mp4">';
     v.addEventListener('playing', ()=>v.classList.add('on'));
+    // The film ends on white; the logo is drawn on top as a vector so it stays perfectly sharp at any size.
+    const logo = document.createElement('div');
+    logo.className = 'wkv-logo'; logo.setAttribute('aria-hidden', 'true');
+    logo.innerHTML = '<svg viewBox="0 0 556 410"><use href="#wkMark" x="125" y="0" width="306" height="294"/><use href="#wkWord" x="0" y="312" width="556" height="94"/></svg>';
+    const LOGO_AT = 8.05;
+    (function tick(){ const show = v.currentTime >= LOGO_AT && !v.paused; if(show !== logo.classList.contains('on')) logo.classList.toggle('on', show); requestAnimationFrame(tick); })();
     function mount(){
       const slot = document.querySelector('.wkv-slot');
       if(slot && v.parentNode !== slot){ slot.appendChild(v); const p = v.play(); if(p && p.catch) p.catch(()=>{}); }
+      const box = slot && slot.parentNode;
+      if(box && logo.parentNode !== box) box.appendChild(logo);
     }
     new MutationObserver(mount).observe(document.getElementById('app') || document.body, { childList:true, subtree:true });
     mount();
