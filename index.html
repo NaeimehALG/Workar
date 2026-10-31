@@ -560,6 +560,55 @@
   .inv-row input{flex:1;min-width:0;}
   .inv-share{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
 
+  /* nav: the free tool stands apart */
+  .nav-free{display:inline-flex;align-items:center;gap:8px;color:var(--accent);border-color:#D9C6AE;background:#fff;margin-inline-start:6px;}
+  .nav-free:hover{border-color:var(--accent-2);color:#5A4231;}
+  .nav-free.active{background:var(--surface-2);border-color:var(--accent-2);color:#5A4231;}
+  .nav-free .nf-tag{margin-inline-end:2px;}
+  .hs-mob{display:none;}
+  .nf-tag{font-size:11px;font-weight:700;line-height:1;color:#fff;background:var(--accent);border-radius:999px;padding:4px 7px;}
+  /* home hero: score card */
+  .hs-card{position:absolute;left:-64px;bottom:40px;z-index:2;display:flex;align-items:center;gap:14px;width:290px;text-align:start;font:inherit;cursor:pointer;
+    background:#fff;border:1px solid var(--border);border-radius:18px;padding:14px 18px 14px 14px;color:var(--text);
+    box-shadow:0 2px 4px rgba(90,66,49,.05),0 18px 40px -14px rgba(90,66,49,.32);animation:rsIn .5s ease-out .6s both;transition:transform .15s,box-shadow .15s;}
+  .hs-card:hover{transform:translateY(-2px);box-shadow:0 2px 4px rgba(90,66,49,.05),0 24px 44px -14px rgba(90,66,49,.38);}
+  .hs-card:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+  .hs-g{position:relative;flex:none;width:58px;height:58px;}
+  .hs-g svg{width:58px;height:58px;}
+  .hs-g .tl-arc{stroke-dasharray:327 327;stroke-dashoffset:120;animation:hsSpin 2.4s cubic-bezier(.4,0,.2,1) 1s both;}
+  .hs-g b{position:absolute;inset:0;display:grid;place-items:center;font-size:20px;font-weight:700;color:var(--accent);}
+  .hs-t{display:flex;flex-direction:column;line-height:1.35;}
+  .hs-t b{font-size:15px;color:#5A4231;}
+  .hs-t span{font-size:13px;color:var(--muted);}
+  .hs-t em{font-style:normal;font-size:13.5px;font-weight:700;color:var(--accent);margin-top:5px;text-decoration:underline;text-underline-offset:3px;}
+  @keyframes hsSpin{from{stroke-dashoffset:327;}to{stroke-dashoffset:120;}}
+  /* tools page: upload in the hero */
+  .tl-hero-work{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start;gap:56px;padding-top:28px;}
+  .tl-hero-work .tl-hero-copy{padding-top:18px;}
+  .tl-hero-work .tl-work{max-width:none;}
+  .tl-checks{list-style:none;margin:28px 0 0;padding:0;display:grid;gap:12px;}
+  .tl-checks li{display:flex;gap:10px;align-items:flex-start;font-size:15px;line-height:1.55;color:var(--muted);}
+  .tl-checks b{color:var(--text);}
+  .tl-checks svg{flex:none;color:#fff;background:var(--accent);border-radius:50%;padding:2px;width:20px;height:20px;margin-top:1px;}
+  .tl-hero-work .tl-target{margin:20px 0 0;}
+  .tl-hero-work .tl-run{width:100%;margin-top:16px;}
+  .tl-hero-work .tl-fine{text-align:center;}
+  .tl-how-sec{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:64px;align-items:center;margin:56px 0 24px;padding:56px;background:var(--surface-2);border:1px solid var(--border);border-radius:28px;}
+  .tl-how-art{display:flex;justify-content:center;padding:20px 26px 0 0;}
+  .tl-how-copy h2{margin:0 0 10px;font-size:28px;color:#5A4231;}
+  .tl-steps{list-style:none;margin:0 0 26px;padding:0;}
+  .tl-steps li{display:grid;grid-template-columns:44px minmax(0,1fr);gap:6px;padding:16px 0;border-top:1px solid #E6D8C6;}
+  .tl-steps li:first-child{border-top:0;}
+  .tl-steps .tl-fx-n{background:#fff;}
+  .tl-steps b{display:block;font-size:16px;color:#5A4231;}
+  .tl-steps p{margin:4px 0 0;font-size:14.5px;line-height:1.6;color:var(--muted);}
+  @media (max-width:860px){
+    .tl-hero-work{grid-template-columns:1fr;gap:28px;}
+    .tl-how-sec{grid-template-columns:1fr;gap:36px;padding:36px 24px;}
+    .hs-desk{display:none;}
+    .hs-mob{display:flex;position:static;width:100%;max-width:380px;margin:22px auto 6px;}
+  }
+  @media (prefers-reduced-motion: reduce){ .hs-card,.hs-g .tl-arc{animation:none !important;} }
   @media (prefers-reduced-motion: reduce){ .rs-hl::after,.rs-note,.rs-badge,.hr-bub,.tl-arc{animation:none !important;} }
   @media (max-width:860px){
     .tl-hero,.home-tools{grid-template-columns:1fr;gap:44px;}
@@ -3503,7 +3552,7 @@ Object.assign(I18N.en, {
   nav_tools:'Free Resume Score', nav_hr:'Talk to HR',
   tl_f1_t:'A score out of 100', tl_f1_s:'How a recruiter would rate it on a first read.',
   tl_f2_t:'Your three biggest fixes', tl_f2_s:'Ranked, with example rewrites you can use.',
-  tl_f3_t:'Private to you', tl_f3_s:'Your file is never shown to mentors or anyone else.',
+  tl_f3_t:'Private to you', tl_f3_s:'Your file is never shown to anyone else.',
   tl_of100:'/100', rs_note1:'Add a number', rs_note2:'Strong result',
   tl_ready:'Ready to review', tl_lbl_resume:'Your resume', tl_lbl_li:'Your LinkedIn profile',
   tl_back_upload:'Upload a file instead', tl_drop_resume:'Drop your resume here, or choose a file', tl_drop_li:'Drop your LinkedIn PDF here, or choose a file',
@@ -3512,9 +3561,15 @@ Object.assign(I18N.en, {
   hr_q1:'Why am I not getting callbacks?', hr_q2:'Is my resume right for this role?', hr_q3:'How should I answer the salary question?', hr_q4:'What happens after I click Apply?',
   hr_see:'See HR mentors', hr_cover_t:'What a session with HR can cover',
   home_tools_note:'Free, about 30 seconds',
+  nf_tag:'Free', nf_label:'Resume Score',
+  hs_t:'What is your resume score?', hs_s:'Find out in 30 seconds, free.', hs_b:'Get my score',
+  tl_how_t:'How it works',
+  tl_s1_t:'Upload your resume', tl_s1_s:'Or your LinkedIn profile. PDF, Word, or pasted text all work.',
+  tl_s2_t:'Get your score and top fixes', tl_s2_s:'A score out of 100, what is working, and the three changes that matter most.',
+  tl_s3_t:'Talk it through with a recruiter', tl_s3_s:'When you want a second opinion, book a private session with an HR professional.',
 
-  tl_kicker:'Free, takes about 30 seconds', tl_title:'See your resume the way a recruiter does',
-  tl_sub:'Get a score out of 100, what is already working, and the three changes that will make the biggest difference.',
+  tl_kicker:'Free, takes about 30 seconds', tl_title:'How does your resume score?',
+  tl_sub:'Upload your resume and see it the way a recruiter does: a score out of 100, what is already working, and the three changes that will make the biggest difference.',
   tl_tab_resume:'Resume Score', tl_tab_linkedin:'LinkedIn Check',
   tl_how_resume:'Upload your resume (PDF, Word or text) or paste it below.',
   tl_how_linkedin:'Paste your headline, About section and recent experience. Or, on your LinkedIn profile, choose More → Save to PDF and upload the file.',
@@ -4661,7 +4716,7 @@ function navHtml(){
   const prepItem = prepVisible() ? [['prep', T('nav_prep')]] : [];
   // One fixed order for everyone, so the menu never reshuffles while the profile loads after a refresh:
   // Home · Inbox · My profile · Find a mentor · AI coach (Inbox only when signed in)
-  const items = [['home', T('nav_home')], ['@inbox'], ['dashboard', (uid || myProfile) ? T('nav_dash') : T('nav_start')], ['browse', T('nav_browse')], ['hr', T('nav_hr')], ['tools', T('nav_tools')], ...prepItem, ['coach', T('nav_coach')]];
+  const items = [['home', T('nav_home')], ['@inbox'], ['dashboard', (uid || myProfile) ? T('nav_dash') : T('nav_start')], ['browse', T('nav_browse')], ['hr', T('nav_hr')], ...prepItem, ['coach', T('nav_coach')]];
   const inboxItem = ()=>{ if(!uid) return ''; const n = requestsNeedingMe() + inboxUnreadTotal(), on = state.view==='requests' || state.view==='messages';
     return `<a class="navlink nav-msg ${on?'active':''}" href="${navHref('messages')}" data-nav="${requestsNeedingMe() ? 'requests' : 'messages'}"${on?' aria-current="page"':''}>${esc(T('nav_inbox'))}<span class="nav-msg-badge" style="${n?'':'display:none'}">${n}</span></a>`; };
   const link = (v, label, cls)=>`<a class="navlink ${cls||''} ${state.view===v?'active':''}" href="${navHref(v)}" data-nav="${v}"${state.view===v?' aria-current="page"':''}>${esc(label)}</a>`;
@@ -4670,6 +4725,7 @@ function navHtml(){
     <div class="navlinks">
       ${items.map(([v,l])=>v==='@inbox' ? inboxItem() : link(v, l)).join('')}
       ${isAdmin() ? link('admin', T('adm_nav')) : ''}
+      <a class="navlink nav-free ${state.view==='tools'?'active':''}" href="${navHref('tools')}" data-nav="tools"${state.view==='tools'?' aria-current="page"':''}><span class="nf-tag">${esc(T('nf_tag'))}</span>${esc(T('nf_label'))}</a>
       ${uid ? `<button type="button" class="navlink" id="signout-btn" title="${esc(T('signed_in_as'))} ${esc(userEmail||'')}">${esc(T('nav_signout'))}</button>` : `<a class="navlink" href="${navHref('dashboard')}" data-nav="dashboard">${esc(T('nav_login'))}</a>`}
       
     </div>
@@ -6641,6 +6697,12 @@ const PRO_ICONS = {
   plan:'<path d="M9 5h10M9 12h10M9 19h10"/><path d="M4 5l1 1 2-2M4 12l1 1 2-2M4 19l1 1 2-2"/>',
   help:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17.5v.01"/>'
 };
+function heroScoreCard(cls){
+  return `<button type="button" class="hs-card ${cls}" data-nav="tools" data-tool="resume">
+        <span class="hs-g">${toolGauge(0, 58)}<b>?</b></span>
+        <span class="hs-t"><b>${esc(T('hs_t'))}</b><span>${esc(T('hs_s'))}</span><em>${esc(T('hs_b'))}</em></span>
+      </button>`;
+}
 function heroTrustHtml(){
   const ck = '<svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><circle cx="10" cy="10" r="9" fill="var(--surface-2)" stroke="var(--border)"/><path d="M6 10.2l2.6 2.6L14 7.5" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   return `<ul class="pro-trust"><li>${ck}${esc(T('hero_trust1'))}</li><li>${ck}${esc(T('hero_trust2'))}</li></ul>`;
@@ -6682,9 +6744,11 @@ function homeView(){
       <button class="btn btn-primary" data-nav="browse">${esc(T('cta_browse'))}</button>
       <button class="btn btn-outline" data-nav="onboard" data-role="mentor">${esc(T('cta_become'))}</button>
     </div>
+    ${heroScoreCard('hs-mob')}
     ${heroTrustHtml()}
     </div>
     <div class="ar-hero-wrap">${ART.hero()}
+      ${heroScoreCard('hs-desk')}
     </div>
   </div>
   <!-- What we help with: simple topic list in the site's own section style. -->
@@ -7205,49 +7269,52 @@ function toolsView(){
       </div>
     </section>` : '';
   return `
-  <section class="tl-hero">
+  <section class="tl-hero tl-hero-work">
     <div class="tl-hero-copy">
       <p class="tl-note">${esc(T('tl_kicker'))}</p>
       <h1>${esc(T('tl_title'))}</h1>
       <p class="tl-lede">${esc(T('tl_sub'))}</p>
-      <ul class="tl-facts">
-        <li><b>${esc(T('tl_f1_t'))}</b><span>${esc(T('tl_f1_s'))}</span></li>
-        <li><b>${esc(T('tl_f2_t'))}</b><span>${esc(T('tl_f2_s'))}</span></li>
-        <li><b>${esc(T('tl_f3_t'))}</b><span>${esc(T('tl_f3_s'))}</span></li>
+      <ul class="tl-checks">
+        ${[1,2,3].map(n=>`<li><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3.5 8.3l2.8 2.7L12.5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>${esc(T('tl_f'+n+'_t'))}.</b> ${esc(T('tl_f'+n+'_s'))}</span></li>`).join('')}
       </ul>
     </div>
-    <div class="tl-hero-art">${recruiterSheetHtml()}</div>
-  </section>
-
-  <section class="tl-work" aria-label="${esc(T('tl_title'))}">
-    <div class="tl-seg" role="tablist">
-      <button type="button" class="${tab==='resume'?'on':''}" data-tool-tab="resume" role="tab" aria-selected="${tab==='resume'}">${esc(T('tl_tab_resume'))}</button>
-      <button type="button" class="${tab==='linkedin'?'on':''}" data-tool-tab="linkedin" role="tab" aria-selected="${tab==='linkedin'}">${esc(T('tl_tab_linkedin'))}</button>
-    </div>
-    <div class="tl-card">
-      ${file ? `
-      <div class="tl-picked">
-        <span class="tl-pk-ic">${FILE_IC}</span>
-        <div><b>${esc(file.name)}</b><span>${esc(T('tl_ready'))}</span></div>
-        <button type="button" class="btn btn-ghost btn-sm" id="tl-file-x">${esc(T('tl_remove'))}</button>
-      </div>` : paste ? `
-      <div class="field tl-paste"><label for="tl-text">${esc(T(tab==='resume' ? 'tl_lbl_resume' : 'tl_lbl_li'))}</label><textarea id="tl-text" rows="10" placeholder="${esc(T(tab==='resume' ? 'tl_ph_resume' : 'tl_ph_li'))}">${esc(tx)}</textarea></div>
-      <button type="button" class="tl-link" id="tl-to-upload">${esc(T('tl_back_upload'))}</button>` : `
-      <button type="button" class="tl-drop" id="tl-upload" ${busy?'disabled':''}>
-        <svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M28 6H13a4 4 0 0 0-4 4v28a4 4 0 0 0 4 4h22a4 4 0 0 0 4-4V17z"/><path d="M28 6v11h11M24 35V23M19 28l5-5 5 5"/></svg>
-        <b>${esc(T(tab==='resume' ? 'tl_drop_resume' : 'tl_drop_li'))}</b>
-        <span>${esc(T(tab==='resume' ? 'tl_drop_hint_r' : 'tl_drop_hint_l'))}</span>
-      </button>
-      <button type="button" class="tl-link" id="tl-to-paste">${esc(T(tab==='resume' ? 'tl_paste_r' : 'tl_paste_l'))}</button>`}
-      <div class="tl-row">
+    <div class="tl-work" id="tl-work">
+      <div class="tl-seg" role="tablist">
+        <button type="button" class="${tab==='resume'?'on':''}" data-tool-tab="resume" role="tab" aria-selected="${tab==='resume'}">${esc(T('tl_tab_resume'))}</button>
+        <button type="button" class="${tab==='linkedin'?'on':''}" data-tool-tab="linkedin" role="tab" aria-selected="${tab==='linkedin'}">${esc(T('tl_tab_linkedin'))}</button>
+      </div>
+      <div class="tl-card">
+        ${file ? `
+        <div class="tl-picked">
+          <span class="tl-pk-ic">${FILE_IC}</span>
+          <div><b>${esc(file.name)}</b><span>${esc(T('tl_ready'))}</span></div>
+          <button type="button" class="btn btn-ghost btn-sm" id="tl-file-x">${esc(T('tl_remove'))}</button>
+        </div>` : paste ? `
+        <div class="field tl-paste"><label for="tl-text">${esc(T(tab==='resume' ? 'tl_lbl_resume' : 'tl_lbl_li'))}</label><textarea id="tl-text" rows="8" placeholder="${esc(T(tab==='resume' ? 'tl_ph_resume' : 'tl_ph_li'))}">${esc(tx)}</textarea></div>
+        <button type="button" class="tl-link" id="tl-to-upload">${esc(T('tl_back_upload'))}</button>` : `
+        <button type="button" class="tl-drop" id="tl-upload" ${busy?'disabled':''}>
+          <svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M28 6H13a4 4 0 0 0-4 4v28a4 4 0 0 0 4 4h22a4 4 0 0 0 4-4V17z"/><path d="M28 6v11h11M24 35V23M19 28l5-5 5 5"/></svg>
+          <b>${esc(T(tab==='resume' ? 'tl_drop_resume' : 'tl_drop_li'))}</b>
+          <span>${esc(T(tab==='resume' ? 'tl_drop_hint_r' : 'tl_drop_hint_l'))}</span>
+        </button>
+        <button type="button" class="tl-link" id="tl-to-paste">${esc(T(tab==='resume' ? 'tl_paste_r' : 'tl_paste_l'))}</button>`}
         <div class="field tl-target"><label for="tl-target">${esc(T('tl_target'))}</label><input id="tl-target" placeholder="${esc(T('tl_ph_target'))}" value="${esc(state.toolTarget||'')}"></div>
         <button type="button" class="btn btn-primary tl-run" id="tl-run" ${busy?'disabled':''}>${busy ? `<span class="tl-spin" aria-hidden="true"></span>` : ''}${esc(busy ? T('tl_busy') : (signedIn ? T('tl_run') : T('tl_run_signup')))}</button>
+        ${state.toolErr ? `<p class="tl-err" role="alert">${esc(state.toolErr)}</p>` : ''}
+        <p class="tl-fine">${esc(T(signedIn ? 'tl_free_note' : 'tl_signup_note'))}</p>
       </div>
-      ${state.toolErr ? `<p class="tl-err" role="alert">${esc(state.toolErr)}</p>` : ''}
-      <p class="tl-fine">${esc(T(signedIn ? 'tl_free_note' : 'tl_signup_note'))}</p>
     </div>
   </section>
-  ${resultHtml}`;
+  ${resultHtml}
+  ${res ? '' : `
+  <section class="tl-how-sec">
+    <div class="tl-how-art">${recruiterSheetHtml()}</div>
+    <div class="tl-how-copy">
+      <h2>${esc(T('tl_how_t'))}</h2>
+      <ol class="tl-steps">${[1,2,3].map(n=>`<li><span class="tl-fx-n">${n}</span><div><b>${esc(T('tl_s'+n+'_t'))}</b><p>${esc(T('tl_s'+n+'_s'))}</p></div></li>`).join('')}</ol>
+      <button type="button" class="btn btn-primary" id="tl-top">${esc(T('tl_run'))}</button>
+    </div>
+  </section>`}`;
 }
 async function runToolScore(){
   const tab = state.toolTab==='linkedin' ? 'linkedin' : 'resume';
@@ -7301,6 +7368,8 @@ function wireTools(){
   if(fx) fx.addEventListener('click', ()=>{ state.toolFile = Object.assign({}, state.toolFile, { [tab]: null }); render(); });
   const run = document.getElementById('tl-run');
   if(run) run.addEventListener('click', runToolScore);
+  const top = document.getElementById('tl-top');
+  if(top) top.addEventListener('click', ()=>{ const w = document.getElementById('tl-work'); if(w) w.scrollIntoView({ behavior:'smooth', block:'center' }); const d = document.getElementById('tl-upload') || document.getElementById('tl-text'); if(d) setTimeout(()=>d.focus({ preventScroll:true }), 400); });
 }
 
 // ---------- Talk to HR & Recruiters ----------
@@ -9604,7 +9673,6 @@ function dashboardView(){
   ${reqListHtml(myReqs, isMentor)}
   ${isMentor ? (()=>{ const booked = cache.requests.filter(r=>r.clientId===uid && r.mentorId!==uid);
       return booked.length ? `<div class="section-head" style="margin-top:40px;"><h2>${esc(T('your_requests'))}</h2></div>${reqListHtml(booked, false)}` : ''; })() : ''}
-  ${inviteHtml()}
   </div>${dashSide(isMentor)}</div>`;
 }
 
