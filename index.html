@@ -2976,6 +2976,8 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .lx-head-left{text-align:start;margin:0 0 40px;max-width:560px;}
   /* How it works: three columns on a thin line */
   .lx-how{padding:96px 0 0;}
+  .lx-how-row+.lx-how-row{margin-top:44px;}
+  .lx-how-lab{margin:0 0 18px;font-size:12.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#A07D56;}
   .lx-how-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px;counter-reset:s;}
   .lx-how-steps li{position:relative;padding-top:28px;border-top:1px solid #D9C6AE;}
   .lx-how-steps li::before{content:"";position:absolute;top:-4px;inset-inline-start:0;width:7px;height:7px;border-radius:50%;background:var(--brand);}
@@ -3030,7 +3032,7 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
     .lx-b{flex:1 1 auto;}
   }
   /* Tighter vertical rhythm across the site */
-  .lx-box{margin-top:56px;}
+  .lx-box{margin-top:64px;}
   .lx-sec,.lx-how,.lx-more{padding-top:64px;}
   .lx-score{margin-top:64px;padding:52px 56px;}
   .lx-faq2{margin-top:64px;padding:0;}
@@ -4091,7 +4093,11 @@ Object.assign(I18N.en, {
   hm_f1_t:'Choose your mentor', hm_f1_s:'Browse professionals by field and experience, read reviews from past clients, and see each rate up front.',
   hm_f2_t:'Pick a time', hm_f2_s:'Book a 30-minute session in your own time zone. Your card is charged only after the session takes place.',
   hm_f3_t:'Meet on video', hm_f3_s:'Join a private video call from any device and leave with clear, practical next steps.',
-  hm_how_s:'Three simple steps from your first question to a clear plan.', hm_more_go:'Explore', fq_sub:'Everything you need to know before your first session.',
+  hm_how_s:'Simple for the people asking for advice, and for the professionals sharing it.',
+  hm_how_c:'If you are looking for advice', hm_how_m:'If you are a professional',
+  hm_m_f1_t:'Sign up and create your profile', hm_m_f1_s:'Sign up yourself in a few minutes, add your experience and LinkedIn, and set your own rate.',
+  hm_m_f2_t:'Choose your hours', hm_m_f2_s:'Open the times that suit you. Clients book 30-minute sessions straight into your calendar.',
+  hm_m_f3_t:'Meet and get paid', hm_m_f3_s:'Hold the session by video and get paid for every session you complete.', hm_more_go:'Explore', fq_sub:'Everything you need to know before your first session.',
   ts_seek_k:'Looking for your next role', ts_seek_t:'Talk to someone who already has the job you want',
   ts_seek_s:'Search by job title or company. Aiming for a specific role? Find a professional who does it. Want to work at a specific company? Look for mentors who work there.',
   ts_seek_ph:'Job title or company', ts_seek_b:'Search',
@@ -4110,7 +4116,7 @@ Object.assign(I18N.en, {
   hm_p3_t:'Free tools to get started', hm_p3_s:'Score your resume, check your LinkedIn and practise interviews with the AI coach.', hm_p3_b:'Try the free tools',
   hm_end_c_k:'For job seekers', hm_end_c_t:'Get advice from someone who has been there', hm_end_c_s:'Choose a mentor by field, experience and reviews. You are charged only after your session takes place.',
   hm_end_m_k:'For professionals', hm_end_m_t:'Share what you know, and earn from it', hm_end_m_s:'Set your own rate and availability. Mentors keep {p}% of every session.',
-  hm_how_s:'Three steps from a question to a clear plan.',
+
   hs_t:'What is your resume score?', hs_s:'Find out in 30 seconds, free.', hs_b:'Get my score',
   tl_how_t:'How it works',
   tl_s1_t:'Upload your resume', tl_s1_s:'Or your LinkedIn profile. PDF, Word, or pasted text all work.',
@@ -4129,7 +4135,7 @@ Object.assign(I18N.en, {
   tl_run:'Get my free score', tl_run_signup:'Create a free account to get your score', tl_busy:'Reviewing…',
   tl_free_note:'Free. Your file stays private.', tl_signup_note:'Free, no card needed.',
   tl_err:'Something went wrong. Please try again.',
-  tl_err_short_r:'Please upload your resume or paste a bit more of it.', tl_err_short_l:'Please paste your headline, About section and recent experience.',
+  tl_err_short_r:'Please upload your resume or paste a bit more of it.', tl_err_short_l:'Add your LinkedIn profile link above and click Get my profile PDF, then drop the PDF here.',
   tl_band1:'Needs work', tl_band2:'Good start', tl_band3:'Strong', tl_band4:'Excellent',
   tl_strengths:'What is working', tl_fixes:'Your top 3 fixes',
   tl_imp_t:'Want these fixes applied for you?', tl_imp_s:'Get a rewritten version with the three fixes applied, ready to download as a Word file.', tl_imp_r:'Improve my resume', tl_imp_l:'Improve my LinkedIn', tl_imp_busy:'Rewriting… this can take up to a minute', tl_imp_again:'Rewrite again',
@@ -7346,14 +7352,17 @@ function homeView(){
     </div>
   </section>
 
+  <section class="lx-how">
+    <div class="lx-head"><h2>${esc(T('hiw2_title'))}</h2><p>${esc(T('hm_how_s'))}</p></div>
+    ${[['hm_how_c','hm_f'],['hm_how_m','hm_m_f']].map(([lab,k])=>`<div class="lx-how-row">
+      <p class="lx-how-lab">${esc(T(lab))}</p>
+      <ol class="lx-how-steps">${[1,2,3].map(n=>`<li><span class="lx-how-n">0${n}</span><b>${esc(T(k+n+'_t'))}</b><p>${esc(T(k+n+'_s'))}</p></li>`).join('')}</ol>
+    </div>`).join('')}
+  </section>
+
   <section class="lx-box">
     <h2>${esc(T('hm_help_t'))}</h2>
     <div class="lx-topics">${topics.map(x=>`<button type="button" class="lx-topic" data-route-q="${esc(x.q)}"><b>${esc(x.t)}</b><span>${esc(x.s)}</span><em>${esc(T('lx_go'))}</em></button>`).join('')}</div>
-  </section>
-
-  <section class="lx-how">
-    <div class="lx-head"><h2>${esc(T('hiw2_title'))}</h2><p>${esc(T('hm_how_s'))}</p></div>
-    <ol class="lx-how-steps">${[1,2,3].map(n=>`<li><span class="lx-how-n">0${n}</span><b>${esc(T('hm_f'+n+'_t'))}</b><p>${esc(T('hm_f'+n+'_s'))}</p></li>`).join('')}</ol>
   </section>
 
   <section class="lx-score">
@@ -7899,7 +7908,7 @@ function toolsView(){
           <span class="tl-pk-ic">${FILE_IC}</span>
           <div><b>${esc(file.name)}</b><span>${esc(T('tl_ready'))}</span></div>
           <button type="button" class="btn btn-ghost btn-sm" id="tl-file-x">${esc(T('tl_remove'))}</button>
-        </div>` : paste ? `
+        </div>` : (tab==='linkedin' && !state.toolLiOpened) ? '' : paste ? `
         <div class="field tl-paste"><label for="tl-text">${esc(T(tab==='resume' ? 'tl_lbl_resume' : 'tl_lbl_li'))}</label><textarea id="tl-text" rows="8" placeholder="${esc(T(tab==='resume' ? 'tl_ph_resume' : 'tl_ph_li'))}">${esc(tx)}</textarea></div>
         <button type="button" class="tl-link" id="tl-to-upload">${esc(T('tl_back_upload'))}</button>` : `
         <button type="button" class="tl-drop" id="tl-upload" ${busy?'disabled':''}>
@@ -7907,7 +7916,7 @@ function toolsView(){
           <b>${esc(T(tab==='resume' ? 'tl_drop_resume' : 'tl_drop_li'))}</b>
           <span>${esc(T(tab==='resume' ? 'tl_drop_hint_r' : 'tl_drop_hint_l'))}</span>
         </button>
-        <button type="button" class="tl-link" id="tl-to-paste">${esc(T(tab==='resume' ? 'tl_paste_r' : 'tl_paste_l'))}</button>`}
+        ${tab==='resume' ? `<button type="button" class="tl-link" id="tl-to-paste">${esc(T('tl_paste_r'))}</button>` : ''}`}
         <div class="field tl-target"><label for="tl-target">${esc(T('tl_target'))}</label><input id="tl-target" placeholder="${esc(T('tl_ph_target'))}" value="${esc(state.toolTarget||'')}"></div>
         <button type="button" class="btn btn-primary tl-run" id="tl-run" ${busy?'disabled':''}>${busy ? `<span class="tl-spin" aria-hidden="true"></span>` : ''}${esc(busy ? T('tl_busy') : (signedIn ? T('tl_run') : T('tl_run_signup')))}</button>
         ${state.toolErr ? `<p class="tl-err" role="alert">${esc(state.toolErr)}</p>` : ''}
