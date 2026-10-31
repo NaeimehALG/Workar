@@ -549,7 +549,7 @@
   .tl-doc li{margin:2px 0;}
   @media (max-width:600px){ .tl-imp{padding:20px 16px;} .tl-doc{padding:20px 16px;} }
   .tl-band-dark{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;background:linear-gradient(135deg,#6B4F3A 0%,#8B6A4C 100%);color:#F7F1E9;border-radius:18px;padding:28px 30px;margin-top:28px;}
-  .tl-band-dark h3{margin:0;font-size:19px;color:#fff;}
+  .tl-band-dark h3{margin:0;font-size:19px;color:#fff !important;}
   .tl-band-dark p{margin:6px 0 0;font-size:14.5px;color:#E9DCCB;max-width:52ch;}
   .tl-cta-btns{display:flex;gap:10px;flex-wrap:wrap;}
   .tl-btn-light{background:#FFFDF9;color:#5A4231;}
@@ -565,6 +565,21 @@
   .hr-bub-r{align-self:flex-end;background:var(--accent);border-color:var(--accent);color:#fff;border-radius:20px 20px 6px 20px;}
   .hr-cover{padding:8px 0 48px;}
   .hr-cover h2{margin:0 0 22px;font-size:24px;color:#5A4231;}
+  .ab-sec{padding:8px 0 44px;}
+  .ab-sec h2{margin:0 0 18px;font-size:24px;color:#5A4231;}
+  .ab-why{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:40px;align-items:start;border-top:1px solid var(--border);padding-top:36px;}
+  .ab-why p{margin:0 0 14px;font-size:16px;line-height:1.7;color:var(--text);max-width:62ch;}
+  .ab-quote{margin:0;font-size:26px;line-height:1.35;font-weight:600;color:#5A4231;}
+  .ab-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;}
+  .ab-card{border:1px solid var(--border);border-radius:18px;padding:26px 28px;background:var(--surface-2);display:flex;flex-direction:column;align-items:flex-start;gap:8px;}
+  .ab-card h3{margin:0;font-size:18px;color:#5A4231;}
+  .ab-card p{margin:0 0 10px;font-size:14.5px;line-height:1.6;color:var(--muted);}
+  .ab-card .btn{margin-top:auto;}
+  .ab-note{margin:0 0 28px;font-size:13.5px;color:var(--muted);}
+  .ab-contact{display:flex;gap:18px;flex-wrap:wrap;margin-top:6px;}
+  .ab-contact a{color:var(--accent);font-weight:600;text-decoration:none;}
+  .ab-contact a:hover{text-decoration:underline;}
+  @media (max-width:760px){ .ab-why,.ab-split{grid-template-columns:1fr;gap:18px;} .ab-quote{font-size:22px;} }
   .hr-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;}
   .hr-cols>div{border-top:2px solid var(--accent-2);padding-top:18px;}
   .hr-cols h3{margin:0 0 8px;font-size:16.5px;color:#5A4231;}
@@ -3867,6 +3882,28 @@ Object.assign(I18N.fa, {
 });
 // Free tools, HR page, invite links, verified reviews (English-only site)
 Object.assign(I18N.en, {
+  nav_about:'About', ft_about:'About Workar',
+  ab_kicker:'About Workar', ab_title:'A place for every career to find its guide',
+  ab_sub:'Workar connects people with experienced professionals for private, one-on-one video sessions, so the next step in a career is easier to see and easier to take.',
+  ab_why_t:'Why we built Workar', ab_quote:'The best career advice comes from someone who has already done it.',
+  ab_q1:'I want to move into project management. Where do I start?', ab_q2:'I made that switch five years ago. Let me show you what worked.', ab_q3:'Which certification should I do first?', ab_q4:'Let us look at your background and decide together.',
+  ab_why_p1:'Most career advice is generic. The answers that actually help come from someone who has already done the job you want, worked in the industry you are trying to enter, or made the same change you are considering.',
+  ab_why_p2:'Those people are hard to reach. Workar makes them easy to find and easy to book, for a focused 30-minute conversation about your situation.',
+  ab_how_t:'How it works',
+  ab_h1_t:'Find someone who has done it', ab_h1_s:'Browse mentors by field and experience, read their profiles and reviews, and choose the person who fits.',
+  ab_h2_t:'Book 30 minutes', ab_h2_s:'Pick a time that suits you both. Your card is held, not charged, until the session takes place.',
+  ab_h3_t:'Talk, then take the next step', ab_h3_s:'Meet by video from any device, ask your questions, and leave with a clearer plan.',
+  ab_val_t:'What we stand for',
+  ab_v1_t:'Real experience', ab_v1_s:'Every mentor shares their LinkedIn profile and works in the field they mentor in.',
+  ab_v2_t:'Honest reviews', ab_v2_s:'Reviews can only be written after a completed session, so what you read comes from real conversations.',
+  ab_v3_t:'Fair for everyone', ab_v3_s:'Mentors set their own rate and hours. You pay only after your session happens.',
+  ab_free_t:'Free tools to get started', ab_free_s:'Not ready to book yet? Score your resume, check your LinkedIn profile and practise interview questions with the free AI coach.',
+  ab_free_b:'Get my free Resume Score',
+  ab_men_t:'Share what you know', ab_men_s:'Every professional has experience someone else is looking for. Join Workar as a mentor, set your own rate and schedule, and get paid for every session you hold.',
+  ab_men_b:'Become a mentor',
+  ab_note:'Mentors on Workar are independent professionals. You choose who to book based on their profile and reviews.',
+  ab_contact_t:'Get in touch', ab_contact_s:'Questions, ideas or partnerships: we would love to hear from you.',
+  ab_cta_t:'Ready to talk to someone who has been there?', ab_cta_s:'Find a mentor in your field and book your first 30-minute session.',
   nav_tools:'Free Resume Score', nav_hr:'Talk to HR', nav_coaching:'Career & Life Coaching',
   co_kicker:'With ICF-credentialed coaches', co_title:'Career and life coaching',
   co_sub:'Work with a credentialed coach on the parts of work that a resume cannot fix: stress, confidence, balance and the big decisions.',
@@ -4004,7 +4041,7 @@ let state = { view:'home', mentorId:null, coachMode:'resume', chatMsgs:[], sendi
   authMode:'login', authError:'', authCheckEmail:false, authBusy:false,
   lang:'en', query:'', role:null, voiceMode:false, listening:false, outOfCredits:false };
 try{ const __qs = new URLSearchParams(location.search), __dr = __qs.get('r'); if(__qs.get('go')==='dispute' && __dr){ state.view = 'dispute'; state.disputeReq = __dr.slice(0,120); history.replaceState(null, '', location.pathname + location.hash); } }catch(e){}
-try{ const __qs2 = new URLSearchParams(location.search), __go = __qs2.get('go'), __m = (__qs2.get('m')||'').slice(0,80); if(__go && ['dashboard','admin','privacy','terms','refunds','conduct','browse','coach','tools','hr','coaching','prep','requests','messages','mentor','onboard'].includes(__go) && (__go!=='mentor' || __m)){ if(__go==='requests'){ state.ibPreferAction = true; } state.view = __go==='requests' ? 'messages' : __go; if(__go==='mentor') state.mentorId = __m; if(__go==='onboard' && ['client','mentor'].includes(__qs2.get('r'))){ state.role = __qs2.get('r'); saveIntent(state.role, ''); } } }catch(e){}
+try{ const __qs2 = new URLSearchParams(location.search), __go = __qs2.get('go'), __m = (__qs2.get('m')||'').slice(0,80); if(__go && ['dashboard','admin','privacy','terms','refunds','conduct','browse','coach','tools','hr','coaching','about','prep','requests','messages','mentor','onboard'].includes(__go) && (__go!=='mentor' || __m)){ if(__go==='requests'){ state.ibPreferAction = true; } state.view = __go==='requests' ? 'messages' : __go; if(__go==='mentor') state.mentorId = __m; if(__go==='onboard' && ['client','mentor'].includes(__qs2.get('r'))){ state.role = __qs2.get('r'); saveIntent(state.role, ''); } } }catch(e){}
 try{ const __mp = /^\/mentor\/([^\/?#]{1,120})\/?$/.exec(location.pathname); if(__mp && !new URLSearchParams(location.search).get('go')){ state.view = 'mentor'; state.mentorId = decodeURIComponent(__mp[1]).slice(0,80); } }catch(e){}
 if(state.view==='conduct'){ state.view = 'terms'; state.legalJump = 'conduct'; }
 if(state.view==='terms' && location.hash==='#conduct') state.legalJump = 'conduct';
@@ -4046,7 +4083,7 @@ function legalJumpNow(){
 const APP_BASE = '/';
 function mentorPath(id){ return APP_BASE + 'mentor/' + encodeURIComponent(id); }
 function viewUrl(view){
-  const keep = new Set(['dashboard','admin','privacy','terms','refunds','conduct','browse','coach','tools','hr','coaching','prep','messages','mentor','onboard','dispute']);
+  const keep = new Set(['dashboard','admin','privacy','terms','refunds','conduct','browse','coach','tools','hr','coaching','about','prep','messages','mentor','onboard','dispute']);
   if(!keep.has(view)) return APP_BASE;
   if(view==='mentor' && state.mentorId) return mentorPath(state.mentorId);
   const q = new URLSearchParams({ go: view });
@@ -4274,6 +4311,7 @@ function updateHead(){
   else if(v==='coach'){ title = T('nav_coach') + sfx; desc = T('dsc_coach'); canon = SITE_ORIGIN + '/?go=coach'; }
   else if(v==='tools'){ title = T('tl_title') + sfx; desc = T('tl_sub'); canon = SITE_ORIGIN + '/?go=tools'; }
   else if(v==='hr'){ title = T('hr_title') + sfx; desc = T('hr_sub'); canon = SITE_ORIGIN + '/?go=hr'; }
+  else if(v==='about'){ title = T('ab_kicker') + sfx; desc = T('ab_sub'); canon = SITE_ORIGIN + '/?go=about'; }
   else if(v==='coaching'){ title = T('co_title') + sfx; desc = T('co_sub'); canon = SITE_ORIGIN + '/?go=coaching'; }
   else if(legal && ['privacy','terms','refunds','conduct'].includes(v)){ title = legal.title + sfx; desc = T('dsc_legal'); canon = SITE_ORIGIN + '/?go=' + (v==='conduct' ? 'terms' : v); }
   else if(v==='messages' || v==='requests') title = T('nav_inbox') + sfx;
@@ -5063,6 +5101,7 @@ function render(){
       case 'coach': body = coachView(); break;
       case 'tools': body = toolsView(); break;
       case 'hr': body = hrView(); break;
+      case 'about': body = aboutView(); break;
       case 'coaching': body = coachingView(); break;
       case 'dispute': body = disputeView(); break;
       case 'prep': body = prepVisible() ? prepView() : homeView(); break;
@@ -5079,7 +5118,7 @@ function render(){
   if(__focusKey){ const f = [...document.querySelectorAll('#onboard-form input, #onboard-form select, #onboard-form textarea, .dash-form input, .dash-form select, .dash-form textarea')].find(e=>draftKey(e)===__focusKey);
     if(f){ f.focus({ preventScroll:true }); try{ if(__sel && __sel[0]!=null) f.setSelectionRange(__sel[0], __sel[1]); }catch(e){} } }
   if(state.langPrompt) app.appendChild(el(langPromptHtml()));
-  app.appendChild(el(`<footer class="site-foot"><div class="sf-top"><div class="sf-brand"><b>Workar</b> &middot; ${esc(T('footer_tag'))}</div><p class="foot-disc">${esc(T('disclaimer'))}</p></div><div class="sf-bottom"><span class="sf-copy" dir="ltr">&copy; ${new Date().getFullYear()} Workar</span><span class="foot-links"><a data-nav="privacy">${esc(T('ft_privacy'))}</a><a data-nav="terms">${esc(T('ft_terms'))}</a><a data-nav="refunds">${esc(T('ft_refunds'))}</a></span><span class="sf-social"><a href="${INSTAGRAM_URL}" target="_blank" rel="noopener noreferrer" aria-label="Workar on Instagram" title="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a><a href="${LINKEDIN_URL}" target="_blank" rel="noopener noreferrer" aria-label="Workar on LinkedIn" title="LinkedIn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 3a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM3 9h4v12H3V9Zm6 0h4v1.6C13.7 9.5 14.8 9 16.2 9 19 9 21 10.7 21 14v7h-4v-6.3c0-1.7-.7-2.7-2-2.7s-2 1-2 2.7V21H9V9Z"/></svg></a><a href="${YOUTUBE_URL}" target="_blank" rel="noopener noreferrer" aria-label="Workar on YouTube" title="YouTube"><svg width="18" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 7s-.2-1.5-.8-2.1C20.4 4.1 19.5 4 19 4c-2.9-.2-7-.2-7-.2s-4.1 0-7 .2c-.5 0-1.4.1-2.2.9C2.2 5.5 2 7 2 7s-.2 1.8-.2 3.5v3c0 1.7.2 3.5.2 3.5s.2 1.5.8 2.1c.8.8 1.8.8 2.4.9 1.7.2 6.8.2 6.8.2s4.1 0 7-.2c.5 0 1.4-.1 2.2-.9.6-.6.8-2.1.8-2.1s.2-1.8.2-3.5v-3C22.2 8.8 22 7 22 7ZM10 15.5v-7l6 3.5-6 3.5Z"/></svg></a></span></div></footer>`));
+  app.appendChild(el(`<footer class="site-foot"><div class="sf-top"><div class="sf-brand"><b>Workar</b> &middot; ${esc(T('footer_tag'))}</div><p class="foot-disc">${esc(T('disclaimer'))}</p></div><div class="sf-bottom"><span class="sf-copy" dir="ltr">&copy; ${new Date().getFullYear()} Workar</span><span class="foot-links"><a data-nav="about">${esc(T('ft_about'))}</a><a data-nav="privacy">${esc(T('ft_privacy'))}</a><a data-nav="terms">${esc(T('ft_terms'))}</a><a data-nav="refunds">${esc(T('ft_refunds'))}</a></span><span class="sf-social"><a href="${INSTAGRAM_URL}" target="_blank" rel="noopener noreferrer" aria-label="Workar on Instagram" title="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a><a href="${LINKEDIN_URL}" target="_blank" rel="noopener noreferrer" aria-label="Workar on LinkedIn" title="LinkedIn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 3a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM3 9h4v12H3V9Zm6 0h4v1.6C13.7 9.5 14.8 9 16.2 9 19 9 21 10.7 21 14v7h-4v-6.3c0-1.7-.7-2.7-2-2.7s-2 1-2 2.7V21H9V9Z"/></svg></a><a href="${YOUTUBE_URL}" target="_blank" rel="noopener noreferrer" aria-label="Workar on YouTube" title="YouTube"><svg width="18" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 7s-.2-1.5-.8-2.1C20.4 4.1 19.5 4 19 4c-2.9-.2-7-.2-7-.2s-4.1 0-7 .2c-.5 0-1.4.1-2.2.9C2.2 5.5 2 7 2 7s-.2 1.8-.2 3.5v3c0 1.7.2 3.5.2 3.5s.2 1.5.8 2.1c.8.8 1.8.8 2.4.9 1.7.2 6.8.2 6.8.2s4.1 0 7-.2c.5 0 1.4-.1 2.2-.9.6-.6.8-2.1.8-2.1s.2-1.8.2-3.5v-3C22.2 8.8 22 7 22 7ZM10 15.5v-7l6 3.5-6 3.5Z"/></svg></a></span></div></footer>`));
   wire();
   if(state.view==='messages' || state.view==='requests') wireInbox();
   if(window.WorkarAgents) WorkarAgents.afterRender();
@@ -5108,7 +5147,7 @@ function navHtml(){
   const prepItem = prepVisible() ? [['prep', T('nav_prep')]] : [];
   // One fixed order for everyone, so the menu never reshuffles while the profile loads after a refresh:
   // Home · Inbox · My profile · Find a mentor · AI coach (Inbox only when signed in)
-  const items = [['home', T('nav_home')], ['@inbox'], ['dashboard', (uid || myProfile) ? T('nav_dash') : T('nav_start')], ['browse', T('nav_browse')], ['hr', T('nav_hr')], ...prepItem, ['coach', T('nav_coach')]];
+  const items = [['home', T('nav_home')], ['@inbox'], ['dashboard', (uid || myProfile) ? T('nav_dash') : T('nav_start')], ['browse', T('nav_browse')], ['hr', T('nav_hr')], ...prepItem, ['coach', T('nav_coach')], ['about', T('nav_about')]];
   const inboxItem = ()=>{ if(!uid) return ''; const n = requestsNeedingMe() + inboxUnreadTotal(), on = state.view==='requests' || state.view==='messages';
     return `<a class="navlink nav-msg ${on?'active':''}" href="${navHref('messages')}" data-nav="${requestsNeedingMe() ? 'requests' : 'messages'}"${on?' aria-current="page"':''}>${esc(T('nav_inbox'))}<span class="nav-msg-badge" style="${n?'':'display:none'}">${n}</span></a>`; };
   const link = (v, label, cls)=>`<a class="navlink ${cls||''} ${state.view===v?'active':''}" href="${navHref(v)}" data-nav="${v}"${state.view===v?' aria-current="page"':''}>${esc(label)}</a>`;
@@ -7942,6 +7981,60 @@ function hrView(){
       <div class="tl-cta-btns"><button class="btn tl-btn-light" data-nav="tools">${esc(T('hr_try_tools'))}</button>${list.length ? '' : `<button class="btn tl-btn-ghost" data-nav="onboard" data-role="mentor">${esc(T('hr_join'))}</button>`}</div>
     </div>
   </section>`;
+}
+// ---------- About Workar ----------
+function aboutView(){
+  return `
+  <section class="tl-hero hr-hero">
+    <div class="tl-hero-copy">
+      <p class="tl-note">${esc(T('ab_kicker'))}</p>
+      <h1>${esc(T('ab_title'))}</h1>
+      <p class="tl-lede">${esc(T('ab_sub'))}</p>
+      <div class="tl-cta-btns" style="margin-top:26px;">
+        <button class="btn btn-primary" data-nav="browse">${esc(T('cta_browse'))}</button>
+        <button class="btn btn-outline" data-nav="onboard" data-role="mentor">${esc(T('ab_men_b'))}</button>
+      </div>
+    </div>
+    <div class="hr-convo" aria-hidden="true">
+      ${[1,2,3,4].map((n,i)=>`<p class="hr-bub ${i%2?'hr-bub-r':''}" style="--i:${i}">${esc(T('ab_q'+n))}</p>`).join('')}
+    </div>
+  </section>
+
+  <section class="ab-sec">
+    <div class="ab-why">
+      <div><h2>${esc(T('ab_why_t'))}</h2><p class="ab-quote">${esc(T('ab_quote'))}</p></div>
+      <div><p>${esc(T('ab_why_p1'))}</p><p>${esc(T('ab_why_p2'))}</p></div>
+    </div>
+  </section>
+
+  <section class="hr-cover">
+    <h2>${esc(T('ab_how_t'))}</h2>
+    <div class="hr-cols">${[1,2,3].map(n=>`<div><h3>${esc(T('ab_h'+n+'_t'))}</h3><p>${esc(T('ab_h'+n+'_s'))}</p></div>`).join('')}</div>
+  </section>
+
+  <section class="hr-cover">
+    <h2>${esc(T('ab_val_t'))}</h2>
+    <div class="hr-cols">${[1,2,3].map(n=>`<div><h3>${esc(T('ab_v'+n+'_t'))}</h3><p>${esc(T('ab_v'+n+'_s'))}</p></div>`).join('')}</div>
+  </section>
+
+  <section class="ab-sec">
+    <div class="ab-split">
+      <div class="ab-card"><h3>${esc(T('ab_free_t'))}</h3><p>${esc(T('ab_free_s'))}</p><button class="btn btn-primary" data-nav="tools">${esc(T('ab_free_b'))}</button></div>
+      <div class="ab-card"><h3>${esc(T('ab_men_t'))}</h3><p>${esc(T('ab_men_s'))}</p><button class="btn btn-outline" data-nav="onboard" data-role="mentor">${esc(T('ab_men_b'))}</button></div>
+    </div>
+  </section>
+
+  <section class="ab-sec">
+    <h2>${esc(T('ab_contact_t'))}</h2>
+    <p class="ab-note" style="margin-bottom:8px;">${esc(T('ab_contact_s'))}</p>
+    <div class="ab-contact"><a href="mailto:${SUPPORT_EMAIL}">${esc(SUPPORT_EMAIL)}</a><a href="${LINKEDIN_URL}" target="_blank" rel="noopener noreferrer">LinkedIn</a><a href="${INSTAGRAM_URL}" target="_blank" rel="noopener noreferrer">Instagram</a></div>
+  </section>
+
+  <p class="ab-note">${esc(T('ab_note'))}</p>
+  <div class="tl-band-dark">
+    <div><h3>${esc(T('ab_cta_t'))}</h3><p>${esc(T('ab_cta_s'))}</p></div>
+    <div class="tl-cta-btns"><button class="btn tl-btn-light" data-nav="browse">${esc(T('cta_browse'))}</button><button class="btn tl-btn-ghost" data-nav="onboard" data-role="mentor">${esc(T('ab_men_b'))}</button></div>
+  </div>`;
 }
 function wireHr(){
   const b = document.getElementById('hr-see'); if(!b) return;
