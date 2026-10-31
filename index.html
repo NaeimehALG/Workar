@@ -555,7 +555,7 @@
   .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
   #app[data-view="home"] .nav{margin-bottom:12px;}
   .hm-hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:64px;align-items:center;padding:36px 0 64px;}
-  .hm-hero h1{margin:0;font-size:clamp(34px,4.6vw,54px);line-height:1.06;letter-spacing:-.034em !important;color:#5A4231;max-width:15ch;}
+  .hm-hero h1{margin:0;font-size:clamp(32px,4.1vw,48px);line-height:1.08;letter-spacing:-.032em !important;color:#5A4231;max-width:19ch;}
   .hm-lede{margin:20px 0 0;font-size:18px;line-height:1.6;color:var(--muted);max-width:50ch;}
   .hm-search{display:flex;align-items:center;gap:10px;margin-top:32px;padding:7px 7px 7px 18px;background:#fff;border:1px solid #DCCBB5;border-radius:999px;max-width:540px;
     box-shadow:0 1px 2px rgba(90,66,49,.05),0 14px 34px -18px rgba(90,66,49,.28);transition:border-color .15s,box-shadow .15s;}
@@ -608,6 +608,8 @@
     .hm-sec{padding-top:56px;}
   }
   @media (max-width:560px){
+    .hm-chips{display:grid !important;grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible;}
+    .hm-chip{text-align:center;}
     .hm-search{padding:6px 6px 6px 14px;}
     .hm-search .btn{padding:0 16px;}
     .hm-topics{grid-template-columns:1fr;}
@@ -616,6 +618,38 @@
     .hm-topic-art{width:84px;padding:6px;margin:0;flex:none;}
     .hm-topic b{flex:1;min-width:0;}
     .hm-topic-line{flex-basis:100%;}
+  }
+  .hm-chips{flex-wrap:nowrap !important;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:2px;}
+  .hm-chips::-webkit-scrollbar{display:none;}
+  .hm-chip{white-space:nowrap;flex:none;padding:7px 13px;font-size:13px;}
+  .hm-pillars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin:0 0 56px;border:1px solid var(--border);border-radius:22px;background:#fff;overflow:hidden;}
+  .hm-pillar{display:flex;gap:16px;align-items:flex-start;text-align:start;font:inherit;color:inherit;cursor:pointer;background:transparent;border:0;padding:26px 26px 24px;transition:background .15s;}
+  .hm-pillar+.hm-pillar{border-inline-start:1px solid var(--border);}
+  .hm-pillar:hover{background:#FCF9F5;}
+  .hm-pillar:focus-visible{outline:2px solid var(--accent);outline-offset:-4px;}
+  .hm-p-ic{flex:none;width:44px;height:44px;border-radius:12px;background:var(--surface-2);color:var(--accent);display:grid;place-items:center;}
+  .hm-p-txt{display:flex;flex-direction:column;}
+  .hm-p-txt b{font-size:16px;line-height:1.3;color:#5A4231;}
+  .hm-p-txt span{margin-top:6px;font-size:14px;line-height:1.55;color:var(--muted);}
+  .hm-p-txt em{font-style:normal;margin-top:12px;font-size:13.5px;font-weight:700;color:var(--accent);}
+  .hm-pillar:hover em{text-decoration:underline;text-underline-offset:3px;}
+  .hm-end{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin:88px 0 32px;}
+  .hm-end>div{border-radius:26px;padding:44px 40px 40px;display:flex;flex-direction:column;align-items:flex-start;}
+  .hm-end-c{background:var(--surface-2);border:1px solid var(--border);}
+  .hm-end-m{background:linear-gradient(135deg,#6B4F3A 0%,#8B6A4C 100%);color:#F7F1E9;}
+  .hm-end-k{margin:0 0 12px;font-size:14px;font-weight:600;color:var(--accent-2);}
+  .hm-end-m .hm-end-k{color:#EDD6B3;}
+  .hm-end h2{margin:0;font-size:clamp(24px,2.8vw,32px);line-height:1.15;color:#5A4231;max-width:16ch;}
+  .hm-end-m h2{color:#fff;}
+  .hm-end p:not(.hm-end-k){margin:14px 0 26px;font-size:15.5px;line-height:1.6;color:var(--muted);max-width:42ch;}
+  .hm-end .btn{margin-top:auto;}
+  .hm-end-m p:not(.hm-end-k){color:#EEE3D5;}
+  .hm-end-m .btn:focus-visible{outline:2px solid #F7F1E9;outline-offset:2px;}
+  @media (max-width:860px){
+    .hm-pillars{grid-template-columns:minmax(0,1fr);}
+    .hm-pillar+.hm-pillar{border-inline-start:0;border-top:1px solid var(--border);}
+    .hm-end{grid-template-columns:minmax(0,1fr);margin-top:64px;}
+    .hm-end>div{padding:34px 26px 30px;}
   }
   /* home: dark feature band for the free score */
   .sb-band{position:relative;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:56px;align-items:center;margin:0;padding:64px 64px 64px 60px;
@@ -3660,12 +3694,18 @@ Object.assign(I18N.en, {
   home_tools_note:'Free, about 30 seconds',
   nf_tag:'Free', nf_label:'Resume Score',
   sb_f1:'point score, the way a recruiter reads it', sb_f2:'ranked fixes with example rewrites', sb_f3:'from upload to your score',
-  hm_h1:'Learn from someone who has already done the job you want',
-  hm_sub:'Book a private one-to-one session with an experienced professional. Get honest feedback on your resume, your interviews and your next move.',
+  hm_h1:'One-on-one career mentoring with people who have done the job you want',
+  hm_sub:'Workar connects you with experienced professionals and HR experts for private video sessions on your resume, your interviews and your next career move.',
   hm_q_lbl:'What do you want help with?', hm_q_ph:'What do you want help with?', hm_q_btn:'Find mentors', hm_chips_lbl:'Popular topics',
-  hm_chip1:'Resume & LinkedIn', hm_chip2:'Interview practice', hm_chip3:'Changing careers', hm_chip4:'New to Canada',
+  hm_chip1:'Resume & LinkedIn', hm_chip2:'Interviews', hm_chip3:'Career change', hm_chip4:'Moving abroad',
   hm_help_t:'Where a mentor makes the difference', hm_help_s:'Choose what you need most right now. We will suggest mentors who have faced the same challenge.',
   hm_topic_go:'See matching mentors',
+  hm_p_t:'Everything you need for your next career move',
+  hm_p1_t:'Private sessions with mentors', hm_p1_s:'Book a 30-minute video call with a professional who works in the role you want.', hm_p1_b:'Find a mentor',
+  hm_p2_t:'Advice from HR and recruiters', hm_p2_s:'Learn how hiring decisions are made, from the people who make them.', hm_p2_b:'Talk to HR',
+  hm_p3_t:'Free tools to get started', hm_p3_s:'Score your resume, check your LinkedIn and practise interviews with the AI coach.', hm_p3_b:'Try the free tools',
+  hm_end_c_k:'For job seekers', hm_end_c_t:'Get advice from someone who has been there', hm_end_c_s:'Choose a mentor by field, experience and reviews. You are charged only after your session takes place.',
+  hm_end_m_k:'For professionals', hm_end_m_t:'Share what you know, and earn from it', hm_end_m_s:'Set your own rate and availability. Mentors keep {p}% of every session.',
   hm_how_s:'From your first question to your next offer.',
   hs_t:'What is your resume score?', hs_s:'Find out in 30 seconds, free.', hs_b:'Get my score',
   tl_how_t:'How it works',
@@ -6863,6 +6903,17 @@ function homeView(){
     <div class="ar-hero-wrap hm-film">${ART.hero()}</div>
   </section>
 
+  <section class="hm-pillars" aria-label="${esc(T('hm_p_t'))}">
+    ${[
+      ['browse', '<circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.8-3.4 3-5.2 5.5-5.2s4.7 1.8 5.5 5.2"/><rect x="14.5" y="6" width="6.5" height="5" rx="1.2"/><path d="M16.5 11l-1 2"/>'],
+      ['hr', '<path d="M4 5h16v10H9l-5 4z"/><path d="M8 9h8M8 12h5"/>'],
+      ['tools', '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 15l2 2 4-4"/>']
+    ].map(([v,ic],i)=>`<button type="button" class="hm-pillar" data-nav="${v}">
+      <span class="hm-p-ic"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ic}</svg></span>
+      <span class="hm-p-txt"><b>${esc(T('hm_p'+(i+1)+'_t'))}</b><span>${esc(T('hm_p'+(i+1)+'_s'))}</span><em>${esc(T('hm_p'+(i+1)+'_b'))}</em></span>
+    </button>`).join('')}
+  </section>
+
   <section class="sb-band" aria-label="${esc(T('nf_label'))}">
     <div class="sb-copy">
       <p class="sb-note">${esc(T('home_tools_note'))}</p>
@@ -6902,11 +6953,18 @@ function homeView(){
     <div class="fq-list">${[1,2,3,4,5,6].map(n=>`<details class="fq-item"><summary>${esc(T('fq_q'+n))}</summary><p>${esc(T('fq_a'+n))}</p></details>`).join('')}</div>
   </section>
 
-  <section class="hm-close">
-    <h2>${esc(T('close_t'))}</h2>
-    <div class="hm-close-r">
-      <p>${esc(T('close_s'))}</p>
-      <div class="tl-cta-btns"><button class="btn btn-primary" data-nav="browse">${esc(T('cta_browse'))}</button><button class="btn btn-outline" data-nav="onboard" data-role="mentor">${esc(T('cta_become'))}</button></div>
+  <section class="hm-end">
+    <div class="hm-end-c">
+      <p class="hm-end-k">${esc(T('hm_end_c_k'))}</p>
+      <h2>${esc(T('hm_end_c_t'))}</h2>
+      <p>${esc(T('hm_end_c_s'))}</p>
+      <button class="btn btn-primary" data-nav="browse">${esc(T('cta_browse'))}</button>
+    </div>
+    <div class="hm-end-m">
+      <p class="hm-end-k">${esc(T('hm_end_m_k'))}</p>
+      <h2>${esc(T('hm_end_m_t'))}</h2>
+      <p>${esc(T('hm_end_m_s').replace('{p}', mentorSharePct()))}</p>
+      <button class="btn tl-btn-light" data-nav="onboard" data-role="mentor">${esc(T('cta_become'))}</button>
     </div>
   </section>
   `;
