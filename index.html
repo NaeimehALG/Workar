@@ -64,7 +64,7 @@
   button.navlink{border:1px solid transparent;} button.lang-switch{background:var(--surface-2);border:1px solid var(--border);}
   .navlink:focus-visible,.brand:focus-visible,.lang-switch:focus-visible,.foot-links a:focus-visible,.pro-foot a:focus-visible,.card[data-nav]:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
   .brand .mark{font-weight:700;font-size:24px;letter-spacing:-.01em;}
-  .brand .tag{font-size:12px;color:var(--muted);position:relative;top:7px;}
+  .brand .tag{font-size:12px;color:var(--muted);position:relative;top:4px;}
   .navlinks{display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
   .navlink{padding:8px 14px;border-radius:999px;font-size:14px;font-weight:600;cursor:pointer;color:var(--muted);border:1px solid transparent;}
   .navlink.active{background:var(--surface-2);color:var(--text);border-color:var(--border);}
@@ -575,10 +575,14 @@
   .ab-card h3{margin:0;font-size:18px;color:#5A4231;}
   .ab-card p{margin:0 0 10px;font-size:14.5px;line-height:1.6;color:var(--muted);}
   .ab-card .btn{margin-top:auto;}
+  .ab-steps .tl-fx-n{margin-bottom:12px;}
+  .ab-for{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;}
+  .ab-for-card{border:1px solid var(--border);border-radius:16px;padding:22px 20px;background:#fff;}
+  .ab-for-card h3{margin:0 0 8px;font-size:16px;color:#5A4231;}
+  .ab-for-card p{margin:0;font-size:14px;line-height:1.6;color:var(--muted);}
+  @media (max-width:980px){ .ab-for{grid-template-columns:repeat(2,minmax(0,1fr));} }
+  @media (max-width:560px){ .ab-for{grid-template-columns:1fr;} }
   .ab-note{margin:0 0 28px;font-size:13.5px;color:var(--muted);}
-  .ab-contact{display:flex;gap:18px;flex-wrap:wrap;margin-top:6px;}
-  .ab-contact a{color:var(--accent);font-weight:600;text-decoration:none;}
-  .ab-contact a:hover{text-decoration:underline;}
   @media (max-width:760px){ .ab-why,.ab-split{grid-template-columns:1fr;gap:18px;} .ab-quote{font-size:22px;} }
   .hr-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;}
   .hr-cols>div{border-top:2px solid var(--accent-2);padding-top:18px;}
@@ -3893,6 +3897,11 @@ Object.assign(I18N.en, {
   ab_h1_t:'Find someone who has done it', ab_h1_s:'Browse mentors by field and experience, read their profiles and reviews, and choose the person who fits.',
   ab_h2_t:'Book 30 minutes', ab_h2_s:'Pick a time that suits you both. Your card is held, not charged, until the session takes place.',
   ab_h3_t:'Talk, then take the next step', ab_h3_s:'Meet by video from any device, ask your questions, and leave with a clearer plan.',
+  ab_for_t:'Who Workar is for',
+  ab_f1_t:'Job seekers', ab_f1_s:'Get your resume, LinkedIn and interview answers in front of someone who knows what hiring teams look for.',
+  ab_f2_t:'Career changers', ab_f2_s:'Talk to someone who has already made the switch you are considering, and learn what it really takes.',
+  ab_f3_t:'Professionals growing in their role', ab_f3_s:'Prepare for a promotion, a new responsibility or a difficult decision with an experienced sounding board.',
+  ab_f4_t:'Students and graduates', ab_f4_s:'Understand the paths open to you and the skills worth building before your first role.',
   ab_val_t:'What we stand for',
   ab_v1_t:'Real experience', ab_v1_s:'Every mentor shares their LinkedIn profile and works in the field they mentor in.',
   ab_v2_t:'Honest reviews', ab_v2_s:'Reviews can only be written after a completed session, so what you read comes from real conversations.',
@@ -3902,7 +3911,6 @@ Object.assign(I18N.en, {
   ab_men_t:'Share what you know', ab_men_s:'Every professional has experience someone else is looking for. Join Workar as a mentor, set your own rate and schedule, and get paid for every session you hold.',
   ab_men_b:'Become a mentor',
   ab_note:'Mentors on Workar are independent professionals. You choose who to book based on their profile and reviews.',
-  ab_contact_t:'Get in touch', ab_contact_s:'Questions, ideas or partnerships: we would love to hear from you.',
   ab_cta_t:'Ready to talk to someone who has been there?', ab_cta_s:'Find a mentor in your field and book your first 30-minute session.',
   nav_tools:'Free Resume Score', nav_hr:'Talk to HR', nav_coaching:'Career & Life Coaching',
   co_kicker:'With ICF-credentialed coaches', co_title:'Career and life coaching',
@@ -8009,7 +8017,12 @@ function aboutView(){
 
   <section class="hr-cover">
     <h2>${esc(T('ab_how_t'))}</h2>
-    <div class="hr-cols">${[1,2,3].map(n=>`<div><h3>${esc(T('ab_h'+n+'_t'))}</h3><p>${esc(T('ab_h'+n+'_s'))}</p></div>`).join('')}</div>
+    <div class="hr-cols ab-steps">${[1,2,3].map(n=>`<div><span class="tl-fx-n">${n}</span><h3>${esc(T('ab_h'+n+'_t'))}</h3><p>${esc(T('ab_h'+n+'_s'))}</p></div>`).join('')}</div>
+  </section>
+
+  <section class="ab-sec">
+    <h2>${esc(T('ab_for_t'))}</h2>
+    <div class="ab-for">${[1,2,3,4].map(n=>`<div class="ab-for-card"><h3>${esc(T('ab_f'+n+'_t'))}</h3><p>${esc(T('ab_f'+n+'_s'))}</p></div>`).join('')}</div>
   </section>
 
   <section class="hr-cover">
@@ -8022,12 +8035,6 @@ function aboutView(){
       <div class="ab-card"><h3>${esc(T('ab_free_t'))}</h3><p>${esc(T('ab_free_s'))}</p><button class="btn btn-primary" data-nav="tools">${esc(T('ab_free_b'))}</button></div>
       <div class="ab-card"><h3>${esc(T('ab_men_t'))}</h3><p>${esc(T('ab_men_s'))}</p><button class="btn btn-outline" data-nav="onboard" data-role="mentor">${esc(T('ab_men_b'))}</button></div>
     </div>
-  </section>
-
-  <section class="ab-sec">
-    <h2>${esc(T('ab_contact_t'))}</h2>
-    <p class="ab-note" style="margin-bottom:8px;">${esc(T('ab_contact_s'))}</p>
-    <div class="ab-contact"><a href="mailto:${SUPPORT_EMAIL}">${esc(SUPPORT_EMAIL)}</a><a href="${LINKEDIN_URL}" target="_blank" rel="noopener noreferrer">LinkedIn</a><a href="${INSTAGRAM_URL}" target="_blank" rel="noopener noreferrer">Instagram</a></div>
   </section>
 
   <p class="ab-note">${esc(T('ab_note'))}</p>
@@ -11573,7 +11580,7 @@ init();
     v.className = 'wkv-video'; v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true;
     v.setAttribute('muted',''); v.setAttribute('playsinline',''); v.setAttribute('preload','auto'); v.setAttribute('aria-hidden','true');
     v.poster = '/hero-v10-poster.jpg';
-    v.innerHTML = '<source src="/hero-v10.webm?v=two-men-1" type="video/webm"><source src="/hero-v10.mp4?v=two-men-1" type="video/mp4">';
+    v.innerHTML = '<source src="/hero-v10.webm?v=white-end-1" type="video/webm"><source src="/hero-v10.mp4?v=white-end-1" type="video/mp4">';
     v.addEventListener('playing', ()=>v.classList.add('on'));
     function mount(){
       const slot = document.querySelector('.wkv-slot');
