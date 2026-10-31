@@ -2971,7 +2971,7 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
     .lx-faq2{margin-top:64px;padding:44px 16px;border-radius:22px;}
     .lx-faq-list{padding:0 18px;}
   }
-  .lx-end{text-align:center;margin:0;padding:72px 0 64px;}
+  .lx-end{text-align:center;margin:96px 0 0;padding:80px 0 96px;border-top:1px solid var(--line);}
   .lx-end h2{margin:0 auto;font-size:clamp(28px,3.2vw,42px) !important;line-height:1.15 !important;max-width:20ch;}
   .lx-end .lx-btns{justify-content:center;}
   @media (max-width:860px){
@@ -2989,39 +2989,13 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
     .lx-sec{grid-template-columns:minmax(0,1fr);gap:20px;padding-top:64px;}
     .lx-score{grid-template-columns:minmax(0,1fr);gap:36px;padding:36px 24px;margin-top:64px;}
     .lx-score-art{order:-1;}
-    .lx-end{margin-top:0;padding:56px 0 48px;}
+    .lx-end{margin-top:64px;padding:64px 0 72px;}
     .lx-b{flex:1 1 auto;}
-  }
-  /* Tighter vertical rhythm across the site */
-  .lx-box{margin-top:56px;}
-  .lx-sec,.lx-how,.lx-more{padding-top:64px;}
-  .lx-score{margin-top:64px;padding:52px 56px;}
-  .lx-faq2{margin-top:64px;padding:56px 48px;}
-  .lx-head{margin-bottom:36px;}
-  .lx-head-left{margin-bottom:32px;}
-  .lx-how-n{font-size:40px;margin-bottom:14px;}
-  .lx-end{padding:56px 0 40px;}
-  .tl-hero{padding-bottom:40px;}
-  .hr-cover{padding-bottom:36px;}
-  .ab-sec{padding-bottom:32px;}
-  .tl-how-sec{margin-top:40px;}
-  footer.site-foot{margin-top:16px;}
-  @media (max-width:860px){
-    .lx-box{margin-top:40px;}
-    .lx-sec,.lx-how,.lx-more{padding-top:48px;}
-    .lx-score{margin-top:48px;padding:32px 22px;}
-    .lx-faq2{margin-top:48px;padding:36px 16px;}
-    .lx-head{margin-bottom:26px;}
-    .lx-end{padding:44px 0 32px;}
-    .tl-hero{padding-bottom:32px;}
   }
   /* Header on desktop: logo, tagline and every menu link on one line, sharing one baseline */
   @media (min-width:1025px){
-    /* the browser lines up the text baselines itself, so it holds with any font the visitor's computer uses */
-    .nav{flex-wrap:nowrap;align-items:last baseline;}
-    .brand{align-items:last baseline;}
-    .brand .tag{top:-1px;}
-    .navlinks{flex-wrap:nowrap;align-items:baseline;gap:0;position:relative;top:-1px;}
+    .nav{flex-wrap:nowrap;align-items:flex-end;}
+    .navlinks{flex-wrap:nowrap;align-items:center;gap:0;margin-bottom:-13px;}
     .navlinks .navlink{white-space:nowrap;padding:8px 9px;font-size:13.5px;}
     .nav-free{margin-inline-start:4px;}
   }
@@ -4095,7 +4069,7 @@ Object.assign(I18N.en, {
   hr_c1_t:'The first screen', hr_c1_s:'Learn what a recruiter checks first on your resume and LinkedIn, and what makes them keep reading.',
   hr_c2_t:'Behind the hiring process', hr_c2_s:'Applicant tracking systems, hiring managers, salary ranges: understand what happens after you click Apply.',
   hr_c3_t:'Questions you cannot ask at work', hr_c3_s:'Get honest, confidential answers on job offers, negotiation, and how to explain a gap or a change of career.',
-  hr_list_t:'HR & recruiting mentors', hr_browse:'Browse HR & recruiters',
+  hr_list_t:'HR & recruiting mentors',
   hr_empty_t:'Our first HR and recruiting mentors are joining now.',
   hr_empty_s:'In the meantime, run your resume through the free Resume Score. If you work in HR or recruiting, we would love to have you as a mentor.',
   hr_try_tools:'Get my free Resume Score', hr_join:'Join as an HR mentor',
@@ -8050,7 +8024,7 @@ function hrView(){
       <h1>${esc(T('hr_title'))}</h1>
       <p class="tl-lede">${esc(T('hr_sub'))}</p>
       <div class="tl-cta-btns" style="margin-top:26px;">
-        <button class="btn btn-primary" id="hr-see">${esc(T('hr_browse'))}</button>
+        ${list.length ? `<button class="btn btn-primary" id="hr-see">${esc(T('hr_see'))}</button>` : `<button class="btn btn-primary" data-nav="browse">${esc(T('cta_browse'))}</button>`}
       </div>
     </div>
     <div class="hr-convo" aria-hidden="true">
@@ -11663,7 +11637,7 @@ init();
     v.className = 'wkv-video'; v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true;
     v.setAttribute('muted',''); v.setAttribute('playsinline',''); v.setAttribute('preload','auto'); v.setAttribute('aria-hidden','true');
     v.poster = '/hero-v10-poster.jpg';
-    v.innerHTML = '<source src="/hero-v10.webm?v=white-end-3" type="video/webm"><source src="/hero-v10.mp4?v=white-end-3" type="video/mp4">';
+    v.innerHTML = '<source src="/hero-v10.webm?v=white-end-2" type="video/webm"><source src="/hero-v10.mp4?v=white-end-2" type="video/mp4">';
     v.addEventListener('playing', ()=>v.classList.add('on'));
     function mount(){
       const slot = document.querySelector('.wkv-slot');
