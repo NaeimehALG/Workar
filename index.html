@@ -2931,6 +2931,46 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .lx-faq .fq-list{margin:-14px 0 0;}
   .lx-faq .fq-item:first-child{border-top:0;}
   .lx-faq .fq-item summary{font-size:16px;font-weight:600;color:var(--ink);}
+  /* Shared section heading */
+  .lx-head{text-align:center;max-width:620px;margin:0 auto 48px;}
+  .lx-head h2{margin:0;font-size:clamp(28px,3vw,40px) !important;line-height:1.15 !important;}
+  .lx-head p{margin:12px 0 0;font-size:16px;line-height:1.6;color:var(--body);}
+  .lx-head-left{text-align:start;margin:0 0 40px;max-width:560px;}
+  /* How it works: three columns on a thin line */
+  .lx-how{padding:96px 0 0;}
+  .lx-how-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px;counter-reset:s;}
+  .lx-how-steps li{position:relative;padding-top:28px;border-top:1px solid #D9C6AE;}
+  .lx-how-steps li::before{content:"";position:absolute;top:-4px;inset-inline-start:0;width:7px;height:7px;border-radius:50%;background:var(--brand);}
+  .lx-how-n{display:block;font-size:44px;font-weight:200;line-height:1;color:#B9966B;letter-spacing:-.02em;margin-bottom:18px;font-variant-numeric:tabular-nums;}
+  .lx-how-steps b{display:block;font-size:18px;font-weight:600;color:var(--ink);}
+  .lx-how-steps p{margin:8px 0 0;font-size:15px;line-height:1.65;color:var(--body);}
+  /* More ways: cards */
+  .lx-more{padding:96px 0 0;}
+  .lx-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;}
+  .lx-card{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:30px 28px 26px;border-radius:22px;background:#FBF7F2;border:1px solid var(--line);color:inherit;text-decoration:none;cursor:pointer;transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease;}
+  .lx-card:hover{transform:translateY(-4px);border-color:#E3D3BF;box-shadow:0 18px 40px -24px rgba(90,66,49,.45);}
+  .lx-card:focus-visible{outline:2px solid var(--brand);outline-offset:3px;}
+  .lx-card-ic{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:#fff;color:var(--brand);border:1px solid var(--line);margin-bottom:10px;}
+  .lx-card b{font-size:18px;font-weight:600;color:var(--ink);}
+  .lx-card em{font-style:normal;font-size:15px;line-height:1.6;color:var(--body);flex:1;}
+  .lx-card i{font-style:normal;font-size:14px;font-weight:600;color:var(--brand);margin-top:14px;}
+  .lx-card i span{display:inline-block;transition:transform .2s;}
+  .lx-card:hover i span{transform:translateX(4px);}
+  /* FAQ: centred column in a soft panel */
+  .lx-faq2{margin:96px 0 0;padding:72px 56px;border-radius:28px;background:#FBF7F2;}
+  .lx-faq2 .lx-head{margin-bottom:36px;}
+  .lx-faq-list{max-width:760px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:20px;padding:4px 28px;}
+  .lx-faq-list .fq-item:last-child{border-bottom:0;}
+  .lx-faq-list .fq-item summary{font-size:16px;font-weight:600;color:var(--ink);padding-top:20px;padding-bottom:20px;}
+  .lx-faq-list .fq-item p{font-size:15px;}
+  @media (max-width:860px){
+    .lx-how,.lx-more{padding-top:64px;}
+    .lx-how-steps,.lx-cards{grid-template-columns:minmax(0,1fr);gap:28px;}
+    .lx-cards{gap:14px;}
+    .lx-head{margin-bottom:32px;}
+    .lx-faq2{margin-top:64px;padding:44px 16px;border-radius:22px;}
+    .lx-faq-list{padding:0 18px;}
+  }
   .lx-end{text-align:center;margin:96px 0 0;padding:80px 0 96px;border-top:1px solid var(--line);}
   .lx-end h2{margin:0 auto;font-size:clamp(28px,3.2vw,42px) !important;line-height:1.15 !important;max-width:20ch;}
   .lx-end .lx-btns{justify-content:center;}
@@ -3976,6 +4016,7 @@ Object.assign(I18N.en, {
   hm_f1_t:'Choose your mentor', hm_f1_s:'Browse professionals by field and experience, read reviews from past clients, and see each rate up front.',
   hm_f2_t:'Pick a time', hm_f2_s:'Book a 30-minute session in your own time zone. Your card is charged only after the session takes place.',
   hm_f3_t:'Meet on video', hm_f3_s:'Join a private video call from any device and leave with clear, practical next steps.',
+  hm_how_s:'Three simple steps from your first question to a clear plan.', hm_more_go:'Explore', fq_sub:'Everything you need to know before your first session.',
   hm_more_t:'More ways Workar helps', hm_more_s:'Get the hiring side of the story, support beyond the resume, and practice between sessions.',
   hm_m1_t:'Talk to HR and recruiters', hm_m1_s:'Learn how hiring decisions are made, from the people who make them.', hm_m1_b:'Talk to HR',
   hm_m2_t:'Career and life coaching', hm_m2_s:'Work with an ICF-credentialed coach on stress, confidence and the big decisions.', hm_m2_b:'Explore coaching',
@@ -7172,6 +7213,11 @@ function disclaimerHtml(){ return `<p class="pro-note">${esc(T('disclaimer_short
 // PMP Prep is switched off for visitors for now. Set SHOW_PREP to true to bring it back.
 const SHOW_PREP = false;
 function prepVisible(){ return SHOW_PREP || isAdmin(); }
+const LX_IC = {
+  hr:`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.9-3.6 3.4-5.5 6.5-5.5s5.6 1.9 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 14.8c1.6.8 2.6 2.5 3 5.2"/></svg>`,
+  coach:`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>`,
+  ai:`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="12" rx="3"/><path d="M9 21h6M12 17v4M9 11h.01M15 11h.01"/></svg>`
+};
 function homeView(){
   const topics = [1,2,3,4].map(n=>({ t:T('lx_t'+n), s:T('lx_s'+n), q:T('lx_q'+n) }));
   return `
@@ -7196,9 +7242,9 @@ function homeView(){
     <div class="lx-topics">${topics.map(x=>`<button type="button" class="lx-topic" data-route-q="${esc(x.q)}"><b>${esc(x.t)}</b><span>${esc(x.s)}</span><em>${esc(T('lx_go'))}</em></button>`).join('')}</div>
   </section>
 
-  <section class="lx-sec">
-    <h2>${esc(T('hiw2_title'))}</h2>
-    <ol class="lx-steps">${[1,2,3].map(n=>`<li><span>0${n}</span><b>${esc(T('hm_f'+n+'_t'))}</b><p>${esc(T('hm_f'+n+'_s'))}</p></li>`).join('')}</ol>
+  <section class="lx-how">
+    <div class="lx-head"><h2>${esc(T('hiw2_title'))}</h2><p>${esc(T('hm_how_s'))}</p></div>
+    <ol class="lx-how-steps">${[1,2,3].map(n=>`<li><span class="lx-how-n">0${n}</span><b>${esc(T('hm_f'+n+'_t'))}</b><p>${esc(T('hm_f'+n+'_s'))}</p></li>`).join('')}</ol>
   </section>
 
   <section class="lx-score">
@@ -7211,14 +7257,14 @@ function homeView(){
     <div class="lx-score-art">${recruiterSheetHtml(true, 'home')}</div>
   </section>
 
-  <section class="lx-sec">
-    <h2>${esc(T('hm_more_t'))}</h2>
-    <div class="lx-links">${[['hr','hm_m1'],['coaching','hm_m2'],['coach','hm_m3']].map(([v,k])=>`<a class="lx-link" data-nav="${v}"><span><b>${esc(T(k+'_t'))}</b><em>${esc(T(k+'_s'))}</em></span><i aria-hidden="true">→</i></a>`).join('')}</div>
+  <section class="lx-more">
+    <div class="lx-head lx-head-left"><h2>${esc(T('hm_more_t'))}</h2><p>${esc(T('hm_more_s'))}</p></div>
+    <div class="lx-cards">${[['hr','hm_m1',LX_IC.hr],['coaching','hm_m2',LX_IC.coach],['coach','hm_m3',LX_IC.ai]].map(([v,k,ic])=>`<a class="lx-card" href="${navHref(v)}" data-nav="${v}"><span class="lx-card-ic" aria-hidden="true">${ic}</span><b>${esc(T(k+'_t'))}</b><em>${esc(T(k+'_s'))}</em><i>${esc(T('hm_more_go'))} <span aria-hidden="true">→</span></i></a>`).join('')}</div>
   </section>
 
-  <section class="lx-sec lx-faq">
-    <h2>${esc(T('fq_title_a'))} ${esc(T('fq_title_b'))}</h2>
-    <div class="fq-list">${[1,2,3,5].map(n=>`<details class="fq-item"><summary>${esc(T('fq_q'+n))}</summary><p>${esc(T('fq_a'+n))}</p></details>`).join('')}</div>
+  <section class="lx-faq2">
+    <div class="lx-head"><h2>${esc(T('fq_title_a'))} ${esc(T('fq_title_b'))}</h2><p>${esc(T('fq_sub'))}</p></div>
+    <div class="fq-list lx-faq-list">${[1,2,3,5].map(n=>`<details class="fq-item"><summary>${esc(T('fq_q'+n))}</summary><p>${esc(T('fq_a'+n))}</p></details>`).join('')}</div>
   </section>
 
   <section class="lx-end">
@@ -11580,7 +11626,7 @@ init();
     v.className = 'wkv-video'; v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true;
     v.setAttribute('muted',''); v.setAttribute('playsinline',''); v.setAttribute('preload','auto'); v.setAttribute('aria-hidden','true');
     v.poster = '/hero-v10-poster.jpg';
-    v.innerHTML = '<source src="/hero-v10.webm?v=white-end-1" type="video/webm"><source src="/hero-v10.mp4?v=white-end-1" type="video/mp4">';
+    v.innerHTML = '<source src="/hero-v10.webm?v=white-end-2" type="video/webm"><source src="/hero-v10.mp4?v=white-end-2" type="video/mp4">';
     v.addEventListener('playing', ()=>v.classList.add('on'));
     function mount(){
       const slot = document.querySelector('.wkv-slot');
