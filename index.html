@@ -551,8 +551,74 @@
   #hr-list .tl-band-dark{margin-top:32px;}
   #hr-list .hr-first{margin-top:0;}
 
+  /* ---------- Home (rebuilt) ---------- */
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+  #app[data-view="home"] .nav{margin-bottom:12px;}
+  .hm-hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:64px;align-items:center;padding:36px 0 64px;}
+  .hm-hero h1{margin:0;font-size:clamp(34px,4.6vw,54px);line-height:1.06;letter-spacing:-.034em !important;color:#5A4231;max-width:15ch;}
+  .hm-lede{margin:20px 0 0;font-size:18px;line-height:1.6;color:var(--muted);max-width:50ch;}
+  .hm-search{display:flex;align-items:center;gap:10px;margin-top:32px;padding:7px 7px 7px 18px;background:#fff;border:1px solid #DCCBB5;border-radius:999px;max-width:540px;
+    box-shadow:0 1px 2px rgba(90,66,49,.05),0 14px 34px -18px rgba(90,66,49,.28);transition:border-color .15s,box-shadow .15s;}
+  .hm-search:focus-within{border-color:var(--accent);box-shadow:0 0 0 4px rgba(139,106,76,.12),0 14px 34px -18px rgba(90,66,49,.28);}
+  .hm-search svg{color:var(--muted-soft);flex:none;}
+  .hm-search input{flex:1;min-width:0;border:0 !important;outline:0;background:transparent !important;box-shadow:none !important;font:inherit;font-size:15.5px;color:var(--text);padding:8px 0 !important;}
+  .hm-search .btn{flex:none;height:44px;padding:0 22px;}
+  .hm-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+  .hm-chip{font:inherit;font-size:13.5px;font-weight:600;color:var(--accent);background:var(--surface-2);border:1px solid var(--border);border-radius:999px;padding:7px 14px;cursor:pointer;transition:background .15s,border-color .15s,color .15s;}
+  .hm-chip:hover{background:#fff;border-color:var(--accent-2);color:#5A4231;}
+  .hm-chip:focus-visible,.hm-topic:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  .hm-trust{list-style:none;margin:28px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px 22px;}
+  .hm-trust li{display:flex;align-items:center;gap:7px;font-size:13.5px;color:var(--muted);}
+  .hm-trust svg{color:var(--accent);flex:none;}
+  .hm-film{position:relative;width:100%;max-width:440px;margin:0 auto;animation:proArch 1.3s cubic-bezier(.2,.8,.2,1) .1s both;}
+  @media (prefers-reduced-motion: reduce){ .hm-film{animation:none;} }
+  .hm-sec{padding:72px 0 0;}
+  .hm-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;align-items:end;margin-bottom:36px;}
+  .hm-head h2{margin:0;font-size:clamp(26px,3.2vw,36px);line-height:1.12;color:#5A4231;max-width:18ch;}
+  .hm-head p{margin:0;font-size:16px;line-height:1.6;color:var(--muted);max-width:46ch;justify-self:end;}
+  .hm-topics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;}
+  .hm-topic{display:flex;flex-direction:column;align-items:flex-start;text-align:start;font:inherit;color:inherit;cursor:pointer;background:#fff;border:1px solid var(--border);border-radius:20px;padding:20px 20px 22px;
+    transition:border-color .2s,box-shadow .2s,transform .2s;}
+  .hm-topic:hover{border-color:#D9C6AE;box-shadow:0 18px 40px -24px rgba(90,66,49,.35);transform:translateY(-2px);}
+  .hm-topic-art{display:block;width:100%;background:var(--surface-2);border-radius:14px;padding:14px 10px 6px;margin-bottom:18px;}
+  .hm-topic-art svg{display:block;width:100%;max-width:170px;height:auto;margin:0 auto;}
+  .hm-topic b{font-size:16.5px;color:#5A4231;line-height:1.3;}
+  .hm-topic-line{margin-top:8px;font-size:14px;line-height:1.55;color:var(--muted);flex:1;}
+  .hm-topic-go{margin-top:16px;font-size:13.5px;font-weight:700;color:var(--accent);text-decoration:underline;text-decoration-color:transparent;text-underline-offset:3px;transition:text-decoration-color .15s;}
+  .hm-topic:hover .hm-topic-go{text-decoration-color:currentColor;}
+  .hm-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px;position:relative;}
+  .hm-steps::before{content:"";position:absolute;left:18px;right:calc(25% - 3px);top:18px;height:1px;background:var(--border);}
+  .hm-steps li{position:relative;}
+  .hm-step-n{position:relative;display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:#fff;border:1px solid #D9C6AE;color:var(--accent);font-weight:700;font-size:14.5px;margin-bottom:18px;}
+  .hm-steps li:first-child .hm-step-n{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .hm-steps b{display:block;font-size:16.5px;color:#5A4231;margin-bottom:6px;}
+  .hm-steps p{margin:0;font-size:14.5px;line-height:1.6;color:var(--muted);}
+  #app[data-view="home"] .fq{margin-top:0;}
+  .hm-close{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;align-items:center;margin:88px 0 24px;padding-top:48px;border-top:1px solid var(--border);}
+  .hm-close h2{margin:0;font-size:clamp(28px,3.6vw,42px);line-height:1.1;color:#5A4231;max-width:14ch;}
+  .hm-close p{margin:0 0 20px;font-size:16px;line-height:1.6;color:var(--muted);max-width:44ch;}
+  @media (max-width:960px){ .hm-topics{grid-template-columns:repeat(2,minmax(0,1fr));} }
+  @media (max-width:860px){
+    .hm-hero{grid-template-columns:minmax(0,1fr);gap:40px;padding-top:20px;}
+    .hm-film{max-width:330px;}
+    .hm-head,.hm-close{grid-template-columns:minmax(0,1fr);gap:14px;}
+    .hm-head p{justify-self:start;}
+    .hm-steps{grid-template-columns:1fr 1fr;gap:28px 20px;}
+    .hm-steps::before{display:none;}
+    .hm-sec{padding-top:56px;}
+  }
+  @media (max-width:560px){
+    .hm-search{padding:6px 6px 6px 14px;}
+    .hm-search .btn{padding:0 16px;}
+    .hm-topics{grid-template-columns:1fr;}
+    .hm-steps{grid-template-columns:1fr;}
+    .hm-topic{flex-direction:row;flex-wrap:wrap;align-items:center;column-gap:14px;}
+    .hm-topic-art{width:84px;padding:6px;margin:0;flex:none;}
+    .hm-topic b{flex:1;min-width:0;}
+    .hm-topic-line{flex-basis:100%;}
+  }
   /* home: dark feature band for the free score */
-  .sb-band{position:relative;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:56px;align-items:center;margin:8px 0 72px;padding:64px 64px 64px 60px;
+  .sb-band{position:relative;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:56px;align-items:center;margin:0;padding:64px 64px 64px 60px;
     background:linear-gradient(135deg,#6B4F3A 0%,#7D5F45 55%,#8B6A4C 100%);border-radius:32px;color:#F7F1E9;overflow:hidden;isolation:isolate;
     box-shadow:0 30px 60px -40px rgba(90,66,49,.55);}
   .sb-band::before{content:"";position:absolute;width:620px;height:620px;right:-140px;top:-160px;border-radius:50%;z-index:-1;
@@ -571,7 +637,7 @@
   .sb-art .rs-badge{background:#D4B48C;color:#4A3526;box-shadow:0 12px 30px -8px rgba(0,0,0,.5);}
   .sb-band .tl-btn-light:focus-visible,.sb-band .tl-btn-ghost:focus-visible{outline:2px solid #F7F1E9;outline-offset:2px;}
   @media (max-width:860px){
-    .sb-band{grid-template-columns:1fr;gap:40px;padding:44px 26px 48px;border-radius:24px;}
+    .sb-band{grid-template-columns:minmax(0,1fr);gap:40px;padding:44px 26px 48px;border-radius:24px;}
     .sb-art{order:-1;padding:24px 30px 0 0;}
   }
   @media (max-width:520px){ .sb-facts{gap:12px;} .sb-facts b{font-size:22px;} .sb-facts span{font-size:12px;} }
@@ -3093,8 +3159,8 @@ const I18N = {
     fq_a3:"Mentors are independent professionals who share their own experience. You choose based on their profile and on reviews from past clients, and only clients who have had a real session can leave a review.",
     fq_q4:"Is my video call private?",
     fq_a4:"Each paid booking receives a unique Jitsi meeting link. Anyone with that link can attempt to join, so keep it confidential and enable the lobby to approve participants. The first participant may need to sign in to Jitsi.",
-    fq_q5:"Can I use Workar in any language?",
-    fq_a5:"Yes. Workar is available in many languages — just pick yours from the language menu. You can also filter mentors by the languages they speak.",
+    fq_q5:"Can my session be in another language?",
+    fq_a5:"Workar itself is in English, and many mentors speak other languages too. On Find a mentor, filter by language to book a session in the language you are most comfortable with.",
     fq_q6:"How do I become a mentor?",
     fq_a6:"Select \"Become a mentor\", complete your profile with the help of our assistant, and set your own rate. We'll email you as soon as your profile is live.",
     ar_chip_t:"Next session confirmed", ar_chip_s:"Tuesday, 6:00 PM · private video call",
@@ -3594,6 +3660,13 @@ Object.assign(I18N.en, {
   home_tools_note:'Free, about 30 seconds',
   nf_tag:'Free', nf_label:'Resume Score',
   sb_f1:'point score, the way a recruiter reads it', sb_f2:'ranked fixes with example rewrites', sb_f3:'from upload to your score',
+  hm_h1:'Learn from someone who has already done the job you want',
+  hm_sub:'Book a private one-to-one session with an experienced professional. Get honest feedback on your resume, your interviews and your next move.',
+  hm_q_lbl:'What do you want help with?', hm_q_ph:'What do you want help with?', hm_q_btn:'Find mentors', hm_chips_lbl:'Popular topics',
+  hm_chip1:'Resume & LinkedIn', hm_chip2:'Interview practice', hm_chip3:'Changing careers', hm_chip4:'New to Canada',
+  hm_help_t:'Where a mentor makes the difference', hm_help_s:'Choose what you need most right now. We will suggest mentors who have faced the same challenge.',
+  hm_topic_go:'See matching mentors',
+  hm_how_s:'From your first question to your next offer.',
   hs_t:'What is your resume score?', hs_s:'Find out in 30 seconds, free.', hs_b:'Get my score',
   tl_how_t:'How it works',
   tl_s1_t:'Upload your resume', tl_s1_s:'Or your LinkedIn profile. PDF, Word, or pasted text all work.',
@@ -4733,6 +4806,10 @@ function render(){
   wireRateWidgets();
   wireSheets();
   if(state.view==='tools') wireTools();
+  const hmS = document.getElementById('hm-search');
+  if(hmS) hmS.addEventListener('submit', e=>{ e.preventDefault(); const q = (document.getElementById('hm-q').value||'').trim();
+    if(!q){ nav('browse'); return; } state.hmQuery = q; state.matchQuery = q; nav('browse');
+    setTimeout(()=>{ const b = document.getElementById('match-btn'); if(b) b.click(); window.scrollTo(0,0); }, 60); });
   if(state.view==='hr') wireHr();
   wireInvite();
   setupReveal();
@@ -6767,22 +6844,25 @@ function disclaimerHtml(){ return `<p class="pro-note">${esc(T('disclaimer_short
 const SHOW_PREP = false;
 function prepVisible(){ return SHOW_PREP || isAdmin(); }
 function homeView(){
-  const mentors = Object.entries(cache.profiles).slice(0,3);
+  const chips = [1,2,3,4].map(n=>({ label: T('hm_chip'+n), q: T('rt'+n+'_q') }));
+  const ck = '<svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><path d="M3.5 8.3l2.8 2.7L12.5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   return `
-  <div class="hero hero-arch">
-    <div class="hero-copy">
-    <h1>${esc(T('hero_h1a'))}<i>${esc(T('hero_h1em'))}</i>${esc(T('hero_h1b'))}</h1>
-    <p>${esc(T('hero_sub'))}</p>
-    <div class="hero-actions">
-      <button class="btn btn-primary" data-nav="browse">${esc(T('cta_browse'))}</button>
-      <button class="btn btn-outline" data-nav="onboard" data-role="mentor">${esc(T('cta_become'))}</button>
+  <section class="hm-hero">
+    <div class="hm-copy">
+      <h1>${esc(T('hm_h1'))}</h1>
+      <p class="hm-lede">${esc(T('hm_sub'))}</p>
+      <form class="hm-search" id="hm-search" role="search">
+        <label class="sr-only" for="hm-q">${esc(T('hm_q_lbl'))}</label>
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+        <input id="hm-q" autocomplete="off" placeholder="${esc(T('hm_q_ph'))}" value="${esc(state.hmQuery||'')}">
+        <button type="submit" class="btn btn-primary">${esc(T('hm_q_btn'))}</button>
+      </form>
+      <div class="hm-chips" aria-label="${esc(T('hm_chips_lbl'))}">${chips.map(c=>`<button type="button" class="hm-chip" data-route-q="${esc(c.q)}">${esc(c.label)}</button>`).join('')}</div>
+      <ul class="hm-trust"><li>${ck}${esc(T('hero_trust1'))}</li><li>${ck}${esc(T('hero_trust2'))}</li></ul>
     </div>
-    ${heroScoreCard('hs-mob')}
-    ${heroTrustHtml()}
-    </div>
-    <div class="ar-hero-wrap">${ART.hero()}
-    </div>
-  </div>
+    <div class="ar-hero-wrap hm-film">${ART.hero()}</div>
+  </section>
+
   <section class="sb-band" aria-label="${esc(T('nf_label'))}">
     <div class="sb-copy">
       <p class="sb-note">${esc(T('home_tools_note'))}</p>
@@ -6798,42 +6878,35 @@ function homeView(){
     <div class="sb-art">${recruiterSheetHtml(false, 'home')}</div>
   </section>
 
-  <!-- What we help with: simple topic list in the site's own section style. -->
-  <section class="lp-section tp">
-    <h2 class="lp-title">${esc(T('rt_title_a'))}</h2>
-    <p class="lp-sub">${esc(T('rt_sub'))}</p>
-    <div class="lp-bar"></div>
-    <div class="tp-row">
-      ${ROUTES.map((r,i)=>`<div class="tp-item reveal" data-rk="tp${i}" style="--d:${i*0.12}s">
-        <div class="tp-art">${ART.spots[i]()}</div>
-        <h3>${esc(T(r.title))}</h3>
-        <p>${esc(T(r.line))}</p>
-        <button type="button" class="btn btn-ghost btn-sm" data-route-q="${esc(T(r.q))}" style="margin-top:12px;">${esc(T('find_mentor_title'))}&nbsp;${document.documentElement.dir==='rtl'?'←':'→'}</button>
-      </div>`).join('')}
+  <section class="hm-sec">
+    <header class="hm-head"><h2>${esc(T('hm_help_t'))}</h2><p>${esc(T('hm_help_s'))}</p></header>
+    <div class="hm-topics">
+      ${ROUTES.map((r,i)=>`<button type="button" class="hm-topic" data-route-q="${esc(T(r.q))}">
+        <span class="hm-topic-art">${ART.spots[i]()}</span>
+        <b>${esc(T(r.title))}</b>
+        <span class="hm-topic-line">${esc(T(r.line))}</span>
+        <span class="hm-topic-go">${esc(T('hm_topic_go'))}</span>
+      </button>`).join('')}
     </div>
-    <div class="tp-cta"><button type="button" class="btn btn-primary" data-nav="browse">${esc(T('rt_cta'))}</button></div>
   </section>
 
+  <section class="hm-sec">
+    <header class="hm-head"><h2>${esc(T('hiw2_title'))}</h2><p>${esc(T('hm_how_s'))}</p></header>
+    <ol class="hm-steps">
+      ${[1,2,3,4].map(n=>`<li><span class="hm-step-n">${n}</span><b>${esc(T('step'+n+'_t'))}</b><p>${esc(T('step'+n+'_b'))}</p></li>`).join('')}
+    </ol>
+  </section>
 
-
-  ${landingSections()}
-
-
-
-
-
-  <!-- Questions -->
-  <section class="fq reveal" data-rk="fq">
+  <section class="fq hm-sec" data-rk="fq">
     <div class="fq-head"><h2 class="lp-title">${esc(T('fq_title_a'))} ${esc(T('fq_title_b'))}</h2><p class="lp-sub">${esc(T('fq_sub'))}</p></div>
     <div class="fq-list">${[1,2,3,4,5,6].map(n=>`<details class="fq-item"><summary>${esc(T('fq_q'+n))}</summary><p>${esc(T('fq_a'+n))}</p></details>`).join('')}</div>
   </section>
 
-  <section class="lp-section close">
-    <h2 class="lp-title">${esc(T('close_t'))}</h2>
-    <p class="lp-sub">${esc(T('close_s'))}</p>
-    <div class="hero-actions" style="justify-content:center;margin-top:22px;">
-      <button class="btn btn-primary" data-nav="browse">${esc(T('cta_browse'))}</button>
-      <button class="btn btn-outline" data-nav="onboard" data-role="mentor">${esc(T('cta_become'))}</button>
+  <section class="hm-close">
+    <h2>${esc(T('close_t'))}</h2>
+    <div class="hm-close-r">
+      <p>${esc(T('close_s'))}</p>
+      <div class="tl-cta-btns"><button class="btn btn-primary" data-nav="browse">${esc(T('cta_browse'))}</button><button class="btn btn-outline" data-nav="onboard" data-role="mentor">${esc(T('cta_become'))}</button></div>
     </div>
   </section>
   `;
