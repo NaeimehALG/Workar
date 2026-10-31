@@ -4058,7 +4058,7 @@ Object.assign(I18N.en, {
   hr_c1_t:'The first screen', hr_c1_s:'Learn what a recruiter checks first on your resume and LinkedIn, and what makes them keep reading.',
   hr_c2_t:'Behind the hiring process', hr_c2_s:'Applicant tracking systems, hiring managers, salary ranges: understand what happens after you click Apply.',
   hr_c3_t:'Questions you cannot ask at work', hr_c3_s:'Get honest, confidential answers on job offers, negotiation, and how to explain a gap or a change of career.',
-  hr_list_t:'HR & recruiting mentors',
+  hr_list_t:'HR & recruiting mentors', hr_browse:'Browse HR & recruiters',
   hr_empty_t:'Our first HR and recruiting mentors are joining now.',
   hr_empty_s:'In the meantime, run your resume through the free Resume Score. If you work in HR or recruiting, we would love to have you as a mentor.',
   hr_try_tools:'Get my free Resume Score', hr_join:'Join as an HR mentor',
@@ -8013,7 +8013,7 @@ function hrView(){
       <h1>${esc(T('hr_title'))}</h1>
       <p class="tl-lede">${esc(T('hr_sub'))}</p>
       <div class="tl-cta-btns" style="margin-top:26px;">
-        ${list.length ? `<button class="btn btn-primary" id="hr-see">${esc(T('hr_see'))}</button>` : `<button class="btn btn-primary" data-nav="browse">${esc(T('cta_browse'))}</button>`}
+        <button class="btn btn-primary" id="hr-see">${esc(T('hr_browse'))}</button>
       </div>
     </div>
     <div class="hr-convo" aria-hidden="true">
