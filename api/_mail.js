@@ -53,18 +53,42 @@ function when(req, tz) {
   return [req.date, req.time].filter(Boolean).join(' at ');
 }
 
-function layout(title, paragraphs, cta) {
+// Every email ends with the same courteous sign-off, after the button, unless the text already signs off itself.
+const SIGN_OFF = 'Thank you,<br>The Workar Team';
+function layout(title, paragraphs, cta, opts = {}) {
+  const signed = paragraphs.some(x => /workar team/i.test(String(x || '')));
+  const sign = opts.noSign || signed ? '' : `<p style="margin:22px 0 0;font-size:15px;line-height:1.6;color:#5B4433;">${SIGN_OFF}</p>`;
   const p = paragraphs.filter(Boolean).map(x => /^<(ul|h3|div)/.test(x) ? `<div style="margin:0 0 14px;font-size:15px;line-height:1.6;color:#5B4433;">${x}</div>` : `<p style="margin:0 0 14px;font-size:15px;line-height:1.6;color:#5B4433;">${x}</p>`).join('');
   const button = cta ? `<p style="margin:22px 0 6px;"><a href="${cta.url}" style="display:inline-block;background:#8B6A4C;color:#fff;text-decoration:none;font-weight:700;font-size:15px;padding:12px 22px;border-radius:999px;">${esc(cta.text)}</a></p>` : '';
   return `<!doctype html><html><body style="margin:0;background:#F7F1E9;font-family:Arial,Helvetica,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#F7F1E9;padding:28px 12px;"><tr><td align="center">
   <table width="100%" cellpadding="0" cellspacing="0" style="max-width:540px;background:#fff;border:1px solid #EAE0D2;border-radius:16px;">
   <tr><td style="padding:26px 30px 8px;font-size:12px;letter-spacing:4px;font-weight:700;color:#A88660;">WORKAR</td></tr>
-  <tr><td style="padding:6px 30px 26px;"><h1 style="margin:0 0 16px;font-size:21px;line-height:1.3;color:#4A3526;">${esc(title)}</h1>${p}${button}</td></tr>
+  <tr><td style="padding:6px 30px 26px;"><h1 style="margin:0 0 16px;font-size:21px;line-height:1.3;color:#4A3526;">${esc(title)}</h1>${p}${button}${sign}</td></tr>
   </table>
-  <p style="font-size:12px;color:#A88660;margin:16px 0 4px;">Questions? Simply reply to this email and our team will help.</p>
+  <p style="font-size:12px;color:#A88660;margin:16px 0 4px;">Questions? Simply reply to this email and our team will be happy to help.</p>
   <p style="font-size:12px;color:#A88660;margin:0;">Workar Group · career mentoring · <a href="${SITE()}" style="color:#A88660;">workar.me</a></p>
   </td></tr></table></body></html>`;
+}
+
+// The welcome email a mentor receives when their profile goes live.
+function mentorWelcome(p, opts = {}) {
+  const firstName = String(p.name || '').trim().split(/\s+/)[0] || 'there';
+  const steps = ['Set your weekly availability, so clients can book a time that suits you.',
+    'Set up your payouts under My profile, so you are paid automatically after each session.',
+    'Take a moment to review your bio, session rate and LinkedIn, so they reflect you at your best.'];
+  if (!p.avatarUrl) steps.push('Add a profile photo. A friendly, professional photo helps clients feel confident choosing you.');
+  return {
+    subject: 'Welcome to Workar: your mentor profile is now live',
+    title: `Welcome aboard, ${firstName}`,
+    paras: [`Dear ${esc(firstName)},`,
+      'Thank you for joining Workar as a mentor. We are truly delighted to have you with us. Your profile has been published and is now visible to people looking for guidance in your field.',
+      opts.bioFromResume ? 'We prepared your profile bio from the resume you shared. Please read it through and feel free to edit it at any time from your dashboard.' : '',
+      'To start receiving bookings, we kindly recommend a few quick steps:',
+      list(steps),
+      'If you have any questions, simply reply to this email. We are always happy to help.'],
+    cta: { text: 'Open my profile', url: SITE() + '/?go=dashboard' }
+  };
 }
 
 // Plain-text copy of an HTML email (better inbox placement, readable in any mail app).
@@ -106,4 +130,4 @@ async function sendMail(to, subject, html, attachments, opts = {}) {
 function link(url, text) { return `<a href="${esc(url)}" style="color:#8B6A4C;font-weight:700;">${esc(text)}</a>`; }
 function list(items) { const li = (items || []).filter(Boolean).map(x => `<li style="margin:0 0 6px;">${esc(x)}</li>`).join(''); return li ? `<ul style="margin:0;padding-left:20px;">${li}</ul>` : ''; }
 
-module.exports = { htmlToText, CONTACT_EMAIL, SUPPORT_REPLY_TO, SITE, esc, userFromToken, emailOf, rows, rowsStrict, patch, profile, fullProfile, when, layout, sendMail, link, list };
+module.exports = { mentorWelcome, SIGN_OFF, htmlToText, CONTACT_EMAIL, SUPPORT_REPLY_TO, SITE, esc, userFromToken, emailOf, rows, rowsStrict, patch, profile, fullProfile, when, layout, sendMail, link, list };

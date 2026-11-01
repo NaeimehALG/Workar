@@ -69,8 +69,8 @@ module.exports = async (req, res) => {
     if (event === 'mentor_approved') {
       if ((me.email || '').toLowerCase() !== adminEmail || !targetId) { res.status(403).end(); return; }
       const p = await M.fullProfile(targetId);
-      await M.sendMail(await M.emailOf(targetId), 'Your Workar mentor profile is live',
-        M.layout(`Welcome aboard, ${p.name}`, ['Your mentor profile has been approved and is now visible to people looking for guidance.', 'Make sure your weekly availability is up to date so clients can book you.', p.avatarUrl ? '' : 'We also recommend adding a profile photo. A friendly, professional photo helps clients feel confident choosing you.'], { text: 'Open my profile', url: site + '/?go=dashboard' }));
+      const wel = M.mentorWelcome(p);
+      await M.sendMail(await M.emailOf(targetId), wel.subject, M.layout(wel.title, wel.paras, wel.cta));
       res.status(200).json({ ok: true }); return;
     }
 

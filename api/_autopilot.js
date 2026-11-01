@@ -604,14 +604,13 @@ async function mentorApplications(rep, ctx, onlyId) {
       if (rereview) {
         await forget('rereview', p.id);
         const sent = await mailOrQueue(rep, p.id, 'Your Workar profile updates are live', `Thank you, ${first(p.name)}`,
-          ['Your updated mentor profile is now live again and visible to people looking for guidance.'], { text: 'Open my profile', url: site + '/?go=dashboard' });
+          [`Dear ${M.esc(first(p.name))},`, 'Thank you for keeping your profile up to date. Your updated mentor profile is now live again and visible to people looking for guidance.',
+            'If you have any questions, simply reply to this email. We are always happy to help.'], { text: 'Open my profile', url: site + '/?go=dashboard' });
         rep.done.push(`Put <b>${M.esc(p.name)}</b>'s edited mentor profile live again${sent ? '' : ' (the email is queued and retried)'}.`);
         continue;
       }
-      const welcomed = await mailOrQueue(rep, p.id, 'Your Workar mentor profile is live', `Welcome aboard, ${p.name}`,
-        ['Thank you for joining Workar. Your mentor profile is now live and visible to people looking for guidance.',
-          (ctx.bioFromResume || []).includes(p.id) ? 'We wrote your profile bio from the resume you uploaded. Please read it, and edit it anytime from your dashboard.' : '',
-          'Please make sure your weekly availability is up to date so clients can book you.', p.avatarUrl ? '' : PHOTO_TIP], { text: 'Open my profile', url: site + '/?go=dashboard' });
+      const wel = M.mentorWelcome(p, { bioFromResume: (ctx.bioFromResume || []).includes(p.id) });
+      const welcomed = await mailOrQueue(rep, p.id, wel.subject, wel.title, wel.paras, wel.cta);
       ctx.approvedNow = (ctx.approvedNow || 0) + 1;
       (ctx.approvedIds = ctx.approvedIds || []).push(p.id);
       rep.done.push(`Approved ${welcomed ? 'and welcomed ' : ''}mentor <b>${M.esc(p.name)}</b> (${M.esc(p.profession || '')}).${welcomed ? '' : ' The welcome email is queued and retried on the next runs.'} ${M.esc(a.summary || '')}`);
@@ -628,13 +627,13 @@ async function mentorApplications(rep, ctx, onlyId) {
       const firstAsk = await once('ask', p.id);
       if (firstAsk) await once('ask', p.id + ':' + prints[p.id]);
       if (firstAsk) {
-        const askParas = [`Hi ${M.esc(first(p.name))},`,
-          rereview ? 'Thank you for updating your mentor profile. While the update is checked, your profile is hidden from Find a mentor.' : 'Welcome to Workar, and thank you for joining us as a mentor.',
-          miss.length === 1 ? `Your profile is almost ready to go live. To publish it, please add ${M.esc(miss[0])}.` : miss.length ? 'Your profile is almost ready to go live. To publish it, please add:' : `Your profile is almost ready to go live. ${M.esc(q)}`,
+        const askParas = [`Dear ${M.esc(first(p.name))},`,
+          rereview ? 'Thank you for updating your mentor profile. While we review your changes, your profile is temporarily hidden from Find a mentor.' : 'Welcome to Workar, and thank you so much for joining us as a mentor. We are delighted to have you.',
+          miss.length === 1 ? `Your profile is almost ready to go live. To publish it, we kindly ask you to add ${M.esc(miss[0])}.` : miss.length ? 'Your profile is almost ready to go live. To publish it, we kindly ask you to add:' : `Your profile is almost ready to go live. ${M.esc(q)}`,
           miss.length > 1 ? M.list(miss) : '',
           p.avatarUrl ? '' : PHOTO_TIP,
-          'As soon as you save your changes, we will review your profile and let you know when it is live.',
-          'We are glad to have you with us.<br>The Workar team'];
+          'It only takes a few minutes. As soon as you save your changes, we will review your profile and let you know when it is live.',
+          'If you have any questions, simply reply to this email. We are always happy to help.'];
         const to = await M.emailOf(p.id);
         if (!(await mail(rep, to, 'Your Workar mentor profile is almost ready', 'One last step', askParas, { text: 'Complete my profile', url: site + '/?go=dashboard' }, ['ask', p.id]))) { await forget('ask', p.id); await forget('ask', p.id + ':' + prints[p.id]); continue; }
         // The team inbox gets a hidden copy of this email automatically (see sendMail in _mail.js).
@@ -642,20 +641,18 @@ async function mentorApplications(rep, ctx, onlyId) {
       } else if (await once('ask', p.id + ':' + prints[p.id])) {
         // They updated the profile after our first request, and it still needs something: tell them exactly what, once per version.
         if (!(await mail(rep, await M.emailOf(p.id), 'Thank you for updating your Workar profile', 'Nearly there',
-          [`Hi ${M.esc(first(p.name))},`,
-            'Thank you for updating your mentor profile. We have reviewed it again.',
+          [`Dear ${M.esc(first(p.name))},`,
+            'Thank you for updating your mentor profile. We have reviewed it again, and you are nearly there.',
             miss.length === 1 ? `To publish it, please add ${M.esc(miss[0])}.` : miss.length ? 'To publish it, please add:' : M.esc(q),
             miss.length > 1 ? M.list(miss) : '',
-              'As soon as you save your changes, we will review it again and let you know when it is live.',
-            'Kind regards,<br>The Workar team'], { text: 'Complete my profile', url: site + '/?go=dashboard' }, ['ask', p.id + ':' + prints[p.id]]))) continue;
+              'As soon as you save your changes, we will review it again and let you know when it is live.'], { text: 'Complete my profile', url: site + '/?go=dashboard' }, ['ask', p.id + ':' + prints[p.id]]))) continue;
         rep.done.push(`Asked mentor applicant <b>${M.esc(p.name)}</b> again after their update: “${M.esc(q)}”`);
       } else if (await askedLongAgo(p.id) && await once('ask_close', p.id)) {
         // One friendly reminder a week after the first request, then nothing more.
         const reminded = await mail(rep, await M.emailOf(p.id), 'A reminder about your Workar mentor profile', 'Your profile is almost ready',
-          [`Hi ${M.esc(first(p.name))},`,
-            miss.length === 1 ? `A quick reminder: your mentor profile will go live as soon as you add ${M.esc(miss[0])}.` : 'A quick reminder: your mentor profile will go live as soon as a few missing details are added.',
-            'Once you save your profile, we will review it right away and let you know when it is live.',
-            'Kind regards,<br>The Workar team'], { text: 'Complete my profile', url: site + '/?go=dashboard' }, ['ask_close', p.id]);
+          [`Dear ${M.esc(first(p.name))},`,
+            miss.length === 1 ? `A gentle reminder: your mentor profile will go live as soon as you add ${M.esc(miss[0])}.` : 'A gentle reminder: your mentor profile will go live as soon as a few missing details are added.',
+            'Once you save your profile, we will review it right away and let you know when it is live. We would love to see you mentoring on Workar.'], { text: 'Complete my profile', url: site + '/?go=dashboard' }, ['ask_close', p.id]);
         if (reminded) rep.done.push(`Sent a closing reminder to mentor applicant <b>${M.esc(p.name)}</b>.`);
       }
     }
@@ -778,19 +775,19 @@ async function reviews(rep, ctx) {
 const SETUP_COPY = {
   client: [
     ['Your Workar account is ready', 'You are one step away from your first mentor',
-      ['Thank you for joining Workar. To start browsing mentors, just add your name. It takes less than a minute.', 'Your goals and resume are optional and can be added at any time from your dashboard.'], 'Find a mentor'],
+      ['Thank you for joining Workar. We are glad to have you with us.', 'To start browsing mentors, simply add your name. It takes less than a minute. Your goals and resume are optional and can be added at any time from your dashboard.'], 'Find a mentor'],
     ['Still looking for career guidance?', 'Your Workar account is waiting for you',
       ['Experienced professionals are available for private 30-minute video or voice sessions, and your card is charged only after the session takes place.', 'This is our last reminder. If you have any questions, simply reply to this email.'], 'Find a mentor']
   ],
   mentor: [
-    ['Finish your Workar mentor profile', 'Your mentor profile is almost ready',
-      ['Thank you for your interest in mentoring on Workar. Your profile is not complete yet, so clients cannot find you.', 'It takes a few minutes: add your LinkedIn profile and a few lines about your experience, and we help fill in the rest.'], 'Complete my mentor profile'],
-    ['Clients cannot find you on Workar yet', 'One step left to start mentoring',
-      ['Your mentor profile is still incomplete, so it is not visible to clients.', 'This is our last reminder. If anything is unclear, simply reply to this email and our team will help.'], 'Complete my mentor profile']
+    ['Please complete your Workar mentor profile', 'Your mentor profile is almost ready',
+      ['Thank you so much for your interest in mentoring on Workar. We are delighted to have you with us.', 'Your profile is not complete yet, so clients cannot find you just yet. It only takes a few minutes: add your LinkedIn profile and a few lines about your experience, and we will help with the rest.', 'Once your profile is complete, people looking for guidance in your field can book a 30-minute session with you, at the rate and times you choose.'], 'Complete my mentor profile'],
+    ['Your Workar mentor profile is waiting for you', 'One step left to start mentoring',
+      ['We noticed your mentor profile is still incomplete, so it is not yet visible to clients.', 'We would love to see you mentoring on Workar. This is our last reminder, and if anything is unclear, simply reply to this email and we will be happy to help.'], 'Complete my mentor profile']
   ],
   none: [
     ['Finish setting up your Workar account', 'You are one step away',
-      ['Thank you for creating a Workar account. Your account is not set up yet.', 'Choose whether you would like to find a mentor or become a mentor. It takes about a minute.'], 'Finish setting up'],
+      ['Thank you for creating a Workar account. We are glad to have you with us.', 'Your account is not set up yet. Simply choose whether you would like to find a mentor or become a mentor. It takes about a minute.'], 'Finish setting up'],
     ['Your Workar account is waiting for you', 'Find a mentor, or become one',
       ['Your Workar account is still not set up. You can find an experienced mentor for a 30-minute session, or share your own experience as a mentor.', 'This is our last reminder. If you have any questions, simply reply to this email.'], 'Finish setting up']
   ]
