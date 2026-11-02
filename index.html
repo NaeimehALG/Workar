@@ -5328,20 +5328,17 @@ function render(){
 function navHtml(){
   const prepItem = prepVisible() ? [['prep', T('nav_prep')]] : [];
   // One fixed order for everyone, so the menu never reshuffles while the profile loads after a refresh:
-  // Explore (Home · Find a mentor · Talk to HR · Life Coaching · AI coach · Resume Score · About), then the account (Inbox · My profile / Get started · Log in)
-  const items = [['home', T('nav_home')], ['browse', T('nav_browse')], ['hr', T('nav_hr')], ['coaching', T('nav_coaching')], ...prepItem, ['coach', T('nav_coach')]];
+  // Home · Inbox · My profile / Get started · Find a mentor · Talk to HR · Life Coaching · AI coach · Resume Score · Log in (About lives in the footer)
+  const items = [['home', T('nav_home')], ['@inbox'], ['dashboard', (uid || myProfile) ? T('nav_dash') : T('nav_start')], ['browse', T('nav_browse')], ['hr', T('nav_hr')], ['coaching', T('nav_coaching')], ...prepItem, ['coach', T('nav_coach')]];
   const inboxItem = ()=>{ if(!uid) return ''; const n = requestsNeedingMe() + inboxUnreadTotal(), on = state.view==='requests' || state.view==='messages';
     return `<a class="navlink nav-msg ${on?'active':''}" href="${navHref('messages')}" data-nav="${requestsNeedingMe() ? 'requests' : 'messages'}"${on?' aria-current="page"':''}>${esc(T('nav_inbox'))}<span class="nav-msg-badge" style="${n?'':'display:none'}">${n}</span></a>`; };
   const link = (v, label, cls)=>`<a class="navlink ${cls||''} ${state.view===v?'active':''}" href="${navHref(v)}" data-nav="${v}"${state.view===v?' aria-current="page"':''}>${esc(label)}</a>`;
   return `<nav class="nav" aria-label="${esc(T('nav_home'))}">
     <a class="brand" href="${navHref('home')}" data-nav="home" aria-label="Workar"><svg class="logo-mark logo-row" viewBox="0 0 306 294" aria-hidden="true"><use href="#wkMark" x="0" y="0" width="306" height="294"/></svg><span class="brand-word">WORKAR</span></a>
     <div class="navlinks">
-      ${items.map(([v,l])=>link(v, l)).join('')}
-      <a class="navlink nav-free ${state.view==='tools'?'active':''}" href="${navHref('tools')}" data-nav="tools"${state.view==='tools'?' aria-current="page"':''}><span class="nf-tag">${esc(T('nf_tag'))}</span>${esc(T('nf_label'))}</a>
-      ${link('about', T('nav_about'))}
-      ${inboxItem()}
-      ${link('dashboard', (uid || myProfile) ? T('nav_dash') : T('nav_start'))}
+      ${items.map(([v,l])=>v==='@inbox' ? inboxItem() : link(v, l)).join('')}
       ${isAdmin() ? link('admin', T('adm_nav')) : ''}
+      <a class="navlink nav-free ${state.view==='tools'?'active':''}" href="${navHref('tools')}" data-nav="tools"${state.view==='tools'?' aria-current="page"':''}><span class="nf-tag">${esc(T('nf_tag'))}</span>${esc(T('nf_label'))}</a>
       ${uid ? `<button type="button" class="navlink" id="signout-btn" title="${esc(T('signed_in_as'))} ${esc(userEmail||'')}">${esc(T('nav_signout'))}</button>` : `<a class="navlink" href="${navHref('dashboard')}" data-nav="dashboard">${esc(T('nav_login'))}</a>`}
       
     </div>
