@@ -3089,11 +3089,11 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   /* Header on desktop: logo, tagline and every menu link on one line, sharing one baseline */
   @media (min-width:1025px){
     /* the browser lines up the text baselines itself, so it holds with any font the visitor's computer uses */
-    .nav{flex-wrap:nowrap;align-items:last baseline;padding:14px 0 16px;margin-bottom:22px;}
+    .nav{flex-wrap:nowrap;align-items:center;padding:14px 0 16px;margin-bottom:22px;}
     #app[data-view="home"] .nav{margin-bottom:8px;}
-    .brand{align-items:last baseline;position:relative;top:-6px;}
+    .brand{align-items:center;padding-bottom:0;}
     .brand .tag{top:-1px;}
-    .navlinks{flex-wrap:nowrap;align-items:baseline;gap:0;position:relative;top:6px;}
+    .navlinks{flex-wrap:nowrap;align-items:center;gap:0;}
     .navlinks .navlink{white-space:nowrap;padding:8px 9px;font-size:13.5px;}
     .nav-free{margin-inline-start:4px;}
   }
@@ -5328,7 +5328,7 @@ function navHtml(){
     return `<a class="navlink nav-msg ${on?'active':''}" href="${navHref('messages')}" data-nav="${requestsNeedingMe() ? 'requests' : 'messages'}"${on?' aria-current="page"':''}>${esc(T('nav_inbox'))}<span class="nav-msg-badge" style="${n?'':'display:none'}">${n}</span></a>`; };
   const link = (v, label, cls)=>`<a class="navlink ${cls||''} ${state.view===v?'active':''}" href="${navHref(v)}" data-nav="${v}"${state.view===v?' aria-current="page"':''}>${esc(label)}</a>`;
   return `<nav class="nav" aria-label="${esc(T('nav_home'))}">
-    <a class="brand" href="${navHref('home')}" data-nav="home" aria-label="Workar"><svg class="logo-mark" viewBox="0 0 556 410" role="img" aria-label="Workar"><use href="#wkMark" x="125" y="0" width="306" height="294"/><use href="#wkWord" x="0" y="312" width="556" height="94"/></svg><span class="tag">${esc(T('tag'))}</span></a>
+    <a class="brand" href="${navHref('home')}" data-nav="home" aria-label="Workar"><svg class="logo-mark" viewBox="0 0 556 410" role="img" aria-label="Workar"><use href="#wkMark" x="125" y="0" width="306" height="294"/><use href="#wkWord" x="0" y="312" width="556" height="94"/></svg></a>
     <div class="navlinks">
       ${items.map(([v,l])=>v==='@inbox' ? inboxItem() : link(v, l)).join('')}
       ${isAdmin() ? link('admin', T('adm_nav')) : ''}
