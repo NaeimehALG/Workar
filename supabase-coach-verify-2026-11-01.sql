@@ -31,3 +31,8 @@ create trigger protect_coach_credential before insert or update on public.profil
 alter table public.profiles add column if not exists "mentorKind" text;
 alter table public.profiles drop constraint if exists profiles_mentor_kind_check;
 alter table public.profiles add constraint profiles_mentor_kind_check check ("mentorKind" is null or "mentorKind" in ('pro','hr','coach'));
+
+-- Accepted coaching credentials: ICF ACC / PCC / MCC, EMCC accreditation, CCE Board Certified Coach (BCC),
+-- and completed ICF-accredited coach training (ICFT). The column keeps its old name "coachIcf".
+alter table public.profiles drop constraint if exists profiles_coach_icf_check;
+alter table public.profiles add constraint profiles_coach_icf_check check ("coachIcf" is null or "coachIcf" in ('ACC','PCC','MCC','EMCC','BCC','ICFT'));
