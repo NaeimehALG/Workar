@@ -2975,6 +2975,7 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
     .ts-form{padding-left:12px;}
   }
   /* Human touch: real mentor faces */
+  .lx-sub2{display:block;margin-top:12px;font-weight:500;color:var(--brand);}
   .lx-faces{display:flex;align-items:center;gap:12px;margin-top:26px;font-size:14px;color:var(--body);}
   .lx-faces-row{display:flex;}
   .lx-faces-row img{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid #fff;box-shadow:0 1px 3px rgba(60,40,25,.18);margin-inline-start:-10px;background:#F3EBE1;}
@@ -4102,7 +4103,7 @@ Object.assign(I18N.en, {
   ch_sub:'Private 30-minute video sessions with experienced professionals. Honest feedback on your resume, your interviews and your next move.',
   ch_q_ph:'What do you want help with?', ch_small:'You are charged only after your session takes place.',
   ch_free:'Free', ch_end_t:'Your next step starts with one conversation.',
-  lx_sub:'Workar connects people taking their next career step with those who have already made it: experienced professionals across every field, HR experts and certified life coaches. Have experience to share? Sign up and become a mentor.',
+  lx_sub:'Workar connects ambitious people with those who have already walked the path, from experienced professionals in every field to HR experts and certified life coaches.\nHave experience to share? Sign up and become a mentor.',
   lx_go:'See mentors',
   lx_t1:'Resume & LinkedIn', lx_s1:'Line-by-line feedback from someone who hires in your field.', lx_q1:'I would like a mentor to review my resume and LinkedIn profile.',
   lx_t2:'Interviews', lx_s2:'Rehearse real questions and get honest notes on every answer.', lx_q2:'I want to practise for job interviews with someone in my field.',
@@ -7391,7 +7392,7 @@ function homeView(){
     <div class="lx-copy">
       <p class="lx-k"><i></i>${esc(T('hm_label'))}</p>
       <h1>${esc(T('ch_h1'))}</h1>
-      <p class="lx-sub">${esc(T('lx_sub'))}</p>
+      <p class="lx-sub">${esc(T('lx_sub')).split('\n').map((l,i)=>i ? `<span class="lx-sub2">${l}</span>` : l).join('')}</p>
       <div class="lx-btns"><button class="btn btn-primary lx-b" data-nav="browse">${esc(T('li_b1'))}</button><button class="btn btn-outline lx-b" data-nav="tools" data-tool="resume">${esc(T('li_b2'))}</button></div>
       ${faces.length >= 3 ? `<div class="lx-faces"><span class="lx-faces-row">${faces.slice(0,5).map(([id,p])=>`<img src="${esc(photoOf(id))}" alt="" loading="lazy" decoding="async">`).join('')}</span><span>${esc(T('hm_faces'))}</span></div>` : ''}
     </div>
