@@ -365,17 +365,18 @@ async function englishLiveMentors(rep, ctx) {
   if (timeLeft(ctx) > 60000) await fillDetails(list, ctx);
 }
 
-// "Best For" is never asked of applicants: when it is empty, the AI writes one short sentence from the bio (admin's decision, Oct 27 2026).
+// "Best for" belongs to Workar's AI, never to the mentor (admin's decision, Oct 27 and Nov 1 2026): for every mentor the AI
+// writes one short sentence from the bio, and writes it again whenever the bio changes (memory: agent_events "bestfor_done").
 function clip(s, n) { if (s.length <= n) return s; const c = s.slice(0, n - 1); const i = c.lastIndexOf(' '); return (i > n * 0.6 ? c.slice(0, i) : c).replace(/[\s,;:(\-]+$/, '') + '…'; }
 
 // Failed attempts are remembered (agent_events "bestfor_fail", per bio version), so a bio the AI keeps failing on
 // is not sent again and again; it is tried again once the bio changes.
 const bestForKey = p => `${p.id}:${hash16(String(p.bio || '').trim())}`;
 async function fillBestFor(apps, ctx) {
-  let need = apps.filter(p => !String(p.idealMentee || '').trim() && String(p.bio || '').trim().length >= 80);
+  let need = apps.filter(p => String(p.bio || '').trim().length >= 80);
   if (!need.length || !process.env.ANTHROPIC_API_KEY) return;
-  const fails = await failCounts('bestfor_fail');
-  need = need.filter(p => (fails[bestForKey(p)] || 0) < AI_MAX_FAILS);
+  const fails = await failCounts('bestfor_fail'), done = await failCounts('bestfor_done');
+  need = need.filter(p => !done[bestForKey(p)] && (fails[bestForKey(p)] || 0) < AI_MAX_FAILS);
   if (!need.length) return;
   const noteAll = async list => { for (const p of list) await noteFail('bestfor_fail', bestForKey(p)); };
   try {
@@ -392,7 +393,7 @@ Return an array: [{"id": "...", "bestFor": "..."}]`,
       const p = need.find(x => a && x.id === a.id), line = clip(String((a && a.bestFor) || '').trim(), 160);
       if (!p || !line) continue;
       const r = await M.patch(`profiles?id=eq.${encodeURIComponent(p.id)}`, { idealMentee: line });
-      if (r.ok) { p.idealMentee = line; filled.add(p.id); }
+      if (r.ok) { p.idealMentee = line; filled.add(p.id); await once('bestfor_done', bestForKey(p)).catch(() => {}); }
     }
     await noteAll(need.slice(0, 20).filter(p => !filled.has(p.id)));
   } catch (e) { console.error('best-for-failed', e.message); await noteAll(need.slice(0, 20)); }

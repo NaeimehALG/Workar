@@ -113,7 +113,7 @@ test('an unchanged profile keeps its earlier verdict and is not sent to the AI a
     patch: async (p, b) => { patched.push(b); return { ok: true }; },
     emailOf: async id => id + '@x.test', sendMail: async (to, subject) => { sent.push({ to, subject }); return { ok: true }; }
   }));
-  require.cache[aiPath].exports = Object.assign({}, realAi, { askJSON: async (sys) => { if (/public in English only|fill in ONLY the listed "missing"/.test(sys)) return []; aiCalls++; return aiCalls === 1 ? [{ id: 'd', verdict: 'decline', summary: 'no' }] : [{ id: 'd', verdict: 'approve', summary: 'yes' }]; } });
+  require.cache[aiPath].exports = Object.assign({}, realAi, { askJSON: async (sys) => { if (/public in English only|fill in ONLY the listed "missing"|"Best for" line/.test(sys)) return []; aiCalls++; return aiCalls === 1 ? [{ id: 'd', verdict: 'decline', summary: 'no' }] : [{ id: 'd', verdict: 'approve', summary: 'yes' }]; } });
   delete require.cache[apPath];
   process.env.SUPABASE_URL = 'https://sb.test'; process.env.SUPABASE_SERVICE_ROLE_KEY = 'k'; process.env.ANTHROPIC_API_KEY = 'k';
   const savedFetch = global.fetch;

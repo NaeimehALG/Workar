@@ -11684,7 +11684,7 @@ init();
     if(box){ mountOb(box); const ta = box.querySelector('textarea'); if(ob.error) ta.value = text; ta.focus(); }
   }
   function extraProfileFields(){
-    const out = {}; ['helpsWith','seniority','field','industries','idealMentee'].forEach(k=>{ const v = ob.draft[k]; if(v!==undefined && v!=='' && !(Array.isArray(v)&&!v.length)) out[k]=v; });
+    const out = {}; ['helpsWith','seniority','field','industries'].forEach(k=>{ const v = ob.draft[k]; if(v!==undefined && v!=='' && !(Array.isArray(v)&&!v.length)) out[k]=v; });
     return out;
   }
 

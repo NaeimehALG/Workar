@@ -104,7 +104,6 @@ const ONBOARD_TOOL = {
       field: { type: 'string', enum: FIELDS },
       seniority: { type: 'string', enum: SENIORITY },
       industries: { type: 'array', items: { type: 'string' }, maxItems: 5 },
-      idealMentee: { type: 'string', description: 'One or two sentences on who they help best.' },
       linkedin: { type: 'string', description: 'Their personal LinkedIn profile link, e.g. "https://www.linkedin.com/in/jane-doe". Save it whenever they paste or type it.' }
     }
   }
@@ -164,7 +163,7 @@ function applyDraft(draft, input) {
   if (FIELDS.includes(input.field)) next.field = input.field;
   if (SENIORITY.includes(input.seniority)) next.seniority = input.seniority;
   set('industries', strArr(input.industries, 5, 50));
-  set('idealMentee', str(input.idealMentee, 300));
+  // "Best for" is never taken from the applicant: Workar's AI writes it from the bio (api/_autopilot.js fillBestFor).
   // Only a personal profile link (linkedin.com/in/<name>) counts, stored in one standard form.
   if (typeof input.linkedin === 'string') {
     let t = input.linkedin.trim(); if (t && !/^https?:\/\//i.test(t)) t = 'https://' + t.replace(/^\/+/, '');
