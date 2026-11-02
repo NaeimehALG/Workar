@@ -26,3 +26,8 @@ end $$;
 drop trigger if exists protect_coach_credential on public.profiles;
 create trigger protect_coach_credential before insert or update on public.profiles
   for each row execute function public.protect_coach_credential();
+
+-- Mentor sign-up asks how the person joins: professional in their field, HR / recruiter, or certified life coach.
+alter table public.profiles add column if not exists "mentorKind" text;
+alter table public.profiles drop constraint if exists profiles_mentor_kind_check;
+alter table public.profiles add constraint profiles_mentor_kind_check check ("mentorKind" is null or "mentorKind" in ('pro','hr','coach'));

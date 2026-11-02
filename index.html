@@ -2992,6 +2992,17 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   .lx-person em{font-style:normal;font-size:13px;color:#A07D56;}
   .lx-ppl .lx-how-cta{margin-top:34px;}
   .hr-none{margin:0 0 8px;font-size:15px;}
+  .ob-kind{border:0;padding:0;margin:0 0 18px;min-width:0;}
+  .ob-kind legend{font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:8px;padding:0;}
+  .ob-kind-opts{display:grid;gap:8px;}
+  .ob-kind .ob-kind-opt{display:flex !important;flex-direction:row !important;align-items:flex-start;gap:12px;margin:0 !important;padding:12px 14px;border:1px solid var(--border);border-radius:14px;cursor:pointer;background:#fff;}
+  .ob-kind-opt:has(input:checked){border-color:var(--brand);background:#FBF7F2;}
+  .ob-kind .ob-kind-opt input[type=radio]{width:16px !important;height:16px !important;min-width:0;flex:none;margin:3px 0 0 !important;padding:0 !important;display:inline-block;accent-color:var(--brand);box-shadow:none !important;}
+  .ob-kind-opt span{display:flex;flex-direction:column;gap:2px;}
+  .ob-kind-opt b{font-size:14.5px;font-weight:600;color:var(--ink);}
+  .ob-kind-opt em{font-style:normal;font-size:13px;color:var(--body);}
+  .ob-kind-icf{margin-top:12px;}
+  .ob-kind-icf .field-row{align-items:end;}
   .mc-best{margin:10px 0 0;font-size:13.5px;line-height:1.5;color:var(--body);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
   .mc-best span{font-weight:600;color:#8B6A4C;}
   @media (max-width:860px){
@@ -4144,7 +4155,12 @@ Object.assign(I18N.en, {
   ts_pro_s:'Workar is an open platform, not an employer. Professionals sign up on their own as independent mentors and earn from what they already know.',
   ts_pro_l1:'Sign up yourself in a few minutes', ts_pro_l2:'Set your own rate and hours', ts_pro_l3:'Get paid for every session you hold',
   ts_pro_b:'Sign up as a mentor',
-  mc_best:'Best for', hm_ppl_k:'Real people, real careers', hm_ppl_t:'Meet some of the people you can talk to',
+  mc_best:'Best for',
+  ok_lbl:'I am joining as', ok_pro:'A professional in my field', ok_pro_s:'Share what you have learned in your job and industry.',
+  ok_hr:'An HR professional or recruiter', ok_hr_s:'You will also appear on Talk to HR.',
+  ok_coach:'A certified life coach (ICF)', ok_coach_s:'You will also appear on Life Coaching once we verify your ICF credential.',
+  ok_icf_lvl:'ICF level', ok_icf_pick:'Choose your level', ok_icf_req:'Please choose your ICF level and add your credential number or Coach Finder link.',
+  ok_icf_note:'We check every credential on the ICF website before your profile appears on Life Coaching.', hm_ppl_k:'Real people, real careers', hm_ppl_t:'Meet some of the people you can talk to',
   hm_ppl_s:'Every mentor is a working professional who chose to share what they have learned along the way.', hm_ppl_all:'Meet all mentors',
   hm_faces:'Real professionals, one conversation away',
   hr_list_none:'No HR professionals or recruiters have joined yet. They are signing up now, so please check back soon.',
@@ -7380,6 +7396,7 @@ document.addEventListener('click', e=>{ const b = e.target.closest && e.target.c
   document.querySelectorAll('[data-how-row]').forEach(r=>{ r.hidden = r.getAttribute('data-how-row') !== state.howFor; });
 });
 function goSearch(q){ q = String(q||'').trim(); state.query = q; state.hrOnly = false; state.browseShown = 0; nav('browse'); window.scrollTo(0,0); }
+document.addEventListener('change', e=>{ if(e.target && e.target.name==='mentorKind' && e.target.closest('#onboard-form')){ state.obKind = e.target.value; const w = document.querySelector('.ob-kind-icf'); if(w) w.hidden = e.target.value!=='coach'; } });
 document.addEventListener('change', e=>{ if(e.target && e.target.id==='edit-coach-icf'){ const w = document.getElementById('edit-coach-id-wrap'); if(w) w.hidden = !e.target.value; } });
 document.addEventListener('submit', e=>{ if(e.target && e.target.id==='ts-form'){ e.preventDefault(); const i = document.getElementById('ts-q'); if(i && !i.value.trim()){ i.focus(); return; } goSearch(i ? i.value : ''); } });
 document.addEventListener('click', e=>{ const c = e.target.closest && e.target.closest('[data-ts-q]'); if(c) goSearch(c.getAttribute('data-ts-q')); });
@@ -7803,6 +7820,16 @@ function onboardView(){
       ${preset==='client' ? resumeCard('ob') : ''}
       ${preset==='mentor' ? `
         ${obSection(1,'ob_s_about')}
+        <fieldset class="field ob-kind"><legend>${esc(T('ok_lbl'))}</legend>
+          <div class="ob-kind-opts">${['pro','hr','coach'].map(k=>`<label class="ob-kind-opt"><input type="radio" name="mentorKind" value="${k}" ${(state.obKind||'pro')===k?'checked':''}><span><b>${esc(T('ok_'+k))}</b><em>${esc(T('ok_'+k+'_s'))}</em></span></label>`).join('')}</div>
+          <div class="ob-kind-icf" ${(state.obKind==='coach')?'':'hidden'}>
+            <div class="field-row">
+              <div class="field"><label for="ob-f-icf">${esc(T('ok_icf_lvl'))}</label><select id="ob-f-icf" name="coachIcf"><option value="">${esc(T('ok_icf_pick'))}</option>${['ACC','PCC','MCC'].map(l=>`<option value="${l}">ICF ${l} · ${esc(T('co_lvl_'+l))}</option>`).join('')}</select></div>
+              <div class="field"><label for="ob-f-icfid">${esc(T('co_id_lbl'))}</label><input id="ob-f-icfid" name="coachIcfId" maxlength="200" placeholder="${esc(T('co_id_ph'))}"></div>
+            </div>
+            <p class="hint">${esc(T('ok_icf_note'))}</p>
+          </div>
+        </fieldset>
         ${obPhotoField()}
         <div class="field"><label for="ob-f-name">${esc(T('lbl_name'))}</label><input id="ob-f-name" name="name" required autocomplete="name" placeholder="${esc(T('ph_name'))}" value="${esc(liSignupName || (draft && myProfile.name) || '')}"></div>
         <div class="field-row">
@@ -8191,7 +8218,7 @@ function wireTools(){
 
 // ---------- Talk to HR & Recruiters ----------
 const HR_RE = /\b(hr|h\.r\.|human resources?|recruit\w*|talent\s+(acquisition|partner|sourc\w*|lead|manager)|people\s+(partner|operations|ops|team|lead)|hiring\s+(manager|lead)|staffing|headhunt\w*)\b/i;
-function isHrMentor(p){ return !!p && p.role!=='client' && p.approved!==false && HR_RE.test([p.profession, p.headline, p.currentProfession].join(' ')); }
+function isHrMentor(p){ return !!p && p.role!=='client' && p.approved!==false && (p.mentorKind==='hr' || (p.mentorKind!=='pro' && p.mentorKind!=='coach' && HR_RE.test([p.profession, p.headline, p.currentProfession].join(' ')))); }
 function hrView(){
   const list = Object.entries(cache.profiles).filter(([id,p])=>isHrMentor(p))
     .sort(([ia],[ib])=>((avgRating(ib)||0)-(avgRating(ia)||0)) || ((cache.reviews[ib]||[]).length-(cache.reviews[ia]||[]).length));
@@ -8223,7 +8250,7 @@ function hrView(){
     ${list.length ? `<div class="grid">${list.map(([id,p])=>mentorCardHtml(id,p)).join('')}</div>` : `<p class="muted hr-none">${esc(T('hr_list_none'))}</p>`}
     <div class="tl-band-dark ${list.length?'':'hr-first'}" style="margin-top:32px;">
       <div><h3>${esc(T(list.length ? 'hr_tools_t' : 'hr_empty_t'))}</h3><p>${esc(T(list.length ? 'hr_tools_s' : 'hr_empty_s'))}</p></div>
-      <div class="tl-cta-btns"><button class="btn tl-btn-light" data-nav="tools">${esc(T('hr_try_tools'))}</button>${list.length ? '' : `<button class="btn tl-btn-ghost" data-nav="onboard" data-role="mentor">${esc(T('hr_join'))}</button>`}</div>
+      <div class="tl-cta-btns"><button class="btn tl-btn-light" data-nav="tools">${esc(T('hr_try_tools'))}</button>${list.length ? '' : `<button class="btn tl-btn-ghost" data-nav="onboard" data-role="mentor" data-kind="hr">${esc(T('hr_join'))}</button>`}</div>
     </div>
   </section>`;
 }
@@ -8313,7 +8340,7 @@ function coachingView(){
     ${list.length ? `<div class="grid">${list.map(([id,p])=>mentorCardHtml(id,p)).join('')}</div>` : `<p class="muted hr-none">${esc(T('co_list_none'))}</p>`}
     <div class="tl-band-dark ${list.length?'':'hr-first'}" style="margin-top:32px">
       <div><h3>${esc(T(list.length ? 'co_join_t2' : 'co_empty_t'))}</h3><p>${esc(T('co_empty_s'))}</p></div>
-      <div class="tl-cta-btns"><button class="btn tl-btn-light" data-nav="onboard" data-role="mentor">${esc(T('co_join'))}</button>${list.length ? '' : `<button class="btn tl-btn-ghost" data-nav="browse">${esc(T('cta_browse'))}</button>`}</div>
+      <div class="tl-cta-btns"><button class="btn tl-btn-light" data-nav="onboard" data-role="mentor" data-kind="coach">${esc(T('co_join'))}</button>${list.length ? '' : `<button class="btn tl-btn-ghost" data-nav="browse">${esc(T('cta_browse'))}</button>`}</div>
     </div>
   </section>`;
 }
@@ -10530,6 +10557,7 @@ function dashboardView(){
         <div class="field"><label>${esc(T('lbl_certifications'))}</label><input id="edit-certifications" value="${esc((myProfile.certifications||[]).join(', '))}" placeholder="${esc(T('ph_certifications'))}"></div>
         <div class="field"><label>${esc(T('lbl_experience'))}</label><input id="edit-experience" type="number" min="0" value="${esc(myProfile.experience||'')}"></div>
       </div>
+      <div class="field"><label for="edit-kind">${esc(T('ok_lbl'))}</label><select id="edit-kind">${['pro','hr','coach'].map(k=>`<option value="${k}" ${(myProfile.mentorKind||'pro')===k?'selected':''}>${esc(T('ok_'+k))}</option>`).join('')}</select></div>
       <div class="field"><label for="edit-coach-icf">${esc(T('co_edit_lbl'))}</label><select id="edit-coach-icf"><option value="">${esc(T('co_edit_none'))}</option>${['ACC','PCC','MCC'].map(l=>`<option value="${l}" ${myProfile.coachIcf===l?'selected':''}>ICF ${l} · ${esc(T('co_lvl_'+l))}</option>`).join('')}</select><small class="muted">${esc(T('co_edit_help'))}${myProfile.coachIcf ? ' · <b>' + esc(T(myProfile.coachIcfOk ? 'co_ok' : 'co_pending')) + '</b>' : ''}</small></div>
       <div class="field" id="edit-coach-id-wrap" ${myProfile.coachIcf ? '' : 'hidden'}><label for="edit-coach-id">${esc(T('co_id_lbl'))}</label><input id="edit-coach-id" value="${esc(myProfile.coachIcfId||'')}" placeholder="${esc(T('co_id_ph'))}" maxlength="200"></div>` : `<div class="field"><label>${esc(T('lbl_certifications'))}</label><input id="edit-certifications" value="${esc((myProfile.certifications||[]).join(', '))}" placeholder="${esc(T('ph_certifications'))}"></div>`}
     </section>
@@ -10717,6 +10745,7 @@ function wire(){
       if(node.hasAttribute('data-role')) params.role = node.getAttribute('data-role');
       if(node.hasAttribute('data-tool')) params.toolTab = node.getAttribute('data-tool');
       if(view==='onboard') params.role = node.getAttribute('data-role') || state.role || null;
+      if(view==='onboard' && node.hasAttribute('data-kind')) state.obKind = node.getAttribute('data-kind');
       nav(view, params);
     });
     if(node.tagName!=='A' && node.tagName!=='BUTTON') node.addEventListener('keydown', ev=>{ if((ev.key==='Enter' || ev.key===' ') && ev.target===node){ ev.preventDefault(); node.click(); } });
@@ -10796,6 +10825,17 @@ function wire(){
       doc.sessionRate = Math.max(minRate(), Number(fd.get('sessionRate'))||minRate());
       if(window.WorkarAgents) Object.assign(doc, WorkarAgents.extraProfileFields());
       doc.helpsWith = checkedVals(form, 'helpsWith');
+      const kind = ['pro','hr','coach'].includes(fd.get('mentorKind')) ? fd.get('mentorKind') : 'pro';
+      doc.mentorKind = kind;
+      if(kind==='coach'){
+        const lvl = fd.get('coachIcf'), cid = String(fd.get('coachIcfId')||'').trim().slice(0,200);
+        if(!['ACC','PCC','MCC'].includes(lvl) || !cid){
+          toast(T('ok_icf_req'), 5000);
+          const el = form.querySelector(['ACC','PCC','MCC'].includes(lvl) ? '#ob-f-icfid' : '#ob-f-icf'); if(el){ el.scrollIntoView({block:'center'}); el.focus(); }
+          return;
+        }
+        doc.coachIcf = lvl; doc.coachIcfId = cid;
+      }
     }
     const obBtn = form.querySelector('button[type="submit"]');
     state.obBusy = true; if(obBtn) obBtn.disabled = true;
@@ -11037,6 +11077,8 @@ function wire(){
     if(degEl && uniEl){ patch.degree = degEl.value.trim(); patch.university = uniEl.value.trim(); patch.education = [patch.degree, patch.university].filter(Boolean).join(', '); }
     const certEl = document.getElementById('edit-certifications');
     if(certEl) patch.certifications = splitList(certEl.value);
+    const kindEl = document.getElementById('edit-kind');
+    if(kindEl && ['pro','hr','coach'].includes(kindEl.value)) patch.mentorKind = kindEl.value;
     const icfEl = document.getElementById('edit-coach-icf');
     if(icfEl){
       patch.coachIcf = ['ACC','PCC','MCC'].includes(icfEl.value) ? icfEl.value : null;
