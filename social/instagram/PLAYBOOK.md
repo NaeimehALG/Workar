@@ -10,9 +10,11 @@ Rules from Nora: post to Instagram only, never Facebook. 3 posts a week + 1 stor
 - Workar logo bottom centre on Instagram (top-left stays for LinkedIn).
 - Headlines short and plain. Captions end with a workar.me call to action and 6-7 hashtags including #workar.
 
-## Weekly schedule (Vancouver time)
-- Posts: Tue, Thu, Sat at 12:00 PM (one of them a 4-slide carousel).
-- Stories: every day Mon-Sun at 10:00 AM (stories can reuse the week's illustrations).
+## Weekly schedule and algorithm rules (Vancouver time)
+- 3 feed items: 1 Reel (7-12 s, 1080x1920, made with ffmpeg from the week's illustrations, hook in the first second, ends on logo + workar.me), 1 carousel of 5-7 slides, 1 single image or second carousel.
+- Post times: the "Active times" suggestion in Business Suite on Tue, Thu, Sat (fallback 12:00 PM). Stories every day at 10:00 AM, with an "Add link" sticker to https://www.workar.me where offered.
+- Hook in the first line and first slide; short captions; end with "Save this", "Send this to someone" or a question, then the workar.me call to action; 3-5 specific hashtags incl. #workar; alt text.
+- Never skip a day.
 
 ## Steps
 1. Write the week's plan: 3 posts (headline, kicker, caption) and 7 stories.
