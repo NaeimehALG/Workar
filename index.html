@@ -3091,11 +3091,11 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   /* Header on desktop: logo, tagline and every menu link on one line, sharing one baseline */
   @media (min-width:1025px){
     /* the browser lines up the text baselines itself, so it holds with any font the visitor's computer uses */
-    .nav{flex-wrap:nowrap;align-items:center;padding:14px 0 16px;margin-bottom:22px;}
+    .nav{flex-wrap:nowrap;align-items:last baseline;padding:14px 0 16px;margin-bottom:22px;}
     #app[data-view="home"] .nav{margin-bottom:8px;}
-    .brand{align-items:center;padding-bottom:0;}
+    .brand{align-items:flex-end;padding-bottom:0;position:relative;top:2px;}
     .brand .tag{top:-1px;}
-    .navlinks{flex-wrap:nowrap;align-items:center;gap:0;}
+    .navlinks{flex-wrap:nowrap;align-items:baseline;gap:0;}
     .navlinks .navlink{white-space:nowrap;padding:8px 9px;font-size:13.5px;}
     .nav-free{margin-inline-start:4px;}
   }
