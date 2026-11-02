@@ -1,0 +1,15 @@
+[
+ {"bg":"w1/img1.png","out":"w1/f-post1-talk-to-hr.jpg","kicker":"Talk to HR","title":"Recruiters spend seconds on your resume. Ask one what they see.","size":60,"pos":"70%"},
+ {"bg":"w1/img2.png","out":"w1/f-post2-1.jpg","kicker":"Your first session","title":"How to make 30 minutes with a mentor count.","n":"1/4","pos":"70%"},
+ {"bg":"w1/img4.png","out":"w1/f-post2-2.jpg","kicker":"Step 1","title":"Bring one real question.","sub":"“How do I move into product?” gets you further than “Any advice?”","n":"2/4","pos":"70%"},
+ {"bg":"w1/img5.png","out":"w1/f-post2-3.jpg","kicker":"Step 2","title":"Share your resume before the call.","sub":"So your 30 minutes go to what matters most.","n":"3/4","pos":"70%"},
+ {"bg":"w1/img6.png","out":"w1/f-post2-4.jpg","kicker":"Step 3","title":"Leave with one next step.","sub":"Find your mentor at workar.me","n":"4/4","pos":"70%"},
+ {"bg":"w1/img3.png","out":"w1/f-post3-become-a-mentor.jpg","kicker":"For professionals","title":"Someone is trying to get where you are today.","sub":"Sign up and become a mentor at workar.me","pos":"70%"},
+ {"story":true,"bg":"w1/img4.png","out":"w1/f-story-1-mon.jpg","kicker":"New week","title":"One small step for your career this week?","sub":"workar.me","pos":"70%"},
+ {"story":true,"bg":"w1/img5.png","out":"w1/f-story-2-tue.jpg","kicker":"Free tool","title":"How does your resume score out of 100?","sub":"Free Resume Score at workar.me","pos":"70%"},
+ {"story":true,"bg":"w1/img1.png","out":"w1/f-story-3-wed.jpg","kicker":"Talk to HR","title":"Ask the people who actually do the hiring.","sub":"workar.me","pos":"70%"},
+ {"story":true,"bg":"w1/img2.png","out":"w1/f-story-4-thu.jpg","kicker":"Mentor tip","title":"Ask your mentor: “What would you do in my place?”","pos":"70%"},
+ {"story":true,"bg":"w1/img3.png","out":"w1/f-story-5-fri.jpg","kicker":"For professionals","title":"Your experience could be someone’s shortcut.","sub":"Become a mentor at workar.me","pos":"70%"},
+ {"story":true,"bg":"w1/img7.png","out":"w1/f-story-6-sat.jpg","kicker":"New on Workar","title":"Life coaching with certified coaches.","sub":"workar.me","pos":"70%"},
+ {"story":true,"bg":"w1/img8.png","out":"w1/f-story-7-sun.jpg","kicker":"Sunday","title":"Rest is part of the plan.","sub":"See you next week.","pos":"70%"}
+]
