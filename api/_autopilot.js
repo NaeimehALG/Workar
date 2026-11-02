@@ -361,6 +361,7 @@ async function englishLiveMentors(rep, ctx) {
   const live = await M.rowsStrict(`profiles?role=eq.mentor&approved=eq.true&select=*`);
   const list = (Array.isArray(live) ? live : []).filter(p => !p.banned);
   await englishProfiles(list, ctx);
+  if (timeLeft(ctx) > 60000) await fillBestFor(list, ctx);   // live mentors without a Best for line get one too
   if (timeLeft(ctx) > 60000) await fillDetails(list, ctx);
 }
 
