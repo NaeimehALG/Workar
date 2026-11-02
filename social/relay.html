@@ -1,0 +1,18 @@
+<!doctype html><meta charset="utf-8"><title>Workar media</title>
+<body style="font:14px system-ui;padding:20px">Preparing images…
+<script>
+// Hands Workar social images to the scheduling tab that opened this window (used once per weekly batch).
+(async () => {
+  const q = new URLSearchParams(location.search), dir = q.get('dir') || '', files = (q.get('f') || '').split(',').filter(Boolean);
+  if (!/^[\w-]+$/.test(dir) || !window.opener) { document.body.textContent = 'Nothing to do.'; return; }
+  const out = [];
+  for (const f of files) {
+    if (!/^[\w.-]+$/.test(f)) continue;
+    const r = await fetch('/social/instagram/' + dir + '/' + f, { cache: 'no-store' });
+    if (r.ok) out.push({ name: f, type: r.headers.get('content-type') || 'image/jpeg', buf: await r.arrayBuffer() });
+  }
+  window.opener.postMessage({ wkRelay: true, files: out }, '*');
+  document.body.textContent = 'Done. You can close this window.';
+  setTimeout(() => window.close(), 800);
+})();
+</script>
