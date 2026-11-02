@@ -64,7 +64,9 @@
   button.navlink{border:1px solid transparent;} button.lang-switch{background:var(--surface-2);border:1px solid var(--border);}
   .navlink:focus-visible,.brand:focus-visible,.lang-switch:focus-visible,.foot-links a:focus-visible,.pro-foot a:focus-visible,.card[data-nav]:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
   .brand .mark{font-weight:700;font-size:24px;letter-spacing:-.01em;}
-  .brand svg.logo-mark.logo-row{height:38px;aspect-ratio:1000/294;}
+  .brand svg.logo-mark.logo-row{height:36px;aspect-ratio:306/294;}
+  .brand .brand-word{font-family:inherit;font-size:19px;font-weight:600;letter-spacing:.06em;color:#9B7634;line-height:1;margin-inline-start:2px;}
+  .brand:has(.brand-word){align-items:center;gap:10px;}
   .brand .tag{font-size:12px;color:var(--muted);position:relative;top:4px;}
   .navlinks{display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
   .navlink{padding:8px 14px;border-radius:999px;font-size:14px;font-weight:600;cursor:pointer;color:var(--muted);border:1px solid transparent;}
@@ -3092,7 +3094,7 @@ html[dir="rtl"] .fq-item summary{padding:18px 0 18px 32px;}
   /* Header on desktop: logo, tagline and every menu link on one line, sharing one baseline */
   @media (min-width:1025px){
     /* the browser lines up the text baselines itself, so it holds with any font the visitor's computer uses */
-    .nav{flex-wrap:nowrap;align-items:center;padding:16px 0;margin-bottom:22px;}
+    .nav{flex-wrap:nowrap;align-items:center;padding:28px 0 20px;margin-bottom:22px;}
     #app[data-view="home"] .nav{margin-bottom:8px;}
     .brand{align-items:center;padding-bottom:0;}
     .brand .tag{top:-1px;}
@@ -5331,7 +5333,7 @@ function navHtml(){
     return `<a class="navlink nav-msg ${on?'active':''}" href="${navHref('messages')}" data-nav="${requestsNeedingMe() ? 'requests' : 'messages'}"${on?' aria-current="page"':''}>${esc(T('nav_inbox'))}<span class="nav-msg-badge" style="${n?'':'display:none'}">${n}</span></a>`; };
   const link = (v, label, cls)=>`<a class="navlink ${cls||''} ${state.view===v?'active':''}" href="${navHref(v)}" data-nav="${v}"${state.view===v?' aria-current="page"':''}>${esc(label)}</a>`;
   return `<nav class="nav" aria-label="${esc(T('nav_home'))}">
-    <a class="brand" href="${navHref('home')}" data-nav="home" aria-label="Workar"><svg class="logo-mark logo-row" viewBox="0 0 1000 294" role="img" aria-label="Workar"><use href="#wkMark" x="0" y="0" width="306" height="294"/><use href="#wkWord" x="356" y="99" width="636" height="107"/></svg></a>
+    <a class="brand" href="${navHref('home')}" data-nav="home" aria-label="Workar"><svg class="logo-mark logo-row" viewBox="0 0 306 294" aria-hidden="true"><use href="#wkMark" x="0" y="0" width="306" height="294"/></svg><span class="brand-word">WORKAR</span></a>
     <div class="navlinks">
       ${items.map(([v,l])=>v==='@inbox' ? inboxItem() : link(v, l)).join('')}
       ${isAdmin() ? link('admin', T('adm_nav')) : ''}
