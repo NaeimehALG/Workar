@@ -1,0 +1,18 @@
+name: tmp-canva-dl
+on:
+  push:
+    branches: [tmp-canva-dl-1102]
+    paths: [urls.txt]
+permissions:
+  contents: write
+jobs:
+  dl:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          mkdir -p out; i=0
+          while read -r u; do [ -z "$u" ] && continue; i=$((i+1)); curl -fsSL "$u" -o out/img$i.png; done < urls.txt
+          ls -la out
+          git config user.name "workar-bot"; git config user.email "bot@workar.me"
+          git add out; git commit -m "downloaded images"; git push
