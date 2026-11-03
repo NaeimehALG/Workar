@@ -4513,6 +4513,10 @@ LEGAL.fa.conduct = { title:'منشور رفتاری', updated:'October 14, 2026'
 ]};
 // The Code of Conduct is part of the Terms of Service (one page); old ?go=conduct links open Terms at that part.
 LEGAL.en.terms.updated = 'October 29, 2026'; LEGAL.fa.terms.updated = 'October 29, 2026';
+// Sign in with LinkedIn: say exactly what LinkedIn shares with us (PIPEDA / PIPA: tell people what is collected and why).
+LEGAL.en.privacy.sections.splice(2, 0, ['Signing in with LinkedIn','If you choose "Continue with LinkedIn" or connect LinkedIn from your profile, LinkedIn asks for your permission and then shares only your name, email address and profile photo with us. We use them to create your account, fill in your name and photo, and show a "Signed in with LinkedIn" badge. We do not receive your connections, messages, work history or other LinkedIn data, and we never post on LinkedIn for you. You can remove this access at any time in your LinkedIn settings.']);
+LEGAL.fa.privacy.sections.splice(2, 0, ['ورود با LinkedIn','اگر «ادامه با LinkedIn» را انتخاب کنید یا LinkedIn را از پروفایلتان وصل کنید، LinkedIn از شما اجازه می‌گیرد و فقط نام، ایمیل و عکس پروفایلتان را با ما به اشتراک می‌گذارد. از آن‌ها برای ساخت حساب، تکمیل نام و عکس و نمایش نشان «ورود با LinkedIn» استفاده می‌کنیم. به ارتباطات، پیام‌ها، سوابق کاری یا داده‌های دیگر LinkedIn شما دسترسی نداریم و هرگز از طرف شما در LinkedIn پست نمی‌گذاریم. هر زمان بخواهید می‌توانید این دسترسی را از تنظیمات LinkedIn حذف کنید.']);
+LEGAL.en.privacy.updated = 'November 2, 2026'; LEGAL.fa.privacy.updated = 'November 2, 2026';
 function legalView(page){
   if(page==='conduct') page = 'terms';
   const LL = LEGAL[state.lang] || LEGAL.en, L = LL[page] || LEGAL.en[page];
