@@ -799,7 +799,11 @@ async function confirmLink(email) {
     method: 'POST', headers: svc(), body: JSON.stringify({ type: 'magiclink', email, redirect_to: M.SITE() })
   });
   const j = await r.json().catch(() => ({}));
-  return r.ok ? (j.action_link || (j.properties && j.properties.action_link) || '') : '';
+  if (!r.ok) return '';
+  // Same-domain link (see linkOf in agents.js): the workar.me page verifies the token with Supabase.
+  const pr = j.properties || j;
+  if (pr.hashed_token && pr.verification_type) return `${M.SITE()}/?wk_auth=${encodeURIComponent(pr.verification_type)}&th=${encodeURIComponent(pr.hashed_token)}`;
+  return j.action_link || (j.properties && j.properties.action_link) || '';
 }
 // Sends a fresh confirmation link (the caller has already claimed 'confirm-nudge' for this person).
 async function sendConfirmNudge(rep, u) {

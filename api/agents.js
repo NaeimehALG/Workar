@@ -549,24 +549,38 @@ async function genLink(payload, origin) {
   const j = await r.json().catch(() => ({}));
   return { ok: r.ok, status: r.status, j };
 }
-const linkOf = j => (j && (j.action_link || (j.properties && j.properties.action_link))) || '';
+// Account links point at workar.me itself (not the supabase.co address): a button whose link goes to another domain
+// than the sender is a common reason for emails landing in spam. The page verifies the token with Supabase.
+// Links stay valid for AUTH_LINK_HOURS (Supabase > Authentication > Email > "Email OTP Expiration" = 86400 seconds).
+const AUTH_LINK_HOURS = 24;
+function linkOf(j, base) {
+  const pr = (j && (j.properties || j)) || {};
+  const hashed = pr.hashed_token, type = pr.verification_type;
+  if (hashed && type) return `${String(base || M.SITE()).replace(/\/$/, '')}/?wk_auth=${encodeURIComponent(type)}&th=${encodeURIComponent(hashed)}`;
+  return (j && (j.action_link || (j.properties && j.properties.action_link))) || '';
+}
 const userOf = j => (j && (j.user || (j.id ? j : null))) || null;
 
 const AUTH_COPY = {
   en: {
-    confirm: ['Confirm your email', 'Welcome to Workar. Please confirm your email address to finish creating your account.', 'Confirm my email'],
-    reset: ['Reset your password', 'We received a request to reset your Workar password. Use the button below to choose a new one.', 'Choose a new password'],
-    note: 'If you did not request this, you can safely ignore this email.'
+    confirm: ['Confirm your email address for Workar', 'Confirm your email address', 'Thank you for creating a Workar account. Please confirm your email address to activate your account.', 'Confirm my email'],
+    reset: ['Your Workar password reset link', 'Reset your password', 'We received a request to reset the password for your Workar account. Use the button below to choose a new password.', 'Choose a new password'],
+    expiry: `For your security, this link can be used once and expires in ${AUTH_LINK_HOURS} hours. If it has expired, you can request a new one on workar.me.`,
+    fallback: 'If the button does not work, copy and paste this address into your browser:',
+    note: 'If you did not request this, you can safely ignore this email. No changes will be made to your account.'
   },
   fa: {
-    confirm: ['ایمیل خود را تأیید کنید', 'به Workar خوش آمدید. برای تکمیل ساخت حساب، لطفاً ایمیل خود را تأیید کنید.', 'تأیید ایمیل'],
-    reset: ['بازنشانی رمز عبور', 'درخواستی برای بازنشانی رمز عبور حساب Workar شما دریافت شد. با دکمه‌ی زیر رمز تازه‌ای انتخاب کنید.', 'انتخاب رمز تازه'],
-    note: 'اگر این درخواست از طرف شما نبوده، می‌توانید این ایمیل را نادیده بگیرید.'
+    confirm: ['تأیید ایمیل حساب Workar', 'ایمیل خود را تأیید کنید', 'از ساخت حساب Workar سپاسگزاریم. برای فعال شدن حساب، لطفاً ایمیل خود را تأیید کنید.', 'تأیید ایمیل'],
+    reset: ['لینک بازنشانی رمز عبور Workar', 'بازنشانی رمز عبور', 'درخواستی برای بازنشانی رمز عبور حساب Workar شما دریافت شد. با دکمه‌ی زیر رمز تازه‌ای انتخاب کنید.', 'انتخاب رمز تازه'],
+    expiry: `این لینک فقط یک بار قابل استفاده است و پس از ${AUTH_LINK_HOURS} ساعت منقضی می‌شود. در این صورت می‌توانید از workar.me لینک تازه بخواهید.`,
+    fallback: 'اگر دکمه کار نکرد، این نشانی را در مرورگر کپی کنید:',
+    note: 'اگر این درخواست از طرف شما نبوده، می‌توانید این ایمیل را نادیده بگیرید؛ تغییری در حسابتان ایجاد نمی‌شود.'
   }
 };
 async function mailAuth(email, kind, url, lang) {
-  const c = AUTH_COPY[lang === 'fa' ? 'fa' : 'en'], [title, text, cta] = c[kind];
-  const r = await M.sendMail(email, title, M.layout(title, [M.esc(text), M.esc(c.note)], { url, text: cta }), null, { noCopy: true });
+  const c = AUTH_COPY[lang === 'fa' ? 'fa' : 'en'], [subject, title, text, cta] = c[kind];
+  const paras = [M.esc(text), M.esc(c.expiry), `${M.esc(c.fallback)}<br><span style="word-break:break-all;font-size:13px;">${M.link(url, url)}</span>`, M.esc(c.note)];
+  const r = await M.sendMail(email, subject, M.layout(title, paras, { url, text: cta }), null, { noCopy: true });
   if (!r || !r.ok) throw new Error('email-send-failed');
 }
 
@@ -580,7 +594,7 @@ async function authEmail(req, res, b) {
 
   if (b.task === 'auth_recover') {
     const g = await genLink({ type: 'recovery', email }, origin);
-    if (g.ok && linkOf(g.j)) await mailAuth(email, 'reset', linkOf(g.j), lang);
+    if (g.ok && linkOf(g.j)) await mailAuth(email, 'reset', linkOf(g.j, origin), lang);
     return res.status(200).json({ sent: true }); // same answer whether or not the account exists
   }
 
@@ -593,7 +607,7 @@ async function authEmail(req, res, b) {
     const name = String(b.name || '').replace(/[<>]/g, '').trim().slice(0, 80) || undefined;
     const g = await genLink({ type: 'signup', email, password, data: { role, name } }, origin);
     if (!g.ok && /weak_password|weak|pwned|leaked|compromised/i.test(JSON.stringify(g.j))) return res.status(400).json({ error: 'weak-password' });
-    if (g.ok && linkOf(g.j)) { await mailAuth(email, 'confirm', linkOf(g.j), lang); return res.status(200).json({ sent: true }); }
+    if (g.ok && linkOf(g.j)) { await mailAuth(email, 'confirm', linkOf(g.j, origin), lang); return res.status(200).json({ sent: true }); }
     if (!/already|registered|exists/i.test(JSON.stringify(g.j))) { console.error('auth-signup-link-failed', g.status, JSON.stringify(g.j).slice(0, 300)); return res.status(502).json({ error: 'fallback' }); }
   }
   // Existing address (re-sign-up, or "resend confirmation"): only unconfirmed accounts get a link.
@@ -603,7 +617,7 @@ async function authEmail(req, res, b) {
   if (u.email_confirmed_at || u.confirmed_at) return res.status(200).json({ already: true });
   // Never change the password of an existing account here: anyone can submit this form with someone else's
   // email. The confirmation link goes to the real owner; if they forgot their password they can reset it.
-  await mailAuth(email, 'confirm', linkOf(m.j), lang);
+  await mailAuth(email, 'confirm', linkOf(m.j, origin), lang);
   return res.status(200).json({ sent: true });
 }
 

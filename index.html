@@ -1186,6 +1186,22 @@
   .auth-tabs button.on{background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(74,53,38,.12);}
   .auth-h{font-size:24px;font-weight:700;margin:0 0 6px;}
   .auth-sub{margin:0 0 22px;font-size:14.5px;}
+  .auth-status{display:flex;flex-direction:column;align-items:center;text-align:center;max-width:400px;margin:0 auto;padding:6px 0;}
+  .as-ic{display:inline-flex;align-items:center;justify-content:center;width:68px;height:68px;border-radius:50%;background:var(--accent);color:var(--accent-ink);margin-bottom:18px;box-shadow:0 10px 26px -12px rgba(139,106,76,.7);}
+  .as-ic.as-ok{background:#3E7B55;box-shadow:0 10px 26px -12px rgba(62,123,85,.7);}
+  .as-ic.as-warn{background:#B98D5E;}
+  .as-h{font-size:24px;font-weight:700;line-height:1.25;margin:0 0 12px;color:var(--text);}
+  .as-p{margin:0 0 12px;font-size:15px;line-height:1.55;color:var(--muted);}
+  .as-email{display:inline-block;margin-top:6px;font-size:16px;color:var(--text);background:var(--surface-2);border:1px solid var(--border);border-radius:999px;padding:6px 14px;word-break:break-all;}
+  .as-tips{list-style:none;margin:6px 0 20px;padding:14px 16px;text-align:start;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13.5px;line-height:1.5;color:var(--text);display:grid;gap:8px;width:100%;box-sizing:border-box;}
+  .as-tips li{position:relative;padding-inline-start:18px;}
+  .as-tips li::before{content:"";position:absolute;inset-inline-start:2px;top:.55em;width:6px;height:6px;border-radius:50%;background:var(--accent);}
+  .as-btn{width:100%;}
+  .as-form{width:100%;text-align:start;margin-top:6px;}
+  .as-sent{width:100%;box-sizing:border-box;text-align:start;}
+  .as-alt{margin:16px 0 0;font-size:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+  .as-alt a{color:var(--accent);font-weight:600;}
+  .nm-row{gap:12px;}
   .auth-note{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;margin:0 0 18px;font-size:13.5px;}
   .auth-forgot{text-align:end;margin:-8px 0 14px;}
   .auth-roles{margin:0 0 18px;}
@@ -3235,7 +3251,7 @@ const I18N = {
     hiw2_t:'2. Match with a mentor', hiw2_b:'Search by job title, read real reviews, and request a conversation.',
     hiw3_t:'3. Get AI coaching too', hiw3_b:'Between sessions, get instant feedback on your resume and career questions.',
     onboard_title:'Set up your profile',
-    adm_paystat:'Check payment setup (Stripe, Daily)', msg_cant_delete:'This message can\'t be deleted.', toast_rereview:'Saved. Your updated profile is being checked and will be visible again shortly.', draft_t:'Your mentor profile is not finished yet. It goes live once it is complete.', draft_btn:'Finish my mentor profile', auth_i_am:'I want to', auth_role_client:'Find a mentor', auth_role_mentor:'Become a mentor', auth_pick_role:'Please choose whether you want to find a mentor or become a mentor.', lbl_full_name:'Full name', ph_full_name:'e.g. Sara Ahmadi', ob_quick_t:'One last detail', ob_quick_s:'Add your name and you can start browsing mentors right away. Your goals and resume can be added later from your dashboard.', ob_quick_btn:'Start browsing mentors', toast_client_ready:'Your account is ready. Find a mentor who fits your goals.',
+    adm_paystat:'Check payment setup (Stripe, Daily)', msg_cant_delete:'This message can\'t be deleted.', toast_rereview:'Saved. Your updated profile is being checked and will be visible again shortly.', draft_t:'Your mentor profile is not finished yet. It goes live once it is complete.', draft_btn:'Finish my mentor profile', auth_i_am:'I want to', auth_role_client:'Find a mentor', auth_role_mentor:'Become a mentor', auth_pick_role:'Please choose whether you want to find a mentor or become a mentor.', lbl_full_name:'Full name', ph_full_name:'e.g. Sara Ahmadi', lbl_first_name:'First name', ph_first_name:'e.g. Sara', lbl_last_name:'Last name', ph_last_name:'e.g. Ahmadi', ob_quick_t:'One last detail', ob_quick_s:'Add your name and you can start browsing mentors right away. Your goals and resume can be added later from your dashboard.', ob_quick_btn:'Start browsing mentors', toast_client_ready:'Your account is ready. Find a mentor who fits your goals.',
     role_client_t:"I'm looking for a mentor", role_client_s:'Get guidance on your resume, interviews, or career path.',
     role_mentor_t:"I'm a mentor", role_mentor_s:'Share your experience and help someone with your job.',
     pick_to_continue:'Pick one to continue.',
@@ -3393,7 +3409,13 @@ const I18N = {
     auth_toggle_to_login:'Already have an account? Log in',
     auth_check_email:'Account created — check your email and click the confirmation link, then log in below.',
     auth_check_spam:"Don't see it within a few minutes? Check your spam or promotions folder.",
-    auth_resend:'Resend confirmation email', auth_resent:'Sent — check your inbox', auth_too_many:'Too many emails were requested. Please wait a few minutes and try again.', auth_weak_pw:'Please choose a password with at least 10 characters, including letters and numbers. Very common or leaked passwords are not accepted.',
+    auth_resend:'Resend confirmation email', auth_resent:'A new email is on its way',
+    ci_title:'Check your email to activate your account', ci_sent_to:'We sent a confirmation link to:', ci_click:'Open that email and click "Confirm my email". Your account will be ready right away.',
+    ci_expiry:'The link is valid for 24 hours and works only once. If you request a new email, only the newest link will work.', ci_change:'Use a different email', ci_login:'Back to log in',
+    el_ok_t:'Your email is confirmed', el_ok_s:'Thank you. Your Workar account is now active and you are signed in.', el_continue:'Continue',
+    el_exp_t:'This confirmation link has expired', el_exp_s:'Confirmation links are valid for 24 hours and work only once, and only the newest link works. Enter your email and we will send you a new one.',
+    el_exp_reset_t:'This password reset link has expired', el_exp_reset_s:'Reset links are valid for 24 hours and work only once. Enter your email and we will send you a new one.',
+    el_send_new:'Send me a new link', el_sent_t:'A new link is on its way.', el_sent_s:'Please check your inbox (and your spam folder) and use the newest email.', el_already:'This email is already confirmed. Please log in.', auth_too_many:'Too many emails were requested. Please wait a few minutes and try again.', auth_weak_pw:'Please choose a password with at least 10 characters, including letters and numbers. Very common or leaked passwords are not accepted.',
     auth_already_registered:'This email already has an account — please log in.',
     lbl_confirm_password_signup:'Confirm password', ph_confirm_password:'Re-enter your password', forgot_link:'Forgot password?', forgot_hint:"Enter your account email and we'll send you a link to reset your password.",
     btn_send_reset:'Send reset link', back_to_login:'Back to log in',
@@ -3678,7 +3700,7 @@ const I18N = {
     hiw2_t:'۲. با یک منتور آشنا شوید', hiw2_b:'بر اساس عنوان شغلی جستجو کنید، نظرهای واقعی را بخوانید و درخواست گفتگو بدهید.',
     hiw3_t:'۳. از مربی هوش مصنوعی هم کمک بگیرید', hiw3_b:'بین جلسه‌ها برای رزومه و سؤال‌های شغلی‌تان بازخورد فوری بگیرید.',
     onboard_title:'پروفایلتان را بسازید',
-    adm_paystat:'بررسی تنظیمات پرداخت (Stripe، Daily)', msg_cant_delete:'این پیام قابل حذف نیست.', toast_rereview:'ذخیره شد. پروفایل به‌روزشده‌ی شما در حال بررسی است و به‌زودی دوباره نمایش داده می‌شود.', draft_t:'پروفایل منتوری شما هنوز کامل نشده و بعد از تکمیل نمایش داده می‌شود.', draft_btn:'تکمیل پروفایل منتوری', auth_i_am:'می‌خواهم', auth_role_client:'منتور پیدا کنم', auth_role_mentor:'منتور شوم', auth_pick_role:'لطفاً انتخاب کنید که می‌خواهید منتور پیدا کنید یا منتور شوید.', lbl_full_name:'نام و نام خانوادگی', ph_full_name:'مثلاً سارا احمدی', ob_quick_t:'فقط یک مورد مانده', ob_quick_s:'نامتان را وارد کنید تا همین الان منتورها را ببینید. هدف‌ها و رزومه‌تان را بعداً هم می‌توانید از داشبورد اضافه کنید.', ob_quick_btn:'دیدن منتورها', toast_client_ready:'حسابتان آماده است. منتوری متناسب با هدف‌تان پیدا کنید.',
+    adm_paystat:'بررسی تنظیمات پرداخت (Stripe، Daily)', msg_cant_delete:'این پیام قابل حذف نیست.', toast_rereview:'ذخیره شد. پروفایل به‌روزشده‌ی شما در حال بررسی است و به‌زودی دوباره نمایش داده می‌شود.', draft_t:'پروفایل منتوری شما هنوز کامل نشده و بعد از تکمیل نمایش داده می‌شود.', draft_btn:'تکمیل پروفایل منتوری', auth_i_am:'می‌خواهم', auth_role_client:'منتور پیدا کنم', auth_role_mentor:'منتور شوم', auth_pick_role:'لطفاً انتخاب کنید که می‌خواهید منتور پیدا کنید یا منتور شوید.', lbl_full_name:'نام و نام خانوادگی', ph_full_name:'مثلاً سارا احمدی', lbl_first_name:'نام', ph_first_name:'مثلاً سارا', lbl_last_name:'نام خانوادگی', ph_last_name:'مثلاً احمدی', ob_quick_t:'فقط یک مورد مانده', ob_quick_s:'نامتان را وارد کنید تا همین الان منتورها را ببینید. هدف‌ها و رزومه‌تان را بعداً هم می‌توانید از داشبورد اضافه کنید.', ob_quick_btn:'دیدن منتورها', toast_client_ready:'حسابتان آماده است. منتوری متناسب با هدف‌تان پیدا کنید.',
     role_client_t:'دنبال منتور هستم', role_client_s:'برای رزومه، مصاحبه یا مسیر شغلی‌تان راهنمایی بگیرید.',
     role_mentor_t:'منتور هستم', role_mentor_s:'تجربه‌تان را به اشتراک بگذارید و به کسی در همان شغل کمک کنید.',
     pick_to_continue:'برای ادامه یکی را انتخاب کنید.',
@@ -3836,7 +3858,13 @@ const I18N = {
     auth_toggle_to_login:'حساب دارید؟ وارد شوید',
     auth_check_email:'حساب ساخته شد. ایمیلتان را باز کنید و روی لینک تأیید بزنید، بعد همین پایین وارد شوید.',
     auth_check_spam:'اگر تا چند دقیقه ایمیل نرسید، پوشه‌ی اسپم یا Promotions را هم ببینید.',
-    auth_resend:'ارسال دوباره‌ی ایمیل تأیید', auth_resent:'ارسال شد؛ ایمیلتان را ببینید', auth_too_many:'درخواست‌های زیادی ارسال شده است. لطفاً چند دقیقه بعد دوباره امتحان کنید.', auth_weak_pw:'لطفاً رمزی با دست‌کم ۱۰ کاراکتر، شامل حرف و عدد، انتخاب کنید. رمزهای خیلی رایج یا لو‌رفته پذیرفته نمی‌شوند.',
+    auth_resend:'ارسال دوباره‌ی ایمیل تأیید', auth_resent:'ایمیل تازه ارسال شد',
+    ci_title:'برای فعال شدن حساب، ایمیلتان را ببینید', ci_sent_to:'لینک تأیید را به این نشانی فرستادیم:', ci_click:'ایمیل را باز کنید و روی «تأیید ایمیل» بزنید. حسابتان بلافاصله آماده می‌شود.',
+    ci_expiry:'این لینک ۲۴ ساعت اعتبار دارد و فقط یک بار کار می‌کند. اگر ایمیل تازه بخواهید، فقط جدیدترین لینک کار می‌کند.', ci_change:'استفاده از ایمیل دیگر', ci_login:'بازگشت به ورود',
+    el_ok_t:'ایمیل شما تأیید شد', el_ok_s:'سپاسگزاریم. حساب Workar شما فعال است و وارد شده‌اید.', el_continue:'ادامه',
+    el_exp_t:'این لینک تأیید منقضی شده است', el_exp_s:'لینک‌های تأیید ۲۴ ساعت اعتبار دارند، فقط یک بار کار می‌کنند و فقط جدیدترین لینک معتبر است. ایمیلتان را وارد کنید تا لینک تازه بفرستیم.',
+    el_exp_reset_t:'این لینک بازنشانی رمز منقضی شده است', el_exp_reset_s:'لینک‌های بازنشانی ۲۴ ساعت اعتبار دارند و فقط یک بار کار می‌کنند. ایمیلتان را وارد کنید تا لینک تازه بفرستیم.',
+    el_send_new:'ارسال لینک تازه', el_sent_t:'لینک تازه ارسال شد.', el_sent_s:'صندوق ورودی (و پوشه‌ی اسپم) را ببینید و از جدیدترین ایمیل استفاده کنید.', el_already:'این ایمیل قبلاً تأیید شده است؛ لطفاً وارد شوید.', auth_too_many:'درخواست‌های زیادی ارسال شده است. لطفاً چند دقیقه بعد دوباره امتحان کنید.', auth_weak_pw:'لطفاً رمزی با دست‌کم ۱۰ کاراکتر، شامل حرف و عدد، انتخاب کنید. رمزهای خیلی رایج یا لو‌رفته پذیرفته نمی‌شوند.',
     auth_already_registered:'با این ایمیل قبلاً حساب ساخته شده است؛ لطفاً وارد شوید.',
     lbl_confirm_password_signup:'تکرار رمز عبور', ph_confirm_password:'رمز عبور را دوباره وارد کنید', forgot_link:'رمز عبور را فراموش کرده‌اید؟', forgot_hint:'ایمیل حسابتان را وارد کنید تا لینک تغییر رمز برایتان فرستاده شود.',
     btn_send_reset:'ارسال لینک تغییر رمز', back_to_login:'بازگشت به ورود',
@@ -4313,7 +4341,7 @@ window.addEventListener('popstate', e=>{
   const params = Object.assign({}, st.prepScreen ? { prepScreen: st.prepScreen } : {}, st.mentorId ? { mentorId: st.mentorId } : {});
   nav(st.view || 'home', Object.keys(params).length ? params : null, true);
 });
-try{ history.replaceState({ view: state.view, mentorId: state.view==='mentor' ? state.mentorId : null }, '', /type=recovery/.test(location.hash) ? location.href : viewUrl(state.view) + location.hash); }catch(e){}
+try{ history.replaceState({ view: state.view, mentorId: state.view==='mentor' ? state.mentorId : null }, '', (/type=recovery/.test(location.hash) || /[?&]wk_auth=/.test(location.search)) ? location.href : viewUrl(state.view) + location.hash); }catch(e){}
 
 async function resolveNames(ids){
   if(!sb) return;
@@ -4776,7 +4804,13 @@ const sb = (window.supabase && SUPABASE_URL.startsWith('http'))
   : null;
 // Detect an email-confirmation / magic-link redirect (Supabase puts type=signup etc in the URL hash)
 // before the client consumes it, so we can show a clear success message instead of nothing.
-const __cameFromEmailLink = /type=(signup|magiclink|invite|email_change|recovery)/.test(location.hash);
+const __cameFromEmailLink = /type=(signup|magiclink|invite|email_change)/.test(location.hash);
+// Links in Workar's own account emails: workar.me/?wk_auth=<type>&th=<token hash>. Verified on this page (see init).
+const __emailLink = (()=>{ try{ const q = new URLSearchParams(location.search); const t = q.get('wk_auth'), th = q.get('th');
+  return (t && th && /^(signup|magiclink|recovery|invite|email_change|email)$/.test(t)) ? { type: t, th } : null; }catch(e){ return null; } })();
+// An older Supabase link that was used, replaced by a newer one, or expired comes back with an error in the address.
+const __emailLinkFailed = (()=>{ try{ const h = new URLSearchParams((location.hash||'').replace(/^#/,'') || location.search);
+  return /otp_expired|expired|invalid|already been used/i.test((h.get('error_code')||'') + ' ' + (h.get('error_description')||'')) && !/identity|linkedin/i.test(h.get('error_description')||''); }catch(e){ return false; } })();
 
 function withTimeout(promise, ms, label){
   return Promise.race([
@@ -5004,10 +5038,7 @@ function onSignedIn(session){
   render();
   Promise.resolve(routeNewAccount()).catch(()=>{}).finally(()=>bootMark('route'));
 
-  if(__cameFromEmailLink){
-    toast(T('toast_email_confirmed'), 4000);
-    history.replaceState({}, '', location.origin + location.pathname);
-  }
+  if(__cameFromEmailLink) history.replaceState({}, '', location.origin + location.pathname);
 
   const params = new URLSearchParams(location.search);
   if(params.get('paid')){
@@ -5067,6 +5098,27 @@ async function init(){
     return;
   }
   if(IS_RECOVERY_LINK) state.recoveryMode = true;
+  if(__emailLink){
+    history.replaceState({}, '', location.origin + location.pathname);
+    try{
+      const { data, error } = await withTimeout(sb.auth.verifyOtp({ token_hash: __emailLink.th, type: __emailLink.type }), 10000, 'verifyOtp');
+      if(error || !data || !data.session) throw error || new Error('no-session');
+      session = data.session;
+      if(__emailLink.type==='recovery') state.recoveryMode = true;
+      else state.emailLink = { status:'ok' };
+    }catch(e){
+      console.warn('email-link-failed', e && e.message);
+      // A link that was already used, but the person is signed in on this browser: nothing to fix, carry on.
+      if(session && __emailLink.type!=='recovery') state.emailLink = { status:'ok' };
+      else state.emailLink = { status:'expired', kind: __emailLink.type==='recovery' ? 'reset' : 'confirm' };
+    }
+  } else if(__emailLinkFailed){
+    history.replaceState({}, '', location.origin + location.pathname);
+    state.emailLink = { status:'expired', kind: IS_RECOVERY_LINK ? 'reset' : 'confirm' };
+    state.recoveryMode = false;
+  } else if(__cameFromEmailLink && session){
+    state.emailLink = { status:'ok' };
+  }
   if(session){
     __bootWait.me = true; __bootWait.route = true;   // also wait for my own profile and where to send me
     onSignedIn(session);
@@ -5288,7 +5340,9 @@ function render(){
   let body;
   const wantsAccount = (state.view==='dashboard' || state.view==='onboard' || state.view==='dispute');
   const showAuthScreen = wantsAccount && !uid;
-  if(state.recoveryMode){
+  if(state.emailLink && !state.recoveryMode){
+    body = emailLinkView();
+  } else if(state.recoveryMode){
     body = resetPasswordView();
   } else if(showAuthScreen){
     body = authView();
@@ -5344,7 +5398,8 @@ function render(){
   if(state.view==='admin') wireAdmin();
   if(state.view==='prep' && prepVisible()) wirePrep(); else if(prep.timer){ clearInterval(prep.timer); prep.timer=null; }
   if(state.view==='prepAdmin' && isAdmin()) wirePrepAdmin();
-  if(state.recoveryMode) wireResetPassword();
+  if(state.emailLink && !state.recoveryMode) wireEmailLink();
+  else if(state.recoveryMode) wireResetPassword();
   else if(showAuthScreen) wireAuth();
   updateHead();
   if(state.legalJump && state.view==='terms') legalJumpNow();
@@ -7476,10 +7531,28 @@ function pwField(name, labelKey, phKey, auto){
     <button type="button" class="pw-eye" aria-label="${esc(T('pw_show'))}" tabindex="-1"><svg viewBox="0 0 20 20" width="18" height="18"><path d="M1.5 10S4.8 4 10 4s8.5 6 8.5 6-3.3 6-8.5 6S1.5 10 1.5 10z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="10" r="2.6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
   </div></div>`;
 }
-function authView(){
-  const mode = state.authMode || 'login';
+// First and last name as two fields; a hidden "name" field keeps the combined name, so every form handler reads fd.get('name').
+function splitName(full){ const w = String(full||'').trim().split(/\s+/).filter(Boolean); return w.length < 2 ? [w[0]||'', ''] : [w[0], w.slice(1).join(' ')]; }
+function nameFields(full, idPrefix){
+  const [f, l] = splitName(full), id = idPrefix || 'nm';
+  return `<div class="field-row nm-row" data-nm>
+    <div class="field"><label for="${id}-first">${esc(T('lbl_first_name'))}</label><input id="${id}-first" name="firstName" data-nm-part required autocomplete="given-name" maxlength="40" placeholder="${esc(T('ph_first_name'))}" value="${esc(f)}"></div>
+    <div class="field"><label for="${id}-last">${esc(T('lbl_last_name'))}</label><input id="${id}-last" name="lastName" data-nm-part required autocomplete="family-name" maxlength="40" placeholder="${esc(T('ph_last_name'))}" value="${esc(l)}"></div>
+    <input type="hidden" name="name" value="${esc(String(full||'').trim())}">
+  </div>`;
+}
+function syncNameRow(row){
+  const parts = [...row.querySelectorAll('[data-nm-part]')].map(i=>i.value.trim()).filter(Boolean);
+  row.querySelector('input[name="name"]').value = parts.join(' ').slice(0, 80);
+}
+document.addEventListener('input', e=>{
+  const t = e.target; if(!t || !t.hasAttribute || !t.hasAttribute('data-nm-part')) return;
+  const row = t.closest('[data-nm]'); if(row) syncNameRow(row);
+});
+// Runs before each form's own submit handler (capture), so restored drafts are combined too.
+document.addEventListener('submit', e=>{ const f = e.target; if(f && f.querySelectorAll) f.querySelectorAll('[data-nm]').forEach(syncNameRow); }, true);
+function authSide(){
   return `
-  <div class="auth-wrap">
     <aside class="auth-side">
       <svg class="auth-logo" viewBox="0 0 556 410" aria-hidden="true">
         <g transform="translate(125 0)"><path class="l-mark" d="${WK_MARK}" pathLength="1" vector-effect="non-scaling-stroke"/><path class="l-fill" d="${WK_MARK}" fill-rule="evenodd"/></g>
@@ -7495,8 +7568,15 @@ function authView(){
         <li><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>
           <div><b>${esc(T('auth_f3_t'))}</b><span>${esc(T('auth_f3_s'))}</span></div></li>
       </ul>
-    </aside>
+    </aside>`;
+}
+function authView(){
+  const mode = state.authMode || 'login';
+  return `
+  <div class="auth-wrap">
+    ${authSide()}
     <div class="auth-main">
+      ${state.authCheckEmail && mode!=='forgot' ? checkInboxPanel() : `
       ${mode==='forgot' ? `<h3 class="auth-h">${esc(T('auth_forgot_h'))}</h3>` : `
       <h3 class="auth-welcome">${esc(T('auth_title'))}</h3>
       <div class="auth-tabs" role="tablist">
@@ -7505,12 +7585,6 @@ function authView(){
       </div>
       `}
       <p class="muted auth-sub">${esc(T(mode==='signup' ? 'auth_sub_signup' : mode==='forgot' ? 'forgot_hint' : 'auth_sub_login'))}</p>
-      ${state.authCheckEmail ? `
-      <div class="auth-note">
-        <p style="margin:0 0 6px;font-weight:700;">${esc(T('auth_check_email'))}</p>
-        <p class="muted" style="margin:0 0 10px;font-size:13px;">${esc(T('auth_check_spam'))}</p>
-        <button type="button" class="btn btn-outline btn-sm" id="auth-resend" ${state.resendBusy?'disabled':''}>${esc(state.resendDone ? T('auth_resent') : T('auth_resend'))}</button>
-      </div>` : ''}
       ${state.authInfo ? `<div class="auth-note">${esc(state.authInfo)}</div>` : ''}
       ${mode==='signup' ? `<div class="auth-roles" role="radiogroup" aria-label="${esc(T('auth_i_am'))}">
         <span class="auth-roles-l">${esc(T('auth_i_am'))}</span>
@@ -7523,7 +7597,7 @@ function authView(){
       <p class="muted auth-li-note">${esc(T('auth_li_note'))}</p>
       <div class="auth-or"><span>${esc(T('auth_or'))}</span></div>` : ''}
       <form id="auth-form">
-        ${mode==='signup' ? `<div class="field"><label>${esc(T('lbl_full_name'))}</label><input name="fullname" required autocomplete="name" maxlength="80" placeholder="${esc(T('ph_full_name'))}" value="${esc(state.authName||'')}"></div>` : ''}
+        ${mode==='signup' ? nameFields(state.authName||'', 'su') : ''}
         <div class="field"><label>${esc(T('lbl_email'))}</label><input name="email" type="email" required autocomplete="email" placeholder="${esc(T('ph_email'))}" value="${esc(state.authEmail||'')}"></div>
         ${mode==='forgot' ? '' : `
         ${pwField('password','lbl_password', mode==='signup'?'ph_password_new':'ph_password', mode==='signup'?'new-password':'current-password')}
@@ -7534,8 +7608,76 @@ function authView(){
         <button class="btn btn-primary auth-submit" type="submit" ${state.authBusy?'disabled':''}>${esc(mode==='signup' ? T('btn_signup') : mode==='forgot' ? T('btn_send_reset') : T('btn_login'))}</button>
       </form>
       ${mode==='forgot' ? `<p class="auth-alt"><a href="#" id="auth-toggle">${esc(T('back_to_login'))}</a></p>` : ''}
+      `}
     </div>
   </div>`;
+}
+const ICON_MAIL = '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7l8.5 6 8.5-6"/></svg>';
+const ICON_OK = '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+const ICON_CLOCK = '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>';
+// Shown right after sign-up (and when someone tries to log in before confirming): one clear next step.
+function checkInboxPanel(){
+  return `<div class="auth-status" role="status">
+    <span class="as-ic">${ICON_MAIL}</span>
+    <h3 class="as-h">${esc(T('ci_title'))}</h3>
+    <p class="as-p">${esc(T('ci_sent_to'))}<br><b class="as-email" dir="ltr">${esc(state.authEmail||'')}</b></p>
+    <p class="as-p">${esc(T('ci_click'))}</p>
+    <ul class="as-tips">
+      <li>${esc(T('ci_expiry'))}</li>
+      <li>${esc(T('auth_check_spam'))}</li>
+    </ul>
+    ${state.authError ? `<div class="form-err">${esc(state.authError)}</div>` : ''}
+    <button type="button" class="btn btn-primary as-btn" id="auth-resend" ${state.resendBusy||state.resendDone?'disabled':''}>${esc(state.resendDone ? T('auth_resent') : T('auth_resend'))}</button>
+    <p class="as-alt"><a href="#" id="ci-change">${esc(T('ci_change'))}</a><span aria-hidden="true">·</span><a href="#" id="ci-login">${esc(T('ci_login'))}</a></p>
+  </div>`;
+}
+// The page an emailed link opens: confirmed (with one clear next step), or expired (with a new link one click away).
+function emailLinkView(){
+  const e = state.emailLink || {};
+  const inner = e.status==='ok' ? `
+    <span class="as-ic as-ok">${ICON_OK}</span>
+    <h3 class="as-h">${esc(T('el_ok_t'))}</h3>
+    <p class="as-p">${esc(T('el_ok_s'))}</p>
+    <button type="button" class="btn btn-primary as-btn" id="el-continue">${esc(T('el_continue'))}</button>` : `
+    <span class="as-ic as-warn">${ICON_CLOCK}</span>
+    <h3 class="as-h">${esc(T(e.kind==='reset' ? 'el_exp_reset_t' : 'el_exp_t'))}</h3>
+    <p class="as-p">${esc(T(e.kind==='reset' ? 'el_exp_reset_s' : 'el_exp_s'))}</p>
+    ${e.sent ? `<div class="auth-note as-sent"><b>${esc(T('el_sent_t'))}</b><br>${esc(T('el_sent_s'))}</div>` : `
+    <form id="el-form" class="as-form">
+      <div class="field"><label for="el-email">${esc(T('lbl_email'))}</label><input id="el-email" name="email" type="email" required autocomplete="email" placeholder="${esc(T('ph_email'))}" value="${esc(state.authEmail||'')}"></div>
+      ${state.authError ? `<div class="form-err">${esc(state.authError)}</div>` : ''}
+      <button class="btn btn-primary as-btn" type="submit" ${state.authBusy?'disabled':''}>${esc(T('el_send_new'))}</button>
+    </form>`}
+    <p class="as-alt"><a href="#" id="el-login">${esc(T('ci_login'))}</a></p>`;
+  return `<div class="auth-wrap">${authSide()}<div class="auth-main"><div class="auth-status" role="status">${inner}</div></div></div>`;
+}
+function wireEmailLink(){
+  const go = document.getElementById('el-continue');
+  if(go) go.addEventListener('click', ()=>{
+    state.emailLink = null;
+    if(state.view==='home' || state.view==='auth') nav(myProfile ? 'dashboard' : 'onboard'); else render();
+  });
+  const lg = document.getElementById('el-login');
+  if(lg) lg.addEventListener('click', e=>{ e.preventDefault(); state.emailLink = null; state.authMode = 'login'; state.authError = ''; state.authCheckEmail = false; nav('dashboard'); });
+  const f = document.getElementById('el-form');
+  if(f) f.addEventListener('submit', async e=>{
+    e.preventDefault(); if(state.authBusy) return;
+    const email = String(new FormData(f).get('email')||'').trim(); if(!email) return;
+    const reset = state.emailLink.kind==='reset';
+    state.authEmail = email; state.authBusy = true; state.authError = ''; render();
+    try{
+      const viaUs = await authMail(reset ? 'auth_recover' : 'auth_resend', { email });
+      if(!viaUs){
+        const { error } = reset
+          ? await withTimeout(sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin }), 8000, 'resetPassword')
+          : await withTimeout(sb.auth.resend({ type:'signup', email, options:{ emailRedirectTo: window.location.origin } }), 8000, 'resend');
+        if(error) throw error;
+      }
+      if(viaUs && viaUs.already){ state.emailLink = null; state.authMode = 'login'; state.authInfo = T('el_already'); state.authBusy = false; nav('dashboard'); return; }
+      state.emailLink.sent = true;
+    }catch(err){ state.authError = (err && err.message) || T('auth_error_generic'); }
+    state.authBusy = false; render();
+  });
 }
 
 function resetPasswordView(){
@@ -7614,12 +7756,17 @@ function wireAuth(){
     state.authMode = 'forgot'; state.authError = ''; state.authInfo = ''; state.authCheckEmail = false;
     render();
   });
+  const ciChange = document.getElementById('ci-change');
+  if(ciChange) ciChange.addEventListener('click', e=>{ e.preventDefault(); state.authCheckEmail = false; state.authMode = 'signup'; state.authError = ''; state.resendDone = false; render(); });
+  const ciLogin = document.getElementById('ci-login');
+  if(ciLogin) ciLogin.addEventListener('click', e=>{ e.preventDefault(); state.authCheckEmail = false; state.authMode = 'login'; state.authError = ''; render(); });
   const resendBtn = document.getElementById('auth-resend');
   if(resendBtn) resendBtn.addEventListener('click', async ()=>{
     if(!state.authEmail) return;
-    state.resendBusy = true; render();
+    state.resendBusy = true; state.authError = ''; render();
     try{
       const viaUs = await authMail('auth_resend', { email: state.authEmail });
+      if(viaUs && viaUs.already){ state.resendBusy = false; state.authCheckEmail = false; state.authMode = 'login'; state.authInfo = T('el_already'); render(); return; }
       if(!viaUs){ const { error } = await withTimeout(sb.auth.resend({ type:'signup', email: state.authEmail, options:{ emailRedirectTo: window.location.origin } }), 8000, 'resend'); if(error) throw error; }
       state.resendDone = true;
     }catch(err){ state.authError = (err && err.message) || T('auth_error_generic'); }
@@ -7638,7 +7785,7 @@ function wireAuth(){
       if(box){ box.classList.add('need'); box.scrollIntoView({ block:'center', behavior:'smooth' }); }
       toast(T('auth_pick_role')); return;
     }
-    if(state.authMode==='signup') state.authName = String(fd.get('fullname')||'').trim().slice(0, 80);
+    if(state.authMode==='signup') state.authName = [fd.get('firstName'), fd.get('lastName')].map(x=>String(x||'').trim()).filter(Boolean).join(' ').slice(0, 80);
     state.authBusy = true; state.authError = ''; render();
     try{
       if(state.authMode==='forgot'){
@@ -7802,7 +7949,7 @@ function onboardView(){
   <form id="quick-client-form" class="panel ob-quick">
     <h3 style="margin:0 0 6px;">${esc(T('ob_quick_t'))}</h3>
     <p class="muted" style="margin:0 0 16px;">${esc(T('ob_quick_s'))}</p>
-    <div class="field"><label for="ob-f-name">${esc(T('lbl_full_name'))}</label><input id="ob-f-name" name="name" required autocomplete="name" maxlength="80" placeholder="${esc(T('ph_full_name'))}" value="${esc(knownName())}"></div>
+    ${nameFields(knownName(), 'ob-f')}
     <button class="btn btn-primary ob-submit" type="submit">${esc(T('ob_quick_btn'))}</button>
   </form>` : preset ? `
   ${preset==='mentor' ? '<div id="ob-ai"></div>' : ''}
@@ -7822,7 +7969,7 @@ function onboardView(){
           </div>
         </fieldset>
         ${obPhotoField()}
-        <div class="field"><label for="ob-f-name">${esc(T('lbl_name'))}</label><input id="ob-f-name" name="name" required autocomplete="name" placeholder="${esc(T('ph_name'))}" value="${esc(liSignupName || (draft && myProfile.name) || '')}"></div>
+        ${nameFields(liSignupName || (draft && myProfile.name) || '', 'ob-f')}
         <div class="field-row">
           <div class="field"><label for="ob-f-profession">${esc(T('lbl_title_m'))}</label><input id="ob-f-profession" name="profession" ${rq} placeholder="${esc(T('ph_title_m'))}"></div>
           <div class="field"><label for="ob-f-company">${esc(T('lbl_company'))}</label><input id="ob-f-company" name="company" ${rq} placeholder="${esc(T('ph_company'))}"></div>
@@ -7851,7 +7998,7 @@ function onboardView(){
       ` : `
         ${obSection(1,'ob_s_about')}
         ${obPhotoField()}
-        <div class="field"><label for="ob-f-name">${esc(T('lbl_name'))}</label><input id="ob-f-name" name="name" required autocomplete="name" placeholder="${esc(T('ph_name'))}" value="${esc(liSignupName)}"></div>
+        ${nameFields(liSignupName, 'ob-f')}
         <div class="field-row">
           ${currentJobField('currentProfession', '')}
           <div class="field"><label for="ob-f-profession">${esc(T('lbl_target_job'))}</label><input id="ob-f-profession" name="profession" placeholder="${esc(T('ph_target_job'))}"></div>
