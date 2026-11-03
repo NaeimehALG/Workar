@@ -1079,6 +1079,7 @@
   .ill-wrap{width:72px;height:72px;margin-bottom:14px;}
   .ill-wrap svg{width:100%;height:100%;}
   .card .prof{font-size:13px;color:var(--accent);font-weight:600;}
+  .li-fill{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 14px;margin:0 0 18px;border:1px solid var(--border);border-radius:14px;background:color-mix(in srgb,#0A66C2 5%,var(--surface));}.li-fill .hint{margin:0;}.li-fill-btn{display:inline-flex;align-items:center;gap:8px;font-weight:600;}.li-fill.done{color:var(--text);font-size:14px;}.li-fill.done span{color:#0A66C2;font-weight:700;}.li-find{color:#0A66C2;font-weight:600;white-space:nowrap;text-decoration:none;margin-left:4px;}.li-find:hover{text-decoration:underline;}
   .bio-sug-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px;}.bio-sug-row label{margin:0;}.bio-sug-btn{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}.bio-sug-btn[disabled]{opacity:.6;cursor:progress;}.bio-sug-msg{margin-top:6px;}
   .card p.bio{font-size:13.5px;color:var(--muted);margin:8px 0 12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
   .chip{display:inline-block;padding:3px 10px;border-radius:999px;background:var(--surface-2);font-size:11.5px;color:var(--muted);margin:0 6px 6px 0;border:1px solid var(--border);}
@@ -3297,7 +3298,7 @@ const I18N = {
     sf_adm_banned_t:'Account banned.', sf_adm_unbanned_t:'Ban lifted.',
     av_hours_for:'Exact hours on {d}', av_n_slots:'{n} half-hour slots', av_all:'All day', av_none:'Clear', av_copy:'Copy to other days', av_copy_to:'Copy these hours to:', av_copied:'Copied to {d}.',
     av_pick_day:'Show the exact hours for this day', av_exact_hint:'Tap a block to add or remove it. Tap a day to choose exact half-hour start times below; a striped block is partly available.',
-    lbl_linkedin:'LinkedIn profile', ph_linkedin:'https://linkedin.com/in/yourname', lbl_linkedin_req:'LinkedIn profile (required)', hint_linkedin_m:'Required for every mentor. Clients use it to see your real experience.', err_linkedin_req:'Please add your LinkedIn profile link. It is required for mentors.', err_linkedin_bad:'Please enter a personal LinkedIn profile link, like linkedin.com/in/yourname.',
+    lbl_linkedin:'LinkedIn profile', ph_linkedin:'https://linkedin.com/in/yourname', li_fill_btn:'Fill in with LinkedIn', li_fill_sub:'Adds your name and photo from LinkedIn in one click.', li_fill_done:'Your name and photo were added from LinkedIn. Now paste your profile link below.', li_find_link:'Find my profile link', li_find_how:'Opens your LinkedIn profile. Copy the address from the browser bar and paste it here.', lbl_linkedin_req:'LinkedIn profile (required)', hint_linkedin_m:'Required for every mentor. Clients use it to see your real experience.', err_linkedin_req:'Please add your LinkedIn profile link. It is required for mentors.', err_linkedin_bad:'Please enter a personal LinkedIn profile link, like linkedin.com/in/yourname.',
     lbl_rate:'Price per session', rate_hint:'(leave blank if free)', ph_rate:'e.g. $40 / session',
     lbl_profession_c:'Your current or target profession', ph_profession_c:'e.g. aspiring Data Analyst', lbl_current_job:'Current profession', ph_current_job:'e.g. Data Analyst', first_job:'N/A — this will be my first job', lbl_target_job:'Target profession', ph_target_job:'e.g. Data Analyst', onboard_err:'Your profile could not be saved. Please check your connection and try again. If it keeps happening, contact Workar support from the Help button.',
     lbl_goal_c:"What's your goal?", ph_goal_c:'What are you working toward, and by when?',
@@ -3747,7 +3748,7 @@ const I18N = {
     sf_adm_banned_t:'حساب مسدود شد.', sf_adm_unbanned_t:'مسدودسازی برداشته شد.',
     av_hours_for:'ساعت‌های دقیق {d}', av_n_slots:'{n} بازه‌ی نیم‌ساعته', av_all:'تمام روز', av_none:'پاک کردن', av_copy:'کپی برای روزهای دیگر', av_copy_to:'این ساعت‌ها کپی شود برای:', av_copied:'برای {d} کپی شد.',
     av_pick_day:'نمایش ساعت‌های دقیق این روز', av_exact_hint:'با زدن هر بخش آن را اضافه یا حذف کنید. با زدن نام روز، ساعت‌های شروع نیم‌ساعته را در پایین انتخاب کنید؛ بخش راه‌راه یعنی بخشی از آن آزاد است.',
-    lbl_linkedin:'پروفایل لینکدین', ph_linkedin:'https://linkedin.com/in/yourname', lbl_linkedin_req:'پروفایل لینکدین (الزامی)', hint_linkedin_m:'برای همه‌ی منتورها الزامی است. مراجعان با آن سابقه‌ی واقعی شما را می‌بینند.', err_linkedin_req:'لطفاً لینک پروفایل لینکدین‌تان را وارد کنید. برای منتورها الزامی است.', err_linkedin_bad:'لطفاً لینک پروفایل شخصی لینکدین را وارد کنید، مثل linkedin.com/in/yourname',
+    lbl_linkedin:'پروفایل لینکدین', ph_linkedin:'https://linkedin.com/in/yourname', li_fill_btn:'پر کردن با لینکدین', li_fill_sub:'نام و عکس شما را با یک کلیک از لینکدین اضافه می‌کند.', li_fill_done:'نام و عکس شما از لینکدین اضافه شد. حالا لینک پروفایلتان را پایین بچسبانید.', li_find_link:'پیدا کردن لینک پروفایلم', li_find_how:'پروفایل لینکدین شما را باز می‌کند. آدرس را از نوار مرورگر کپی کنید و اینجا بچسبانید.', lbl_linkedin_req:'پروفایل لینکدین (الزامی)', hint_linkedin_m:'برای همه‌ی منتورها الزامی است. مراجعان با آن سابقه‌ی واقعی شما را می‌بینند.', err_linkedin_req:'لطفاً لینک پروفایل لینکدین‌تان را وارد کنید. برای منتورها الزامی است.', err_linkedin_bad:'لطفاً لینک پروفایل شخصی لینکدین را وارد کنید، مثل linkedin.com/in/yourname',
     lbl_rate:'قیمت هر جلسه', rate_hint:'(اگر رایگان است خالی بگذارید)', ph_rate:'مثلاً ۴۰ دلار برای هر جلسه',
     lbl_profession_c:'شغل فعلی یا هدف شما', ph_profession_c:'مثلاً علاقه‌مند به تحلیل داده', lbl_current_job:'شغل فعلی', ph_current_job:'مثلاً تحلیلگر داده', first_job:'ندارم؛ این اولین شغل من است', lbl_target_job:'شغل هدف', ph_target_job:'مثلاً تحلیل‌گر داده', onboard_err:'پروفایل ذخیره نشد. لطفاً اتصال اینترنت را بررسی کنید و دوباره امتحان کنید. اگر باز هم تکرار شد، از دکمه‌ی «راهنما» با پشتیبانی Workar تماس بگیرید.',
     lbl_goal_c:'هدفتان چیست؟', ph_goal_c:'به چه سمتی می‌روید و تا چه زمانی؟',
@@ -4883,6 +4884,35 @@ document.addEventListener('click', async e=>{
 // Coming back from LinkedIn with an error (e.g. that LinkedIn already belongs to another account)
 try{ const hp = new URLSearchParams((location.hash||'').replace(/^#/,'') || location.search); const ed = hp.get('error_description')||hp.get('error');
   if(ed && /identity|linkedin|already/i.test(ed)) setTimeout(()=>{ try{ toast(T('li_link_fail'), 6000); }catch(e){} }, 1200); }catch(e){}
+// One button: "Fill in with LinkedIn". LinkedIn sign-in shares only name, email and photo, so that is what it fills;
+// the profile link is pasted by the person (with a shortcut that opens their own profile).
+function liIdentityData(user){ const li = ((user && user.identities) || []).find(i=>i && i.provider==='linkedin_oidc'); return li ? (li.identity_data || {}) : null; }
+function liFillFrom(d){ const full = String(d.name || d.full_name || '').trim(), sp = splitName(full);
+  return { first: String(d.given_name || sp[0] || '').trim().slice(0,40), last: String(d.family_name || sp[1] || '').trim().slice(0,40), pic: d.picture || d.avatar_url || '' }; }
+function liFillBar(){
+  if(!state.liLogin) return '';
+  if(state.obLiDone) return `<div class="li-fill done" role="status"><span aria-hidden="true">&#10003;</span> ${esc(T('li_fill_done'))}</div>`;
+  return `<div class="li-fill"><button type="button" class="btn btn-outline li-fill-btn" id="ob-li-fill"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><path fill="#0A66C2" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg><span>${esc(T('li_fill_btn'))}</span></button><span class="hint">${esc(T('li_fill_sub'))}</span></div>`;
+}
+function applyLiFill(){
+  const f = state.obLiFill, form = document.getElementById('onboard-form'); if(!f || !form) return;
+  state.obLiFill = null;
+  const set = (sel, v)=>{ const el = form.querySelector(sel); if(el && v && !el.value.trim()){ el.value = v; el.dispatchEvent(new Event('input', { bubbles:true })); } };
+  set('input[name="firstName"]', f.first); set('input[name="lastName"]', f.last);
+  const li = form.querySelector('input[name="linkedin"]');
+  setTimeout(()=>{ if(li && !li.value.trim()){ li.scrollIntoView({ block:'center', behavior:'smooth' }); li.focus({ preventScroll:true }); } }, 250);
+}
+document.addEventListener('click', async e=>{
+  const t = e.target.closest && e.target.closest('#ob-li-fill'); if(!t || !sb) return;
+  t.disabled = true;
+  try{
+    const { data } = await sb.auth.getSession(); const d = liIdentityData(data && data.session && data.session.user);
+    if(d){ const f = liFillFrom(d); state.obLiFill = f; state.obLiDone = true; if(f.pic && !(state.obPhoto && state.obPhoto.url)) state.obPhoto = { li:true, url:f.pic }; render(); return; }
+    try{ sessionStorage.setItem('wk-ob-resume', JSON.stringify({ drafts: __formDrafts, role: state.role, fill: true })); }catch(err){}
+    const { error } = await sb.auth.linkIdentity({ provider:'linkedin_oidc', options:{ redirectTo: location.origin + location.pathname + '?go=onboard' } });
+    if(error) throw error;
+  }catch(err){ console.error('ob-linkedin-fill-failed', err); t.disabled = false; toast(T('auth_li_fail'), 5000); }
+});
 // Sign-up form photo: upload now (saved with the profile), or use the LinkedIn photo.
 function liPictureOf(user){ const li = ((user && user.identities) || []).find(i=>i && i.provider==='linkedin_oidc'); const d = li && li.identity_data || {}; return d.picture || d.avatar_url || ''; }
 document.addEventListener('click', async e=>{
@@ -4989,7 +5019,7 @@ function resetAccountState(){
   if(__profUnsub){ try{ __profUnsub(); }catch(e){} __profUnsub = null; }
   uid = null; userEmail = null; myProfile = null; signupMeta = {};
   __routedNew = false; liSynced = false; __obLoadedFor = null; clearTimeout(__obSaveT);
-  state.noProfile = false; state.role = null; state.returnMentorId = null; state.obResume = null; state.obPhoto = null;
+  state.noProfile = false; state.role = null; state.returnMentorId = null; state.obResume = null; state.obPhoto = null; state.obLiDone = false; state.obLiFill = null;
   try{ clearFormDrafts('ob'); clearFormDrafts('dash'); }catch(e){}
   clearIntent();
 }
@@ -5006,6 +5036,8 @@ function resumeOnboardAfterLinkedIn(session){
   if(saved.role) state.role = saved.role;
   const pic = liPictureOf(session && session.user);
   if(pic) state.obPhoto = { li:true, url:pic };
+  const d = liIdentityData(session && session.user);
+  if(d){ state.obLiFill = liFillFrom(d); state.obLiDone = true; }
   state.view = 'onboard';
 }
 async function syncLinkedIn(){
@@ -7909,7 +7941,7 @@ function obPhotoField(){
           <div class="ob-photo-row">
             <span class="avatar ob-photo-av ${state.obPhoto && state.obPhoto.url ? 'has' : ''}">${state.obPhoto && state.obPhoto.url ? `<img src="${esc(state.obPhoto.url)}" alt="">` : '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>'}</span>
             <button type="button" class="btn btn-outline btn-sm" id="ob-photo-up">${esc(T(state.obPhoto ? 'ob_photo_change' : 'pn_upload'))}</button>
-            ${state.liLogin && !(state.obPhoto && state.obPhoto.li) ? `<button type="button" class="btn btn-outline btn-sm ob-li-btn" id="ob-photo-li"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="#0A66C2" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45z"/></svg><span>${esc(T('pn_use_li'))}</span></button>` : ''}
+            
             <input type="file" id="ob-photo-file" accept="image/jpeg,image/png,image/webp" hidden>
           </div>
           ${state.role==='mentor' ? `<div class="hint">${esc(T('ob_photo_hint'))}</div>` : ''}
@@ -7978,6 +8010,7 @@ function onboardView(){
   ${preset==='mentor' ? '<div id="ob-ai"></div>' : ''}
   <div class="ob-grid">
     <form id="onboard-form" class="panel wide ob-form">
+      ${liFillBar()}
       ${preset==='client' ? resumeCard('ob') : ''}
       ${preset==='mentor' ? `
         ${obSection(1,'ob_s_about')}
@@ -8001,7 +8034,7 @@ function onboardView(){
         <div class="field"><div class="bio-sug-row"><label for="ob-f-bio">${esc(T('lbl_bio_m'))} <span class="hint" style="display:inline;">${esc(T('opt_label'))}</span></label>${bioSugBtn('ob-f-bio')}</div><textarea id="ob-f-bio" name="bio" placeholder="${esc(T('ph_bio_m'))}"></textarea><div class="hint bio-sug-msg" data-bio-msg="ob-f-bio">${esc(T('bio_sug_hint'))}</div></div>
         <div class="field"><label for="ob-f-languages">${esc(T('lbl_languages'))}</label><input id="ob-f-languages" name="languages" ${rq} placeholder="${esc(T('ph_languages'))}"></div>
         ${obSection(2,'sec_links_only')}
-        <div class="field"><label for="ob-f-linkedin">${esc(T('lbl_linkedin_req'))}</label><input id="ob-f-linkedin" name="linkedin" type="text" required autocomplete="url" placeholder="${esc(T('ph_linkedin'))}"><div class="hint">${esc(T('hint_linkedin_m'))}</div></div>
+        <div class="field"><label for="ob-f-linkedin">${esc(T('lbl_linkedin_req'))}</label><input id="ob-f-linkedin" name="linkedin" type="text" required autocomplete="url" placeholder="${esc(T('ph_linkedin'))}"><div class="hint">${esc(T('hint_linkedin_m'))} <a class="li-find" href="https://www.linkedin.com/in/me/" target="_blank" rel="noopener" title="${esc(T('li_find_how'))}">${esc(T('li_find_link'))} &#8599;</a></div></div>
         ${obSection(3,'sec_rate')}
         <div class="field">${rateWidget(minRate(), 0, 'name="sessionRate"')}</div>
         <details class="ob-more" ${state.obMoreOpen?'open':''}>
@@ -8041,7 +8074,7 @@ function onboardView(){
           <div class="field"><label for="ob-f-university">${esc(T('lbl_university'))} <span class="hint" style="display:inline;">${esc(T('opt_label'))}</span></label><input id="ob-f-university" name="university" placeholder="${esc(T('ph_university'))}"></div>
         </div>
         <div class="field"><label for="ob-f-certifications">${esc(T('lbl_certifications'))} <span class="hint" style="display:inline;">${esc(T('opt_label'))}</span></label><input id="ob-f-certifications" name="certifications" placeholder="${esc(T('ph_certifications'))}"></div>
-        <div class="field"><label for="ob-f-linkedin">${esc(T('lbl_linkedin_opt'))} <span class="hint" style="display:inline;">${esc(T('opt_label'))}</span></label><input id="ob-f-linkedin" name="linkedin" type="text" placeholder="${esc(T('ph_linkedin'))}"></div>
+        <div class="field"><label for="ob-f-linkedin">${esc(T('lbl_linkedin_opt'))} <span class="hint" style="display:inline;">${esc(T('opt_label'))}</span></label><input id="ob-f-linkedin" name="linkedin" type="text" placeholder="${esc(T('ph_linkedin'))}"><div class="hint"><a class="li-find" href="https://www.linkedin.com/in/me/" target="_blank" rel="noopener" title="${esc(T('li_find_how'))}">${esc(T('li_find_link'))} &#8599;</a></div></div>
       `}
       <div id="onboard-err" class="form-err" style="display:none;"></div>
       <button class="btn btn-primary ob-submit" type="submit">${esc(T(switching ? 'bm_submit' : state.returnMentorId && preset==='client' ? 'ob_submit_book' : 'create_profile'))}</button>
@@ -10975,7 +11008,7 @@ function wire(){
     });
   });
 
-  wireFirstJob(); wireMentorPreview();
+  wireFirstJob(); wireMentorPreview(); applyLiFill();
   const obMore = document.querySelector('.ob-more'); if(obMore) obMore.addEventListener('toggle', ()=>{ state.obMoreOpen = obMore.open; });
   const qcf = document.getElementById('quick-client-form');
   if(qcf) qcf.addEventListener('submit', e=>{ e.preventDefault(); const b = qcf.querySelector('button[type="submit"]'); if(b) b.disabled = true; quickClient(new FormData(qcf).get('name')); });
