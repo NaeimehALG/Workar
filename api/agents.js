@@ -75,7 +75,7 @@ function capTurns(msgs, max = MAX_INPUT_CHARS) {
   return out;
 }
 // Per-account hourly caps for each signed-in AI task.
-const AI_LIMITS = { onboard: 60, request_note: 20, profile_review: 10, reply_draft: 40, followup_draft: 20, resume_read: 10, price_recommend: 20, career_score: 10, career_improve: 5 };
+const AI_LIMITS = { onboard: 60, request_note: 20, profile_review: 10, reply_draft: 40, followup_draft: 20, resume_read: 10, bio_suggest: 15, price_recommend: 20, career_score: 10, career_improve: 5 };
 
 // =====================================================================
 // 1. Mentor onboarding assistant
@@ -451,6 +451,43 @@ Write in the same language as their bio.`,
   });
 }
 
+
+// =====================================================================
+// 6b. Bio suggestion (mentor sign-up / profile edit). Writes a first-person bio from the facts the
+//     mentor gave: their title, company, experience, what they pasted (e.g. their LinkedIn About) and,
+//     if uploaded, their resume. Never invents facts. Always English (public profiles are English).
+// =====================================================================
+async function bioSuggest(req, res, b) {
+  const me = await realUser(req);
+  if (!me) return res.status(401).json({ error: 'Please sign in first.' });
+  if (await overUserLimit(me.id, 'ai_bio', AI_LIMITS.bio_suggest)) return res.status(429).json({ error: 'Please try again in a little while.' });
+  const facts = {
+    role: str(b.profession, 80) || '', company: str(b.company, 120) || '', yearsExperience: str(String(b.experience == null ? '' : b.experience), 4) || '',
+    kind: ['pro', 'hr', 'coach'].includes(b.mentorKind) ? b.mentorKind : 'pro', languages: str(b.languages, 160) || '',
+    education: [str(b.degree, 120), str(b.university, 120)].filter(Boolean).join(', '), certifications: str(b.certifications, 300) || '',
+    theirText: str(b.text, 3000) || ''
+  };
+  let doc = null;
+  const path = String(b.path || '');
+  if (path && path.startsWith(me.id + '/') && !path.includes('..') && path.length <= 300) { try { doc = await resumeBlock(path); } catch (e) { doc = null; } }
+  if (!doc && !facts.theirText && !facts.role) return res.status(400).json({ error: 'Please add your job title first, or paste your LinkedIn About.' });
+  const system = `You write the short bio for a mentor's public profile on Workar, a career mentorship platform.
+Write it in English, first person, warm and professional, 60 to 120 words: their background, what they have worked on, and how they can help people.
+Use ONLY facts given (their text, the form fields, the document). Never invent employers, numbers, achievements or credentials. Do not promise specific services.
+If they pasted their own text (for example their LinkedIn About), keep their voice and main points; tighten and translate it to English if needed.
+No quotes, emojis, hashtags, contact details or links. Respond with valid JSON only: {"bio":""}`;
+  const text = 'Form fields (JSON): ' + JSON.stringify(facts);
+  let out = {};
+  try {
+    if (doc) {
+      const data = await AI.callClaude({ system, messages: [{ role: 'user', content: [doc, { type: 'text', text }] }], maxTokens: 600, timeoutMs: 30000 });
+      out = AI.extractJSON(AI.textOf(data)) || {};
+    } else out = await AI.askJSON(system, text, { maxTokens: 600, timeoutMs: 25000 });
+  } catch (e) { return res.status(502).json({ error: 'We could not write a suggestion right now. Please try again.' }); }
+  const bio = String((out && out.bio) || '').trim().slice(0, 1500);
+  if (bio.length < 40) return res.status(502).json({ error: 'We could not write a suggestion right now. Please try again.' });
+  return res.status(200).json({ bio });
+}
 
 // =====================================================================
 // 7. Reply helper (inbox): drafts a courteous reply the user edits and sends
@@ -1094,6 +1131,7 @@ module.exports = async (req, res) => {
       case 'translate_profile': return await translateProfile(req, res, b);
       case 'request_note': return await requestNote(req, res, b);
       case 'profile_review': return await profileReview(req, res, b);
+      case 'bio_suggest': return await bioSuggest(req, res, b);
       case 'price_recommend': return await priceRecommendation(req, res, b);
       case 'reply_draft': return await replyDraft(req, res, b);
       case 'prep_brief': return await prepBrief(req, res, b);

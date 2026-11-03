@@ -1079,6 +1079,7 @@
   .ill-wrap{width:72px;height:72px;margin-bottom:14px;}
   .ill-wrap svg{width:100%;height:100%;}
   .card .prof{font-size:13px;color:var(--accent);font-weight:600;}
+  .bio-sug-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px;}.bio-sug-row label{margin:0;}.bio-sug-btn{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}.bio-sug-btn[disabled]{opacity:.6;cursor:progress;}.bio-sug-msg{margin-top:6px;}
   .card p.bio{font-size:13.5px;color:var(--muted);margin:8px 0 12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
   .chip{display:inline-block;padding:3px 10px;border-radius:999px;background:var(--surface-2);font-size:11.5px;color:var(--muted);margin:0 6px 6px 0;border:1px solid var(--border);}
   .mc-link{color:inherit;text-decoration:none;}
@@ -3258,7 +3259,7 @@ const I18N = {
     lbl_name:'Your name', ph_name:'e.g. Jordan Lee',
     lbl_headline:'Headline (title & company)', ph_headline:'e.g. Senior Structural Engineer at Stantec',
     lbl_profession_m:'Your profession', ph_profession_m:'e.g. Structural Engineer, Product Designer',
-    lbl_bio_m:'Short bio', ph_bio_m:"A few lines about your experience and how you can help. Write it like you're talking directly to a mentee.",
+    lbl_bio_m:'Short bio', ph_bio_m:"Paste your LinkedIn About here, or tap \u201cSuggest a bio\u201d and we will write one for you to edit.", bio_sug_btn:'Suggest a bio', bio_sug_again:'Suggest another', bio_sug_busy:'Writing\u2026', bio_sug_done:'Here is a suggestion. Edit it so it sounds like you.', bio_sug_err:'We could not write a suggestion right now. Please try again.', bio_sug_hint:'Optional. If you leave it empty, we will write it for you from your profile.',
     
     lbl_experience:'Years of experience', ph_experience:'e.g. 8',
     lbl_languages:'Languages (comma-separated)', ph_languages:'e.g. English, Farsi',
@@ -3708,7 +3709,7 @@ const I18N = {
     lbl_name:'نام شما', ph_name:'مثلاً سارا محمدی',
     lbl_headline:'عنوان شغلی و شرکت', ph_headline:'مثلاً مهندس عمران ارشد در استنتک',
     lbl_profession_m:'شغل شما', ph_profession_m:'مثلاً مهندس سازه، طراح محصول',
-    lbl_bio_m:'بیوی کوتاه', ph_bio_m:'چند خط درباره‌ی تجربه‌تان و اینکه چطور می‌توانید کمک کنید. طوری بنویسید که انگار مستقیم با یک جویای کار حرف می‌زنید.',
+    lbl_bio_m:'بیوی کوتاه', ph_bio_m:'بخش About لینکدین‌تان را اینجا بچسبانید، یا روی «پیشنهاد بیو» بزنید تا یک متن برایتان بنویسیم و ویرایشش کنید.', bio_sug_btn:'پیشنهاد بیو', bio_sug_again:'پیشنهاد دیگر', bio_sug_busy:'در حال نوشتن…', bio_sug_done:'این یک پیشنهاد است. ویرایشش کنید تا به زبان خودتان باشد.', bio_sug_err:'الان نتوانستیم پیشنهادی بنویسیم. لطفاً دوباره امتحان کنید.', bio_sug_hint:'اختیاری. اگر خالی بگذارید، از روی پروفایلتان برایتان می‌نویسیم.',
     
     lbl_experience:'سال‌های تجربه', ph_experience:'مثلاً ۸',
     lbl_languages:'زبان‌ها (با کاما جدا کنید)', ph_languages:'مثلاً فارسی، انگلیسی',
@@ -7997,7 +7998,7 @@ function onboardView(){
           <div class="field"><label for="ob-f-company">${esc(T('lbl_company'))}</label><input id="ob-f-company" name="company" ${rq} placeholder="${esc(T('ph_company'))}"></div>
         </div>
         <div class="field"><label for="ob-f-experience">${esc(T('lbl_experience'))}</label><input id="ob-f-experience" name="experience" type="number" min="0" placeholder="${esc(T('ph_experience'))}"></div>
-        <div class="field"><label for="ob-f-bio">${esc(T('lbl_bio_m'))}</label><textarea id="ob-f-bio" name="bio" ${rq} placeholder="${esc(T('ph_bio_m'))}"></textarea></div>
+        <div class="field"><div class="bio-sug-row"><label for="ob-f-bio">${esc(T('lbl_bio_m'))} <span class="hint" style="display:inline;">${esc(T('opt_label'))}</span></label>${bioSugBtn('ob-f-bio')}</div><textarea id="ob-f-bio" name="bio" placeholder="${esc(T('ph_bio_m'))}"></textarea><div class="hint bio-sug-msg" data-bio-msg="ob-f-bio">${esc(T('bio_sug_hint'))}</div></div>
         <div class="field"><label for="ob-f-languages">${esc(T('lbl_languages'))}</label><input id="ob-f-languages" name="languages" ${rq} placeholder="${esc(T('ph_languages'))}"></div>
         ${obSection(2,'sec_links_only')}
         <div class="field"><label for="ob-f-linkedin">${esc(T('lbl_linkedin_req'))}</label><input id="ob-f-linkedin" name="linkedin" type="text" required autocomplete="url" placeholder="${esc(T('ph_linkedin'))}"><div class="hint">${esc(T('hint_linkedin_m'))}</div></div>
@@ -9234,6 +9235,41 @@ async function sendAttachment(threadId, file, isDm){
   if(!isDm) notify('message', threadId);
 }
 // Resume card: on the sign-up form ('ob') and in the dashboard profile editor ('dash').
+// ---------- Bio suggestion (mentor sign-up and dashboard) ----------
+function bioSugBtn(target){ return `<button type="button" class="btn btn-outline btn-sm bio-sug-btn" data-bio-sug="${target}"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.6L18.5 9.5l-4.7 1.9L12 16l-1.8-4.6L5.5 9.5l4.7-1.9z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg><span>${esc(T('bio_sug_btn'))}</span></button>`; }
+function bioFacts(target){
+  const ob = target==='ob-f-bio', form = ob ? document.getElementById('onboard-form') : null;
+  const g = (obName, dashId)=>{ if(ob){ const el = form && form.querySelector(`[name="${obName}"]`); return el ? String(el.value||'').trim() : ''; } const el = document.getElementById(dashId); return el ? String(el.value||'').trim() : ''; };
+  const kindEl = ob && form ? form.querySelector('[name="mentorKind"]:checked') : null;
+  const resume = ob ? state.obResume : (myProfile && myProfile.resumePath ? { path: myProfile.resumePath } : null);
+  return { profession: g('profession','edit-profession'), company: g('company','edit-company'), experience: g('experience','edit-experience'),
+    languages: g('languages','edit-languages'), degree: g('degree','edit-degree'), university: g('university','edit-university'), certifications: g('certifications','edit-certifications'),
+    mentorKind: kindEl ? kindEl.value : (myProfile && myProfile.mentorKind) || 'pro', path: resume && resume.path ? resume.path : undefined };
+}
+async function fetchBioSuggestion(target, text){
+  let tok = null; try{ const { data } = await sb.auth.getSession(); tok = data && data.session ? data.session.access_token : null; }catch(e){}
+  const r = await fetch('/api/agents', { method:'POST', headers:{ 'Content-Type':'application/json', Authorization:'Bearer '+(tok||'') },
+    body: JSON.stringify(Object.assign({ task:'bio_suggest', text: String(text||'').slice(0,3000) }, bioFacts(target))) });
+  const d = await r.json().catch(()=>({}));
+  if(!r.ok || !d.bio) throw new Error(d.error || T('bio_sug_err'));
+  return d.bio;
+}
+async function runBioSuggest(btn){
+  const target = btn.getAttribute('data-bio-sug'), ta = document.getElementById(target); if(!ta || btn.disabled) return;
+  const msg = document.querySelector(`[data-bio-msg="${target}"]`), lbl = btn.querySelector('span');
+  btn.disabled = true; if(lbl) lbl.textContent = T('bio_sug_busy');
+  try{
+    const bio = await fetchBioSuggestion(target, ta.value);
+    ta.value = bio; ta.dispatchEvent(new Event('input', { bubbles:true }));
+    try{ if(typeof __formDrafts!=='undefined') delete __formDrafts['dash|'+target]; }catch(e){}
+    if(msg){ msg.hidden = false; msg.textContent = T('bio_sug_done'); }
+    if(lbl) lbl.textContent = T('bio_sug_again');
+  }catch(e){
+    if(msg){ msg.hidden = false; msg.textContent = e.message || T('bio_sug_err'); } else toast(e.message || T('bio_sug_err'));
+    if(lbl) lbl.textContent = T('bio_sug_btn');
+  }finally{ btn.disabled = false; }
+}
+document.addEventListener('click', e=>{ const b = e.target && e.target.closest ? e.target.closest('[data-bio-sug]') : null; if(b){ e.preventDefault(); runBioSuggest(b); } });
 function resumeCard(where){
   const role = where==='ob' ? state.role : (myProfile && myProfile.role);
   const cur = where==='ob' ? state.obResume : (myProfile && myProfile.resumePath ? { path:myProfile.resumePath, name:myProfile.resumeName } : null);
@@ -10713,7 +10749,7 @@ function dashboardView(){
         <div class="field"><label>${esc(T('lbl_field_c'))}</label><input id="edit-target-field" value="${esc(myProfile.targetField||'')}" placeholder="${esc(T('ph_field_c'))}"></div>
       </div>
       <div class="field" id="edit-goals-wrap"><label>${esc(T('lbl_goals_c'))}</label>${optPills('goals', GOAL_KEYS, 'goal_', myProfile.goals||[])}</div>` : ''}
-      <div class="field"><label>${esc(T(isMentor?'lbl_bio_m':'lbl_goal_c'))}${isMentor?'':` <span class="hint" style="display:inline;">${esc(T('opt_label'))}</span>`}</label><textarea id="edit-bio">${esc(myProfile.bio||'')}</textarea></div>
+      <div class="field">${isMentor ? `<div class="bio-sug-row"><label for="edit-bio">${esc(T('lbl_bio_m'))}</label>${bioSugBtn('edit-bio')}</div>` : `<label>${esc(T('lbl_goal_c'))} <span class="hint" style="display:inline;">${esc(T('opt_label'))}</span></label>`}<textarea id="edit-bio" ${isMentor?`placeholder="${esc(T('ph_bio_m'))}"`:''}>${esc(myProfile.bio||'')}</textarea>${isMentor?'<div class="hint bio-sug-msg" data-bio-msg="edit-bio" hidden></div>':''}</div>
     </section>
     <section class="df-sec"><h3>${esc(T('sec_background'))}</h3>
       <div class="field-row">
@@ -11006,6 +11042,11 @@ function wire(){
     }
     const obBtn = form.querySelector('button[type="submit"]');
     state.obBusy = true; if(obBtn) obBtn.disabled = true;
+    if(state.role==='mentor' && !String(doc.bio||'').trim()){
+      // No bio typed: write one from what they filled in (and their resume, if uploaded). If it fails, the
+      // profile is still saved and the review step completes the bio later.
+      try{ doc.bio = await withTimeout(fetchBioSuggestion('ob-f-bio', ''), 30000, 'bio_suggest'); }catch(e){ doc.bio = ''; }
+    }
     try{
       state.onboardError = '';
       const back = state.returnMentorId;
