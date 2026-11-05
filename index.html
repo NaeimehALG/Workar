@@ -12162,14 +12162,24 @@ init();
     v.className = 'wkv-video'; v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true;
     v.setAttribute('muted',''); v.setAttribute('playsinline',''); v.setAttribute('preload','auto'); v.setAttribute('aria-hidden','true');
     v.poster = '/hero-v10-poster.jpg';
-    v.innerHTML = '<source src="/hero-v10.webm?v=white-end-5" type="video/webm"><source src="/hero-v10.mp4?v=white-end-5" type="video/mp4">';
+    // H.264 first: every device decodes it in hardware, so playback stays smooth (VP9 is often decoded in software)
+    v.innerHTML = '<source src="/hero-v10.mp4?v=white-end-5" type="video/mp4"><source src="/hero-v10.webm?v=white-end-5" type="video/webm">';
     v.addEventListener('playing', ()=>v.classList.add('on'));
     // The film ends on white; the logo is drawn on top as a vector so it stays perfectly sharp at any size.
     const logo = document.createElement('div');
     logo.className = 'wkv-logo'; logo.setAttribute('aria-hidden', 'true');
     logo.innerHTML = '<svg viewBox="0 0 556 410"><use href="#wkMark" x="125" y="0" width="306" height="294"/><use class="wkv-word" href="#wkWord" x="0" y="312" width="556" height="94"/></svg>';
     const LOGO_AT = 8.05;
-    (function tick(){ const show = v.currentTime >= LOGO_AT && !v.paused; if(show !== logo.classList.contains('on')) logo.classList.toggle('on', show); requestAnimationFrame(tick); })();
+    // Logo check runs only while the film plays (no endless per-frame loop competing with the video)
+    const syncLogo = ()=>{ const show = v.currentTime >= LOGO_AT && !v.paused; if(show !== logo.classList.contains('on')) logo.classList.toggle('on', show); };
+    if(v.requestVideoFrameCallback){ const onFrame = ()=>{ syncLogo(); v.requestVideoFrameCallback(onFrame); }; v.requestVideoFrameCallback(onFrame); }
+    else v.addEventListener('timeupdate', syncLogo);
+    v.addEventListener('pause', syncLogo); v.addEventListener('seeked', syncLogo);
+    // Pause the film when it is off screen or the tab is hidden, so it never uses the CPU for nothing
+    let inView = true;
+    const resume = ()=>{ if(inView && !document.hidden && v.isConnected && v.paused){ const p = v.play(); if(p && p.catch) p.catch(()=>{}); } };
+    if('IntersectionObserver' in window){ new IntersectionObserver(es=>{ es.forEach(e=>{ inView = e.isIntersecting; if(!inView) v.pause(); else resume(); }); }).observe(v); }
+    document.addEventListener('visibilitychange', ()=>{ if(document.hidden) v.pause(); else resume(); });
     function mount(){
       const slot = document.querySelector('.wkv-slot');
       if(slot && v.parentNode !== slot){ slot.appendChild(v); const p = v.play(); if(p && p.catch) p.catch(()=>{}); }
