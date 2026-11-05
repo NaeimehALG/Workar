@@ -551,6 +551,19 @@
   .tl-doc ul{margin:4px 0 0;padding-left:20px;}
   .tl-doc li{margin:2px 0;}
   @media (max-width:600px){ .tl-imp{padding:20px 16px;} .tl-doc{padding:20px 16px;} }
+  .tl-trust{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:20px;margin:40px 0 0;}
+  .tl-trust-col{border:1px solid var(--line);border-radius:22px;padding:30px 30px 26px;background:#fff;}
+  .tl-trust-priv{background:#FBF7F2;}
+  .tl-trust h3{margin:0 0 6px;font-size:19px;font-weight:600;color:var(--ink);}
+  .tl-trust p{margin:0 0 16px;font-size:14.5px;}
+  .tl-trust ul{list-style:none;margin:0;padding:0;display:grid;gap:12px;}
+  .tl-trust-col:first-child li{display:flex;flex-direction:column;gap:2px;padding-left:14px;border-left:2px solid #E3D3BF;}
+  .tl-trust li b{font-size:14.5px;font-weight:600;color:var(--ink);}
+  .tl-trust li span{font-size:14px;line-height:1.55;color:var(--body);}
+  .tl-trust-priv li{display:flex;align-items:flex-start;gap:10px;}
+  .tl-trust-priv li svg{flex:none;margin-top:3px;color:var(--brand);}
+  .tl-trust-link{display:inline-block;margin-top:18px;font-size:14px;font-weight:600;color:var(--brand);}
+  @media (max-width:860px){ .tl-trust{grid-template-columns:minmax(0,1fr);gap:14px;} .tl-trust-col{padding:22px 18px;} }
   .tl-band-dark{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;background:linear-gradient(135deg,#6B4F3A 0%,#8B6A4C 100%);color:#F7F1E9;border-radius:18px;padding:28px 30px;margin-top:28px;}
   .tl-band-dark h3{margin:0;font-size:19px;color:#fff !important;}
   .tl-band-dark p{margin:6px 0 0;font-size:14.5px;color:#E9DCCB;max-width:52ch;}
@@ -4222,6 +4235,23 @@ Object.assign(I18N.en, {
   tl_s2_t:'Get your score and top fixes', tl_s2_s:'A score out of 100, what is working, and the three changes that matter most.',
   tl_s3_t:'Talk it through with a recruiter', tl_s3_s:'When you want a second opinion, book a private session with an HR professional.',
 
+  tl_m_t:'What your score measures', tl_m_s_r:'Your resume is scored out of 100 on the five things recruiters check first.', tl_m_s_l:'Your profile is scored out of 100 on the five things recruiters look at when they search LinkedIn.',
+  tl_mr1_t:'Clarity', tl_mr1_s:'Can a recruiter see who you are and what you do in a few seconds?',
+  tl_mr2_t:'Measurable results', tl_mr2_s:'Do your bullet points show what changed because of your work?',
+  tl_mr3_t:'Relevance and keywords', tl_mr3_s:'Does it match the role you are aiming for, in the words employers use?',
+  tl_mr4_t:'Structure and length', tl_mr4_s:'Is it easy to scan, with the most important information first?',
+  tl_mr5_t:'ATS-friendly format', tl_mr5_s:'Can applicant tracking systems read it without losing information?',
+  tl_ml1_t:'Headline', tl_ml1_s:'Does it say what you do and what you want next?',
+  tl_ml2_t:'About section', tl_ml2_s:'Does it tell your story clearly and invite people to reach out?',
+  tl_ml3_t:'Searchable keywords', tl_ml3_s:'Will recruiters find you when they search for your skills?',
+  tl_ml4_t:'Results in your experience', tl_ml4_s:'Do your roles show impact, not only duties?',
+  tl_ml5_t:'Completeness', tl_ml5_s:'Are the sections recruiters expect filled in?',
+  tl_p_t:'How your file is protected',
+  tl_p1:'Your file is kept in private storage in your own account. It is never public.',
+  tl_p2:'It is not shown on your profile and is not sent to anyone.',
+  tl_p3:'It is used only to create your score and your improved version.',
+  tl_p4:'Remove file deletes it from your account straight away.',
+  tl_p_more:'Read our privacy policy',
   tl_kicker:'Free, takes about 30 seconds', tl_title:'How does your resume score?',
   tl_sub:'Upload your resume and see it the way a recruiter does: a score out of 100, what is already working, and the three changes that will make the biggest difference.',
   tl_tab_resume:'Resume Score', tl_tab_linkedin:'LinkedIn Check',
@@ -8226,6 +8256,18 @@ function toolsView(){
       <ol class="tl-steps">${[1,2,3].map(n=>`<li><span class="tl-fx-n">${n}</span><div><b>${esc(T('tl_s'+n+'_t'))}</b><p>${esc(T('tl_s'+n+'_s'))}</p></div></li>`).join('')}</ol>
       <button type="button" class="btn btn-primary" id="tl-top">${esc(T('tl_run'))}</button>
     </div>
+  </section>
+  <section class="tl-trust">
+    <div class="tl-trust-col">
+      <h3>${esc(T('tl_m_t'))}</h3>
+      <p class="muted">${esc(T(state.toolTab==='linkedin' ? 'tl_m_s_l' : 'tl_m_s_r'))}</p>
+      <ul>${[1,2,3,4,5].map(n=>`<li><b>${esc(T((state.toolTab==='linkedin'?'tl_ml':'tl_mr')+n+'_t'))}</b><span>${esc(T((state.toolTab==='linkedin'?'tl_ml':'tl_mr')+n+'_s'))}</span></li>`).join('')}</ul>
+    </div>
+    <div class="tl-trust-col tl-trust-priv">
+      <h3>${esc(T('tl_p_t'))}</h3>
+      <ul>${[1,2,3,4].map(n=>`<li><svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><path d="M3.5 8.3l2.8 2.7L12.5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>${esc(T('tl_p'+n))}</span></li>`).join('')}</ul>
+      <a class="tl-trust-link" href="${navHref('privacy')}" data-nav="privacy">${esc(T('tl_p_more'))}</a>
+    </div>
   </section>`}`;
 }
 // ---------- After the score: improved version + Word download ----------
@@ -8380,7 +8422,7 @@ function wireTools(){
     up.addEventListener('drop', e=>{ const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]; toolTakeFile(f); });
   }
   const fx = document.getElementById('tl-file-x');
-  if(fx) fx.addEventListener('click', ()=>{ state.toolFile = Object.assign({}, state.toolFile, { [tab]: null }); render(); });
+  if(fx) fx.addEventListener('click', ()=>{ const f = (state.toolFile||{})[tab]; if(f && f.path) sb.storage.from('files').remove([f.path]).catch(()=>{}); state.toolFile = Object.assign({}, state.toolFile, { [tab]: null }); render(); });
   const run = document.getElementById('tl-run');
   if(run) run.addEventListener('click', runToolScore);
   const lu = document.getElementById('tl-li-url');
