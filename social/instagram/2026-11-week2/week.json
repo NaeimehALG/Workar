@@ -1,0 +1,16 @@
+[
+ {"bg":"raw/img4.png","out":"out/post2-1.jpg","kicker":"Interview prep","title":"Five questions you will likely hear in your next interview.","n":"1/6","pos":"70%"},
+ {"bg":"raw/img3.png","out":"out/post2-2.jpg","kicker":"Question 1","title":"“Tell me about yourself.”","sub":"Keep it to two minutes: where you are now, what brought you here, and why this role.","n":"2/6","pos":"70%"},
+ {"bg":"raw/img1.png","out":"out/post2-3.jpg","kicker":"Question 2","title":"“Why do you want this role?”","sub":"Connect your skills to what they need, not only to what you want.","n":"3/6","pos":"70%"},
+ {"bg":"raw/img7.png","out":"out/post2-4.jpg","kicker":"Question 3","title":"“Describe a problem you solved.”","sub":"Use STAR: situation, task, action, result.","n":"4/6","pos":"70%"},
+ {"bg":"raw/img5.png","out":"out/post2-5.jpg","kicker":"Question 4","title":"“What is your biggest weakness?”","sub":"Name a real one and show what you are doing to improve it.","n":"5/6","pos":"70%"},
+ {"bg":"raw/img2.png","out":"out/post2-6.jpg","kicker":"Question 5","title":"“Do you have any questions for us?”","sub":"Always say yes. Practise with an HR expert at workar.me","n":"6/6","pos":"70%"},
+ {"bg":"raw/img6.png","out":"out/post3-your-experience.jpg","kicker":"For professionals","title":"Your experience is worth more than you think.","sub":"Become a mentor and get paid per session at workar.me","pos":"70%"},
+ {"story":true,"bg":"raw/img1.png","out":"out/story-1-mon.jpg","kicker":"Monday tip","title":"Update one line on your resume today.","sub":"Start with your most recent result.","pos":"70%"},
+ {"story":true,"bg":"raw/img3.png","out":"out/story-2-tue.jpg","kicker":"Quick question","title":"What is the hardest part of your job search right now?","sub":"Reply and tell us.","pos":"70%"},
+ {"story":true,"bg":"raw/img7.png","out":"out/story-3-wed.jpg","kicker":"Free tool","title":"Is your resume ready for recruiters?","sub":"Check your free Resume Score at workar.me","pos":"70%"},
+ {"story":true,"bg":"raw/img5.png","out":"out/story-4-thu.jpg","kicker":"Talk to HR","title":"No replies to your applications? Ask an HR expert why.","sub":"workar.me","pos":"70%"},
+ {"story":true,"bg":"raw/img6.png","out":"out/story-5-fri.jpg","kicker":"For professionals","title":"Share what you know. Get paid per session.","sub":"Become a mentor at workar.me","pos":"70%"},
+ {"story":true,"bg":"raw/img2.png","out":"out/story-6-sat.jpg","kicker":"From the Workar team","title":"We built Workar so no one has to plan a career alone.","sub":"workar.me","pos":"70%"},
+ {"story":true,"bg":"raw/img8.png","out":"out/story-7-sun.jpg","kicker":"Sunday reflection","title":"Where do you want your career to be next year?","sub":"A certified life coach can help you plan it. workar.me","pos":"70%"}
+]
