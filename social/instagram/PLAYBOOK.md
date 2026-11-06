@@ -28,4 +28,10 @@ Rules from Nora: post to Instagram only, never Facebook. 3 posts a week + 1 stor
    - Before clicking "Add photo/video", patch HTMLInputElement.prototype.click so file inputs are attached to the page instead of opening the system dialog; then upload with the browser file_upload tool using the staged /mnt/user-data/uploads/... paths.
    - Caption: end the hashtags with a space so the suggestion box does not swallow the last tag.
    - Set date and time, Schedule, then "Maybe later" on the boost dialog (never boost without Nora).
+   - Stories: "Add link" in the story composer is Facebook-only; with only workarmentoring ticked it stays disabled, so Instagram stories go out without a link sticker.
 7. Check the Planner shows every item on the right day and time, then send Nora the contact sheets and the list of days and times.
+
+## Notes from the week of Nov 9
+- If Downloads cannot be connected, ChatGPT images can be captured in two tiles (an overlay showing the image at 1086x1448 CSS px, zoom screenshots saved to disk, then stitched); finals go to /mnt/user-data/outputs/workar-insta-<week>/ for the upload tool.
+- Check every illustration for statues, portraits or busts with faces; remove them before rendering.
+- Reel overlays: tools/reel_overlays.js with <week>/reel.json, then ffmpeg zoompan per scene + xfade.

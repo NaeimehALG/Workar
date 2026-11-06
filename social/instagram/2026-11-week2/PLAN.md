@@ -40,5 +40,5 @@ Sign up at workar.me
 
 #mentorship #becomeamentor #careergrowth #workar
 
-## Stories, daily 10:00 AM, link sticker https://www.workar.me
+## Stories, daily 10:00 AM (Business Suite offers "Add link" only for Facebook stories)
 Mon tip, Tue question, Wed Resume Score, Thu Talk to HR, Fri mentor invitation, Sat from the team, Sun life coaching reflection.
